@@ -24,11 +24,12 @@ CORE_SOURCES = boot.o              \
 MOD_SOURCES = testmod.o            \
               i8042.o              \
               pci.o                \
+              ide.o                \
 
 PROG_SOURCES = prog/init.o         \
                syscall.o           \
 
-CFLAGS=-nostdlib -nostdinc -fno-builtin -fno-stack-protector -Wall -I.
+CFLAGS=-nostdlib -nostdinc -fno-builtin -fno-stack-protector -Wall -g -I.
 CORE_LDFLAGS=-Tcore.ld -M=allsymbol.map
 PROG_LDFLAGS=-Tprog.ld
 ASFLAGS=-felf

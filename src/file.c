@@ -13,7 +13,6 @@ file_t* file_open(char *path, u32int flags)
         vfs_open(f->vnode);
         return f;
     } else {
-        kfree(f->path);
         kfree(f);
         return 0;
     }

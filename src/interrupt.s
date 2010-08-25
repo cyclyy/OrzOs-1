@@ -101,6 +101,7 @@ DEF_IRQ 11,43
 DEF_IRQ 12,44
 DEF_IRQ 13,45
 DEF_IRQ 14,46
+DEF_IRQ 15,47
 
 [extern irq_handler]
 

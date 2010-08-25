@@ -38,10 +38,52 @@ u32int inl(u16int port)
     return ret;
 }
 
+void insl(u16int port, u32int buffer, u32int quads) {
+    u32int i;
+    for (i=0; i<quads*4; i+=4) {
+        *(u32int*)(buffer+i) = inl(port);
+    }
+}
+
+void insw(u16int port, u32int buffer, u32int words) {
+    u32int i;
+    for (i=0; i<words*2; i+=2) {
+        *(u16int*)(buffer+i) = inw(port);
+    }
+}
+
+void insb(u16int port, u32int buffer, u32int bytes) {
+    u32int i;
+    for (i=0; i<bytes; i++) {
+        *(u8int*)(buffer+i) = inb(port);
+    }
+}
+
 void memset(void *addr, u8int c, u32int n)
 {
     while(n) {
         ((u8int *)addr)[--n] = c;
+    }
+}
+
+void outsl(u16int port, u32int buffer, u32int quads) {
+    u32int i;
+    for (i=0; i<quads*4; i+=4) {
+        outl(port, *(u32int*)(buffer+i));
+    }
+}
+
+void outsw(u16int port, u32int buffer, u32int words) {
+    u32int i;
+    for (i=0; i<words*2; i+=2) {
+        outw(port, *(u16int*)(buffer+i));
+    }
+}
+
+void outsb(u16int port, u32int buffer, u32int bytes) {
+    u32int i;
+    for (i=0; i<bytes; i++) {
+        outb(port, *(u8int*)(buffer+i));
     }
 }
 

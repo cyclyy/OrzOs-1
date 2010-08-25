@@ -11,8 +11,8 @@ static pci_dev_t *pci_devs = 0;
 static void dump_pci_dev(pci_dev_t *dev)
 {
     printk("bus %p slot %p func %p\n", dev->bus, dev->slot, dev->func);
-    printk("device %p, vendor %p, class %p, subclass %p\n", 
-            dev->config->device,dev->config->vendor,dev->config->class_code,dev->config->subclass);
+    printk("device %p, vendor %p, class %p, subclass %p prog_if %p\n", 
+            dev->config->device,dev->config->vendor,dev->config->class_code,dev->config->subclass,dev->config->prog_if);
 }
 
 u32int read_pci_config_dword(u32int bus, u32int slot, u32int func, u32int off)
@@ -27,6 +27,40 @@ void write_pci_config_dword(u32int bus, u32int slot, u32int func, u32int off, u3
     u32int addr = 0x80000000 | (bus<<16) | (slot<<11) | (func<<8) | (off&0xfc);
     outl(PCI_CONFIG_ADDRESS, addr);
     outl(PCI_CONFIG_DATA, data);
+}
+
+void write_pci_config_word(u32int bus, u32int slot, u32int func, u32int off, u16int data)
+{
+    u32int addr = 0x80000000 | (bus<<16) | (slot<<11) | (func<<8) | (off&0xfe);
+    outl(PCI_CONFIG_ADDRESS, addr);
+    outw(PCI_CONFIG_DATA, data);
+}
+
+void write_pci_config_byte(u32int bus, u32int slot, u32int func, u32int off, u8int data)
+{
+    u32int addr = 0x80000000 | (bus<<16) | (slot<<11) | (func<<8) | (off&0xff);
+    outl(PCI_CONFIG_ADDRESS, addr);
+    outb(PCI_CONFIG_DATA, data);
+}
+
+u32int read_pci_dev_config_dword(pci_dev_t *dev, u32int off)
+{
+    return read_pci_config_dword(dev->bus,dev->slot,dev->func,off);
+}
+
+void write_pci_dev_config_dword(pci_dev_t *dev, u32int off, u32int data)
+{
+    return write_pci_config_dword(dev->bus,dev->slot,dev->func,off,data);
+}
+
+void write_pci_dev_config_word(pci_dev_t *dev, u32int off, u16int data)
+{
+    return write_pci_config_word(dev->bus,dev->slot,dev->func,off,data);
+}
+
+void write_pci_dev_config_byte(pci_dev_t *dev, u32int off, u8int data)
+{
+    return write_pci_config_byte(dev->bus,dev->slot,dev->func,off,data);
 }
 
 s32int pci_present()
@@ -133,6 +167,12 @@ MODULE_CLEANUP(module_pci_cleanup);
 
 MEXPORT(read_pci_config_dword);
 MEXPORT(write_pci_config_dword);
+MEXPORT(write_pci_config_word);
+MEXPORT(write_pci_config_byte);
+MEXPORT(read_pci_dev_config_dword);
+MEXPORT(write_pci_dev_config_dword);
+MEXPORT(write_pci_dev_config_word);
+MEXPORT(write_pci_dev_config_byte);
 MEXPORT(pci_present);
 MEXPORT(register_pci_driver);
 MEXPORT(unregister_pci_driver);

@@ -43,8 +43,14 @@ struct pci_dev_struct {
 };
 
 u32int read_pci_config_dword(u32int bus, u32int slot, u32int func, u32int off);
-
 void write_pci_config_dword(u32int bus, u32int slot, u32int func, u32int off, u32int data);
+void write_pci_config_word(u32int bus, u32int slot, u32int func, u32int off, u16int data);
+void write_pci_config_byte(u32int bus, u32int slot, u32int func, u32int off, u8int data);
+
+u32int read_pci_dev_config_dword(pci_dev_t *dev, u32int off);
+void write_pci_dev_config_dword(pci_dev_t *dev, u32int off, u32int data);
+void write_pci_dev_config_word(pci_dev_t *dev, u32int off, u16int data);
+void write_pci_dev_config_byte(pci_dev_t *dev, u32int off, u8int data);
 
 s32int pci_present();
 

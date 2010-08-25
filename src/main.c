@@ -24,6 +24,8 @@ void dump_initrd();
 
 u32int kmain(multiboot_t *ptr, u32int esp)
 {
+    asm volatile("cli");
+
     scr_clear();  
 
     // All our initialisation calls will go in here.
@@ -49,6 +51,8 @@ u32int kmain(multiboot_t *ptr, u32int esp)
     scr_puts("init_multitasking.\n");
     init_multitasking();
 
+    asm volatile("sti");
+
     scr_puts("init_syscalls.\n");
     init_syscalls();
 
@@ -60,45 +64,18 @@ u32int kmain(multiboot_t *ptr, u32int esp)
 
     scr_puts("load initrdfs module.\n");
     module_initrdfs_init();
-
-    scr_puts("mount_root.\n");
     mount_root();
 
-    module_t *m = load_module("/i8042.o");
-    if (m)
-        m->init();
+    load_module("/i8042.o");
+    load_module("/pci.o");
+    load_module("/ide.o"); 
 
-    m = load_module("/pci.o");
-    if (m)
-        m->init();
-
-    //scr_puts("init_initrd.\n");
-    //vfs_root = init_initrd( *(u32int*)mboot_ptr->mods_addr );
-
-//    u32int *s = (u32int *)0xf0000000;
-//    *s = 1;
-
-    /*
-     *char buf[1000];
-     *u32int n = sprintf(buf, "t_%s_n", "a");
-     *printk("%s==%d\n",buf,n);
-     */
-
-    /*scr_puts("bring up usermod init process\n");*/
     if (fork()) {
         while (1) 
             switch_task();
     } else {
         execve("/init",0,0);
     }
-    /*
-    if (fork()) {
-        execve("/init",0,0);
-    } else {
-        printk("miao\n");
-        execve("/init",0,0);
-    }
-    */
 } 
 
 void dump_initrd()

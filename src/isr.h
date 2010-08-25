@@ -25,6 +25,7 @@ typedef struct {
 #define IRQ12 44
 #define IRQ13 45
 #define IRQ14 46
+#define IRQ15 47
 
 typedef void (*isr_t)(registers_t *);
 

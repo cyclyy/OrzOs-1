@@ -41,6 +41,18 @@ u16int inw(u16int port);
 
 u32int inl(u16int port);
 
+void insl(u16int port, u32int buffer, u32int quads);
+
+void insw(u16int port, u32int buffer, u32int words);
+
+void insb(u16int port, u32int buffer, u32int bytes);
+
+void outsl(u16int port, u32int buffer, u32int quads);
+
+void outsw(u16int port, u32int buffer, u32int words);
+
+void outsb(u16int port, u32int buffer, u32int bytes);
+
 void memset(void *addr, u8int c, u32int n);
 
 void *memcpy(void *dst, void *src, u32int n);

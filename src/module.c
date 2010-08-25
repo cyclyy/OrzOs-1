@@ -25,7 +25,7 @@ char *get_module_name(char *path, char *name)
     return name;
 }
 
-u32int resolve_symbol(char *sym_name)
+static u32int resolve_symbol(char *sym_name)
 {
     u32int i;
     for (i=0; i<ksyms->len; i++) {
@@ -43,6 +43,43 @@ u32int resolve_symbol(char *sym_name)
     }
     
     return 0;
+}
+
+static void relocate_section(u32int addr, Elf32_Shdr *shdr_rel, Elf32_Shdr *shdr_sym, u8int *buf)
+{
+    if (!shdr_rel || !shdr_sym || !buf)
+        return;
+
+    u32int i;
+    if (shdr_rel) {
+        Elf32_Rel *sec_rel = (Elf32_Rel*)(buf + shdr_rel->sh_offset);
+        u32int n = shdr_rel->sh_size / shdr_rel->sh_entsize;
+        u32int a, s, p;
+
+        for (i=0; i<n; i++) {
+            p = addr + sec_rel->r_offset;
+            a = *(u32int*)(p);
+            
+            Elf32_Sym *elf_sym = (Elf32_Sym*)(buf + shdr_sym->sh_offset) + ELF32_R_SYM(sec_rel->r_info);
+            s = elf_sym->st_value;
+
+            switch (ELF32_R_TYPE(sec_rel->r_info)) {
+                case R_386_32:
+                    *(u32int*)(p) = s+a;
+                    break;
+                case R_386_PC32:
+                    *(u32int*)(p) = s+a-p;
+                    break;
+                default:
+                    ;
+            }
+
+            /*printk("Reloc s: %p, a: %p, p: %p, off: %p\n", s, a, p, *(u32int*)(p));*/
+
+            sec_rel += 1;
+            
+        }
+    }
 }
 
 u32int verify_module_header(Elf32_Ehdr *header) 
@@ -92,6 +129,8 @@ module_t* load_module(char *path)
         Elf32_Shdr *shdr;
         Elf32_Shdr *shdr_text = 0;
         Elf32_Shdr *shdr_rel_text = 0;
+        Elf32_Shdr *shdr_rel_rodata = 0;
+        Elf32_Shdr *shdr_rel_data = 0;
         Elf32_Shdr *shdr_sym = 0;
         Elf32_Shdr *shdr_data = 0;
         Elf32_Shdr *shdr_rodata = 0;
@@ -109,6 +148,10 @@ module_t* load_module(char *path)
                 shdr_text = shdr;
             if (strcmp(sh_name, ".rel.text") == 0)
                 shdr_rel_text = shdr;
+            if (strcmp(sh_name, ".rel.rodata") == 0)
+                shdr_rel_rodata = shdr;
+            if (strcmp(sh_name, ".rel.data") == 0)
+                shdr_rel_data = shdr;
             if (strcmp(sh_name, ".data") == 0)
                 shdr_data = shdr;
             if (strcmp(sh_name, ".rodata") == 0)
@@ -220,7 +263,7 @@ module_t* load_module(char *path)
                 if (elf_sym->st_shndx == SHN_UNDEF) {
                     u32int resolved_addr = resolve_symbol(elf_sym_name);
                     if (resolved_addr) {
-                        printk("Resolve %s ... ok : %p\n",elf_sym_name, resolved_addr);
+                        /*printk("Resolve %s ... ok : %p\n",elf_sym_name, resolved_addr);*/
                         elf_sym->st_value = resolved_addr;
                     } else {
                         printk("Resolve %s ... failed.\n",elf_sym_name);
@@ -253,8 +296,10 @@ module_t* load_module(char *path)
                     else {
                     }
 
-                    if (elf_sym->st_value)
-                        printk("SECTION %s assign ..%p\n", sec_str + shdr->sh_name, elf_sym->st_value);
+                    /*
+                     *if (elf_sym->st_value)
+                     *    printk("SECTION %s assign ..%p\n", sec_str + shdr->sh_name, elf_sym->st_value);
+                     */
                 } else if (ELF32_ST_BIND(elf_sym->st_info) == STB_GLOBAL) {
                     shdr = (Elf32_Shdr*) (buf + ehdr->e_shoff + ehdr->e_shentsize*elf_sym->st_shndx);
 
@@ -277,7 +322,9 @@ module_t* load_module(char *path)
                         msyms->symbol[msyms->len].name = strdup(elf_sym_name);
                         msyms->symbol[msyms->len].value =  elf_sym->st_value;
                         msyms->len++;
-                        printk("Export %s ... %p\n", msyms->symbol[msyms->len-1].name, elf_sym->st_value);
+                        /*
+                         *printk("Export %s ... %p\n", msyms->symbol[msyms->len-1].name, elf_sym->st_value);
+                         */
                     }
                 }
 
@@ -321,40 +368,15 @@ module_t* load_module(char *path)
                 memset((void*)bss_addr, 0, bss_end-bss_addr);
 
                 // start relocation
-                if (shdr_rel_text) {
-                    Elf32_Rel *sec_rel = (Elf32_Rel*)(buf + shdr_rel_text->sh_offset);
-                    u32int n = shdr_rel_text->sh_size / shdr_rel_text->sh_entsize;
-                    u32int a, s, p;
-
-                    for (i=0; i<n; i++) {
-                        p = text_addr + sec_rel->r_offset;
-                        a = *(u32int*)(p);
-                        
-                        Elf32_Sym *elf_sym = (Elf32_Sym*)(buf + shdr_sym->sh_offset) + ELF32_R_SYM(sec_rel->r_info);
-                        s = elf_sym->st_value;
-
-                        switch (ELF32_R_TYPE(sec_rel->r_info)) {
-                            case R_386_32:
-                                *(u32int*)(p) = s+a;
-                                break;
-                            case R_386_PC32:
-                                *(u32int*)(p) = s+a-p;
-                                break;
-                            default:
-                                ;
-                        }
-
-                        /*
-                         *printk("Reloc s: %p, a: %p, p: %p, off: %p\n", s, a, p, *(u32int*)(p));
-                         */
-
-                        sec_rel += 1;
-                        
-                    }
-                }
+                relocate_section(text_addr, shdr_rel_text, shdr_sym, buf);
+                relocate_section(rodata_addr, shdr_rel_rodata, shdr_sym, buf);
+                relocate_section(data_addr, shdr_rel_data, shdr_sym, buf);
 
                 m->next = modules;
                 modules = m;
+
+                if (m->init)
+                    m->init();
 
                 return m;
             } else {
@@ -386,6 +408,9 @@ void unload_module(module_t *m)
             p->next = m->next;
         }
     }
+
+    if (m->cleanup)
+        m->cleanup();
 
     kfree(m->symtab);
     kfree(m);

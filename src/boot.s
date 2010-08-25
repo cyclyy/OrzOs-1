@@ -39,7 +39,6 @@ push    esp                   ; Initial esp
 push    ebx                   ; Load multiboot header location
 
 ; Execute the kernel:
-cli                         ; Disable interrupts.
 call kmain                   ; call our main() function.
 jmp $                       ; Enter an infinite loop, to stop the processor
 ; executing whatever rubbish is in the memory
