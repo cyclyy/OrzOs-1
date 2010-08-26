@@ -19,43 +19,45 @@ file_t* file_open(char *path, u32int flags)
     if (node->flags & VFS_DEV_FILE) {
         dev_t *dev  = find_dev(node->dev_id);
         if (dev) {
-            f->open = dev->open;
-            f->read = dev->read;
-            f->write= dev->write;
-            f->close= dev->close;
+            f->f_ops = dev->f_ops;
             f->priv = dev;
         }
     } else if (node->flags & VFS_FILE) {
-        f->open     = node->open;
-        f->read     = node->read;
-        f->write    = node->write;
-        f->close    = node->close;
+        f->f_ops = node->f_ops;
     }
-    if (f->open)
-        f->open(f);
+    if (f->f_ops && f->f_ops->open)
+        f->f_ops->open(f);
     return f;
 }
 
 s32int file_read(file_t *f, void *buf, u32int sz)
 {
-    u32int n = f->read(f, f->offset, sz, buf);
-    f->offset += n;
+    if (f && f->f_ops && f->f_ops->read) {
+        u32int n = f->f_ops->read(f, f->offset, sz, buf);
+        f->offset += n;
+        return n;
+    } else
+        return 0;
 
-    return n;
 }
 
 s32int file_write(file_t *f, void *buf, u32int sz)
 {
-    u32int n = f->write(f, f->offset, sz, buf);
-    f->offset += n;
+    if (f && f->f_ops && f->f_ops->write) {
+        u32int n = f->f_ops->write(f, f->offset, sz, buf);
+        f->offset += n;
 
-    return n;
+        return n;
+    } else 
+        return 0;
 }
 
 void file_close(file_t *f)
 {
-    f->close(f);
-    kfree(f);
+    if (f && f->f_ops && f->f_ops->write) {
+        f->f_ops->close(f);
+        kfree(f);
+    }
 }
 
 s32int file_lseek(file_t *f, s32int offset, u32int whence)

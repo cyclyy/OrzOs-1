@@ -121,6 +121,13 @@ static s32int disk_write(file_t *f, u32int offset, u32int sz, u8int *buf)
     return do_disk_write(d,offset,sz,buf);
 }
 
+struct file_operations disk_fops = {
+    .open  = &disk_open,
+    .close = &disk_close,
+    .read  = &disk_read,
+    .write = &disk_write
+};
+
 static s32int part_read(file_t *f, u32int offset, u32int sz, u8int *buf)
 {
     partition_t *p = (partition_t*)((dev_t*)f->priv)->priv;
@@ -148,6 +155,13 @@ static s32int part_write(file_t *f, u32int offset, u32int sz, u8int *buf)
     }
     return do_disk_write(d,offset,sz,buf);
 }
+
+struct file_operations part_fops = {
+    .open  = 0,
+    .close = 0,
+    .read  = &part_read,
+    .write = &part_write
+};
 
 void add_partition(disk_t *disk, u8int type, u32int start_blk, u32int nr_blks, u32int *start_part_no)
 {
@@ -189,10 +203,7 @@ err:
             dev_t *d = (dev_t*)kmalloc(sizeof(dev_t));
             memset(d,0,sizeof(dev_t));
             d->dev_id = disk->dev_id + *start_part_no;
-            d->open = 0;
-            d->close = 0;
-            d->read = &part_read;
-            d->write = &part_write;
+            d->f_ops = &part_fops;
             d->priv = part;
             add_dev(d);
         }
@@ -217,10 +228,7 @@ void add_disk(disk_t *disk)
     dev_t *d = (dev_t*)kmalloc(sizeof(dev_t));
     memset(d,0,sizeof(dev_t));
     d->dev_id = disk->dev_id;
-    d->open = &disk_open;
-    d->close = &disk_close;
-    d->read = &disk_read;
-    d->write = &disk_write;
+    d->f_ops = &disk_fops;
     d->priv = disk;
     add_dev(d);
 

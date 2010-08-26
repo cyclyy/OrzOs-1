@@ -15,6 +15,24 @@
 
 typedef struct fs_struct fs_t;
 typedef struct vnode_struct vnode_t;
+
+struct file_operations {
+    s32int   (*open)    (file_t *f);
+    s32int   (*close)   (file_t *f);
+    s32int   (*read)    (file_t *f, u32int offset, u32int sz, u8int *buffer);
+    s32int   (*write)   (file_t *f, u32int offset, u32int sz, u8int *buffer);
+};
+
+struct vnode_operations {
+    vnode_t* (*parent)  (vnode_t *node);
+    vnode_t**(*subnodes)(vnode_t *node);
+    vnode_t* (*mkdir)   (vnode_t *dir, char *name,    u32int flags, u32int *err);
+    vnode_t* (*mknod)   (vnode_t *dir, u32int dev_id, u32int flags, u32int *err);
+    vnode_t* (*create)  (vnode_t *dir, char *name,    u32int flags, u32int *err);
+    s32int   (*rmdir)   (vnode_t *dir, char *name, u32int *err);
+    s32int   (*unlink)  (vnode_t *dir, char *name);
+};
+
 struct vnode_struct {
     char name[128]; //filename
     u32int length;
@@ -26,17 +44,8 @@ struct vnode_struct {
     u32int dev_id;   // set by fs driver to identify the vnode, or (major, minor) if it's a device
     u32int ino; 
 
-    s32int   (*open)    (file_t *f);
-    s32int   (*close)   (file_t *f);
-    s32int   (*read)    (file_t *f, u32int offset, u32int sz, u8int *buffer);
-    s32int   (*write)   (file_t *f, u32int offset, u32int sz, u8int *buffer);
-    
-    vnode_t**(*subnodes)(vnode_t *node);
-    vnode_t* (*mkdir)   (vnode_t *dir, char *name,    u32int flags, u32int *err);
-    vnode_t* (*mknod)   (vnode_t *dir, u32int dev_id, u32int flags, u32int *err);
-    vnode_t* (*create)  (vnode_t *dir, char *name,    u32int flags, u32int *err);
-    s32int   (*rmdir)   (vnode_t *dir, char *name, u32int *err);
-    s32int   (*unlink)  (vnode_t *dir, char *name);
+    struct file_operations  *f_ops;
+    struct vnode_operations *v_ops;
 
     fs_t    *fs;    // the file system instance is resides in.
     vnode_t *covered;

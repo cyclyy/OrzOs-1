@@ -3,15 +3,13 @@
 
 #include "common.h"
 #include "module.h"
+#include "vfs.h"
 #include "file.h"
 
 typedef struct dev_struct {
     u32int dev_id;
     module_t *m;
-    s32int (*open)(file_t *f);
-    s32int (*close)(file_t *f);
-    s32int (*read)(file_t *f, u32int offset, u32int sz, u8int *buffer);
-    s32int (*write)(file_t *f, u32int offset, u32int sz, u8int *buffer);
+    struct file_operations *f_ops;
     struct dev_struct *next;
     void *priv;
 } dev_t;

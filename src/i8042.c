@@ -54,16 +54,20 @@ wait_queue_t *wq = 0;
 u8int in_escape = 0;
 u32int key;
 
+struct file_operations dev_i8042_fops = {
+    .open  = &i8042_open,
+    .close = &i8042_close,
+    .read  = &i8042_read,
+    .write = &i8042_write,
+};
+
 void module_i8042_init()
 {
     /*printk("I'm module_i8042_init\n");*/
     dev_i8042 = (dev_t*)kmalloc(sizeof(dev_t));
     memset(dev_i8042, 0, sizeof(dev_t));
     dev_i8042->dev_id = 0x10000;
-    dev_i8042->read = &i8042_read;
-    dev_i8042->write = &i8042_write;
-    dev_i8042->open = &i8042_open;
-    dev_i8042->close = &i8042_close;
+    dev_i8042->f_ops  = &dev_i8042_fops;
 
     if (i8042_probe() == 0) {
         wq = (wait_queue_t*)kmalloc(sizeof(wait_queue_t));

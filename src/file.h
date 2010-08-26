@@ -14,6 +14,7 @@
 
 // represent a opened file
 
+struct file_operations;
 struct vnode_struct;
 typedef struct file_struct file_t;
     
@@ -21,10 +22,7 @@ struct file_struct {
     u32int offset;
     u32int flags;
     struct vnode_struct *vnode;
-    s32int   (*open)    (file_t *f);
-    s32int   (*close)   (file_t *f);
-    s32int   (*read)    (file_t *f, u32int offset, u32int sz, u8int *buffer);
-    s32int   (*write)   (file_t *f, u32int offset, u32int sz, u8int *buffer);
+    struct file_operations *f_ops;
 
     void *priv;
 };
