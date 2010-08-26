@@ -5,6 +5,7 @@
 #include "isr.h"
 #include "task.h"
 #include "kheap.h"
+#include "disk.h"
 
 u8int ide_buf[2048] = {0};
 u8int ide_irq_invoked = 0;
@@ -33,6 +34,45 @@ struct ide_device {
 } ide_devices[4];
 
 void ide_write(u8int channel, u8int reg, u8int data);
+
+s32int ide_read_sectors(u8int drive, u8int numsects, u32int lba, u8int *buf);
+
+s32int ide_write_sectors(u8int drive, u8int numsects, u32int lba, u8int *buf);
+
+u32int ide_read_blks(disk_t *disk, u32int start_blk, u32int nr_blks, u8int *buf)
+{
+    u8int drive = (u32int)disk->priv;
+
+    while(nr_blks >= 256) {
+        ide_read_sectors(drive, 0, start_blk, buf);
+        buf += 256*512;
+        start_blk += 256;
+        nr_blks -= 256;
+    }
+
+    if (nr_blks)
+        ide_read_sectors(drive, nr_blks, start_blk, buf);
+    
+    return nr_blks;
+}
+
+u32int ide_write_blks(disk_t *disk, u32int start_blk, u32int nr_blks, u8int *buf)
+{
+    u8int drive = (u32int)disk->priv;
+
+    while(nr_blks >= 256) {
+        ide_write_sectors(drive, 0, start_blk, buf);
+        buf += 256*512;
+        start_blk += 256;
+        nr_blks -= 256;
+    }
+
+    if (nr_blks)
+        ide_write_sectors(drive, nr_blks, start_blk, buf);
+
+    return nr_blks;
+}
+
 
 u8int ide_read(u8int channel, u8int reg) {
     u8int result;
@@ -376,6 +416,18 @@ void ide_initialize(u32int bar0, u32int bar1, u32int bar2, u32int bar3, u32int b
                     (const char *[]){"ATA", "ATAPI"}[ide_devices[i].type],         /* type */
                     ide_devices[i].size / 1024 / 2,               /* size */
                     ide_devices[i].model);
+            if (ide_devices[i].type == IDE_ATA) {
+               disk_t *d = (disk_t*)kmalloc(sizeof(disk_t));
+               memset(d, 0, sizeof(disk_t));
+               d->dev_id = 0x400000 + i*0x10000;
+               d->name = strdup((char*)ide_devices[i].model);
+               d->blk_size = 512;
+               d->nr_blks = ide_devices[i].size;
+               d->read_blks = &ide_read_blks;
+               d->write_blks = &ide_write_blks;
+               add_disk(d);
+            }
+
         }
 
     /*register_interrupt_handler(IRQ14, &ide_irq);*/

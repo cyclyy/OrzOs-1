@@ -18,9 +18,7 @@ u32int initial_esp;
 
 multiboot_t *mboot_ptr;
 
-void init_modules();
 void mount_root();
-void dump_initrd();
 
 u32int kmain(multiboot_t *ptr, u32int esp)
 {
@@ -76,50 +74,17 @@ u32int kmain(multiboot_t *ptr, u32int esp)
     } else {
         execve("/init",0,0);
     }
+
+    // never return here;
+    return 0;
 } 
-
-void dump_initrd()
-{
-    vnode_t *dir = 0;
-    u32int i = 0;
-//    scr_putp("fs_root",fs_root);
-    while ((dir = vfs_readdir(vfs_root, i++))) {
-        scr_puts("name:");
-        scr_puts(dir->name);
-        scr_puts("\n");
-
-        vnode_t *node = vfs_finddir(vfs_root, dir->name);
-
-        ASSERT(node);
-
-        if (node->flags & VFS_FILE) {
-            scr_puts("\t vnode file type,content is \"");
-            u8int *buf;
-            buf = (u8int*)kmalloc(node->length);
-            vfs_read(node,0,node->length,buf);
-            scr_puts((const char*)buf);
-            kfree(buf);
-            scr_puts("\"\n");
-        } else {
-            scr_puts("\t vnode dir type.");
-            scr_puts("\n");
-        }
-    }
-
-}
-
-void init_modules()
-{
-}
 
 void mount_root()
 {
     ASSERT(mboot_ptr->mods_count == 1);
 
     fs_driver_t *driver = get_fs_driver_byname("initrdfs");
-    ASSERT(driver);
-    fs_t *root_fs = driver->createfs(driver, 0, 0, (void*) *(u32int*)mboot_ptr->mods_addr );
-    ASSERT(root_fs);
-    vfs_mount(vfs_root, root_fs);
+    fs_t *fs = driver->createfs(driver, 0, 0, (void*) *(u32int*)mboot_ptr->mods_addr );
+    vfs_mount_root(fs);
 }
 

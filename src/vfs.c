@@ -1,17 +1,18 @@
 #include "vfs.h"
 #include "kheap.h"
 #include "screen.h"
-#include "cdev.h"
+#include "errno.h"
+#include "dev.h"
+#include "file.h"
 
-vnode_t *vfs_root = 0;
+vnode_t     *vfs_root   = 0;
 fs_driver_t *fs_drivers = 0;
+vfsmount_t  *vfs_mounts = 0;
 
 void init_vfs()
 {
-    vfs_root = (vnode_t *)kmalloc(sizeof(vnode_t));
-    memset(vfs_root, 0, sizeof(vnode_t));
-    vfs_root->flags = VFS_DIRECTORY;
-    strcpy(vfs_root->name, "root");
+    vfs_mounts = (vfsmount_t*)kmalloc(sizeof(vfsmount_t));
+    memset(vfs_mounts,0,sizeof(vfsmount_t));
 }
 
 void register_fs_driver(fs_driver_t *driver)
@@ -52,12 +53,11 @@ fs_driver_t* get_fs_driver_byname(char *name)
     return driver;
 }
 
+/*
 u32int vfs_read(vnode_t *node, u32int offset, u32int sz, u8int *buffer)
 {
-    /*
-     *printk("vfs_read offset: %p, size: %d, buffer: %p\n",
-     *        offset, sz, buffer);
-     */
+    printk("vfs_read offset: %p, size: %d, buffer: %p\n",
+            offset, sz, buffer);
     if (!node)
         return 0;
     if (node->read)
@@ -81,17 +81,6 @@ void vfs_open(vnode_t *node)
 {
     if (!node)
         return;
-    if (node->flags & VFS_DEV_FILE) {
-        cdev_t *cdev = find_cdev(node->id);
-        if (cdev) {
-            node->open = cdev->open;
-            node->read = cdev->read;
-            node->write = cdev->write;
-            node->close = cdev->close;
-        }
-    }
-    if (node->open)
-        node->open(node);
 }
 
 void vfs_close(vnode_t *node)
@@ -149,14 +138,33 @@ vnode_t* vfs_finddir(struct vnode *vnode, char *name)
 
     return 0;
 }
+*/
 
 vnode_t* vfs_lookup(vnode_t *node, char *path)
 {
-    /*
-    if ((node->flags & FS_DIRECTORY) && node->lookup) {
-        return node->lookup(node,name);
+    if (!vfs_mounts)
+        return 0;
+
+    u32int i;
+    for (i=vfs_mounts->n-1; i>=0; i--) {
+        char *s = strstr(path,vfs_mounts->mounts[i].path);
+        if (s==path) {
+            fs_t *fs = vfs_mounts->mounts[i].fs;
+            if (strcmp(path, vfs_mounts->mounts[i].path)==0)
+                return fs->get_root(fs);
+
+            s = path+strlen(vfs_mounts->mounts[i].path);
+            if (strcmp(vfs_mounts->mounts[i].path,"/")==0) 
+                s--;
+            if (fs->lookup)
+                return fs->lookup(fs, s);
+            else 
+                return 0;
+        }
     }
-    */
+    return 0;
+
+    /*
     if (!node || !path || (path[0] == 0) || (path[0] != '/') ) 
         return 0;
 
@@ -175,7 +183,6 @@ vnode_t* vfs_lookup(vnode_t *node, char *path)
 
         if ((path[i] == '/') || (path[i] == 0)) {
             s[j] = 0;
-            /*printk("vfs_lookup: %s\n",s);*/
             if ((tmp->flags & VFS_MOUNTPOINT)) {
                 tmp = tmp->ptr;
             }
@@ -190,21 +197,82 @@ vnode_t* vfs_lookup(vnode_t *node, char *path)
     } while (tmp && (i<len));
 
     return tmp;
+    */
 }
 
-void vfs_mount(vnode_t *node, fs_t *fs)
+s32int vfs_mount_root(fs_t *fs)
 {
-    if (!node || !fs)
-        return;
+    if (!fs || !vfs_mounts)
+        return -1;
+
+    // root must be mounted first
+    if (vfs_mounts->n != 0)
+        return -1;
+
+    vfs_root = fs->get_root(fs);
+
+    if (vfs_root) {
+        vfs_mounts->mounts[0].path = strdup("/");
+        vfs_mounts->mounts[0].fs   = fs;
+        vfs_mounts->n++;
+    } else {
+        return -1;
+    }
+
+    printk("vfs_mount_root ok\n");
+    return 0;
+}
+
+s32int vfs_mount(char *path, fs_t *fs)
+{
+    if (!path || !fs || !vfs_mounts)
+        return -1;
+
+    if (vfs_mounts->n >= MAX_VFSMOUNTS)
+        return -1;
+
+    if (strcmp(path,"/")==0)
+        return vfs_mount_root(fs);
+
+    vnode_t *node     = vfs_lookup(vfs_root, path);
     vnode_t *to_mount = fs->get_root(fs);
+    u32int i;
+
+    if (!node || !to_mount)
+        return  -EFAULT;
 
     if ( (node->flags & VFS_DIRECTORY) && !(node->flags & VFS_MOUNTPOINT) ) {
+        // add to vfs_mounts
+        i = 0;
+        while ((i<vfs_mounts->n) && (strcmp(path,vfs_mounts->mounts[i].path)==-1)) 
+            i++;
+        if (i==vfs_mounts->n) {
+            vfs_mounts->mounts[vfs_mounts->n].path  = strdup(path);
+            vfs_mounts->mounts[vfs_mounts->n].fs    = fs;
+            vfs_mounts->n++;
+        } else if (strcmp(path,vfs_mounts->mounts[i].path)==0) {
+            return -EEXIST;
+        } else {
+            u32int j;
+            for (j=vfs_mounts->n; j>=i; j--) {
+                vfs_mounts->mounts[j+1].path    = vfs_mounts->mounts[j].path;
+                vfs_mounts->mounts[j+1].fs      = vfs_mounts->mounts[j].fs;
+            }
+            vfs_mounts->mounts[i].path  = strdup(path);
+            vfs_mounts->mounts[i].fs    = fs;
+            vfs_mounts->n++;
+        }
+
+        // modify vnode
         node->flags |= VFS_MOUNTPOINT;
         to_mount->covered = node;
         node->ptr = to_mount;
+
     } else {
-        scr_puts("vfs_mount failed");
+        return -1;
     }
+
+    return 0;
 }
 
 void syscall_mount(char *src, char* dst, u32int flags, void *data)
@@ -214,7 +282,7 @@ void syscall_mount(char *src, char* dst, u32int flags, void *data)
 void dump_vnode(vnode_t *node)
 {
     if (!node) {
-        scr_puts("vnode null\n");
+        scr_puts("vnode [null]\n");
         return;
     }
     scr_puts("vnode \"");
@@ -230,3 +298,4 @@ void dump_vnode(vnode_t *node)
 
     scr_puts("\n");
 }
+

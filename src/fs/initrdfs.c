@@ -1,5 +1,6 @@
 #include "initrdfs.h"
 #include "kheap.h"
+#include "screen.h"
 
 fs_driver_t *driver;
 
@@ -10,12 +11,29 @@ u32int nfiles;
 initrdfs_header_t *initrd_header;
 initrdfs_file_header_t *initrd_file_header;
 
-u32int initrd_read(vnode_t *node, u32int offset, u32int sz, u8int *buffer);
-vnode_t* initrd_readdir(vnode_t *node, u32int i);
+s32int initrd_read(file_t *f, u32int offset, u32int sz, u8int *buffer);
+vnode_t** initrd_subnodes(vnode_t *node);
 
-vnode_t* initrd_get_root(fs_t *fs)
+vnode_t* initrdfs_get_root(fs_t *fs)
 {
     return initrd_node;
+}
+
+vnode_t* initrdfs_lookup(fs_t *fs, char *path)
+{
+    if (strcmp(path,"/") == 0) {
+        return initrd_node;
+    } else if (strcmp(path+1, kbd_node->name) == 0) {
+        return kbd_node;
+    } else {
+        u32int i;
+        for (i=0; i<nfiles; i++) {
+            if (strcmp(path+1, file_nodes[i].name)==0) {
+                return &file_nodes[i];
+            }
+        }
+    }
+    return 0;
 }
 
 void initrdfs_init(fs_driver_t *drv)
@@ -26,6 +44,7 @@ void initrdfs_cleanup(fs_driver_t *drv)
 {
 }
 
+
 fs_t* initrdfs_createfs(fs_driver_t *drv, vnode_t *dev, u32int flags, void *data)
 {
     // create root vnode;
@@ -33,15 +52,14 @@ fs_t* initrdfs_createfs(fs_driver_t *drv, vnode_t *dev, u32int flags, void *data
     memset(initrd_node, 0, sizeof(vnode_t));
     strcpy(initrd_node->name,"initrd");
     initrd_node->flags = VFS_DIRECTORY;
-    initrd_node->read = initrd_read;
-    initrd_node->readdir = initrd_readdir;
+    initrd_node->subnodes = initrd_subnodes;
 
     // create "/dev" vnode
     kbd_node = (vnode_t *)kmalloc(sizeof(vnode_t));
     memset(kbd_node, 0, sizeof(vnode_t));
-    strcpy(kbd_node->name,"kbd");
+    strcpy(kbd_node->name,"hda");
     kbd_node->flags = VFS_DEV_FILE;
-    kbd_node->id = 0x00010000;
+    kbd_node->dev_id = 0x400000;
 
     // parse memory begin at (u32int)data, construct other vnodes
     u32int loc = (u32int)data;
@@ -65,9 +83,8 @@ fs_t* initrdfs_createfs(fs_driver_t *drv, vnode_t *dev, u32int flags, void *data
 
         file_nodes[i].length = initrd_file_header[i].length;
         file_nodes[i].flags = VFS_FILE;
-        file_nodes[i].id = i;
+        file_nodes[i].ino = i;
         file_nodes[i].read = initrd_read;
-        file_nodes[i].readdir = initrd_readdir;
 //        file_nodes[i].finddir = initrd_finddir;
 
         initrd_file_header[i].offset += loc;
@@ -77,7 +94,8 @@ fs_t* initrdfs_createfs(fs_driver_t *drv, vnode_t *dev, u32int flags, void *data
     // return file system instance
     fs_t *fs = (fs_t*)kmalloc(sizeof(fs_t));
     memset(fs, 0, sizeof(fs_t));
-    fs->get_root = &initrd_get_root;
+    fs->get_root = &initrdfs_get_root;
+    fs->lookup = &initrdfs_lookup;
 
     return fs;
 }
@@ -103,9 +121,9 @@ void module_initrdfs_cleanup()
 {
 }
 
-u32int initrd_read(vnode_t *node, u32int offset, u32int sz, u8int *buffer)
+s32int initrd_read(file_t *f, u32int offset, u32int sz, u8int *buffer)
 {
-    initrdfs_file_header_t file_header = initrd_file_header[node->id];
+    initrdfs_file_header_t file_header = initrd_file_header[f->vnode->ino];
     if (offset < file_header.length) {
         if (offset + sz > file_header.length) 
             sz = file_header.length - offset;
@@ -115,14 +133,18 @@ u32int initrd_read(vnode_t *node, u32int offset, u32int sz, u8int *buffer)
     return 0;
 }
 
-vnode_t* initrd_readdir(vnode_t *node, u32int i)
+vnode_t** initrd_subnodes(vnode_t *node)
 {
+
     if (node == initrd_node) {
-        if (i==0) {
-            return kbd_node;
-        } else if (i-1 < nfiles) {
-            return &file_nodes[i-1];
+        vnode_t **ret = (vnode_t**)kmalloc((nfiles+2)*sizeof(vnode_t*));
+        u32int i;
+        ret[0] = kbd_node;
+        for (i=0; i<nfiles; i++) {
+            ret[i+1] = &file_nodes[i];
         }
+        ret[nfiles+1] = 0;
+        return ret;
     }
 
     return 0;

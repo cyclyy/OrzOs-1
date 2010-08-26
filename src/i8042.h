@@ -2,22 +2,22 @@
 #define I8042_H
 
 #include "common.h"
-#include "vfs.h"
+#include "file.h"
 #include "isr.h"
 
 void module_i8042_init();
 
 void module_i8042_cleanup();
 
-u32int i8042_probe();
+s32int i8042_probe();
 
-u32int i8042_read(struct vnode *vnode, u32int offset, u32int sz, u8int *buffer);
+s32int i8042_read(file_t *f, u32int offset, u32int sz, u8int *buffer);
 
-u32int i8042_write(struct vnode *vnode, u32int offset, u32int sz, u8int *buffer);
+s32int i8042_write(file_t *f, u32int offset, u32int sz, u8int *buffer);
 
-void i8042_open(struct vnode *vnode);
+s32int i8042_open(file_t *f);
 
-void i8042_close(struct vnode *vnode);
+s32int i8042_close(file_t *f);
 
 void i8042_irq(registers_t *regs);
 

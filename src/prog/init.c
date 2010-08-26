@@ -42,9 +42,8 @@ int recur(int i)
         return 0;
 }
 
-int main()
+void test_kbd()
 {
-    char *s = "Init process running.\n";
     u32int ret;
     s32int fd;
     char buf[1000];
@@ -58,6 +57,26 @@ int main()
         if (!(ret & 0x10000000))
             syscall_putch(ret &0xff);
     }
+}
+
+void test_hda()
+{
+    u32int ret;
+    s32int fd;
+    char buf[1000];
+
+    fd = syscall_open("/hda", 0);
+
+    ret = syscall_read(fd, buf, 512);
+
+}
+
+int main()
+{
+    char *s = "Init process running.\n";
+    puts(s);
+
+    test_hda();
 
     /*
     while (1) {

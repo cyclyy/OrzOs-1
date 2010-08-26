@@ -2,25 +2,43 @@
 #include "kheap.h"
 #include "task.h"
 #include "vfs.h"
+#include "dev.h"
 
 file_t* file_open(char *path, u32int flags)
 {
+    if (!path)
+        return 0;
+
+    vnode_t *node = vfs_lookup(vfs_root, path);
+    if (!node)
+        return 0;
+
     file_t *f = (file_t*)kmalloc(sizeof(file_t));
     memset(f,0,sizeof(file_t));
-    strcpy(f->path, path);
-    f->vnode = vfs_lookup(vfs_root, path);
-    if (f->vnode) {
-        vfs_open(f->vnode);
-        return f;
-    } else {
-        kfree(f);
-        return 0;
+    f->vnode = node;
+    if (node->flags & VFS_DEV_FILE) {
+        dev_t *dev  = find_dev(node->dev_id);
+        if (dev) {
+            f->open = dev->open;
+            f->read = dev->read;
+            f->write= dev->write;
+            f->close= dev->close;
+            f->priv = dev;
+        }
+    } else if (node->flags & VFS_FILE) {
+        f->open     = node->open;
+        f->read     = node->read;
+        f->write    = node->write;
+        f->close    = node->close;
     }
+    if (f->open)
+        f->open(f);
+    return f;
 }
 
 s32int file_read(file_t *f, void *buf, u32int sz)
 {
-    u32int n = vfs_read(f->vnode, f->offset, sz, buf);
+    u32int n = f->read(f, f->offset, sz, buf);
     f->offset += n;
 
     return n;
@@ -28,7 +46,7 @@ s32int file_read(file_t *f, void *buf, u32int sz)
 
 s32int file_write(file_t *f, void *buf, u32int sz)
 {
-    u32int n = vfs_write(f->vnode, f->offset, sz, buf);
+    u32int n = f->write(f, f->offset, sz, buf);
     f->offset += n;
 
     return n;
@@ -36,8 +54,7 @@ s32int file_write(file_t *f, void *buf, u32int sz)
 
 void file_close(file_t *f)
 {
-    vfs_close(f->vnode);
-    kfree(f->path);
+    f->close(f);
     kfree(f);
 }
 
@@ -86,7 +103,7 @@ file_t *clone_file(file_t *f)
 }
 
 
-s32int fdopen(char *name, u32int flags)
+s32int fdopen(char *path, u32int flags)
 {
     u32int i; 
     s32int find; 
@@ -99,7 +116,7 @@ s32int fdopen(char *name, u32int flags)
     }
 
     if (find >= 0) {
-        current_task->fd[i] = file_open(name, flags);
+        current_task->fd[i] = file_open(path, flags);
 
         if (current_task->fd[i]) {
             return find;

@@ -2,7 +2,6 @@
 #define FILE_H 
 
 #include "common.h"
-#include "vfs.h"
 
 #define O_RDONLY 1
 #define O_WRONLY 2
@@ -14,12 +13,21 @@
 #define SEEK_END 2
 
 // represent a opened file
-typedef struct {
-    char path[MAX_PATH_LEN];
+
+struct vnode_struct;
+typedef struct file_struct file_t;
+    
+struct file_struct {
     u32int offset;
     u32int flags;
-    vnode_t *vnode;
-} file_t;
+    struct vnode_struct *vnode;
+    s32int   (*open)    (file_t *f);
+    s32int   (*close)   (file_t *f);
+    s32int   (*read)    (file_t *f, u32int offset, u32int sz, u8int *buffer);
+    s32int   (*write)   (file_t *f, u32int offset, u32int sz, u8int *buffer);
+
+    void *priv;
+};
 
 typedef struct {
     file_t *file;
@@ -28,11 +36,11 @@ typedef struct {
     u32int size;
 } file_mapping_t;
 
-file_t* file_open(char *path, u32int flags);
-s32int file_read(file_t *f, void *buf, u32int sz);
-s32int file_write(file_t *f, void *buf, u32int sz);
-void file_close(file_t *f);
-s32int file_lseek(file_t *f, s32int offset, u32int whence);
+file_t* file_open   (char *path, u32int flags);
+s32int  file_read   (file_t *f,  void *buf, u32int sz);
+s32int  file_write  (file_t *f,  void *buf, u32int sz);
+void    file_close  (file_t *f);
+s32int  file_lseek  (file_t *f, s32int offset, u32int whence);
 
 file_mapping_t *clone_file_mapping(file_mapping_t *f_map);
 file_t *clone_file(file_t *f);

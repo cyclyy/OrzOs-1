@@ -1,6 +1,6 @@
 #include "i8042.h"
 #include "screen.h"
-#include "cdev.h"
+#include "dev.h"
 #include "isr.h"
 #include "kheap.h"
 #include "task.h"
@@ -47,7 +47,7 @@ u32int kbdus[128] =
     0,    /* All other keys are undefined */
 };      
 
-cdev_t *dev_i8042;
+dev_t *dev_i8042;
 
 wait_queue_t *wq = 0;
 
@@ -57,10 +57,9 @@ u32int key;
 void module_i8042_init()
 {
     /*printk("I'm module_i8042_init\n");*/
-    dev_i8042 = (cdev_t*)kmalloc(sizeof(cdev_t));
-    memset(dev_i8042, 0, sizeof(cdev_t));
-    dev_i8042->first_id = 0x00010000;
-    dev_i8042->count = 1;
+    dev_i8042 = (dev_t*)kmalloc(sizeof(dev_t));
+    memset(dev_i8042, 0, sizeof(dev_t));
+    dev_i8042->dev_id = 0x10000;
     dev_i8042->read = &i8042_read;
     dev_i8042->write = &i8042_write;
     dev_i8042->open = &i8042_open;
@@ -69,7 +68,7 @@ void module_i8042_init()
     if (i8042_probe() == 0) {
         wq = (wait_queue_t*)kmalloc(sizeof(wait_queue_t));
         memset(wq, 0, sizeof(wait_queue_t));
-        add_cdev(dev_i8042);
+        add_dev(dev_i8042);
         outb(0x64,0x60);
         outb(0x64,0xAE);
         /*printk("%p\n",inb(0x60));*/
@@ -86,11 +85,11 @@ void module_i8042_cleanup()
     /*printk("I'm module_i8042_cleanup\n");*/
     if (dev_i8042) {
         register_interrupt_handler(IRQ1, 0);
-        del_cdev(dev_i8042);
+        del_dev(dev_i8042);
     }
 }
 
-u32int i8042_probe()
+s32int i8042_probe()
 {
     while (inb(0x64) & 1)
         inb(0x60);
@@ -111,7 +110,7 @@ u32int i8042_probe()
     return 0;
 }
 
-u32int i8042_read(struct vnode *vnode, u32int offset, u32int sz, u8int *buffer)
+s32int i8042_read(file_t *f, u32int offset, u32int sz, u8int *buffer)
 {
     /*printk("%s\n", __FUNCTION__);*/
     if ((sz<4) || !buffer)
@@ -124,18 +123,19 @@ u32int i8042_read(struct vnode *vnode, u32int offset, u32int sz, u8int *buffer)
     return 4;
 }
 
-u32int i8042_write(struct vnode *vnode, u32int offset, u32int sz, u8int *buffer)
+s32int i8042_write(file_t *f, u32int offset, u32int sz, u8int *buffer)
 {
     return 0;
 }
 
-void i8042_open(struct vnode *vnode)
+s32int i8042_open(file_t *f)
 {
-    /*printk("%s\n", __FUNCTION__);*/
+    return 0;
 }
 
-void i8042_close(struct vnode *vnode)
+s32int i8042_close(file_t *f)
 {
+    return 0;
 }
 
 void i8042_irq(registers_t *regs)

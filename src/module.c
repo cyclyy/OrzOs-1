@@ -107,9 +107,9 @@ u32int verify_module_header(Elf32_Ehdr *header)
 module_t* load_module(char *path)
 {
 //    scr_puts("load_module\n");
-    vnode_t *node = vfs_lookup(vfs_root, path);
+    file_t *f = file_open(path,0);
 
-    if (!node) {
+    if (!f) {
         /*
         scr_puts("load_module: lookup \"");
         scr_puts(path);
@@ -120,7 +120,7 @@ module_t* load_module(char *path)
 
     u8int *buf = (u8int*)kmalloc(0x10000);
     u32int len = 0;
-    len = vfs_read(node, 0, 0x10000, buf);
+    len = file_read(f, buf, 0x10000);
 
     Elf32_Ehdr *ehdr = (Elf32_Ehdr*)buf;
 

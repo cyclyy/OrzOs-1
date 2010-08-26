@@ -18,7 +18,8 @@ CORE_SOURCES = boot.o              \
                file.o              \
                module.o            \
                vm.o                \
-               cdev.o              \
+               dev.o               \
+               disk.o              \
                fs/initrdfs.o       \
 
 MOD_SOURCES = testmod.o            \
