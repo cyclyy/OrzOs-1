@@ -53,25 +53,28 @@ struct vnode_struct {
 
     void *priv;
 };
-    
-struct fs_struct {
+
+struct fs_operations {
     vnode_t* (*get_root)(fs_t *fs);
     void (*sync)(fs_t *fs);
-
     vnode_t* (*lookup)    (fs_t *fs, char *name);
-
+};
+    
+struct fs_struct {
+    struct fs_operations *fs_ops;
     struct fs_driver *driver;
+};
+
+struct fs_driver_operations {
+    void (*init)(struct fs_driver *);
+    void (*cleanup)(struct fs_driver *);
+    fs_t* (*createfs)(struct fs_driver *, vnode_t *dev, u32int flags, void *data);
+    void (*removefs)(struct fs_driver *, fs_t *fs);
 };
 
 typedef struct fs_driver {
     char name[MAX_NAME_LEN];
-
-    void (*init)(struct fs_driver *);
-    void (*cleanup)(struct fs_driver *);
-
-    fs_t* (*createfs)(struct fs_driver *, vnode_t *dev, u32int flags, void *data);
-    void (*removefs)(struct fs_driver *, fs_t *fs);
-
+    struct fs_driver_operations *fs_drv_ops;
     struct fs_driver *next;
 } fs_driver_t;
 

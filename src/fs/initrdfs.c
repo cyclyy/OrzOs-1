@@ -54,6 +54,10 @@ void initrdfs_cleanup(fs_driver_t *drv)
 {
 }
 
+struct fs_operations initrdfs_ops = {
+    .get_root = &initrdfs_get_root,
+    .lookup = &initrdfs_lookup,
+};
 
 fs_t* initrdfs_createfs(fs_driver_t *drv, vnode_t *dev, u32int flags, void *data)
 {
@@ -104,8 +108,7 @@ fs_t* initrdfs_createfs(fs_driver_t *drv, vnode_t *dev, u32int flags, void *data
     // return file system instance
     fs_t *fs = (fs_t*)kmalloc(sizeof(fs_t));
     memset(fs, 0, sizeof(fs_t));
-    fs->get_root = &initrdfs_get_root;
-    fs->lookup = &initrdfs_lookup;
+    fs->fs_ops = &initrdfs_ops;
 
     return fs;
 }
@@ -114,15 +117,19 @@ void initrdfs_removefs(fs_driver_t *drv, fs_t *fs)
 {
 }
 
+struct fs_driver_operations initrdfs_drv_ops = {
+    .init = &initrdfs_init,
+    .cleanup = &initrdfs_cleanup,
+    .createfs = &initrdfs_createfs,
+};
+
 void module_initrdfs_init()
 {
     driver = (fs_driver_t *)kmalloc(sizeof(fs_driver_t));
     memset(driver, 0, sizeof(fs_driver_t));
 
     strcpy(driver->name, "initrdfs");
-    driver->init = &initrdfs_init;
-    driver->cleanup = &initrdfs_cleanup;
-    driver->createfs = &initrdfs_createfs;
+    driver->fs_drv_ops = &initrdfs_drv_ops;
 
     register_fs_driver(driver);
 }

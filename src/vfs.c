@@ -151,13 +151,13 @@ vnode_t* vfs_lookup(vnode_t *node, char *path)
         if (s==path) {
             fs_t *fs = vfs_mounts->mounts[i].fs;
             if (strcmp(path, vfs_mounts->mounts[i].path)==0)
-                return fs->get_root(fs);
+                return fs->fs_ops->get_root(fs);
 
             s = path+strlen(vfs_mounts->mounts[i].path);
             if (strcmp(vfs_mounts->mounts[i].path,"/")==0) 
                 s--;
-            if (fs->lookup)
-                return fs->lookup(fs, s);
+            if (fs->fs_ops->lookup)
+                return fs->fs_ops->lookup(fs, s);
             else 
                 return 0;
         }
@@ -209,7 +209,7 @@ s32int vfs_mount_root(fs_t *fs)
     if (vfs_mounts->n != 0)
         return -1;
 
-    vfs_root = fs->get_root(fs);
+    vfs_root = fs->fs_ops->get_root(fs);
 
     if (vfs_root) {
         vfs_mounts->mounts[0].path = strdup("/");
@@ -235,7 +235,7 @@ s32int vfs_mount(char *path, fs_t *fs)
         return vfs_mount_root(fs);
 
     vnode_t *node     = vfs_lookup(vfs_root, path);
-    vnode_t *to_mount = fs->get_root(fs);
+    vnode_t *to_mount = fs->fs_ops->get_root(fs);
     u32int i;
 
     if (!node || !to_mount)

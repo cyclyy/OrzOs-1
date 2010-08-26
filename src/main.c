@@ -84,7 +84,7 @@ void mount_root()
     ASSERT(mboot_ptr->mods_count == 1);
 
     fs_driver_t *driver = get_fs_driver_byname("initrdfs");
-    fs_t *fs = driver->createfs(driver, 0, 0, (void*) *(u32int*)mboot_ptr->mods_addr );
+    fs_t *fs = driver->fs_drv_ops->createfs(driver, 0, 0, (void*) *(u32int*)mboot_ptr->mods_addr );
     vfs_mount_root(fs);
 }
 
