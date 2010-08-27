@@ -4,6 +4,7 @@
 #include "errno.h"
 #include "dev.h"
 #include "file.h"
+#include "task.h"
 
 vnode_t     *vfs_root   = 0;
 fs_driver_t *fs_drivers = 0;
@@ -139,6 +140,65 @@ vnode_t* vfs_finddir(struct vnode *vnode, char *name)
     return 0;
 }
 */
+
+char* vfs_abs_path(char *p)
+{
+    if (!p || (strlen(p)==0))
+        return 0;
+
+    char *path;
+    if (*p != '/') {
+        u32int len = strlen(p) + strlen(current_task->work_path) + 2;
+        path = (char*)kmalloc(len);
+        /*memset(path,0,len);*/
+        sprintf(path, "%s/%s", current_task->work_path, p);
+    } else 
+        path = strdup(p);
+
+    char **s = (char**)kmalloc(MAX_PATH_DEPS*sizeof(char*));
+    memset(s,0,MAX_PATH_DEPS*sizeof(char*));
+
+    u32int i,n,err = 0;
+    u32int pos = 0;
+    // assume abs_path is no longer than original path
+    char *ret = (char*)kmalloc(strlen(path)+1);
+    char *tmpstr;
+    memset(ret,0,strlen(path)+1);
+    n = strbrk(s,path,"/");
+    if (n==0) {
+        strcpy(ret,"/");
+    } else {
+        for (i=0; i<n; i++) {
+            if (strcmp(s[i],".") == 0)
+                continue;
+            if (strcmp(s[i],"..") == 0) {
+                tmpstr = strrchr(ret,'/');
+                if (!tmpstr) {
+                    err = 1;
+                    break;
+                }
+                pos = tmpstr - ret;
+                ret[pos] = 0;
+                continue;
+            }
+            ret[pos] = '/';
+            strcpy(ret+pos+1,s[i]);
+            pos += 1+strlen(s[i]);
+            ret[pos] = 0;
+        }
+        if ((err==0) && (pos==0)) {
+            strcpy(ret,"/");
+            printk("vfs_abs_path %s\n",ret);
+        }
+    }
+    kfree(path);
+    kfree(s);
+    if (err) {
+        kfree(ret);
+        return 0;
+    } else 
+        return ret;
+}
 
 vnode_t* vfs_lookup(char *path)
 {

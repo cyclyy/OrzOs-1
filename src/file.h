@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+#define FD_INVALID -1
+
 #define O_RDONLY 1
 #define O_WRONLY 2
 #define O_RDWR   4
@@ -42,12 +44,6 @@ s32int  file_lseek  (file_t *f, s32int offset, u32int whence);
 
 file_mapping_t *clone_file_mapping(file_mapping_t *f_map);
 file_t *clone_file(file_t *f);
-
-s32int fdopen(char *name, u32int flags);
-s32int fdclose(s32int fd);
-s32int fdread(s32int fd, void *buf, u32int size);
-s32int fdwrite(s32int fd, void *buf, u32int size);
-s32int fdlseek(s32int fd, s32int offset, u32int whence);
 
 s32int sys_fdopen(char *name, u32int flags);
 s32int sys_fdclose(s32int fd);

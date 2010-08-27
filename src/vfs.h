@@ -99,6 +99,8 @@ void            register_fs_driver(fs_driver_t *driver);
 void            unregister_fs_driver(fs_driver_t *driver);
 fs_driver_t*    get_fs_driver_byname(char *name);
 
+char*           vfs_abs_path(char *rel_path);
+
 // The difference with vnode->fs->*() and vfs_*() is:
 //   vfs_*() works across file-systems, it handles mount points.
 vnode_t*        vfs_lookup  (char *path);

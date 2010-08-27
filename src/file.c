@@ -4,6 +4,17 @@
 #include "vfs.h"
 #include "dev.h"
 
+static u32int fd_valid(u32int fd)
+{
+    if ((fd<0) || (fd>=MAX_TASK_FDS))
+        return 0;
+
+    if (!current_task->fd[fd])
+        return 0;
+
+    return 1;
+}
+
 file_t* file_open(char *path, u32int flags)
 {
     if (!path)
@@ -113,11 +124,18 @@ file_t *clone_file(file_t *f)
     return ret;
 }
 
-
-s32int fdopen(char *path, u32int flags)
+s32int sys_fdopen(char *path, u32int flags)
 {
-    u32int i; 
-    s32int find; 
+    char *_path = (char*)kmalloc(MAX_PATH_LEN);
+    memset(_path,0,MAX_PATH_LEN);
+    s32int i, find, ret; 
+    u32int n = copy_from_user(_path, path, MAX_PATH_LEN);
+    
+    if (n==0) {
+        kfree(_path);
+        return -EFAULT;
+    }
+
     find = -1;
     for (i=0; i<MAX_TASK_FDS; i++) {
         if (current_task->fd[i] == 0) {
@@ -127,75 +145,41 @@ s32int fdopen(char *path, u32int flags)
     }
 
     if (find >= 0) {
-        current_task->fd[i] = file_open(path, flags);
+        char *abs_path = vfs_abs_path(_path);
+        current_task->fd[i] = file_open(abs_path, flags);
 
         if (current_task->fd[i]) {
-            return find;
+            ret = find;
         } else {
-            return -1;
+            ret = -EFAULT;
         }
+        
+        kfree(abs_path);
     } else {
-        return -1;
+        return -EFAULT;
     }
-}
-
-s32int fdclose(s32int fd)
-{
-    file_t *f = current_task->fd[fd];
-
-    if (f) {
-        file_close(f);
-        return 0;
-    }
-    return -1;
-}
-
-s32int fdread(s32int fd, void *buf, u32int size)
-{
-    file_t *f = current_task->fd[fd];
-
-    if (f) {
-        return file_read(f, buf, size);
-    }
-    return -1;
-}
-
-s32int fdwrite(s32int fd, void *buf, u32int size)
-{
-    file_t *f = current_task->fd[fd];
-
-    if (f) {
-        return file_write(f, buf, size);
-    }
-    return -1;
-}
-
-s32int fdlseek(s32int fd, s32int offset, u32int whence)
-{
-    file_t *f = current_task->fd[fd];
-
-    if (f) {
-        return file_lseek(f, offset, whence);
-    }
-    return -1;
-}
-
-s32int sys_fdopen(char *path, u32int flags)
-{
-    char *_path = (char*)kmalloc(MAX_PATH_LEN);
-    u32int n = copy_from_user(_path, path, MAX_PATH_LEN);
-    u32int ret = fdopen(_path, flags);
     kfree(_path);
     return ret;
 }
 
 s32int sys_fdclose(s32int fd)
 {
-    return fdclose(fd);
+    if (!fd_valid(fd))
+        return -EINVAL;
+
+    file_t *f = current_task->fd[fd];
+    s32int ret = file_close(f);
+    current_task->fd[fd] = 0;
+    return ret;
 }
 
 s32int sys_fdread(s32int fd, void *buf, u32int size)
 {
+    if (!fd_valid(fd))
+        return -EINVAL;
+
+    file_t *f = current_task->fd[fd];
+
     char *kbuf = (char*)kmalloc(PAGE_SIZE);
     u32int n = 0;
     u32int len;
@@ -203,8 +187,8 @@ s32int sys_fdread(s32int fd, void *buf, u32int size)
     u32int ret = 0;
 
     do {
-        len = fdread(fd,kbuf,MIN(PAGE_SIZE,size));
-        if (len<0) {
+        len = file_read(f,kbuf,MIN(PAGE_SIZE,size));
+        if (len<=0) {
             ret = len;
             break;
         }
@@ -218,6 +202,8 @@ s32int sys_fdread(s32int fd, void *buf, u32int size)
 
         n += copied;
 
+        if (len<MIN(PAGE_SIZE,size))
+            break;
         size -= len;
     } while (size);
 
@@ -231,6 +217,11 @@ s32int sys_fdread(s32int fd, void *buf, u32int size)
 
 s32int sys_fdwrite(s32int fd, void *buf, u32int size)
 {
+    if (!fd_valid(fd))
+        return -EINVAL;
+
+    file_t *f = current_task->fd[fd];
+
     char *kbuf = (char*)kmalloc(PAGE_SIZE);
     u32int n = 0;
     u32int len;
@@ -245,15 +236,18 @@ s32int sys_fdwrite(s32int fd, void *buf, u32int size)
             break;
         }
 
-        len = fdwrite(fd,kbuf,copied);
+        len = file_write(f, kbuf, copied);
 
-        if (len<0) {
+        if (len<=0) {
             ret = len;
             break;
         }
 
 
         n += len;
+
+        if (len<copied)
+            break;
 
         size -= len;
     } while (size);
@@ -264,11 +258,15 @@ s32int sys_fdwrite(s32int fd, void *buf, u32int size)
     kfree(kbuf);
 
     return ret;
-    return fdwrite(fd,buf,size);
 }
 
 s32int sys_fdlseek(s32int fd, s32int offset, u32int whence)
 {
-    return fdlseek(fd, offset, whence);
+    if (!fd_valid(fd))
+        return -EINVAL;
+
+    file_t *f = current_task->fd[fd];
+
+    return file_lseek(f, offset, whence);
 }
 

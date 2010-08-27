@@ -13,6 +13,7 @@
 #include "syscalls.h"
 #include "fs/ramfs.h"
 #include "module.h"
+#include "cpio.h"
 
 u32int initial_esp;
 
@@ -64,19 +65,15 @@ u32int kmain(multiboot_t *ptr, u32int esp)
     module_ramfs_init();
     mount_root();
 
-    vfs_create("/miao",0);
-
-    /*
-    load_module("/i8042.o");
-    load_module("/pci.o");
-    load_module("/ide.o"); 
-    */
+    load_module("/boot/modules/i8042.o");
+    load_module("/boot/modules/pci.o");
+    load_module("/boot/modules/ide.o"); 
 
     if (fork()) {
         while (1) 
             switch_task();
     } else {
-        execve("/init",0,0);
+        execve("/boot/init",0,0);
     }
 
     // never return here;
@@ -88,7 +85,15 @@ void mount_root()
     ASSERT(mboot_ptr->mods_count >= 1);
 
     fs_driver_t *driver = get_fs_driver_byname("ramfs");
-    fs_t *fs = driver->fs_drv_ops->createfs(driver, 0, 0, (void*) *(u32int*)mboot_ptr->mods_addr );
+    fs_t *fs = driver->fs_drv_ops->createfs(driver, 0, 0, 0);
     vfs_mount_root(fs);
+
+    multiboot_module_t *m = (multiboot_module_t*)mboot_ptr->mods_addr;
+    printk("mboot mod_start %p, mod_end %p, cmdline %s, pad %p \n", 
+            m->mod_start,
+            m->mod_end,
+            m->cmdline,
+            m->pad);
+    extract_cpio((u8int*)m->mod_start, m->mod_end-m->mod_start);
 }
 

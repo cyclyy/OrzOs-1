@@ -75,15 +75,21 @@ void test_ramfs()
 {
     u32int ret;
     s32int fd;
-    char buf[1000] = {"abcde"};
+    char buf[1000] = {"miao "};
     char buf2[1000];
 
-    fd = syscall_open("/miao", 0);
-    ret = syscall_write(fd, buf, 6);
+    fd = syscall_open("/a.txt", 0);
+    ret = syscall_read(fd, buf2, 1000);
+    syscall_close(fd);
+    puts(buf2);
+
+    fd = syscall_open("./././../a.txt", 0);
+    ret = syscall_write(fd, buf, 5);
     syscall_close(fd);
 
-    fd = syscall_open("/miao", 0);
-    ret = syscall_read(fd, buf2, 100);
+    fd = syscall_open("/boot/../a.txt", 0);
+    ret = syscall_read(fd, buf2, 1000);
+    syscall_close(fd);
     puts(buf2);
 }
 
