@@ -11,7 +11,7 @@
 #include "multiboot.h"
 #include "task.h"
 #include "syscalls.h"
-#include "fs/initrdfs.h"
+#include "fs/ramfs.h"
 #include "module.h"
 
 u32int initial_esp;
@@ -60,13 +60,17 @@ u32int kmain(multiboot_t *ptr, u32int esp)
     scr_puts("init_modules.\n");
     init_module_system(mboot_ptr->num, mboot_ptr->size, mboot_ptr->addr, mboot_ptr->shndx);
 
-    scr_puts("load initrdfs module.\n");
-    module_initrdfs_init();
+    scr_puts("load ramfs module.\n");
+    module_ramfs_init();
     mount_root();
 
+    vfs_create("/miao",0);
+
+    /*
     load_module("/i8042.o");
     load_module("/pci.o");
     load_module("/ide.o"); 
+    */
 
     if (fork()) {
         while (1) 
@@ -81,9 +85,9 @@ u32int kmain(multiboot_t *ptr, u32int esp)
 
 void mount_root()
 {
-    ASSERT(mboot_ptr->mods_count == 1);
+    ASSERT(mboot_ptr->mods_count >= 1);
 
-    fs_driver_t *driver = get_fs_driver_byname("initrdfs");
+    fs_driver_t *driver = get_fs_driver_byname("ramfs");
     fs_t *fs = driver->fs_drv_ops->createfs(driver, 0, 0, (void*) *(u32int*)mboot_ptr->mods_addr );
     vfs_mount_root(fs);
 }

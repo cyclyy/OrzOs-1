@@ -152,7 +152,7 @@ void page_fault_handler(registers_t *regs)
     if (us) {
         if (handle_user_page_fault(fault_addr,rw) != PFAULT_HANDLED) {
             printk(" (FAIL)\n");
-            exit(-EFAULT);
+            exit(EFAULT);
         } else {
             printk(" (PASS)\n");
         }

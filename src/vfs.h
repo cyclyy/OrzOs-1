@@ -12,6 +12,7 @@
 #define VFS_SYMLINK      0x32
 #define VFS_MOUNTPOINT   0x64 // Is the vnode an active mountpoint?
 #define MAX_VFSMOUNTS    10
+#define MAX_PATH_DEPS    20
 
 typedef struct fs_struct fs_t;
 typedef struct vnode_struct vnode_t;
@@ -25,12 +26,12 @@ struct file_operations {
 
 struct vnode_operations {
     vnode_t* (*parent)  (vnode_t *node);
-    vnode_t**(*subnodes)(vnode_t *node);
-    vnode_t* (*mkdir)   (vnode_t *dir, char *name,    u32int flags, u32int *err);
-    vnode_t* (*mknod)   (vnode_t *dir, u32int dev_id, u32int flags, u32int *err);
-    vnode_t* (*create)  (vnode_t *dir, char *name,    u32int flags, u32int *err);
-    s32int   (*rmdir)   (vnode_t *dir, char *name, u32int *err);
-    s32int   (*unlink)  (vnode_t *dir, char *name);
+    s32int   (*subnodes)(vnode_t *dir, vnode_t ***nodes);
+    s32int   (*mkdir)   (vnode_t *dir, char *name, u32int flags);
+    s32int   (*mknod)   (vnode_t *dir, char *name, u32int dev_id, u32int flags);
+    s32int   (*create)  (vnode_t *dir, char *name, u32int flags);
+    s32int   (*rmdir)   (vnode_t *dir, char *name);
+    s32int   (*rm)      (vnode_t *dir, char *name);
 };
 
 struct vnode_struct {
@@ -63,6 +64,7 @@ struct fs_operations {
 struct fs_struct {
     struct fs_operations *fs_ops;
     struct fs_driver *driver;
+    void *priv;
 };
 
 struct fs_driver_operations {
@@ -75,6 +77,7 @@ struct fs_driver_operations {
 typedef struct fs_driver {
     char name[MAX_NAME_LEN];
     struct fs_driver_operations *fs_drv_ops;
+    void *priv;
     struct fs_driver *next;
 } fs_driver_t;
 
@@ -98,10 +101,16 @@ fs_driver_t*    get_fs_driver_byname(char *name);
 
 // The difference with vnode->fs->*() and vfs_*() is:
 //   vfs_*() works across file-systems, it handles mount points.
-vnode_t*        vfs_lookup    (vnode_t  *vnode, char *path);
-s32int          vfs_mount     (char     *path,  fs_t *fs);
+vnode_t*        vfs_lookup  (char *path);
+s32int          vfs_subnodes(char *path, vnode_t ***nodes);
+s32int          vfs_mkdir   (char *path, u32int flags);
+s32int          vfs_mknod   (char *path, u32int dev_id, u32int flags);
+s32int          vfs_create  (char *path, u32int flags);
+s32int          vfs_rmdir   (char *path);
+s32int          vfs_rm      (char *path);
+s32int          vfs_mount   (char *path, fs_t *fs);
 s32int          vfs_mount_root(fs_t *fs);
 
-void dump_vnode(vnode_t *);
+void dump_vfs(char *path);
 
 #endif /* VFS_H */

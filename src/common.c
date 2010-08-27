@@ -266,6 +266,32 @@ char *strdup(char *s)
     return ret;
 }
 
+u32int strbrk(char **result, const char *str, const char *delim)
+{
+    if (!result || !str || !delim)
+        return 0;
+
+    u32int n = 0, i, j, slen, sublen;
+    char *s = strdup(str);
+    slen = strlen(s);
+    for (i=0; i<slen; i++) 
+        for (j=0; j<strlen(delim); j++)
+            if (s[i]==delim[j])
+                s[i]=0;
+    i=0;
+    while (i<slen) {
+        if (s[i]) {
+            sublen = strlen(s+i);
+            result[n++] = strdup(s+i);
+            i+=sublen;
+        }
+        i++;
+    }
+    result[n] = 0;
+    kfree(s);
+    return n;
+}
+
 char *dirname(char *s)
 {
     char *ret = strdup(s);
@@ -284,7 +310,7 @@ char *dirname(char *s)
 
     if (slash == 0) {
         strcpy(ret, ".");
-    } else if (slash > s) {
+    } else if (slash > ret) {
         *slash = 0;
     } else {
         strcpy(ret, "/");

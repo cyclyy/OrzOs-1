@@ -140,7 +140,7 @@ vnode_t* vfs_finddir(struct vnode *vnode, char *name)
 }
 */
 
-vnode_t* vfs_lookup(vnode_t *node, char *path)
+vnode_t* vfs_lookup(char *path)
 {
     if (!vfs_mounts)
         return 0;
@@ -163,41 +163,103 @@ vnode_t* vfs_lookup(vnode_t *node, char *path)
         }
     }
     return 0;
+}
 
-    /*
-    if (!node || !path || (path[0] == 0) || (path[0] != '/') ) 
-        return 0;
+s32int          vfs_subnodes(char *path, vnode_t ***nodes)
+{
+    s32int ret;
+    vnode_t *dir = vfs_lookup(path);
+    if (dir && dir->v_ops && dir->v_ops->subnodes)
+        ret = dir->v_ops->subnodes(dir,nodes);
+    else 
+        ret = -EFAULT;
+    return ret;
+}
 
-    vnode_t *tmp = node;
-    char s[MAX_NAME_LEN];
-    u32int len = strlen(path);
+s32int          vfs_mkdir   (char *path, u32int flags)
+{
+    s32int ret;
+    char *dir_name;
+    char *base_name;
+    dir_name = dirname(path);
+    base_name = basename(path);
+    vnode_t *dir = vfs_lookup(dir_name);
+    printk("mkdir:dirname %s basename %s dir %p\n",dir_name,base_name,dir);
+    if (dir && dir->v_ops && dir->v_ops->mkdir)
+        ret = dir->v_ops->mkdir(dir,base_name,flags);
+    else 
+        ret = -EFAULT;
+    kfree(dir_name);
+    kfree(base_name);
+    return ret;
+}
 
-    if (len == 1)
-        return node;
+s32int          vfs_mknod   (char *path, u32int dev_id, u32int flags)
+{
+    s32int ret;
+    char *dir_name;
+    char *base_name;
+    dir_name = dirname(path);
+    base_name = basename(path);
+    vnode_t *dir = vfs_lookup(dir_name);
+    if (dir && dir->v_ops && dir->v_ops->mknod)
+        ret = dir->v_ops->mknod(dir,base_name,dev_id,flags);
+    else 
+        ret = -EFAULT;
+    kfree(dir_name);
+    kfree(base_name);
+    return ret;
+}
 
-    u32int i = 1;
-    u32int j = 0;
+s32int          vfs_create  (char *path, u32int flags)
+{
+    s32int ret;
+    char *dir_name;
+    char *base_name;
+    dir_name = dirname(path);
+    base_name = basename(path);
+    vnode_t *dir = vfs_lookup(dir_name);
+    if (dir && dir->v_ops && dir->v_ops->create)
+        ret = dir->v_ops->create(dir,base_name,flags);
+    else 
+        ret = -EFAULT;
+    kfree(dir_name);
+    kfree(base_name);
+    return ret;
+}
 
-    do {
-        s[j++] = path[i++];
+s32int          vfs_rmdir   (char *path)
+{
+    s32int ret;
+    char *dir_name;
+    char *base_name;
+    dir_name = dirname(path);
+    base_name = basename(path);
+    vnode_t *dir = vfs_lookup(dir_name);
+    if (dir && dir->v_ops && dir->v_ops->rmdir)
+        ret = dir->v_ops->rmdir(dir,base_name);
+    else 
+        ret = -EFAULT;
+    kfree(dir_name);
+    kfree(base_name);
+    return ret;
+}
 
-        if ((path[i] == '/') || (path[i] == 0)) {
-            s[j] = 0;
-            if ((tmp->flags & VFS_MOUNTPOINT)) {
-                tmp = tmp->ptr;
-            }
-            if (tmp->flags & VFS_DIRECTORY) {
-                tmp = vfs_finddir(tmp, s);
-            } else {
-                tmp = 0;
-            }
-            j = 0;
-            i++;
-        }
-    } while (tmp && (i<len));
-
-    return tmp;
-    */
+s32int          vfs_rm      (char *path)
+{
+    s32int ret;
+    char *dir_name;
+    char *base_name;
+    dir_name = dirname(path);
+    base_name = basename(path);
+    vnode_t *dir = vfs_lookup(dir_name);
+    if (dir && dir->v_ops && dir->v_ops->rm)
+        ret = dir->v_ops->rm(dir,base_name);
+    else 
+        ret = -EFAULT;
+    kfree(dir_name);
+    kfree(base_name);
+    return ret;
 }
 
 s32int vfs_mount_root(fs_t *fs)
@@ -219,7 +281,6 @@ s32int vfs_mount_root(fs_t *fs)
         return -1;
     }
 
-    printk("vfs_mount_root ok\n");
     return 0;
 }
 
@@ -234,7 +295,7 @@ s32int vfs_mount(char *path, fs_t *fs)
     if (strcmp(path,"/")==0)
         return vfs_mount_root(fs);
 
-    vnode_t *node     = vfs_lookup(vfs_root, path);
+    vnode_t *node     = vfs_lookup(path);
     vnode_t *to_mount = fs->fs_ops->get_root(fs);
     u32int i;
 
@@ -279,23 +340,28 @@ void syscall_mount(char *src, char* dst, u32int flags, void *data)
 {
 }
 
-void dump_vnode(vnode_t *node)
+void dump_vfs(char *path)
 {
-    if (!node) {
-        scr_puts("vnode [null]\n");
-        return;
+    vnode_t *node = vfs_lookup(path);
+    if (node) {
+        if (node->flags & VFS_FILE)
+            printk("%s FILE\n",path);
+        if (node->flags & VFS_DIRECTORY) {
+            printk("%s DIR\n",path);
+            vnode_t **sub_nodes = 0;
+            u32int nsubs = vfs_subnodes(path,&sub_nodes);
+            u32int i;
+            for (i=0; i<nsubs; i++) {
+                char *new_path = (char*)kmalloc(strlen(path)+strlen(sub_nodes[i]->name)+2);
+                sprintf(new_path, "%s/%s", path, sub_nodes[i]->name);
+                dump_vfs(new_path);
+                kfree(new_path);
+            }
+            kfree(sub_nodes);
+        }
+        if (node->flags & VFS_DEV_FILE) {
+            printk("%s DEV\n",path);
+        }
     }
-    scr_puts("vnode \"");
-    scr_puts(node->name);
-    scr_puts("\" :");
-    
-    if (node->flags & VFS_FILE)
-        scr_puts(" VFS_FILE ");
-    if (node->flags & VFS_DIRECTORY)
-        scr_puts(" VFS_DIRECTORY ");
-    if (node->flags & VFS_MOUNTPOINT)
-        scr_puts(" VFS_MOUNTPOINT ");
-
-    scr_puts("\n");
 }
 

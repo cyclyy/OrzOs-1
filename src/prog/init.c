@@ -71,12 +71,28 @@ void test_hda()
 
 }
 
+void test_ramfs()
+{
+    u32int ret;
+    s32int fd;
+    char buf[1000] = {"abcde"};
+    char buf2[1000];
+
+    fd = syscall_open("/miao", 0);
+    ret = syscall_write(fd, buf, 6);
+    syscall_close(fd);
+
+    fd = syscall_open("/miao", 0);
+    ret = syscall_read(fd, buf2, 100);
+    puts(buf2);
+}
+
 int main()
 {
     char *s = "Init process running.\n";
     puts(s);
 
-    test_hda();
+    test_ramfs();
 
     /*
     while (1) {

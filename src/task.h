@@ -33,8 +33,8 @@ typedef struct task {
     u32int esp;
     page_directory_t *dir;
     file_t *file;
+    char *work_path;
     vm_t *vm;
-    u32int kstack;
     file_t *fd[MAX_TASK_FDS];
     struct task *next;
 } task_t;

@@ -9,7 +9,7 @@ file_t* file_open(char *path, u32int flags)
     if (!path)
         return 0;
 
-    vnode_t *node = vfs_lookup(vfs_root, path);
+    vnode_t *node = vfs_lookup(path);
     if (!node)
         return 0;
 
@@ -43,6 +43,8 @@ s32int file_read(file_t *f, void *buf, u32int sz)
 
 s32int file_write(file_t *f, void *buf, u32int sz)
 {
+    if (!f)
+        return -EFAULT;
     if (f && f->f_ops && f->f_ops->write) {
         u32int n = f->f_ops->write(f, f->offset, sz, buf);
         f->offset += n;
@@ -52,16 +54,23 @@ s32int file_write(file_t *f, void *buf, u32int sz)
         return 0;
 }
 
-void file_close(file_t *f)
+s32int file_close(file_t *f)
 {
+    if (!f)
+        return -EFAULT;
     if (f && f->f_ops && f->f_ops->write) {
-        f->f_ops->close(f);
+        s32int ret = f->f_ops->close(f);
         kfree(f);
+        return ret;
     }
+
+    return -EFAULT;
 }
 
 s32int file_lseek(file_t *f, s32int offset, u32int whence)
 {
+    if (!f)
+        return 0;
     switch (whence) {
         case SEEK_SET:
             f->offset = offset;

@@ -170,7 +170,7 @@ void init_multitasking()
     current_task->ppid = 0;
     current_task->state = TASK_READY;
     current_task->dir = current_dir;
-
+    current_task->work_path = strdup("/");
 
     set_kernel_stack(KERNEL_STACK_START);
 
@@ -287,11 +287,9 @@ u32int fork()
     child_task->ppid = parent_task->pid;
     child_task->state = TASK_READY;
     child_task->dir = dir;
+    child_task->work_path = strdup(current_task->work_path);
     child_task->vm = vm;
     child_task->next = 0;
-
-    //child_task->kstack = kmalloc_a(KERNEL_STACK_SIZE);
-    /*child_task->kstack = KERNEL_STACK_START - KERNEL_STACK_SIZE;*/
 
     task_t *t = task_queue;
     while (t->next)
@@ -314,8 +312,6 @@ u32int fork()
     if (current_task == parent_task)  {
         /*printk("i'm parent %p\n", current_task->pid);*/
         child_task->eip = eip;
-
-        //copy_kernel_stack(current_task->kstack, current_task->dir, child_task->kstack, child_task->dir);
 
         asm volatile("mov %%esp, %0" : "=r"(esp) );
         asm volatile("mov %%ebp, %0" : "=r"(ebp) );
@@ -380,9 +376,6 @@ void switch_task()
     // update the current page directory
     current_dir = current_task->dir;
 
-    // update tss0.esp0
-    /*set_kernel_stack(current_task->kstack+KERNEL_STACK_SIZE);*/
-
 //    scr_putp("switch_task to pid", current_task->pid);
 //    scr_putp("switch_task to dir", current_task->dir->addr);
     /*printk("switch to task %d\n", current_task->pid);*/
@@ -404,8 +397,6 @@ void switch_task()
 
 void switch_to_user_mode()
 {
-    //set_kernel_stack(current_task->kstack+KERNEL_STACK_SIZE);
-
     // Set up a stack structure for switching to user mode.
     asm volatile("  \
             cli; \
@@ -476,11 +467,11 @@ s32int execve(char *path, char **argv, char **envp)
     }
 
     strcpy(current_task->path, path);
-
     current_task->file = f;
-
     current_task->vm = vm;
     current_task->dir = dir;
+    kfree(current_task->work_path);
+    current_task->work_path = dirname(current_task->path);
 
     current_task->eip = current_task->vm->entry;
     current_task->ebp = current_task->vm->start_stack;

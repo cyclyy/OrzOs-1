@@ -20,13 +20,13 @@ CORE_SOURCES = boot.o              \
                vm.o                \
                dev.o               \
                disk.o              \
-               fs/initrdfs.o       \
+               cpio.o              \
+               fs/ramfs.o          \
 
 MOD_SOURCES = testmod.o            \
               i8042.o              \
               pci.o                \
               ide.o                \
-              fs/ramfs.o           \
 
 PROG_SOURCES = prog/init.o         \
                syscall.o           \

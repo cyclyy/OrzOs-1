@@ -81,6 +81,8 @@ char *strrchr(char *s1, char c);
 
 char *strdup(char *s);
 
+u32int strbrk(char **result, const char *str, const char *delim);
+
 // support abs path only
 char *dirname(char *s);
 

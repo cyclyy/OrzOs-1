@@ -37,7 +37,7 @@ typedef struct {
 file_t* file_open   (char *path, u32int flags);
 s32int  file_read   (file_t *f,  void *buf, u32int sz);
 s32int  file_write  (file_t *f,  void *buf, u32int sz);
-void    file_close  (file_t *f);
+s32int  file_close  (file_t *f);
 s32int  file_lseek  (file_t *f, s32int offset, u32int whence);
 
 file_mapping_t *clone_file_mapping(file_mapping_t *f_map);
