@@ -1,4 +1,5 @@
 #include "syscall.h"
+#include "file.h"
 
 #define VMA_ANON      1     /* memory mapping, no back-file*/
 #define VMA_READ      2  
@@ -91,6 +92,23 @@ void test_ramfs()
     ret = syscall_read(fd, buf2, 1000);
     syscall_close(fd);
     puts(buf2);
+
+    ret = syscall_chdir("modules/");
+    fd = syscall_open(".", 0);
+    ret = syscall_getdents(fd,buf2,1000);
+    u32int i;
+    for (i=0;i<ret;i+=36) {
+        puts(buf2+i);
+        puts("\n");
+    }
+    syscall_close(fd);
+
+    ret = syscall_chdir("..");
+    ret = syscall_getcwd(buf2, 100);
+    puts("working dir: ");
+    puts(buf2);
+    puts("\n");
+
 }
 
 int main()

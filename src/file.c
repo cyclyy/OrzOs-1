@@ -15,6 +15,34 @@ static u32int fd_valid(u32int fd)
     return 1;
 }
 
+dir_t*  dir_open    (char *path, u32int flags)
+{
+    if (!path)
+        return 0;
+    vnode_t *node = vfs_lookup(path);
+    if (!node || !(node->flags & VFS_DIRECTORY))
+        return 0;
+    dir_t *d = (dir_t*)kmalloc(sizeof(dir_t));
+    memset(d,0,sizeof(dir_t));
+    d->nsubs = vfs_subnodes(path,&d->subnodes);
+    if (d->nsubs<0) {
+        kfree(d);
+        return 0;
+    }
+    return d;
+}
+
+s32int dir_close(dir_t *d)
+{
+    if (!d)
+        return -EFAULT;
+
+    kfree(d->subnodes);
+    kfree(d);
+
+    return 0;
+}
+
 file_t* file_open(char *path, u32int flags)
 {
     if (!path)
@@ -126,14 +154,14 @@ file_t *clone_file(file_t *f)
 
 s32int sys_fdopen(char *path, u32int flags)
 {
-    char *_path = (char*)kmalloc(MAX_PATH_LEN);
-    memset(_path,0,MAX_PATH_LEN);
+    char *kpath = (char*)kmalloc(MAX_PATH_LEN);
+    memset(kpath,0,MAX_PATH_LEN);
     s32int i, find, ret; 
-    u32int n = copy_from_user(_path, path, MAX_PATH_LEN);
+    u32int n = copy_from_user(kpath, path, MAX_PATH_LEN);
     
     if (n==0) {
-        kfree(_path);
-        return -EFAULT;
+        ret = -EFAULT;
+        goto cleanup;
     }
 
     find = -1;
@@ -145,20 +173,31 @@ s32int sys_fdopen(char *path, u32int flags)
     }
 
     if (find >= 0) {
-        char *abs_path = vfs_abs_path(_path);
-        current_task->fd[i] = file_open(abs_path, flags);
+        char *abs_path = vfs_abs_path(kpath);
 
-        if (current_task->fd[i]) {
-            ret = find;
-        } else {
-            ret = -EFAULT;
+        vnode_t *node = vfs_lookup(abs_path);
+
+        if (!node) {
+            ret = -ENOENT;
+            goto cleanup;
         }
-        
+
+        current_task->fd[i] = (fd_t*)kmalloc(sizeof(fd_t));
+        memset(current_task->fd[i],0,sizeof(fd_t));
+
+        if (node->flags & VFS_DIRECTORY) {
+            current_task->fd[i]->d = dir_open(abs_path, flags);
+        } else {
+            current_task->fd[i]->f = file_open(abs_path, flags);
+        }
+        ret = find;
         kfree(abs_path);
     } else {
-        return -EFAULT;
+        ret = -EFAULT;
     }
-    kfree(_path);
+
+cleanup:
+    kfree(kpath);
     return ret;
 }
 
@@ -167,8 +206,15 @@ s32int sys_fdclose(s32int fd)
     if (!fd_valid(fd))
         return -EINVAL;
 
-    file_t *f = current_task->fd[fd];
-    s32int ret = file_close(f);
+    s32int ret;
+    fd_t *fd_st = current_task->fd[fd];
+    if (fd_st->f) {
+        ret = file_close(fd_st->f);
+    } else if (fd_st->d) {
+        ret = dir_close(fd_st->d);
+    }
+
+    kfree(fd_st);
     current_task->fd[fd] = 0;
     return ret;
 }
@@ -178,7 +224,7 @@ s32int sys_fdread(s32int fd, void *buf, u32int size)
     if (!fd_valid(fd))
         return -EINVAL;
 
-    file_t *f = current_task->fd[fd];
+    file_t *f = current_task->fd[fd]->f;
 
     char *kbuf = (char*)kmalloc(PAGE_SIZE);
     u32int n = 0;
@@ -220,7 +266,7 @@ s32int sys_fdwrite(s32int fd, void *buf, u32int size)
     if (!fd_valid(fd))
         return -EINVAL;
 
-    file_t *f = current_task->fd[fd];
+    file_t *f = current_task->fd[fd]->f;
 
     char *kbuf = (char*)kmalloc(PAGE_SIZE);
     u32int n = 0;
@@ -265,8 +311,49 @@ s32int sys_fdlseek(s32int fd, s32int offset, u32int whence)
     if (!fd_valid(fd))
         return -EINVAL;
 
-    file_t *f = current_task->fd[fd];
+    file_t *f = current_task->fd[fd]->f;
 
     return file_lseek(f, offset, whence);
+}
+
+s32int          sys_getdents(u32int fd, u8int *buf, u32int size)
+{
+    if (!fd_valid(fd)) 
+        return -EBADF;
+    if (size < sizeof(dentry_t)) 
+        return -EINVAL;
+    dir_t *d = current_task->fd[fd]->d;
+    if (!d)
+        return -ENOTDIR;
+
+    if (d->offset>=d->nsubs)
+        return 0;
+    else {
+        u32int n, len, i;
+        u8int *kbuf;
+        dentry_t *dentry;
+        n = MIN(d->nsubs - d->offset,size/sizeof(dentry_t));
+        len = n * sizeof(dentry_t);
+        kbuf = (u8int*)kmalloc(len);
+        memset(kbuf,0,len);
+        dentry = (dentry_t*)kbuf;
+        for (i=0; i<n; i++) {
+            strcpy(dentry[i].name, d->subnodes[d->offset + i]->name);
+            dentry[i].flags = d->subnodes[d->offset  + i]->flags;
+        }
+
+        u32int copied, ret;
+        copied = copy_to_user(buf,kbuf,len);
+        if (copied<len)
+            ret = -EFAULT;
+        else {
+            d->offset += n;
+            ret = len;
+        }
+
+        kfree(kbuf);
+
+        return ret;
+    }
 }
 

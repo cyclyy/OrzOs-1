@@ -113,6 +113,15 @@ s32int          vfs_rm      (char *path);
 s32int          vfs_mount   (char *path, fs_t *fs);
 s32int          vfs_mount_root(fs_t *fs);
 
+s32int          sys_mkdir   (char *path, u32int flags);
+s32int          sys_mknod   (char *path, u32int dev_id, u32int flags);
+s32int          sys_create  (char *path, u32int flags);
+s32int          sys_rmdir   (char *path);
+s32int          sys_rm      (char *path);
+
+s32int          sys_getcwd  (char *buf,u32int size);
+s32int          sys_chdir   (char *path);
+
 void dump_vfs(char *path);
 
 #endif /* VFS_H */

@@ -2,10 +2,11 @@
 #include "isr.h"
 #include "screen.h"
 #include "task.h"
+#include "vfs.h"
 
 void _syscall_test();
 
-#define N_SYSCALLS (12)
+#define N_SYSCALLS (20)
 
 void *syscalls[N_SYSCALLS] = {
     &fork,
@@ -19,6 +20,14 @@ void *syscalls[N_SYSCALLS] = {
     &sys_mmap,
     &sys_unmap,
     &sys_msleep,
+    &sys_mkdir,
+    &sys_mknod,
+    &sys_create,
+    &sys_rmdir,
+    &sys_rm,
+    &sys_getdents,
+    &sys_getcwd,
+    &sys_chdir,
     &scr_putch,
 };
 

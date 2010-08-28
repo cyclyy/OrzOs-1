@@ -73,6 +73,14 @@ DECL_SYSCALL_3(lseek, s32int, s32int, u32int);
 DECL_SYSCALL_5(mmap, u32int, u32int, s32int, s32int, u32int);
 DECL_SYSCALL_2(unmap, u32int, u32int);
 DECL_SYSCALL_1(msleep, u32int);
+DECL_SYSCALL_2(mkdir, char*,u32int);
+DECL_SYSCALL_3(mknod, char*,u32int,u32int);
+DECL_SYSCALL_2(create, char*,u32int);
+DECL_SYSCALL_1(rmdir, char*);
+DECL_SYSCALL_1(rm, char*);
+DECL_SYSCALL_3(getdents,u32int,u8int*,u32int);
+DECL_SYSCALL_2(getcwd, char*,u32int);
+DECL_SYSCALL_1(chdir, char*);
 DECL_SYSCALL_1(putch, char);
 
 #endif /* SYSCALL_H */

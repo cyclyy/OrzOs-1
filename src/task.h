@@ -35,7 +35,7 @@ typedef struct task {
     file_t *file;
     char *work_path;
     vm_t *vm;
-    file_t *fd[MAX_TASK_FDS];
+    struct fd_struct *fd[MAX_TASK_FDS];
     struct task *next;
 } task_t;
 

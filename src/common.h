@@ -11,7 +11,7 @@
 #define PANIC(x) panic(x, __FILE__, __LINE__)
 #define ASSERT(x) ((x) ? (void)0 : panic_assert(#x, __FILE__, __LINE__))
 
-#define MAX_NAME_LEN  128
+#define MAX_NAME_LEN  32
 #define MAX_PATH_LEN  128
 
 #define _INTSIZEOF(n)   ( (sizeof(n) + sizeof(int) - 1) & ~(sizeof(int) - 1) )

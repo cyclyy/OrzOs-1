@@ -188,7 +188,6 @@ char* vfs_abs_path(char *p)
         }
         if ((err==0) && (pos==0)) {
             strcpy(ret,"/");
-            printk("vfs_abs_path %s\n",ret);
         }
     }
     kfree(path);
@@ -202,7 +201,7 @@ char* vfs_abs_path(char *p)
 
 vnode_t* vfs_lookup(char *path)
 {
-    if (!vfs_mounts)
+    if (!vfs_mounts || !path || (*path==0))
         return 0;
 
     u32int i;
@@ -244,7 +243,6 @@ s32int          vfs_mkdir   (char *path, u32int flags)
     dir_name = dirname(path);
     base_name = basename(path);
     vnode_t *dir = vfs_lookup(dir_name);
-    printk("mkdir:dirname %s basename %s dir %p\n",dir_name,base_name,dir);
     if (dir && dir->v_ops && dir->v_ops->mkdir)
         ret = dir->v_ops->mkdir(dir,base_name,flags);
     else 
@@ -423,5 +421,133 @@ void dump_vfs(char *path)
             printk("%s DEV\n",path);
         }
     }
+}
+
+s32int          sys_mkdir   (char *path, u32int flags)
+{
+    char *kpath = (char*)kmalloc(MAX_PATH_LEN);
+    memset(kpath,0,MAX_PATH_LEN);
+    s32int ret; 
+    u32int n = copy_from_user(kpath, path, MAX_PATH_LEN);
+    
+    if (n==0) {
+        kfree(kpath);
+        return -EFAULT;
+    }
+
+    char *abs_path = vfs_abs_path(kpath);
+    ret = vfs_mkdir(abs_path, flags);
+    kfree(abs_path);
+    kfree(kpath);
+    return ret;
+}
+
+s32int          sys_mknod   (char *path, u32int dev_id, u32int flags)
+{
+    char *kpath = (char*)kmalloc(MAX_PATH_LEN);
+    memset(kpath,0,MAX_PATH_LEN);
+    s32int ret; 
+    u32int n = copy_from_user(kpath, path, MAX_PATH_LEN);
+    
+    if (n==0) {
+        kfree(kpath);
+        return -EFAULT;
+    }
+
+    char *abs_path = vfs_abs_path(kpath);
+    ret = vfs_mknod(abs_path, dev_id, flags);
+    kfree(abs_path);
+    kfree(kpath);
+    return ret;
+}
+
+s32int          sys_create  (char *path, u32int flags)
+{
+    char *kpath = (char*)kmalloc(MAX_PATH_LEN);
+    memset(kpath,0,MAX_PATH_LEN);
+    s32int ret; 
+    u32int n = copy_from_user(kpath, path, MAX_PATH_LEN);
+    
+    if (n==0) {
+        kfree(kpath);
+        return -EFAULT;
+    }
+
+    char *abs_path = vfs_abs_path(kpath);
+    ret = vfs_create(abs_path, flags);
+    kfree(abs_path);
+    kfree(kpath);
+    return ret;
+}
+
+s32int          sys_rmdir   (char *path)
+{
+    char *kpath = (char*)kmalloc(MAX_PATH_LEN);
+    memset(kpath,0,MAX_PATH_LEN);
+    s32int ret; 
+    u32int n = copy_from_user(kpath, path, MAX_PATH_LEN);
+    
+    if (n==0) {
+        kfree(kpath);
+        return -EFAULT;
+    }
+
+    char *abs_path = vfs_abs_path(kpath);
+    ret = vfs_rmdir(abs_path);
+    kfree(abs_path);
+    kfree(kpath);
+    return ret;
+}
+
+s32int          sys_rm      (char *path)
+{
+    char *kpath = (char*)kmalloc(MAX_PATH_LEN);
+    memset(kpath,0,MAX_PATH_LEN);
+    s32int ret; 
+    u32int n = copy_from_user(kpath, path, MAX_PATH_LEN);
+    
+    if (n==0) {
+        kfree(kpath);
+        return -EFAULT;
+    }
+
+    char *abs_path = vfs_abs_path(kpath);
+    ret = vfs_rm(abs_path);
+    kfree(abs_path);
+    kfree(kpath);
+    return ret;
+}
+
+s32int          sys_getcwd  (char *buf, u32int size)
+{
+    s32int n, copied;
+    n = strlen(current_task->work_path) + 1;
+    if (size < n)
+        return -EFAULT;
+    copied = copy_to_user(buf,current_task->work_path,n);
+    if (copied < n)
+        return -EFAULT;
+
+    return 0;
+}
+
+s32int          sys_chdir   (char *path)
+{
+    char *kpath = (char*)kmalloc(MAX_PATH_LEN);
+    memset(kpath,0,MAX_PATH_LEN);
+    s32int ret; 
+    copy_from_user(kpath, path, MAX_PATH_LEN);
+    kpath[MAX_PATH_LEN-1] = 0;
+    char *abs_path = vfs_abs_path(kpath);
+    vnode_t *node = vfs_lookup(abs_path);
+    if (node && (node->flags & VFS_DIRECTORY)) {
+        strcpy(current_task->work_path,abs_path);
+        ret = 0;
+    } else 
+        ret = -EFAULT;
+
+    kfree(kpath);
+    kfree(abs_path);
+    return ret;
 }
 
