@@ -73,6 +73,7 @@ void module_i8042_init()
         wq = (wait_queue_t*)kmalloc(sizeof(wait_queue_t));
         memset(wq, 0, sizeof(wait_queue_t));
         add_dev(dev_i8042);
+        vfs_mknod("/dev/kbd",dev_i8042->dev_id,0);
         outb(0x64,0x60);
         outb(0x64,0xAE);
         /*printk("%p\n",inb(0x60));*/

@@ -78,6 +78,7 @@ DECL_SYSCALL_3(mknod, char*,u32int,u32int);
 DECL_SYSCALL_2(create, char*,u32int);
 DECL_SYSCALL_1(rmdir, char*);
 DECL_SYSCALL_1(rm, char*);
+DECL_SYSCALL_2(rename, char*,char*);
 DECL_SYSCALL_3(getdents,u32int,u8int*,u32int);
 DECL_SYSCALL_2(getcwd, char*,u32int);
 DECL_SYSCALL_1(chdir, char*);

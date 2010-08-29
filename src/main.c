@@ -64,6 +64,8 @@ u32int kmain(multiboot_t *ptr, u32int esp)
     module_ramfs_init();
     mount_root();
 
+    vfs_mkdir("/dev",0);
+
     load_module("/boot/modules/i8042.o");
     load_module("/boot/modules/pci.o");
     load_module("/boot/modules/ide.o"); 

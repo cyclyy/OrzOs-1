@@ -32,10 +32,11 @@ struct vnode_operations {
     s32int   (*create)  (vnode_t *dir, char *name, u32int flags);
     s32int   (*rmdir)   (vnode_t *dir, char *name);
     s32int   (*rm)      (vnode_t *dir, char *name);
+    s32int   (*rename)  (vnode_t *dir, char *old_name, char *name);
 };
 
 struct vnode_struct {
-    char name[128]; //filename
+    char name[MAX_NAME_LEN]; //filename
     u32int length;
 
     u32int mask;    //permission
@@ -110,6 +111,7 @@ s32int          vfs_mknod   (char *path, u32int dev_id, u32int flags);
 s32int          vfs_create  (char *path, u32int flags);
 s32int          vfs_rmdir   (char *path);
 s32int          vfs_rm      (char *path);
+s32int          vfs_rename  (char *path, char *name);
 s32int          vfs_mount   (char *path, fs_t *fs);
 s32int          vfs_mount_root(fs_t *fs);
 
@@ -118,6 +120,7 @@ s32int          sys_mknod   (char *path, u32int dev_id, u32int flags);
 s32int          sys_create  (char *path, u32int flags);
 s32int          sys_rmdir   (char *path);
 s32int          sys_rm      (char *path);
+s32int          sys_rename  (char *path, char *name);
 
 s32int          sys_getcwd  (char *buf,u32int size);
 s32int          sys_chdir   (char *path);

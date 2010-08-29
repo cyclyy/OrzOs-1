@@ -119,12 +119,14 @@ static void init_pci()
             }
 
     pci_dev_t *p = pci_devs;
+    /*
     printk("=====Dump discovered pci device======\n");
     while(p) {
         dump_pci_dev(p);
         p = p->next;
     }
     printk("=====End Dump======\n");
+    */
 }
 
 void register_pci_driver(pci_driver_t *drv)

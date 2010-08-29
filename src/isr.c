@@ -10,6 +10,7 @@ void isr_handler(registers_t regs)
         isr_t handler = interrupt_handlers[regs.int_no];
         handler(&regs);
     } else {
+        printk("Isr_code:%d, eip: %p\n",regs.int_no,regs.eip);
         PANIC("unhandled exception.");
     }
 }

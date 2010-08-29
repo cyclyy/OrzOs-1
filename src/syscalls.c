@@ -6,7 +6,7 @@
 
 void _syscall_test();
 
-#define N_SYSCALLS (20)
+#define N_SYSCALLS (21)
 
 void *syscalls[N_SYSCALLS] = {
     &fork,
@@ -25,6 +25,7 @@ void *syscalls[N_SYSCALLS] = {
     &sys_create,
     &sys_rmdir,
     &sys_rm,
+    &sys_rename,
     &sys_getdents,
     &sys_getcwd,
     &sys_chdir,

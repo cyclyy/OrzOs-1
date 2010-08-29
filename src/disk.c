@@ -205,6 +205,7 @@ err:
             d->dev_id = disk->dev_id + *start_part_no;
             d->f_ops = &part_fops;
             d->priv = part;
+            vfs_mknod("/dev/part",d->dev_id,0);
             add_dev(d);
         }
     }
@@ -231,6 +232,7 @@ void add_disk(disk_t *disk)
     d->f_ops = &disk_fops;
     d->priv = disk;
     add_dev(d);
+    vfs_mknod("/dev/disk",d->dev_id,0);
 
     // search  partitions and call add_dev;
     u8int *mbr = (u8int*)kmalloc(512);

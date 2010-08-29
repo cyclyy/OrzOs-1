@@ -24,6 +24,7 @@ s32int   ramfs_mknod   (vnode_t *dir, char *name, u32int dev_id, u32int flags);
 s32int   ramfs_create  (vnode_t *dir, char *name, u32int flags);
 s32int   ramfs_rmdir   (vnode_t *dir, char *name);
 s32int   ramfs_rm      (vnode_t *dir, char *name);
+s32int   ramfs_rename  (vnode_t *dir, char *old_name, char *name);
 
 struct file_operations ramfs_fops = {
     .open = &ramfs_open,
@@ -40,6 +41,7 @@ struct vnode_operations ramfs_vops = {
     .create  = &ramfs_create,
     .rmdir   = &ramfs_rmdir,
     .rm      = &ramfs_rm,
+    .rename  = &ramfs_rename,
 };
 
 struct fs_operations ramfs_ops = {
@@ -322,6 +324,7 @@ s32int ramfs_mknod   (vnode_t *dir, char *name, u32int dev_id, u32int flags)
     memset(node,0,sizeof(vnode_t));
     strcpy(node->name,name);
     node->flags = VFS_DEV_FILE;
+    node->dev_id = dev_id;
     node->fs = dir->fs;
     ramfs_vnode_priv_t *vnode_priv = (ramfs_vnode_priv_t*)kmalloc(sizeof(ramfs_vnode_priv_t));
     memset(vnode_priv,0,sizeof(ramfs_vnode_priv_t));
@@ -387,6 +390,18 @@ s32int   ramfs_rm      (vnode_t *dir, char *name)
 
     remove_child(dir,node);
 
+    return 0;
+}
+
+s32int ramfs_rename (vnode_t *dir, char *old_name, char *name)
+{
+    vnode_t *node = find_child(dir,old_name);
+
+    if (!node)
+        return -ENOENT;
+
+    strcpy(node->name,name);
+        
     return 0;
 }
 

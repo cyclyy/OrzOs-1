@@ -16,9 +16,10 @@ DEFN_SYSCALL_3(mknod, 12,char*,u32int,u32int);
 DEFN_SYSCALL_2(create, 13,char*,u32int);
 DEFN_SYSCALL_1(rmdir, 14,char*);
 DEFN_SYSCALL_1(rm, 15,char*);
-DEFN_SYSCALL_3(getdents,16,u32int,u8int*,u32int);
-DEFN_SYSCALL_2(getcwd, 17,char*,u32int);
-DEFN_SYSCALL_1(chdir, 18,char*);
-DEFN_SYSCALL_1(putch, 19, char);
+DEFN_SYSCALL_2(rename, 16,char*,char*);
+DEFN_SYSCALL_3(getdents,17,u32int,u8int*,u32int);
+DEFN_SYSCALL_2(getcwd, 18,char*,u32int);
+DEFN_SYSCALL_1(chdir, 19,char*);
+DEFN_SYSCALL_1(putch, 20, char);
 
 

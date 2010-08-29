@@ -260,6 +260,7 @@ s32int          vfs_mknod   (char *path, u32int dev_id, u32int flags)
     dir_name = dirname(path);
     base_name = basename(path);
     vnode_t *dir = vfs_lookup(dir_name);
+    printk("vfs_mknod %s %p\n",path,dev_id);
     if (dir && dir->v_ops && dir->v_ops->mknod)
         ret = dir->v_ops->mknod(dir,base_name,dev_id,flags);
     else 
@@ -313,6 +314,23 @@ s32int          vfs_rm      (char *path)
     vnode_t *dir = vfs_lookup(dir_name);
     if (dir && dir->v_ops && dir->v_ops->rm)
         ret = dir->v_ops->rm(dir,base_name);
+    else 
+        ret = -EFAULT;
+    kfree(dir_name);
+    kfree(base_name);
+    return ret;
+}
+
+s32int vfs_rename  (char *path, char *name)
+{
+    s32int ret;
+    char *dir_name;
+    char *base_name;
+    dir_name = dirname(path);
+    base_name = basename(path);
+    vnode_t *dir = vfs_lookup(dir_name);
+    if (dir && dir->v_ops && dir->v_ops->rm)
+        ret = dir->v_ops->rename(dir,base_name,name);
     else 
         ret = -EFAULT;
     kfree(dir_name);
@@ -529,6 +547,36 @@ s32int          sys_getcwd  (char *buf, u32int size)
         return -EFAULT;
 
     return 0;
+}
+
+s32int          sys_rename  (char *path, char *name)
+{
+    char *kpath = (char*)kmalloc(MAX_PATH_LEN);
+    memset(kpath,0,MAX_PATH_LEN);
+    char *kname = (char*)kmalloc(MAX_NAME_LEN);
+    memset(kname,0,MAX_NAME_LEN);
+    s32int ret; 
+    u32int n;
+    n = copy_from_user(kpath, path, MAX_PATH_LEN);
+    
+    if (n==0) {
+        ret = -EFAULT;
+        goto cleanup;
+    }
+
+    n = copy_from_user(kname, name, MAX_NAME_LEN);
+    
+    if (n==0) {
+        ret = -EFAULT;
+        goto cleanup;
+    }
+    char *abs_path = vfs_abs_path(kpath);
+    ret = vfs_rename(abs_path,name);
+    kfree(abs_path);
+cleanup:
+    kfree(kpath);
+    kfree(kname);
+    return ret;
 }
 
 s32int          sys_chdir   (char *path)

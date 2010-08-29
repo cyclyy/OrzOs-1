@@ -24,10 +24,10 @@ void putn(u32int n)
     if (n==0)
         syscall_putch('0');
 
-    while (n/base==0)
+    while ((base!=1) && (n/base==0))
         base /= 10;
 
-    while (n) {
+    while (base) {
         i = n/base;
         syscall_putch(i + '0');
         n -= base * i;
@@ -49,7 +49,7 @@ void test_kbd()
     s32int fd;
     char buf[1000];
 
-    fd = syscall_open("/kbd", 0);
+    fd = syscall_open("/dev/kbd", 0);
 
     while(1) {
         syscall_read(fd, buf, 4);
@@ -60,15 +60,20 @@ void test_kbd()
     }
 }
 
-void test_hda()
+void test_disk()
 {
     u32int ret;
     s32int fd;
-    char buf[1000];
+    char buf[4000];
 
-    fd = syscall_open("/hda", 0);
+    fd = syscall_open("/dev/part", 0);
 
-    ret = syscall_read(fd, buf, 512);
+    syscall_read(fd, buf, 1024);
+    syscall_read(fd, buf, 1024);
+    u16int magic = *(u16int*)(buf+56);
+    puts("ext2 magic:");
+    putn(magic);
+    puts("\n");
 
 }
 
@@ -77,27 +82,28 @@ void test_ramfs()
     u32int ret;
     s32int fd;
     char buf[1000] = {"miao "};
-    char buf2[1000];
+    char buf2[2000];
 
     fd = syscall_open("/a.txt", 0);
     ret = syscall_read(fd, buf2, 1000);
     syscall_close(fd);
     puts(buf2);
 
-    fd = syscall_open("./././../a.txt", 0);
-    ret = syscall_write(fd, buf, 5);
-    syscall_close(fd);
-
-    fd = syscall_open("/boot/../a.txt", 0);
+    syscall_rename("/a.txt", "b.txt");
+    syscall_rm("/b.txt");
+    syscall_create("/b.txt",0);
+    fd = syscall_open("./././../b.txt", 0);
+    ret = syscall_write(fd, buf, 6);
+    syscall_lseek(fd,0,SEEK_SET);
     ret = syscall_read(fd, buf2, 1000);
     syscall_close(fd);
     puts(buf2);
 
     ret = syscall_chdir("modules/");
     fd = syscall_open(".", 0);
-    ret = syscall_getdents(fd,buf2,1000);
+    ret = syscall_getdents(fd,(u8int*)buf2,2000);
     u32int i;
-    for (i=0;i<ret;i+=36) {
+    for (i=0;i<ret;i+=260) {
         puts(buf2+i);
         puts("\n");
     }
@@ -117,6 +123,8 @@ int main()
     puts(s);
 
     test_ramfs();
+    /*test_kbd();*/
+    /*test_disk();*/
 
     /*
     while (1) {
