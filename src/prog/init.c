@@ -35,6 +35,22 @@ void putn(u32int n)
     }
 
 }
+
+void puthex(u32int n)
+{
+    u32int i;
+    u32int base = 0x10000000;
+    puts(" 0x");
+    while (base) {
+        i = n/base;
+        if (i<10)
+            syscall_putch(i + '0');
+        else 
+            syscall_putch(i-10 + 'A');
+        n -= base * i;
+        base /= 16;
+    }
+}
 int recur(int i)
 {
     if (i)
@@ -117,12 +133,33 @@ void test_ramfs()
 
 }
 
+void test_ext2fs()
+{
+    u32int ret;
+    s32int fd;
+    char buf[1000] = {"miao "};
+    char buf2[1024];
+
+    fd = syscall_open("/volumn/c/b/random.dat", 0);
+    syscall_lseek(fd,-100,SEEK_END);
+    ret = syscall_read(fd, buf2, 1024);
+    putn(ret);
+    puts("\n");
+    puthex(*(u32int*)(buf2));
+    puthex(*(u32int*)(buf2+4));
+    puthex(*(u32int*)(buf2+92));
+    puthex(*(u32int*)(buf2+96));
+    puts("\n");
+    syscall_close(fd);
+}
+
 int main()
 {
     char *s = "Init process running.\n";
     puts(s);
 
-    test_ramfs();
+    test_ext2fs();
+    /*test_ramfs();*/
     /*test_kbd();*/
     /*test_disk();*/
 

@@ -97,6 +97,18 @@ void *memcpy(void *dst, void *src, u32int n)
     return dst;
 }
 
+s32int memcmp(u8int *b1, u8int *b2, u32int n)
+{
+    u32int i;
+    for (i=0; i<n; i++) {
+        if (b1[i]<b2[i])
+            return -1;
+        if (b1[i]>b2[i])
+            return 1;
+    }
+    return 0;
+}
+
 void panic(const char *msg, const char *file, u32int line)
 {
     __asm__ __volatile__("cli");
@@ -258,7 +270,7 @@ char *strrchr(char *s1, char c)
     return ret;
 }
 
-char *strdup(char *s)
+char *strdup(const char *s)
 {
     char *ret = (char*)kmalloc(strlen(s) + 1);
     strcpy(ret, s);

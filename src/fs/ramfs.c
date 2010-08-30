@@ -6,18 +6,18 @@
 
 void    ramfs_init(struct fs_driver *);
 void    ramfs_cleanup(struct fs_driver *);
-fs_t*   ramfs_createfs(struct fs_driver *drv, vnode_t *dev, u32int flags, void *data);
+fs_t*   ramfs_createfs(struct fs_driver *drv, char *path, u32int flags, void *data);
 void    ramfs_removefs(struct fs_driver *, fs_t *fs);
 
 vnode_t* ramfs_get_root(fs_t *fs);
 vnode_t* ramfs_lookup(fs_t *fs, char *path);
+void     ramfs_drop_node(fs_t *fs, vnode_t *node);
 
 s32int   ramfs_open    (file_t *f);
 s32int   ramfs_close   (file_t *f);
 s32int   ramfs_read    (file_t *f, u32int offset, u32int sz, u8int *buffer);
 s32int   ramfs_write   (file_t *f, u32int offset, u32int sz, u8int *buffer);
 
-vnode_t* ramfs_parent  (vnode_t *node);
 s32int   ramfs_subnodes(vnode_t *dir, vnode_t ***nodes);
 s32int   ramfs_mkdir   (vnode_t *dir, char *name, u32int flags);
 s32int   ramfs_mknod   (vnode_t *dir, char *name, u32int dev_id, u32int flags);
@@ -34,7 +34,6 @@ struct file_operations ramfs_fops = {
 };
 
 struct vnode_operations ramfs_vops = {
-    .parent  = &ramfs_parent,
     .subnodes= &ramfs_subnodes,
     .mkdir   = &ramfs_mkdir,
     .mknod   = &ramfs_mknod,
@@ -47,6 +46,7 @@ struct vnode_operations ramfs_vops = {
 struct fs_operations ramfs_ops = {
     .get_root = &ramfs_get_root,
     .lookup = &ramfs_lookup,
+    .drop_node = &ramfs_drop_node,
 };
 
 struct fs_driver_operations ramfs_drv_ops = {
@@ -60,14 +60,7 @@ typedef struct {
     vnode_t *root;
 } ramfs_priv_t;
 
-typedef struct vnode_list_struct {
-    vnode_t *node;
-    struct vnode_list_struct *prev;
-    struct vnode_list_struct *next;
-} vnode_list_t;
-
 typedef struct {
-    vnode_t *parent;
     u32int nchildren;
     vnode_list_t *children;
     u8int *buffer;
@@ -145,7 +138,7 @@ void    ramfs_cleanup(struct fs_driver *fs_drv)
 {
 }
 
-fs_t*   ramfs_createfs(struct fs_driver *drv, vnode_t *dev, u32int flags, void *data)
+fs_t*   ramfs_createfs(struct fs_driver *drv, char *path, u32int flags, void *data)
 {
     fs_t *fs = (fs_t*)kmalloc(sizeof(fs_t));
     memset(fs,0,sizeof(fs_t));
@@ -212,6 +205,11 @@ vnode_t* ramfs_lookup(fs_t *fs, char *path)
     return node;
 }
 
+void ramfs_drop_node (fs_t *fs, vnode_t *node)
+{
+    // doesn't drop it
+}
+
 s32int   ramfs_open    (file_t *f)
 {
     return 0;
@@ -259,12 +257,6 @@ s32int   ramfs_write   (file_t *f, u32int offset, u32int sz, u8int *buf)
     return sz;
 }
 
-vnode_t* ramfs_parent  (vnode_t *node)
-{
-    ramfs_vnode_priv_t *vnode_priv = (ramfs_vnode_priv_t*)(node->priv);
-    return vnode_priv->parent;
-}
-
 s32int   ramfs_subnodes(vnode_t *dir, vnode_t ***nodes)
 {
     if (!(dir->flags & VFS_DIRECTORY))
@@ -275,7 +267,7 @@ s32int   ramfs_subnodes(vnode_t *dir, vnode_t ***nodes)
         return 0;
     if (nodes==0)
         return dir_priv->nchildren;
-    *nodes = (vnode_t**)kmalloc(sizeof(vnode_t)*dir_priv->nchildren);
+    *nodes = (vnode_t**)kmalloc(sizeof(vnode_t*)*dir_priv->nchildren);
     s32int n=0;
     vnode_list_t *p = dir_priv->children;
     while (p) {

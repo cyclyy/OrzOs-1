@@ -69,6 +69,14 @@ u32int kmain(multiboot_t *ptr, u32int esp)
     load_module("/boot/modules/i8042.o");
     load_module("/boot/modules/pci.o");
     load_module("/boot/modules/ide.o"); 
+    load_module("/boot/modules/ext2fs.o"); 
+
+    fs_driver_t *driver = get_fs_driver_byname("ext2fs");
+    driver->fs_drv_ops->init(driver);
+    fs_t *fs = driver->fs_drv_ops->createfs(driver, "/dev/part", 0, 0);
+    vfs_mkdir("/volumn",0);
+    vfs_mkdir("/volumn/c",0);
+    vfs_mount("/volumn/c",fs);
 
     if (fork()) {
         while (1) 
@@ -86,6 +94,7 @@ void mount_root()
     ASSERT(mboot_ptr->mods_count >= 1);
 
     fs_driver_t *driver = get_fs_driver_byname("ramfs");
+    driver->fs_drv_ops->init(driver);
     fs_t *fs = driver->fs_drv_ops->createfs(driver, 0, 0, 0);
     vfs_mount_root(fs);
 

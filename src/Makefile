@@ -27,6 +27,7 @@ MOD_SOURCES = testmod.o            \
               i8042.o              \
               pci.o                \
               ide.o                \
+              fs/ext2fs.o          \
 
 PROG_SOURCES = prog/init.o         \
                syscall.o           \

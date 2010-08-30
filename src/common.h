@@ -57,6 +57,8 @@ void memset(void *addr, u8int c, u32int n);
 
 void *memcpy(void *dst, void *src, u32int n);
 
+s32int memcmp(u8int *b1, u8int *b2,u32int n);
+
 void panic(const char *msg, const char *file, u32int line);
 
 void panic_assert(const char *msg, const char *file, u32int line);
@@ -79,7 +81,7 @@ char *strchr(char *s1, char c);
 // the last apperance of c in s1
 char *strrchr(char *s1, char c);
 
-char *strdup(char *s);
+char *strdup(const char *s);
 
 u32int strbrk(char **result, const char *str, const char *delim);
 

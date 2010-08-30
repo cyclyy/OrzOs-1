@@ -4,15 +4,16 @@
 #include "common.h"
 #include "file.h"
 
-#define VFS_FILE 0x01
-#define VFS_DIRECTORY    0x02
-#define VFS_DEV_FILE  0x04
-#define VFS_DEV_DIR 0x08
-#define VFS_PIPE         0x16
-#define VFS_SYMLINK      0x32
-#define VFS_MOUNTPOINT   0x64 // Is the vnode an active mountpoint?
-#define MAX_VFSMOUNTS    10
-#define MAX_PATH_DEPS    20
+#define VFS_UNKNOWN     0x80
+#define VFS_FILE        0x01
+#define VFS_DIRECTORY   0x02
+#define VFS_DEV_FILE    0x04
+#define VFS_DEV_DIR     0x08
+#define VFS_PIPE        0x10
+#define VFS_SYMLINK     0x20
+#define VFS_MOUNTPOINT  0x40 // Is the vnode an active mountpoint?
+#define MAX_VFSMOUNTS   10
+#define MAX_PATH_DEPS   20
 
 typedef struct fs_struct fs_t;
 typedef struct vnode_struct vnode_t;
@@ -25,7 +26,6 @@ struct file_operations {
 };
 
 struct vnode_operations {
-    vnode_t* (*parent)  (vnode_t *node);
     s32int   (*subnodes)(vnode_t *dir, vnode_t ***nodes);
     s32int   (*mkdir)   (vnode_t *dir, char *name, u32int flags);
     s32int   (*mknod)   (vnode_t *dir, char *name, u32int dev_id, u32int flags);
@@ -56,10 +56,17 @@ struct vnode_struct {
     void *priv;
 };
 
+typedef struct vnode_list_struct {
+    vnode_t *node;
+    struct vnode_list_struct *prev;
+    struct vnode_list_struct *next;
+} vnode_list_t;
+
 struct fs_operations {
     vnode_t* (*get_root)(fs_t *fs);
     void (*sync)(fs_t *fs);
     vnode_t* (*lookup)    (fs_t *fs, char *name);
+    void (*drop_node) (fs_t *fs, vnode_t*node);
 };
     
 struct fs_struct {
@@ -71,7 +78,7 @@ struct fs_struct {
 struct fs_driver_operations {
     void (*init)(struct fs_driver *);
     void (*cleanup)(struct fs_driver *);
-    fs_t* (*createfs)(struct fs_driver *, vnode_t *dev, u32int flags, void *data);
+    fs_t* (*createfs)(struct fs_driver *, char *path, u32int flags, void *data);
     void (*removefs)(struct fs_driver *, fs_t *fs);
 };
 
@@ -125,6 +132,6 @@ s32int          sys_rename  (char *path, char *name);
 s32int          sys_getcwd  (char *buf,u32int size);
 s32int          sys_chdir   (char *path);
 
-void dump_vfs(char *path);
+void vfs_dump(char *path);
 
 #endif /* VFS_H */

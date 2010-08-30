@@ -5,6 +5,7 @@ rm initrd/boot/modules/testmod.o
 rm initrd/boot/modules/i8042.o
 rm initrd/boot/modules/pci.o
 rm initrd/boot/modules/ide.o
+rm initrd/boot/modules/ext2fs.o
 cd src
 make 
 cd ..
@@ -15,6 +16,7 @@ cp src/testmod.o initrd/boot/modules/
 cp src/i8042.o initrd/boot/modules/
 cp src/pci.o initrd/boot/modules/
 cp src/ide.o initrd/boot/modules/
+cp src/fs/ext2fs.o initrd/boot/modules/
 rm initrd.img
 cd initrd
 find -depth -print | sort | cpio -ov > ../initrd.img

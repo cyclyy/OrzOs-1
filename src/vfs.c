@@ -54,93 +54,6 @@ fs_driver_t* get_fs_driver_byname(char *name)
     return driver;
 }
 
-/*
-u32int vfs_read(vnode_t *node, u32int offset, u32int sz, u8int *buffer)
-{
-    printk("vfs_read offset: %p, size: %d, buffer: %p\n",
-            offset, sz, buffer);
-    if (!node)
-        return 0;
-    if (node->read)
-        return node->read(node,offset,sz,buffer);
-
-    return 0;
-}
-
-u32int vfs_write(vnode_t *node, u32int offset, u32int sz, u8int *buffer)
-{
-    if (!node)
-        return 0;
-
-    if (node->write)
-        return node->write(node,offset,sz,buffer);
-
-    return 0;
-}
-
-void vfs_open(vnode_t *node)
-{
-    if (!node)
-        return;
-}
-
-void vfs_close(vnode_t *node)
-{
-    if (!node)
-        return;
-    if (node->close)
-        node->close(node);
-}
-
-vnode_t* vfs_readdir(struct vnode *vnode, u32int i)
-{
-    if (!vnode)
-        return 0;
-
-    if (vnode->flags & VFS_MOUNTPOINT) {
-        vnode = vnode->ptr;
-
-        if (!vnode) {
-            return 0;
-        }
-    }
-
-    if ( (vnode->flags & VFS_DIRECTORY) && vnode->readdir) {
-        return vnode->readdir(vnode, i);
-    }
-    return 0;
-}
-
-vnode_t* vfs_finddir(struct vnode *vnode, char *name)
-{
-    if (!vnode)
-        return 0;
-
-    if (vnode->flags & VFS_MOUNTPOINT) {
-        vnode = vnode->ptr;
-
-        if (!vnode)
-            return 0;
-    }
-
-    // if vnode's file system driver only implement readdir, then enum the child vnodes
-    if (vnode->flags & VFS_DIRECTORY) {
-        if (vnode->finddir) 
-            return vnode->finddir(vnode, name);
-        else if (vnode->readdir) {
-            u32int i = 0;
-            vnode_t *tmp = 0;
-            while ( (tmp = vnode->readdir(vnode, i++)) ) {
-                if (strcmp(tmp->name, name) == 0)
-                    return tmp;
-            }
-        }
-    }
-
-    return 0;
-}
-*/
-
 char* vfs_abs_path(char *p)
 {
     if (!p || (strlen(p)==0))
@@ -372,17 +285,18 @@ s32int vfs_mount(char *path, fs_t *fs)
         return vfs_mount_root(fs);
 
     vnode_t *node     = vfs_lookup(path);
-    vnode_t *to_mount = fs->fs_ops->get_root(fs);
+    /*vnode_t *to_mount = fs->fs_ops->get_root(fs);*/
     u32int i;
 
-    if (!node || !to_mount)
+    if (!node)
         return  -EFAULT;
 
     if ( (node->flags & VFS_DIRECTORY) && !(node->flags & VFS_MOUNTPOINT) ) {
         // add to vfs_mounts
         i = 0;
-        while ((i<vfs_mounts->n) && (strcmp(path,vfs_mounts->mounts[i].path)==-1)) 
+        while ((i<vfs_mounts->n) && (strcmp(path,vfs_mounts->mounts[i].path)==1)) {
             i++;
+        }
         if (i==vfs_mounts->n) {
             vfs_mounts->mounts[vfs_mounts->n].path  = strdup(path);
             vfs_mounts->mounts[vfs_mounts->n].fs    = fs;
@@ -401,9 +315,9 @@ s32int vfs_mount(char *path, fs_t *fs)
         }
 
         // modify vnode
-        node->flags |= VFS_MOUNTPOINT;
-        to_mount->covered = node;
-        node->ptr = to_mount;
+        /*node->flags |= VFS_MOUNTPOINT;*/
+        /*to_mount->covered = node;*/
+        /*node->ptr = to_mount;*/
 
     } else {
         return -1;
@@ -416,7 +330,7 @@ void syscall_mount(char *src, char* dst, u32int flags, void *data)
 {
 }
 
-void dump_vfs(char *path)
+void vfs_dump(char *path)
 {
     vnode_t *node = vfs_lookup(path);
     if (node) {
@@ -430,7 +344,7 @@ void dump_vfs(char *path)
             for (i=0; i<nsubs; i++) {
                 char *new_path = (char*)kmalloc(strlen(path)+strlen(sub_nodes[i]->name)+2);
                 sprintf(new_path, "%s/%s", path, sub_nodes[i]->name);
-                dump_vfs(new_path);
+                vfs_dump(new_path);
                 kfree(new_path);
             }
             kfree(sub_nodes);
