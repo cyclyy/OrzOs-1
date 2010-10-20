@@ -153,6 +153,12 @@ s32int          vfs_mkdir   (char *path, u32int flags)
     s32int ret;
     char *dir_name;
     char *base_name;
+    vnode_t *node;
+    if ((node = vfs_lookup(path))) {
+        if (node->fs->fs_ops && node->fs->fs_ops->drop_node)
+            node->fs->fs_ops->drop_node(node->fs,node);
+        return -EEXIST;
+    }
     dir_name = dirname(path);
     base_name = basename(path);
     vnode_t *dir = vfs_lookup(dir_name);
@@ -160,6 +166,8 @@ s32int          vfs_mkdir   (char *path, u32int flags)
         ret = dir->v_ops->mkdir(dir,base_name,flags);
     else 
         ret = -EFAULT;
+    if (dir->fs->fs_ops && dir->fs->fs_ops->drop_node)
+        dir->fs->fs_ops->drop_node(dir->fs,dir);
     kfree(dir_name);
     kfree(base_name);
     return ret;
@@ -208,10 +216,15 @@ s32int          vfs_rmdir   (char *path)
     dir_name = dirname(path);
     base_name = basename(path);
     vnode_t *dir = vfs_lookup(dir_name);
+    if (vfs_subnodes(dir_name,0)) {
+        ret = -EFAULT;
+        goto cleanup;
+    }
     if (dir && dir->v_ops && dir->v_ops->rmdir)
         ret = dir->v_ops->rmdir(dir,base_name);
     else 
         ret = -EFAULT;
+cleanup:
     kfree(dir_name);
     kfree(base_name);
     return ret;

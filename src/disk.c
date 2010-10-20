@@ -78,7 +78,7 @@ static u32int do_disk_write(disk_t *d, u32int offset, u32int sz, u8int *buf)
         sz -= len;
     }
 
-    // now offset blk_size aligned, read middle blocks
+    // now offset is blk_size-aligned, write middle blocks
     if (sz >= d->blk_size) {
         d->write_blks(d, offset/d->blk_size, sz/d->blk_size, buf);
         len = sz & ~(d->blk_size-1);

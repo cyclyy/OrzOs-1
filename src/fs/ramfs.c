@@ -186,7 +186,7 @@ vnode_t* ramfs_lookup(fs_t *fs, char *path)
     u32int i,j,n, nsubnodes, found;
     n = strbrk(s,path,"/");
     vnode_t *node = fs->fs_ops->get_root(fs);
-    vnode_t **subnodes;
+    vnode_t **subnodes=0;
     for (i=0; i<n; i++) {
         if (!(node->flags & VFS_DIRECTORY))
             return 0;
@@ -199,6 +199,7 @@ vnode_t* ramfs_lookup(fs_t *fs, char *path)
                 break;
             }
         kfree(subnodes);
+        subnodes = 0;
         if (!found)
             return 0;
     }

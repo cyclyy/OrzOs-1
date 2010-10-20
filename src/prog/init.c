@@ -140,17 +140,23 @@ void test_ext2fs()
     char buf[1000] = {"miao "};
     char buf2[1024];
 
-    fd = syscall_open("/volumn/c/b/random.dat", 0);
-    syscall_lseek(fd,-100,SEEK_END);
+    /*
+    fd = syscall_open("/volumn/c/b/c.txt", 0);
     ret = syscall_read(fd, buf2, 1024);
     putn(ret);
     puts("\n");
-    puthex(*(u32int*)(buf2));
-    puthex(*(u32int*)(buf2+4));
-    puthex(*(u32int*)(buf2+92));
-    puthex(*(u32int*)(buf2+96));
+    buf2[ret] = 0;
+    puts(buf2);
+    ret = syscall_write(fd, buf, 4);
+    putn(ret);
     puts("\n");
+    syscall_lseek(fd,0,SEEK_SET);
+    ret = syscall_read(fd, buf2, 1024);
+    buf2[ret] = 0;
+    puts(buf2);
     syscall_close(fd);
+    */
+    syscall_mkdir("/volumn/c/tt",0);
 }
 
 int main()

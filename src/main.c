@@ -76,7 +76,9 @@ u32int kmain(multiboot_t *ptr, u32int esp)
     fs_t *fs = driver->fs_drv_ops->createfs(driver, "/dev/part", 0, 0);
     vfs_mkdir("/volumn",0);
     vfs_mkdir("/volumn/c",0);
+    printk("ff\n");
     vfs_mount("/volumn/c",fs);
+    printk("ff\n");
 
     if (fork()) {
         while (1) 
