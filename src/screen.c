@@ -1,5 +1,4 @@
 #include "screen.h"
-#include "common.h"
 
 u16int *video_addr = (u16int *) 0xb8000;
 u8int cursor_x, cursor_y;
@@ -146,6 +145,7 @@ void scr_puthex(u32int i)
     }
 }
 
+/*
 void scr_putp(const char *msg, void *p)
 {
     scr_puts(msg);
@@ -153,7 +153,9 @@ void scr_putp(const char *msg, void *p)
     scr_puthex((u32int)p);
     scr_putch('\n');
 }
+*/
 
+/*
 void printk(char *fmt, ...)
 {
     if (!fmt) 
@@ -243,4 +245,5 @@ void printk(char *fmt, ...)
 
     va_end(ap);
 }
+*/
 

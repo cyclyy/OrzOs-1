@@ -1,7 +1,7 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include "common.h"
+#include "types.h"
 
 // clear screen
 void scr_clear();
@@ -13,7 +13,7 @@ void scr_putch(char c);
 void scr_puts(const char *s);
 
 // put a line of  s: 0xp
-void scr_putp(const char *s, void *p);
+//void scr_putp(const char *s, void *p);
 
 // put a dec num
 void scr_putn(u32int i);
@@ -22,7 +22,7 @@ void scr_putn(u32int i);
 void scr_puthex(u32int i);
 
 // printf simple clone
-void printk(char *fmt, ...);
+//void printk(char *fmt, ...);
 
 #endif
 

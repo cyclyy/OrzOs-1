@@ -4,9 +4,10 @@
 /*            tutorials: http://www.osdever.net/bkerndev/index.php. */
 
 ENTRY(start)
+OUTPUT_FORMAT(elf64-x86-64)
 SECTIONS
 {
-  .text 0x100000 :
+  .text 0x0 :
   {
     code = .; _code = .; __code = .;
     *(.text)

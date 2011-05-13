@@ -1,4 +1,4 @@
 #! /bin/bash
 
-sudo losetup /dev/loop0 floppy.img
-sudo mount /dev/loop0 /tmp/floppy
+sudo losetup /dev/loop2 floppy.img
+sudo mount /dev/loop2 /tmp/floppy
