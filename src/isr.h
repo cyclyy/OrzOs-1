@@ -1,14 +1,14 @@
 #ifndef ISR_H
 #define ISR_H
 
-#include "common.h"
+#include "sysdef.h"
 
-typedef struct {
-    u32int ds;
-    u32int edi, esi, ebp, esp, ebx, edx, ecx, eax;
-    u32int int_no, errcode;
-    u32int eip, cs, eflags, user_esp, ss;
-} registers_t;
+struct RegisterState {
+    //u64int ds;
+    //u64int rdi, rsi, rbp, rsp, rbx, rdx, rcx, rax;
+    u64int number, errcode;
+    u64int rip, cs, rflags, rsp, ss;
+};
 
 #define IRQ0 32
 #define IRQ1 33
@@ -27,15 +27,15 @@ typedef struct {
 #define IRQ14 46
 #define IRQ15 47
 
-typedef void (*isr_t)(registers_t *);
+typedef void (*IsrHandlerFunc)(struct RegisterState *);
 
-void register_interrupt_handler(u32int n, isr_t handler);
+void registerInterruptHandler(u32int n, IsrHandlerFunc handler);
 
 // general isr handler
-void isr_handler(registers_t regs);
+void isrDispatcher(struct RegisterState *regs);
 
 // general irq handler
-void irq_handler(registers_t regs);
+void irqDispatcher(struct RegisterState *rs);
 
 
 #endif

@@ -4,8 +4,14 @@ AR = x86_64-pc-elf-ar
 LD = x86_64-pc-elf-ld
 NM = x86_64-pc-elf-nm
 
-CORE_SOURCES = loader64.o main.o              \
+CORE_SOURCES = main.o              \
                util.o              \
+			   mm.o				\
+	       dtable.o		   \
+	       flushdtable.o	   \
+	       interrupt.o	   \
+	       isr.o		   \
+		   tlsf.o		\
                screen.o        
 
 MOD_SOURCES = testmod.o            \
@@ -17,7 +23,7 @@ MOD_SOURCES = testmod.o            \
 PROG_SOURCES = prog/init.o         \
                syscall.o           \
 
-CFLAGS=-m64 -ffreestanding -nostdlib -nodefaultlibs -nostdinc -fno-builtin -fno-stack-protector -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Wall -I.
+CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Wall -I. -g
 CORE_LDFLAGS=-Tcore.ld -M=allsymbol.map -z max-page-size=0x1000
 PROG_LDFLAGS=-Tprog.ld
 ASFLAGS=-felf64
@@ -29,10 +35,10 @@ clean:
 	-rm *.o ../util/*.o prog/*.o prog/init fs/*.o kernel allsymbol.map global.map
 
 loader32: loader32.s
-	nasm -f elf32 loader32.s
+	nasm -f bin loader32.s -o loader32
 
 core_link:
-	$(LD) $(CORE_LDFLAGS) -o kernel $(CORE_SOURCES)
+	$(LD) $(CORE_LDFLAGS) -melf_x86_64 -o kernel $(CORE_SOURCES)
 	$(NM) ./kernel > global.map
 
 prog_link:

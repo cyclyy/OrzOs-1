@@ -2,26 +2,29 @@
   [GLOBAL isr%1]        ; %1 accesses the first parameter.
   isr%1:
     cli
-    push dword $0
-    push dword %1
-    jmp isr_common_stub
+    push qword $0
+    push qword %1
+    mov rbx, isr_common_stub
+    jmp rbx
 %endmacro
 
 %macro DEF_ISR_ERRCODE 1
   [GLOBAL isr%1]
   isr%1:
     cli
-    push dword %1
-    jmp isr_common_stub
+    push qword %1
+    mov rbx, isr_common_stub
+    jmp rbx
 %endmacro 
 
 %macro DEF_IRQ 2      
   [GLOBAL irq%1]  
   irq%1:
     cli
-    push dword $0
-    push dword %2
-    jmp irq_common_stub
+    push qword $0
+    push qword %2
+    mov rbx, isr_common_stub
+    jmp rbx
 %endmacro
 
 DEF_ISR_NOERRCODE 0 ; divide zero
@@ -58,33 +61,30 @@ DEF_ISR_NOERRCODE 30
 DEF_ISR_NOERRCODE 31 
 DEF_ISR_NOERRCODE 128
 
-[extern isr_handler]
+[extern isrDispatcher]
 
 isr_common_stub:
-    pushad
+;    mov ax, ds
+;    push rax
+;
+;    mov ax, 0x10
+;    mov ds, ax
+;    mov es, ax
+;    mov fs, ax
+;    mov gs, ax
 
-    mov ax, ds
-    push eax
+    mov rdi, rsp
+    call isrDispatcher
 
-    mov ax, 0x10
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
+;    pop rbx
+;    mov ds, bx
+;    mov es, bx
+;    mov fs, bx
+;    mov gs, bx
 
-    call isr_handler
-
-    pop ebx
-    mov ds, bx
-    mov es, bx
-    mov fs, bx
-    mov gs, bx
-
-    popad
-
-    add esp, 8
+    add rsp, 16
     sti
-    iret
+    iretq
 
 DEF_IRQ 0,32
 DEF_IRQ 1,33
@@ -103,31 +103,28 @@ DEF_IRQ 13,45
 DEF_IRQ 14,46
 DEF_IRQ 15,47
 
-[extern irq_handler]
+[extern irqDispatcher]
 
 irq_common_stub:
-    pushad
+;    mov ax, ds
+;    push rax
+;
+;    mov ax, 0x10
+;    mov ds, ax
+;    mov es, ax
+;    mov fs, ax
+;    mov gs, ax
 
-    mov ax, ds
-    push eax
+    mov rdi, rsp
+    call irqDispatcher
 
-    mov ax, 0x10
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
+;    pop rbx
+;    mov ds, bx
+;    mov es, bx
+;    mov fs, bx
+;    mov gs, bx
 
-    call irq_handler
-
-    pop ebx
-    mov ds, bx
-    mov es, bx
-    mov fs, bx
-    mov gs, bx
-
-    popad
-
-    add esp, 8
+    add rsp, 16
     sti
-    iret
+    iretq
 

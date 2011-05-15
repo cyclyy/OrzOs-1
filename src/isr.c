@@ -1,25 +1,26 @@
 #include "isr.h"
-#include "common.h"
+#include "util.h"
 #include "screen.h"
 
-static isr_t interrupt_handlers[256] = {0};
+static IsrHandlerFunc interruptHandlers[256] = {0};
 
-void isr_handler(registers_t regs)
+void isrDispatcher(struct RegisterState *rs)
 {
-    if (interrupt_handlers[regs.int_no]) {
-        isr_t handler = interrupt_handlers[regs.int_no];
-        handler(&regs);
+    printk("Interrupt %d %x %x\n",rs->number, rs->rip, rs->errcode);
+    if (interruptHandlers[rs->number]) {
+        IsrHandlerFunc handler = interruptHandlers[rs->number];
+        handler(rs);
     } else {
-        printk("Isr_code:%d, eip: %p\n",regs.int_no,regs.eip);
-        PANIC("unhandled exception.");
+        //printk("Isr_code:%d, eip: %p\n",rs->number,regs.eip);
+        //PANIC("unhandled exception.");
     }
 }
 
-void irq_handler(registers_t regs)
+void irqDispatcher(struct RegisterState *rs)
 {
    // Send an EOI (end of interrupt) signal to the PICs.
    // If this interrupt involved the slave.
-   if (regs.int_no >= 40)
+   if (rs->number >= 40)
    {
        // Send reset signal to slave.
        outb(0xA0, 0x20);
@@ -27,15 +28,15 @@ void irq_handler(registers_t regs)
    // Send reset signal to master. (As well as slave, if necessary).
    outb(0x20, 0x20);
 
-    if (interrupt_handlers[regs.int_no]) {
-        isr_t handler = interrupt_handlers[regs.int_no];
-        return handler(&regs);
+    if (interruptHandlers[rs->number]) {
+        IsrHandlerFunc handler = interruptHandlers[rs->number];
+        return handler(rs);
     }
 
 }
 
-void register_interrupt_handler(u32int n, isr_t handler)
+void registerInterruptHandler(u32int n, IsrHandlerFunc handler)
 {
-    interrupt_handlers[n] = handler;
+    interruptHandlers[n] = handler;
 }
 

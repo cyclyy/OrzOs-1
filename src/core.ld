@@ -3,20 +3,21 @@
 /*            Original file taken from Bran's Kernel Development */
 /*            tutorials: http://www.osdever.net/bkerndev/index.php. */
 
-ENTRY(start)
+ENTRY(kmain)
 OUTPUT_FORMAT(elf64-x86-64)
 SECTIONS
 {
-  .text 0x0 :
+  . = 0xffffffffC0100000;
+  .text :
   {
-    code = .; _code = .; __code = .;
+    code = .;
     *(.text)
     . = ALIGN(4096);
   }
 
   .data :
   {
-     data = .; _data = .; __data = .;
+      data = .;
      *(.data)
      *(.rodata)
      . = ALIGN(4096);
@@ -24,10 +25,10 @@ SECTIONS
 
   .bss :
   {
-    bss = .; _bss = .; __bss = .;
+    bss = .; 
     *(.bss)
     . = ALIGN(4096);
   }
 
-  end = .; _end = .; __end = .;
+  end = .;
 } 

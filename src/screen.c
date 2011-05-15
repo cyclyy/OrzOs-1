@@ -1,4 +1,5 @@
 #include "screen.h"
+#include "util.h"
 
 u16int *video_addr = (u16int *) 0xb8000;
 u8int cursor_x, cursor_y;
@@ -104,15 +105,15 @@ void scr_puts(const char *s)
 
 
 // put a dec num
-void scr_putn(u32int i)
+void scr_putn(u64int i)
 {
     if (i==0) {
         scr_putch('0');
     } else {
             
-        char s[10];
+        char s[30];
         int j;
-        j = 8;
+        j = 29;
         s[9] = 0;
         while (i) {
             s[j--] = '0' + (i % 10);
@@ -123,14 +124,14 @@ void scr_putn(u32int i)
 }
 
 // put a hex num
-void scr_puthex(u32int i)
+void scr_puthex(u64int i)
 {
     if (i==0) {
         scr_putch('0');
     } else {
-        char s[10];
+        char s[30];
         int j;
-        j = 8;
+        j = 29;
         s[9] = 0;
         while (i) {
             int k;
@@ -152,98 +153,6 @@ void scr_putp(const char *msg, void *p)
     scr_puts(": 0x");
     scr_puthex((u32int)p);
     scr_putch('\n');
-}
-*/
-
-/*
-void printk(char *fmt, ...)
-{
-    if (!fmt) 
-        return;
-
-    u32int i,j;
-    char ch;
-    char *s;
-    va_list ap;
-    va_start(ap, fmt);
-
-    while (*fmt) {
-        switch (*fmt) {
-            case '%':
-                fmt++;
-                switch (*fmt) {
-                    case '%':
-                        scr_putch(*fmt);
-                        fmt++;
-                        break;
-                    case 'c':
-                        ch = va_arg(ap, char);
-                        scr_putch(ch);
-                        fmt++;
-                        break;
-                    case 's':
-                        s = va_arg(ap, char*);
-                        scr_puts(s);
-                        fmt++;
-                        break;
-                    case 'd':
-                        i = va_arg(ap, u32int);
-                        scr_putn(i);
-                        fmt++;
-                        break;
-                    case 'p':
-                    case 'x':
-                        scr_puts("0x");
-                        i = va_arg(ap, u32int);
-                        scr_puthex(i);
-                        fmt++;
-                        break;
-                    default:
-                        scr_putch('%');
-                        scr_putch(*fmt);
-                        fmt++;
-                        break;
-                }
-                break;
-            case '\\':
-                fmt++;
-                switch (*fmt) {
-                    case '\\':
-                        scr_putch('\\');
-                        fmt++;
-                        break;
-                    case '"':
-                        scr_putch('"');
-                        fmt++;
-                        break;
-                    case 'b':
-                        scr_putch('\b');
-                        fmt++;
-                        break;
-                    case 't':
-                        scr_putch('\t');
-                        fmt++;
-                        break;
-                    case 'n':
-                        scr_putch('\n');
-                        fmt++;
-                        break;
-                    case 'r':
-                        scr_putch('\r');
-                        fmt++;
-                        break;
-                    default:
-                        scr_putch('\\');
-                        scr_putch(*fmt);
-                        fmt++;
-                        break;
-                }
-            default:
-                scr_putch(*fmt++);
-        }
-    }
-
-    va_end(ap);
 }
 */
 

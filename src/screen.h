@@ -1,7 +1,7 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include "types.h"
+#include "sysdef.h"
 
 // clear screen
 void scr_clear();
@@ -16,10 +16,10 @@ void scr_puts(const char *s);
 //void scr_putp(const char *s, void *p);
 
 // put a dec num
-void scr_putn(u32int i);
+void scr_putn(u64int i);
 
 // put a hex num
-void scr_puthex(u32int i);
+void scr_puthex(u64int i);
 
 // printf simple clone
 //void printk(char *fmt, ...);

@@ -1,18 +1,25 @@
 // main.c -- Defines the C-code kernel entry point, calls initialisation routines.
 
-#include "types.h"
+#include "sysdef.h"
 #include "screen.h"
+#include "dtable.h"
+#include "mm.h"
 
-u64int initial_esp;
+struct StartupInfo {
+    u64int memory;
+    u64int initrdAddr;
+    u64int initrdEnd;
+    u64int freeMemStartAddr;
+};
 
-void mount_root();
-
-u64int kmain()
+u64int kmain(struct StartupInfo *si)
 {
-    asm volatile("cli");
-
     scr_clear();  
     scr_puts("Booting...\n");
+
+    initIDT();
+    initMemoryManagement(si->memory, si->freeMemStartAddr);
+
     for(;;);
     // never return here;
     return 0;

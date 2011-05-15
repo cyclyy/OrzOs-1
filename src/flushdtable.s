@@ -1,11 +1,13 @@
+[bits 64]
 [global gdt_flush]
-[global idt_flush]
+[global flushIDT]
 [global tss_flush]
 
 gdt_flush:
-    mov eax, [esp+4]
-    lgdt [eax]
-    jmp 0x08:.reload_cs
+    mov rax, [rsp+8]
+    lgdt [rax]
+    mov rbx, .reload_cs
+    jmp rbx
 .reload_cs:
     mov ax, 0x10
     mov ds, ax
@@ -13,11 +15,12 @@ gdt_flush:
     mov fs, ax
     mov gs, ax
     mov ds, ax
+    
     ret
 
-idt_flush:
-    mov eax, [esp+4]
-    lidt [eax]
+flushIDT:
+    mov rax, rdi
+    lidt [rax]
     ret
 
 tss_flush:
