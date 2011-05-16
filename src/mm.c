@@ -47,20 +47,8 @@ u64int availMemory()
  *-----------------------------------------------------------------------------*/
 void mapPagesEx(u64int vaddr, u64int paddr, u64int n)
 {
-    int i;
-
-    for (i=0; i<n; i++) {
-        vaddr += PAGE_SIZE;
-        paddr += PAGE_SIZE;
-    }
-
-}
-
-
-void initPaging()
-{
-    u64int vaddr, paddr, i, x;
-    struct Page *page;
+    u64int i, x;
+    //struct Page *page;
     struct PageTable *pt;
     struct PageDirectory *pd;
     struct PageDirectoryPointer *pdp;
@@ -68,10 +56,7 @@ void initPaging()
 
     asm volatile("mov %%cr3,%0":"=r"(x)::);
     pml4e = (struct PML4E *)(x & 0xfffffffffffff000);
-    for (i = 0; i<totalHighMemory+HIGHMEM_START_ADDR; 
-            i+=PAGE_SIZE) {
-        paddr = i;
-        vaddr = i + HEAP_START_ADDR;
+    for (i=0; i<n; i++) {
         pdp = (struct PageDirectoryPointer *)
             (pml4e->pdp[((vaddr>>39) & 511)] & (~0 - 0x1000 + 1));
         if (!pdp) {
@@ -94,7 +79,17 @@ void initPaging()
             pd->pt[(vaddr>>21) & 511] = (u64int)pt | 3;
         }
         pt->page[(vaddr>>12) & 511] = paddr | 3;
+        vaddr += PAGE_SIZE;
+        paddr += PAGE_SIZE;
     }
+
+}
+
+
+void initPaging()
+{
+    mapPagesEx(0,0,(totalHighMemory+HIGHMEM_START_ADDR) >> 12);
+    mapPagesEx(HEAP_START_ADDR,0,(totalHighMemory+HIGHMEM_START_ADDR) >> 12);
 }
 
 void initMemoryManagement(u64int totalHighMem, u64int freePMemStartAddr)
@@ -111,7 +106,6 @@ void initMemoryManagement(u64int totalHighMem, u64int freePMemStartAddr)
 
     heap = tlsfInitHeap(freeMemoryStart, availableMemory);
 
-    u64int addr;
     kmallocEx(1,0,0);
 
     tlsfDump(heap);
@@ -125,7 +119,7 @@ u64int kmallocEx(u64int size, u64int pageAligned, u64int *physicalAddr)
     struct TLSFBlock *blk;
 
     if (!size) {
-        return;
+         return 0;
     }
 
 
@@ -158,7 +152,7 @@ u64int kmallocEx(u64int size, u64int pageAligned, u64int *physicalAddr)
     return ret;
 }
 
-void free(u32int addr)
+void free(u64int addr)
 {
     if (!addr)
         return;

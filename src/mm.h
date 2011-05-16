@@ -62,5 +62,5 @@ void setAddressSpace();
  *-----------------------------------------------------------------------------*/
 u64int kmallocEx(u64int size, u64int pageAligned, u64int *physicalAddr);
 
-void free(u32int addr);
+void free(u64int addr);
 
