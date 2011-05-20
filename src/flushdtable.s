@@ -1,10 +1,10 @@
 [bits 64]
-[global gdt_flush]
+[global flushGDT]
 [global flushIDT]
-[global tss_flush]
+[global flushTSS]
 
-gdt_flush:
-    mov rax, [rsp+8]
+flushGDT:
+    mov rax, rdi
     lgdt [rax]
     mov rbx, .reload_cs
     jmp rbx
@@ -15,6 +15,7 @@ gdt_flush:
     mov fs, ax
     mov gs, ax
     mov ds, ax
+    mov ss, ax
     
     ret
 
@@ -23,7 +24,7 @@ flushIDT:
     lidt [rax]
     ret
 
-tss_flush:
+flushTSS:
     mov ax, 0x28
     ltr ax
     ret

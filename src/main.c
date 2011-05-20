@@ -2,23 +2,27 @@
 
 #include "sysdef.h"
 #include "screen.h"
-#include "dtable.h"
-#include "mm.h"
+#include "interrupt.h"
+#include "kmm.h"
+#include "vmm.h"
+#include "util.h"
+#include "process.h"
+#include "bootinfo.h"
+#include "vfs.h"
 
-struct StartupInfo {
-    u64int memory;
-    u64int initrdAddr;
-    u64int initrdEnd;
-    u64int freeMemStartAddr;
-};
-
-u64int kmain(struct StartupInfo *si)
+u64int kmain(struct BootInfo *si)
 {
     scr_clear();  
     scr_puts("Booting...\n");
 
-    initIDT();
+    setBootInfo(si);
+    initInterrupt();
     initMemoryManagement(si->memory, si->freeMemStartAddr);
+    initTSS();
+    initMultitasking();
+    initVFS();
+    vfsMount("Boot",0,"tarfs",0,(void*)getBootInfo()->initrdAddr);
+    DBG("AvailMem:%dKB",availMemory()/1024);
 
     for(;;);
     // never return here;

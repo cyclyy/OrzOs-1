@@ -83,14 +83,24 @@ void outsb(u16int port, u32int buffer, u32int bytes) {
 }
 */
 
-void memset(void *addr, u8int c, u32int n)
+void memset(void *addr, u8int c, u64int n)
 {
     while(n) {
         ((u8int *)addr)[--n] = c;
     }
 }
 
-u32int vsprintf(char *buf, char *fmt, va_list ap)
+void *memcpy(void *dst, void *src, u64int n)
+{
+    while (n) {
+        *(u8int*)(dst + n - 1) = *(u8int*)(src + n - 1);
+        n--;
+    }
+
+    return dst;
+}
+
+u64int vsprintf(char *buf, char *fmt, va_list ap)
 {
     if (!fmt || !buf) 
         return 0;
@@ -181,7 +191,7 @@ u32int vsprintf(char *buf, char *fmt, va_list ap)
     return idx;
 }
 
-u32int sprintf(char *buf, char *fmt, ...)
+u64int sprintf(char *buf, char *fmt, ...)
 {
     int ret;
     va_list args;
@@ -193,7 +203,7 @@ u32int sprintf(char *buf, char *fmt, ...)
 
 char *strcpy(char *dst, const char *src)
 {
-    u32int i = 0;
+    u64int i = 0;
     while (src[i]) {
         dst[i] = src[i];
         i++;
@@ -203,11 +213,11 @@ char *strcpy(char *dst, const char *src)
     return dst;
 }
 
-s32int strcmp(const char *s1, const char *s2)
+s64int strcmp(const char *s1, const char *s2)
 {
-    u32int l1 = strlen(s1);
-    u32int l2 = strlen(s2);
-    u32int i;
+    u64int l1 = strlen(s1);
+    u64int l2 = strlen(s2);
+    u64int i;
 
     for  (i=0; i<MIN(l1,l2); i++) {
         if (s1[i] < s2[i])
@@ -224,9 +234,9 @@ s32int strcmp(const char *s1, const char *s2)
         return 0;
 }
 
-u32int strlen(const char *s)
+u64int strlen(const char *s)
 {
-    u32int i = 0;
+    u64int i = 0;
 
     while (s[i]) {
         i++;
@@ -234,6 +244,105 @@ u32int strlen(const char *s)
 
     return i;
 }
+
+char *strstr(const char *s1, const char *s2)
+{
+    if (!s1 || !s2)
+        return 0;
+
+    u64int n1 = strlen(s1);
+    u64int n2 = strlen(s2);
+
+    if (n1 < n2)
+        return 0;
+
+    u64int i,j;
+
+    for (i=0; i<=n1-n2; i++) {
+        u64int same = 1;
+        for (j=0; j<n2; j++) {
+            if (s1[i+j] != s2[j]) {
+                same = 0;
+                break;
+            }
+        }
+        if (same)
+            return (char*)s1+i;
+    }
+
+    return 0;
+}
+
+char *strrstr(const char *s1, const char *s2)
+{
+    if (!s1 || !s2)
+        return 0;
+
+    u64int n1 = strlen(s1);
+    u64int n2 = strlen(s2);
+
+    if (n1 < n2)
+        return 0;
+
+    u64int i,j;
+
+    for (i=n1-n2; i>=0; i--) {
+        u64int same = 1;
+        for (j=0; j<n2; j++) {
+            if (s1[i+j] != s2[j]) {
+                same = 0;
+                break;
+            }
+        }
+        if (same)
+            return (char*)s1+i;
+    }
+
+    return 0;
+}
+
+// the first apperance of c in s1
+char *strchr(const char *s1, char c)
+{
+    if (!s1)
+        return 0;
+
+    while (*s1 && (*s1 != c)) 
+        s1++;
+
+    if (*s1 == c)
+        return (char*)s1;
+
+    return 0;
+}
+
+// the last apperance of c in s1
+char *strrchr(const char *s1, char c)
+{
+    if (!s1)
+        return 0;
+
+    char *ret = 0;
+
+    while (*s1) { 
+        if (*s1 == c) {
+            ret = (char*)s1;
+        }
+        s1++;
+    }
+
+    return ret;
+}
+
+/*
+char *strdup(const char *s)
+{
+    char *ret = (char*)kMalloc(strlen(s) + 1);
+    strcpy(ret, s);
+
+    return ret;
+}
+*/
 
 void printk(char *fmt, ...)
 {
@@ -249,7 +358,7 @@ void printk(char *fmt, ...)
     return;
     */
     
-    u64int i,j;
+    u64int i;
     int ch;
     char *s;
     va_list ap;
@@ -332,5 +441,44 @@ void printk(char *fmt, ...)
     }
 
     va_end(ap);
+}
+
+char *dirname(char *dest, const char *s)
+{
+    strcpy(dest,s);
+
+    if (strcmp(dest, "/") == 0) 
+        return dest;
+
+    char *slash = strrchr(dest, '/');
+
+    if (slash > dest) {
+        *slash = 0;
+    } else {
+        strcpy(dest, "/");
+    }
+
+    return dest;
+}
+
+char *basename(char *dest, const char *s)
+{
+    strcpy(dest,s);
+    u64int i;
+
+    char *slash = strrchr(s, '/');
+
+    if (slash) {
+        slash++;
+        i = 0;
+        while (slash[i]) {
+            dest[i] = slash[i];
+            i++;
+        }
+        dest[i] = 0;
+    } else 
+        strcpy(dest,s);
+
+    return dest;
 }
 

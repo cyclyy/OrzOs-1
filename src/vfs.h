@@ -1,137 +1,80 @@
 #ifndef VFS_H
-#define VFS_H 
+#define VFS_H
 
-#include "common.h"
-#include "file.h"
+#include "sysdef.h"
 
-#define VFS_UNKNOWN     0x80
-#define VFS_FILE        0x01
-#define VFS_DIRECTORY   0x02
-#define VFS_DEV_FILE    0x04
-#define VFS_DEV_DIR     0x08
-#define VFS_PIPE        0x10
-#define VFS_SYMLINK     0x20
-#define VFS_MOUNTPOINT  0x40 // Is the vnode an active mountpoint?
-#define MAX_VFSMOUNTS   10
-#define MAX_PATH_DEPS   20
+#define VNODE_FILE          0x01
+#define VNODE_DIRECTORY     0x02
 
-typedef struct fs_struct fs_t;
-typedef struct vnode_struct vnode_t;
+struct FileSystem;
+struct FileSystemDriver;
 
-struct file_operations {
-    s32int   (*open)    (file_t *f);
-    s32int   (*close)   (file_t *f);
-    s32int   (*read)    (file_t *f, u32int offset, u32int sz, u8int *buffer);
-    s32int   (*write)   (file_t *f, u32int offset, u32int sz, u8int *buffer);
+struct DirectoryRecord
+{
+    u64int size;
+    char buffer[1];
 };
 
-struct vnode_operations {
-    s32int   (*subnodes)(vnode_t *dir, vnode_t ***nodes);
-    s32int   (*mkdir)   (vnode_t *dir, char *name, u32int flags);
-    s32int   (*mknod)   (vnode_t *dir, char *name, u32int dev_id, u32int flags);
-    s32int   (*create)  (vnode_t *dir, char *name, u32int flags);
-    s32int   (*rmdir)   (vnode_t *dir, char *name);
-    s32int   (*rm)      (vnode_t *dir, char *name);
-    s32int   (*rename)  (vnode_t *dir, char *old_name, char *name);
+struct VNodeInfo
+{
+    u64int size;
 };
 
-struct vnode_struct {
-    char name[MAX_NAME_LEN]; //filename
-    u32int length;
-
-    u32int mask;    //permission
-    u32int flags;   //filetype 
-    u32int uid;     
-    u32int gid;
-    u32int dev_id;   // set by fs driver to identify the vnode, or (major, minor) if it's a device
-    u32int ino; 
-
-    struct file_operations  *f_ops;
-    struct vnode_operations *v_ops;
-
-    fs_t    *fs;    // the file system instance is resides in.
-    vnode_t *covered;
-    vnode_t *ptr;
-
-    void *priv;
+struct VNode
+{
+    u64int flags;
+    u64int id;
+    struct FileSystem *fs;
 };
 
-typedef struct vnode_list_struct {
-    vnode_t *node;
-    struct vnode_list_struct *prev;
-    struct vnode_list_struct *next;
-} vnode_list_t;
-
-struct fs_operations {
-    vnode_t* (*get_root)(fs_t *fs);
-    void (*sync)(fs_t *fs);
-    vnode_t* (*lookup)    (fs_t *fs, char *name);
-    void (*drop_node) (fs_t *fs, vnode_t*node);
-};
-    
-struct fs_struct {
-    struct fs_operations *fs_ops;
-    struct fs_driver *driver;
-    void *priv;
+struct FileSystemOperation
+{
+    s64int (*open)(struct FileSystem *fs, const char *path, u64int flags, struct VNode **ret);
+    s64int (*close)(struct FileSystem *fs, struct VNode *);
+    s64int (*read)(struct FileSystem *fs, struct VNode *node, u64int offset, u64int size, char *buffer);
+    s64int (*write)(struct FileSystem *fs, struct VNode *node, u64int offset, u64int size, char *buffer);
+    s64int (*mkdir)(struct FileSystem *fs, const char *name);
+    s64int (*rmdir)(struct FileSystem *fs, const char *name);
+    s64int (*readdir)(struct FileSystem *fs, struct VNode *node, u64int startIndex, u64int bufSize, char *buf);
+    s64int (*stat)(struct FileSystem *fs, const char *path, struct VNodeInfo *info);
 };
 
-struct fs_driver_operations {
-    void (*init)(struct fs_driver *);
-    void (*cleanup)(struct fs_driver *);
-    fs_t* (*createfs)(struct fs_driver *, char *path, u32int flags, void *data);
-    void (*removefs)(struct fs_driver *, fs_t *fs);
+struct FileSystem
+{
+    struct FileSystemDriver *driver;
+    struct FileSystemOperation *op;
+    void *data;
 };
 
-typedef struct fs_driver {
+struct FileSystemDriverOperation
+{
+    s64int (*mount)(struct FileSystemDriver *driver, struct FileSystem **fs, const char *source, u64int flags, void *data);
+    s64int (*unmount)(struct FileSystemDriver *driver, struct FileSystem *fs);
+};
+
+struct FileSystemDriver
+{
     char name[MAX_NAME_LEN];
-    struct fs_driver_operations *fs_drv_ops;
-    void *priv;
-    struct fs_driver *next;
-} fs_driver_t;
+    struct FileSystemDriverOperation *op;
+    struct FileSystemDriver *next, *prev;
+};
 
-typedef struct {
-    u32int n;
-    struct {
-        char *path;
-        fs_t *fs;
-    } mounts[MAX_VFSMOUNTS];
-} vfsmount_t;
+s64int registerFileSystemDriver(struct FileSystemDriver *fsDriver);
+s64int unregisterFileSystemDriver(const char *name);
 
-extern vnode_t      *vfs_root;
-extern fs_driver_t  *fs_drivers;
-extern vfsmount_t   *vfs_mounts;
+s64int vfsMount(const char *dest, const char *source, const char *fsType, u64int flags, void *data);
+s64int vfsUnmount(const char *path);
 
-void            init_vfs();
+s64int vfsOpen(const char *path, u64int flags, struct VNode **node);
+s64int vfsClose(struct VNode *node);
+s64int vfsRead(struct VNode *node, u64int offset, u64int size, char *buffer);
+s64int vfsWrite(struct VNode *node, u64int offset, u64int size, char *buffer);
+s64int vfsState(const char *path, struct VNodeInfo *info);
 
-void            register_fs_driver(fs_driver_t *driver);
-void            unregister_fs_driver(fs_driver_t *driver);
-fs_driver_t*    get_fs_driver_byname(char *name);
+s64int vfsCreateDirectory(const char *name);
+s64int vfsRemoveDirectory(const char *name);
+s64int vfsReadDirectory(struct VNode *vnd, u64int startIndex, u64int bufSize, char *buf);
 
-char*           vfs_abs_path(char *rel_path);
-
-// The difference with vnode->fs->*() and vfs_*() is:
-//   vfs_*() works across file-systems, it handles mount points.
-vnode_t*        vfs_lookup  (char *path);
-s32int          vfs_subnodes(char *path, vnode_t ***nodes);
-s32int          vfs_mkdir   (char *path, u32int flags);
-s32int          vfs_mknod   (char *path, u32int dev_id, u32int flags);
-s32int          vfs_create  (char *path, u32int flags);
-s32int          vfs_rmdir   (char *path);
-s32int          vfs_rm      (char *path);
-s32int          vfs_rename  (char *path, char *name);
-s32int          vfs_mount   (char *path, fs_t *fs);
-s32int          vfs_mount_root(fs_t *fs);
-
-s32int          sys_mkdir   (char *path, u32int flags);
-s32int          sys_mknod   (char *path, u32int dev_id, u32int flags);
-s32int          sys_create  (char *path, u32int flags);
-s32int          sys_rmdir   (char *path);
-s32int          sys_rm      (char *path);
-s32int          sys_rename  (char *path, char *name);
-
-s32int          sys_getcwd  (char *buf,u32int size);
-s32int          sys_chdir   (char *path);
-
-void vfs_dump(char *path);
+void initVFS();
 
 #endif /* VFS_H */

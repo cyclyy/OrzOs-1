@@ -162,6 +162,9 @@ mov rax, rbx
 add rax, 0xfff
 and rax, 0xfffffffffffff000
 mov [startupinfo.freepmem_start], rax
+mov rax, kstack
+add rax, VIRTUALBASE
+mov [startupinfo.kstack], rax
 
 ; trying to parse and load elf64 kernel
 mov rbx, [kernel64.imageAddr]
@@ -195,7 +198,6 @@ mov rsp, kstack
 add rsp, VIRTUALBASE
 mov rbx, nokernel
 add rbx, VIRTUALBASE
-push rax                    ; fake return EIP
 mov rax, startupinfo
 add rax, VIRTUALBASE
 ; jmp to the 64 bit kernel, cheers
@@ -242,6 +244,8 @@ dq 0                        ; Initrd address
 .initrdEnd:
 dq 0                        ; Initrd end
 .freepmem_start:
+dq 0
+.kstack:
 dq 0
 
 kernel64:

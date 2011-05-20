@@ -17,7 +17,7 @@
  */
 
 #include "tlsf.h"
-#include "mm.h"
+#include "kmm.h"
 #include "util.h"
 
 u64int msBit(u64int x)
@@ -90,26 +90,34 @@ struct TLSFBlock *tlsfFindFreeBlock(struct TLSFHeader *tlsf, u64int *fl, u64int 
 
 void removeFreeBlock(struct TLSFBlock *blk, struct TLSFHeader *tlsf, u64int fl, u64int sl)
 {
-    tlsf->matrix[fl][sl] = blk->ptr.free.next;
-    if (tlsf->matrix[fl][sl])
-        tlsf->matrix[fl][sl]->ptr.free.prev = 0;
-    else {
-        clearBit(&tlsf->slBitmap[fl], sl);
-        if (!tlsf->slBitmap[fl])
-            clearBit(&tlsf->flBitmap, fl);
+    if (blk->ptr.free.next)
+        blk->ptr.free.next->ptr.free.prev = blk->ptr.free.prev;
+    if (blk->ptr.free.prev)
+        blk->ptr.free.prev->ptr.free.next = blk->ptr.free.next;
+    if (tlsf->matrix[fl][sl] == blk) {
+        tlsf->matrix[fl][sl] = blk->ptr.free.next;
+        if (tlsf->matrix[fl][sl])
+            tlsf->matrix[fl][sl]->ptr.free.prev = 0;
+        else {
+            clearBit(&tlsf->slBitmap[fl], sl);
+            if (!tlsf->slBitmap[fl])
+                clearBit(&tlsf->flBitmap, fl);
+        }
     }
+    tlsf->usedSize += blk->size & BLOCK_SIZE;
 }
 
 void insertFreeBlock(struct TLSFBlock *blk, struct TLSFHeader *tlsf, u64int fl, u64int sl)
 {
     if (tlsf->matrix[fl][sl]) {
-        blk->ptr.free.next = tlsf->matrix[fl][sl];
         tlsf->matrix[fl][sl]->ptr.free.prev = blk;
     }
+    blk->ptr.free.prev = 0;
     blk->ptr.free.next = tlsf->matrix[fl][sl];
     tlsf->matrix[fl][sl] = blk;
     setBit(&tlsf->slBitmap[fl],sl);
     setBit(&tlsf->flBitmap,fl);
+    tlsf->usedSize -= blk->size & BLOCK_SIZE;
 }
 
 struct TLSFBlock *getNextBlock(struct TLSFBlock *blk)
@@ -136,8 +144,8 @@ struct TLSFBlock *tlsfAlloc(struct TLSFHeader *tlsf, u64int size)
     removeFreeBlock(freeBlock, tlsf, fl, sl);
     freeBlock->size &= ~BLOCK_FREE;
 
-    remainSize = freeBlock->size - size;
-    if (remainSize >= SPLIT_THREHOLD) {
+    if (freeBlock->size >= size + SPLIT_THREHOLD) {
+        remainSize = freeBlock->size - size;
         nextBlock = getNextBlock(freeBlock);
         freeBlock->size = size & ~BLOCK_FREE;
         remainBlock = getNextBlock(freeBlock);
@@ -145,7 +153,7 @@ struct TLSFBlock *tlsfAlloc(struct TLSFHeader *tlsf, u64int size)
         remainBlock->size = (remainSize - BLOCK_OVERHEAD) | BLOCK_FREE;
         remainBlock->prev = freeBlock;
         nextBlock->prev = remainBlock;
-        tlsfMapping(remainSize, &fl, &sl);
+        tlsfMapping(remainSize - BLOCK_OVERHEAD, &fl, &sl);
         insertFreeBlock(remainBlock, tlsf, fl, sl);
     }
 
@@ -180,6 +188,10 @@ struct TLSFHeader *tlsfInitHeap(u64int startAddr, u64int size)
     nextBlock->prev = block;
 
     tlsf->blockHead = block;
+    tlsf->blockEnd = nextBlock;
+
+    tlsf->maxSize = block->size;
+    tlsf->usedSize = tlsf->maxSize;
 
     tlsfFree(tlsf, block);
 
@@ -231,14 +243,13 @@ void tlsfDump(struct TLSFHeader *tlsf)
 {
     struct TLSFBlock *blk;
 
-    printk("Heap Addr:%x, Size:%d\n",tlsf,tlsf->maxSize);
+    printk("Heap Addr:%x, Size:%d, Used:%d\n",
+            tlsf, tlsf->maxSize, tlsf->usedSize);
 
     blk = tlsf->blockHead;
-    do {
+    while (blk!=tlsf->blockEnd) {
         tlsfPrintBlock(blk);
         blk = getNextBlock(blk);
-        if ((u64int)blk >= (u64int)tlsf + tlsf->maxSize) 
-            break;
-    } while (1);
+    };
 }
 

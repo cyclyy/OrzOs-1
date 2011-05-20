@@ -1,14 +1,7 @@
-#ifndef ISR_H
-#define ISR_H
+#ifndef INTERRUPT_H
+#define INTERRUPT_H
 
 #include "sysdef.h"
-
-struct RegisterState {
-    //u64int ds;
-    //u64int rdi, rsi, rbp, rsp, rbx, rdx, rcx, rax;
-    u64int number, errcode;
-    u64int rip, cs, rflags, rsp, ss;
-};
 
 #define IRQ0 32
 #define IRQ1 33
@@ -27,6 +20,13 @@ struct RegisterState {
 #define IRQ14 46
 #define IRQ15 47
 
+struct RegisterState {
+    //u64int ds;
+    //u64int rdi, rsi, rbp, rsp, rbx, rdx, rcx, rax;
+    u64int number, errcode;
+    u64int rip, cs, rflags, rsp, ss;
+};
+
 typedef void (*IsrHandlerFunc)(struct RegisterState *);
 
 void registerInterruptHandler(u32int n, IsrHandlerFunc handler);
@@ -36,6 +36,8 @@ void isrDispatcher(struct RegisterState *regs);
 
 // general irq handler
 void irqDispatcher(struct RegisterState *rs);
+
+void initInterrupt();
 
 
 #endif

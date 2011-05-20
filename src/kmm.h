@@ -16,14 +16,11 @@
  * =============================================================================
  */
 
+#ifndef KMM_H
+#define KMM_H
+
 #include "sysdef.h"
 
-#define HIGHMEM_START_ADDR 0x100000
-#define HEAP_START_ADDR 0xffffff0000000000      /* start from last 1024GB */
-#define CODE_LOAD_ADDR 0xfffffffC0000000        /* kernel loaded here */
-
-#define PAGE_SIZE 4096
-#define PTR_SIZE 8
 #define ROUND_PAGE_ALIGN(x) ((x+PAGE_SIZE-1) & (~0 - PAGE_SIZE + 1))
 #define FLOOR_PAGE_ALIGN(x) (x & (~0 & PAGE_SIZE))
 #define ROUND_MEM_ALIGN(x) ((x+PTR_SIZE-1) & (~0 - PTR_SIZE + 1))
@@ -51,16 +48,29 @@ u64int totalMemory(); /* in KB */
 
 u64int availMemory(); /* in KB */
 
+struct PML4E *getPML4E();
+
 void initMemoryManagement(u64int upperMemKB, u64int freePMemStartAddr);
 
-void setAddressSpace();
+/*-----------------------------------------------------------------------------
+ *  Map n pages start from vaddr to paddr
+ *-----------------------------------------------------------------------------*/
+void mapPagesVtoP(u64int vaddr, u64int paddr, u64int n, struct PML4E *pml4e);
+
+/*-----------------------------------------------------------------------------
+ *  Unmap n pages start from vaddr
+ *-----------------------------------------------------------------------------*/
+void unmapPages(u64int vaddr, u64int n);
 
 /*-----------------------------------------------------------------------------
  *  Allocate physically continous memory.
  *  Return the virtual address of allocated region.
  *  If physicalAddr != 0, the physical address is putted into.
  *-----------------------------------------------------------------------------*/
-u64int kmallocEx(u64int size, u64int pageAligned, u64int *physicalAddr);
+u64int kMallocEx(u64int size, u64int pageAligned, u64int *physicalAddr);
 
-void free(u64int addr);
+u64int kMalloc(u64int size);
 
+void kFree(void *addr);
+
+#endif

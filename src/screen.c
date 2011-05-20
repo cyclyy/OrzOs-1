@@ -1,7 +1,7 @@
 #include "screen.h"
 #include "util.h"
 
-u16int *video_addr = (u16int *) 0xb8000;
+u16int *video_addr = (u16int *)0xb8000;
 u8int cursor_x, cursor_y;
 
 void scroll()

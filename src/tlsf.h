@@ -34,7 +34,7 @@
 #define BLOCK_SIZE  (~0 - MIN_BLOCK_SIZE + 1)
 #define BLOCK_FREE  0x1
 
-#define ROUND_MEM_ALIGN
+//#define ROUND_MEM_ALIGN
 
 #define TLSF_SIGNATURE 0xABCDFFFFEEEEDCBA
 
@@ -59,6 +59,7 @@ struct TLSFHeader {
     u64int usedSize;
     u64int maxSize;
     struct TLSFBlock *blockHead;
+    struct TLSFBlock *blockEnd;
     u64int flBitmap;
     u64int slBitmap[REAL_FLI];                  /* i -> 2^(FLI_OFFSET+i) */
     struct TLSFBlock *matrix[REAL_FLI][MAX_SLI];

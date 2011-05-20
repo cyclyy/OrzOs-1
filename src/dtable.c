@@ -1,17 +1,14 @@
 #include "dtable.h"
+#include "sysdef.h"
 #include "util.h"
 
-/*
-gdt_entry_t gdt_entries[5];
+struct GDTPtr   gdtPtr;
+struct GDTEntry gdtTable[8];
+struct IDTEntry idtTable[256];
 
-gdt_ptr_t gdt_ptr;
-*/
+struct IDTPtr idtPtr;
 
-struct IDTEntry IDTTable[256];
-
-struct IDTPtr tr;
-
-//tss_entry_t tss0;
+struct TSS tss0;
 
 extern void isr0();
 extern void isr1();
@@ -63,20 +60,36 @@ extern void irq12();
 extern void irq13();
 extern void irq14();
 
-/*
-void setGDT(GDTEntry  *entry, u32int base, u32int limit, u8int access, u8int granunarity)
+extern void flushGDT(struct GDTPtr *);
+extern void flushIDT();
+extern void flushTSS();
+
+void setGDT(struct GDTEntry *entry, u32int base, u32int limit, u8int access, u8int granunarity)
 {
     if (entry) {
-        entry->limit_low = limit & 0xffff;
-        entry->base_low = base & 0xffff;
-        entry->base_middle = (base & 0xff0000) >> 16;
+        entry->limitLow = limit & 0xffff;
+        entry->baseLow = base & 0xffff;
+        entry->baseMiddle = (base & 0xff0000) >> 16;
         entry->access = access;
-        entry->gran = (limit >> 16) & 0x0f;
-        entry->gran |= gran & 0xf0;
-        entry->base_high = (base & 0xff000000) >> 24;
+        entry->granunarity = 0x20;
+        entry->baseHigh = (base & 0xff000000) >> 24;
     }
-}
-*/
+}  
+
+void setTSS(struct GDTEntry *entry, u64int base, u64int limit)
+{
+    struct TSSEntry *tssEntry = (struct TSSEntry *)entry;
+    memset(tssEntry,0,sizeof(struct TSSEntry));
+
+    tssEntry->limitLow = limit & 0xffff;
+    tssEntry->baseLow = base & 0xffff;
+    tssEntry->baseMiddle = (base >> 16) & 0xff;
+    tssEntry->typeAttr = 0xe9;
+    tssEntry->limitMiddle = (limit >> 16) & 0x0f;
+    tssEntry->baseMiddle2 = (base >> 24)  & 0xff;
+    tssEntry->baseHigh = (base >> 32) & 0xffffffff;
+    tssEntry->reserved = 0;
+}  
 
 void setIDT(struct IDTEntry *entry, void* offaddr, u16int selector, u8int typeAttr)
 {
@@ -91,77 +104,46 @@ void setIDT(struct IDTEntry *entry, void* offaddr, u16int selector, u8int typeAt
     }
 }
 
-/*
-void write_tss()
-{
-    memset(&tss0, 0, sizeof(tss_entry_t));
-    tss0.ss0 = 0x10;
-    tss0.cs = 0x0b;
-    tss0.ds = tss0.es = tss0.fs = tss0.gs = 0x13;
-
-    u32int addr = (u32int)&tss0;
-    gdt_set_entry(&gdt_entries[5], addr, addr+sizeof(tss_entry_t), 0xe9, 0xc0);
-}
-
-void init_gdt()
-{
-    gdt_ptr.limit = (sizeof(gdt_entry_t) * 6) - 1;
-    gdt_ptr.base = (u32int)&gdt_entries;
-
-
-    gdt_set_entry(&gdt_entries[0],0,0,0,0);
-    gdt_set_entry(&gdt_entries[1],0,0xffffffff,0x9a,0xcf);
-    gdt_set_entry(&gdt_entries[2],0,0xffffffff,0x92,0xcf);
-    gdt_set_entry(&gdt_entries[3],0,0xffffffff,0xfa,0xcf);
-    gdt_set_entry(&gdt_entries[4],0,0xffffffff,0xf2,0xcf);
-    write_tss();
-
-    gdt_flush( (u32int)&gdt_ptr );
-
-    tss_flush();
-}
-*/
-
 void initIDT()
 {
-    tr.limit = sizeof(struct IDTEntry) * 256 - 1;
-    tr.base = (u64int) &IDTTable;
+    idtPtr.limit = sizeof(struct IDTEntry) * 256 - 1;
+    idtPtr.base = (u64int) &idtTable;
 
-    memset(IDTTable, 0, sizeof(struct IDTEntry)*256);
+    memset(idtTable, 0, sizeof(struct IDTEntry)*256);
 
-    setIDT(&IDTTable[0], (void*)isr0, 0x08, 0x8e);
-    setIDT(&IDTTable[1], (void*)isr1, 0x08, 0x8e);
-    setIDT(&IDTTable[2], (void*)isr2, 0x08, 0x8e);
-    setIDT(&IDTTable[3], (void*)isr3, 0x08, 0x8e);
-    setIDT(&IDTTable[4], (void*)isr4, 0x08, 0x8e);
-    setIDT(&IDTTable[5], (void*)isr5, 0x08, 0x8e);
-    setIDT(&IDTTable[6], (void*)isr6, 0x08, 0x8e);
-    setIDT(&IDTTable[7], (void*)isr7, 0x08, 0x8e);
-    setIDT(&IDTTable[8], (void*)isr8, 0x08, 0x8e);
-    setIDT(&IDTTable[9], (void*)isr9, 0x08, 0x8e);
-    setIDT(&IDTTable[10], (void*)isr10, 0x08, 0x8e);
-    setIDT(&IDTTable[11], (void*)isr11, 0x08, 0x8e);
-    setIDT(&IDTTable[12], (void*)isr12, 0x08, 0x8e);
-    setIDT(&IDTTable[13], (void*)isr13, 0x08, 0x8e);
-    setIDT(&IDTTable[14], (void*)isr14, 0x08, 0x8e);
-    setIDT(&IDTTable[15], (void*)isr15, 0x08, 0x8e);
-    setIDT(&IDTTable[16], (void*)isr16, 0x08, 0x8e);
-    setIDT(&IDTTable[17], (void*)isr17, 0x08, 0x8e);
-    setIDT(&IDTTable[18], (void*)isr18, 0x08, 0x8e);
-    setIDT(&IDTTable[19], (void*)isr19, 0x08, 0x8e);
-    setIDT(&IDTTable[20], (void*)isr20, 0x08, 0x8e);
-    setIDT(&IDTTable[21], (void*)isr21, 0x08, 0x8e);
-    setIDT(&IDTTable[22], (void*)isr22, 0x08, 0x8e);
-    setIDT(&IDTTable[23], (void*)isr23, 0x08, 0x8e);
-    setIDT(&IDTTable[24], (void*)isr24, 0x08, 0x8e);
-    setIDT(&IDTTable[25], (void*)isr25, 0x08, 0x8e);
-    setIDT(&IDTTable[26], (void*)isr26, 0x08, 0x8e);
-    setIDT(&IDTTable[27], (void*)isr27, 0x08, 0x8e);
-    setIDT(&IDTTable[28], (void*)isr28, 0x08, 0x8e);
-    setIDT(&IDTTable[29], (void*)isr29, 0x08, 0x8e);
-    setIDT(&IDTTable[30], (void*)isr30, 0x08, 0x8e);
-    setIDT(&IDTTable[31], (void*)isr31, 0x08, 0x8e);
-    setIDT(&IDTTable[128], (void*)isr128, 0x08, 0x8e);
+    setIDT(&idtTable[0], (void*)isr0, 0x08, 0x8e);
+    setIDT(&idtTable[1], (void*)isr1, 0x08, 0x8e);
+    setIDT(&idtTable[2], (void*)isr2, 0x08, 0x8e);
+    setIDT(&idtTable[3], (void*)isr3, 0x08, 0x8e);
+    setIDT(&idtTable[4], (void*)isr4, 0x08, 0x8e);
+    setIDT(&idtTable[5], (void*)isr5, 0x08, 0x8e);
+    setIDT(&idtTable[6], (void*)isr6, 0x08, 0x8e);
+    setIDT(&idtTable[7], (void*)isr7, 0x08, 0x8e);
+    setIDT(&idtTable[8], (void*)isr8, 0x08, 0x8e);
+    setIDT(&idtTable[9], (void*)isr9, 0x08, 0x8e);
+    setIDT(&idtTable[10], (void*)isr10, 0x08, 0x8e);
+    setIDT(&idtTable[11], (void*)isr11, 0x08, 0x8e);
+    setIDT(&idtTable[12], (void*)isr12, 0x08, 0x8e);
+    setIDT(&idtTable[13], (void*)isr13, 0x08, 0x8e);
+    setIDT(&idtTable[14], (void*)isr14, 0x08, 0x8e);
+    setIDT(&idtTable[15], (void*)isr15, 0x08, 0x8e);
+    setIDT(&idtTable[16], (void*)isr16, 0x08, 0x8e);
+    setIDT(&idtTable[17], (void*)isr17, 0x08, 0x8e);
+    setIDT(&idtTable[18], (void*)isr18, 0x08, 0x8e);
+    setIDT(&idtTable[19], (void*)isr19, 0x08, 0x8e);
+    setIDT(&idtTable[20], (void*)isr20, 0x08, 0x8e);
+    setIDT(&idtTable[21], (void*)isr21, 0x08, 0x8e);
+    setIDT(&idtTable[22], (void*)isr22, 0x08, 0x8e);
+    setIDT(&idtTable[23], (void*)isr23, 0x08, 0x8e);
+    setIDT(&idtTable[24], (void*)isr24, 0x08, 0x8e);
+    setIDT(&idtTable[25], (void*)isr25, 0x08, 0x8e);
+    setIDT(&idtTable[26], (void*)isr26, 0x08, 0x8e);
+    setIDT(&idtTable[27], (void*)isr27, 0x08, 0x8e);
+    setIDT(&idtTable[28], (void*)isr28, 0x08, 0x8e);
+    setIDT(&idtTable[29], (void*)isr29, 0x08, 0x8e);
+    setIDT(&idtTable[30], (void*)isr30, 0x08, 0x8e);
+    setIDT(&idtTable[31], (void*)isr31, 0x08, 0x8e);
+    setIDT(&idtTable[128], (void*)isr128, 0x08, 0x8e);
 
     u8int a1, b1;
 
@@ -189,24 +171,48 @@ void initIDT()
     outb(0x21,a1);
     outb(0xa1,b1);
 
-    setIDT(&IDTTable[32], (void*)irq0, 0x08, 0x8e);
-    setIDT(&IDTTable[33], (void*)irq1, 0x08, 0x8e);
-    setIDT(&IDTTable[34], (void*)irq2, 0x08, 0x8e);
-    setIDT(&IDTTable[35], (void*)irq3, 0x08, 0x8e);
-    setIDT(&IDTTable[36], (void*)irq4, 0x08, 0x8e);
-    setIDT(&IDTTable[37], (void*)irq5, 0x08, 0x8e);
-    setIDT(&IDTTable[38], (void*)irq6, 0x08, 0x8e);
-    setIDT(&IDTTable[39], (void*)irq7, 0x08, 0x8e);
-    setIDT(&IDTTable[40], (void*)irq8, 0x08, 0x8e);
-    setIDT(&IDTTable[41], (void*)irq9, 0x08, 0x8e);
-    setIDT(&IDTTable[42], (void*)irq10, 0x08, 0x8e);
-    setIDT(&IDTTable[43], (void*)irq11, 0x08, 0x8e);
-    setIDT(&IDTTable[44], (void*)irq12, 0x08, 0x8e);
-    setIDT(&IDTTable[45], (void*)irq13, 0x08, 0x8e);
-    setIDT(&IDTTable[46], (void*)irq14, 0x08, 0x8e);
+    setIDT(&idtTable[32], (void*)irq0, 0x08, 0x8e);
+    setIDT(&idtTable[33], (void*)irq1, 0x08, 0x8e);
+    setIDT(&idtTable[34], (void*)irq2, 0x08, 0x8e);
+    setIDT(&idtTable[35], (void*)irq3, 0x08, 0x8e);
+    setIDT(&idtTable[36], (void*)irq4, 0x08, 0x8e);
+    setIDT(&idtTable[37], (void*)irq5, 0x08, 0x8e);
+    setIDT(&idtTable[38], (void*)irq6, 0x08, 0x8e);
+    setIDT(&idtTable[39], (void*)irq7, 0x08, 0x8e);
+    setIDT(&idtTable[40], (void*)irq8, 0x08, 0x8e);
+    setIDT(&idtTable[41], (void*)irq9, 0x08, 0x8e);
+    setIDT(&idtTable[42], (void*)irq10, 0x08, 0x8e);
+    setIDT(&idtTable[43], (void*)irq11, 0x08, 0x8e);
+    setIDT(&idtTable[44], (void*)irq12, 0x08, 0x8e);
+    setIDT(&idtTable[45], (void*)irq13, 0x08, 0x8e);
+    setIDT(&idtTable[46], (void*)irq14, 0x08, 0x8e);
 
-    flushIDT(&tr);
-    //asm volatile("sti");
+    flushIDT(&idtPtr);
+    asm volatile("sti");
+}
+
+void initTSS()
+{
+    gdtPtr.limit = sizeof(struct GDTEntry) * 7 - 1;
+    gdtPtr.base = (u64int)&gdtTable;
+    printk("%x,%d\n", gdtPtr.base,gdtPtr.limit);
+
+    setGDT(&gdtTable[0],0,0,0,0);
+    setGDT(&gdtTable[1],0,0xffffffff,0x9a,0xcf);
+    setGDT(&gdtTable[2],0,0xffffffff,0x92,0xcf);
+    setGDT(&gdtTable[3],0,0xffffffff,0xfa,0xcf);
+    setGDT(&gdtTable[4],0,0xffffffff,0xf2,0xcf);
+
+    memset(&tss0, 0, sizeof(struct TSS));
+    tss0.rsp0 = KERNEL_STACK_TOP;
+    setTSS(&gdtTable[5],(u64int)&tss0, sizeof(struct TSS)-1);
+
+    //tssPtr.limit = sizeof(struct TSSEntry) - 1;
+    //tssPtr.base = (u64int)&tss0;
+
+    printk("%x,%d\n", gdtPtr.base,gdtPtr.limit);
+    flushGDT(&gdtPtr);
+    flushTSS();
 }
 
 /*

@@ -1,11 +1,23 @@
+[bits 64]
+%macro  multipush 1-*
+    %rep  %0
+        push    %1
+    %rotate 1
+    %endrep
+%endmacro
+%macro  multipop 1-*
+    %rep  %0
+    %rotate -1
+        pop    %1
+    %endrep
+%endmacro
 %macro DEF_ISR_NOERRCODE 1  ; define a macro, taking one parameter
   [GLOBAL isr%1]        ; %1 accesses the first parameter.
   isr%1:
     cli
     push qword $0
     push qword %1
-    mov rbx, isr_common_stub
-    jmp rbx
+    jmp isr_common_stub
 %endmacro
 
 %macro DEF_ISR_ERRCODE 1
@@ -13,8 +25,7 @@
   isr%1:
     cli
     push qword %1
-    mov rbx, isr_common_stub
-    jmp rbx
+    jmp isr_common_stub
 %endmacro 
 
 %macro DEF_IRQ 2      
@@ -23,8 +34,7 @@
     cli
     push qword $0
     push qword %2
-    mov rbx, isr_common_stub
-    jmp rbx
+    jmp irq_common_stub
 %endmacro
 
 DEF_ISR_NOERRCODE 0 ; divide zero
@@ -64,24 +74,10 @@ DEF_ISR_NOERRCODE 128
 [extern isrDispatcher]
 
 isr_common_stub:
-;    mov ax, ds
-;    push rax
-;
-;    mov ax, 0x10
-;    mov ds, ax
-;    mov es, ax
-;    mov fs, ax
-;    mov gs, ax
-
-    mov rdi, rsp
+    multipush rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11
+    lea rdi, [rsp + 12*8]
     call isrDispatcher
-
-;    pop rbx
-;    mov ds, bx
-;    mov es, bx
-;    mov fs, bx
-;    mov gs, bx
-
+    multipop  rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11
     add rsp, 16
     sti
     iretq
@@ -106,24 +102,10 @@ DEF_IRQ 15,47
 [extern irqDispatcher]
 
 irq_common_stub:
-;    mov ax, ds
-;    push rax
-;
-;    mov ax, 0x10
-;    mov ds, ax
-;    mov es, ax
-;    mov fs, ax
-;    mov gs, ax
-
-    mov rdi, rsp
+    multipush rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11
+    lea rdi, [rsp + 12*8]
     call irqDispatcher
-
-;    pop rbx
-;    mov ds, bx
-;    mov es, bx
-;    mov fs, bx
-;    mov gs, bx
-
+    multipop rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11
     add rsp, 16
     sti
     iretq
