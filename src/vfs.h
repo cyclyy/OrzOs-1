@@ -29,14 +29,14 @@ struct VNode
 
 struct FileSystemOperation
 {
-    s64int (*open)(struct FileSystem *fs, const char *path, u64int flags, struct VNode **ret);
-    s64int (*close)(struct FileSystem *fs, struct VNode *);
-    s64int (*read)(struct FileSystem *fs, struct VNode *node, u64int offset, u64int size, char *buffer);
-    s64int (*write)(struct FileSystem *fs, struct VNode *node, u64int offset, u64int size, char *buffer);
-    s64int (*mkdir)(struct FileSystem *fs, const char *name);
-    s64int (*rmdir)(struct FileSystem *fs, const char *name);
-    s64int (*readdir)(struct FileSystem *fs, struct VNode *node, u64int startIndex, u64int bufSize, char *buf);
-    s64int (*stat)(struct FileSystem *fs, const char *path, struct VNodeInfo *info);
+    s64int (*root)(struct FileSystem *fs);
+    s64int (*open)(struct FileSystem *fs, s64int id);
+    s64int (*close)(struct FileSystem *fs, s64int id);
+    s64int (*read)(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer);
+    s64int (*write)(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer);
+    s64int (*stat)(struct FileSystem *fs, s64int id, struct VNodeInfo *ni);
+    s64int (*readdir)(struct FileSystem *fs, s64int id, u64int bufSize, char *buf);
+    s64int (*finddir)(struct FileSystem *fs, s64int id, const char *name);
 };
 
 struct FileSystem
@@ -65,15 +65,15 @@ s64int unregisterFileSystemDriver(const char *name);
 s64int vfsMount(const char *dest, const char *source, const char *fsType, u64int flags, void *data);
 s64int vfsUnmount(const char *path);
 
-s64int vfsOpen(const char *path, u64int flags, struct VNode **node);
+s64int vfsOpen(const char *path, u64int flags, struct VNode *node);
 s64int vfsClose(struct VNode *node);
 s64int vfsRead(struct VNode *node, u64int offset, u64int size, char *buffer);
 s64int vfsWrite(struct VNode *node, u64int offset, u64int size, char *buffer);
-s64int vfsState(const char *path, struct VNodeInfo *info);
+s64int vfsState(const char *path, struct VNodeInfo *ni);
 
 s64int vfsCreateDirectory(const char *name);
 s64int vfsRemoveDirectory(const char *name);
-s64int vfsReadDirectory(struct VNode *vnd, u64int startIndex, u64int bufSize, char *buf);
+s64int vfsReadDirectory(struct VNode *vnd, u64int bufSize, char *buf);
 
 void initVFS();
 

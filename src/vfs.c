@@ -140,7 +140,7 @@ struct MountPoint *findMountPointPrefix(const char *path)
     s = strchr(buf,':');
     if (!s)
         return 0;
-    buf[s - buf + 1] = 0;
+    buf[s - buf] = 0;
     mt = mountPoints;
     while (mt) {
         if (strcmp(buf,mt->name)==0)
@@ -162,23 +162,63 @@ s64int parsePath(const char *path, struct MountPoint **mt, char *remainPath)
     else
         strcpy(remainPath,"/");
 
+    DBG((*mt)->name);
+    DBG(path + strlen((*mt)->name) +1);
+
     return 0;
 }
 
-s64int vfsOpen(const char *path, u64int flags, struct VNode **node)
+s64int extractPath(char *path, char *name)
+{
+    char *s;
+    u64int i, len;
+
+    if ((strlen(path)==0) || (strcmp(path,"/")==0))
+        return 0;
+    s = strchr(path+1,'/');
+    if (s) {
+        len = strlen(s);
+        for (i=0; i<len; i++)
+            path[i] = s[i];
+        path[len] = 0;
+    } else {
+        strcpy(name, path+1);
+        strcpy(path, "/");
+    }
+
+    return 1;
+}
+
+s64int vfsOpen(const char *path, u64int flags, struct VNode *node)
 {
     struct MountPoint *mt;
-    char *remainPath;
-    s64int ret;
+    struct VNode n1, n2;
+    char *remainPath, name[MAX_NAME_LEN];
+    s64int ret, id;
 
-    *node = 0;
+    ret = 0;
     remainPath = (char*)kMalloc(strlen(path)+1);
-
     parsePath(path, &mt, remainPath);
+    DBG(remainPath);
 
-    if (mt && mt->fs && mt->fs->op->open)
-        ret = mt->fs->op->open(mt->fs, remainPath, flags, node);
-    else
+    if (mt) {
+        node->fs = mt->fs;
+        id = mt->fs->op->root(mt->fs);
+        while (1) {
+            ret = extractPath(remainPath, name);
+            if (ret <= 0)
+                break;
+            id = mt->fs->op->finddir(mt->fs, id, name);
+            if (id <= 0) {
+                ret = -1;
+                break;
+            }
+        }
+        if (ret==0) {
+            node->id = id;
+            ret = mt->fs->op->open(mt->fs, id);
+        }
+    } else
         ret = -1;
             
     kFree(remainPath);
@@ -189,7 +229,7 @@ s64int vfsOpen(const char *path, u64int flags, struct VNode **node)
 s64int vfsClose(struct VNode *node)
 {
     if (node->fs && node->fs->op->close)
-        return node->fs->op->close(node->fs, node);
+        return node->fs->op->close(node->fs, node->id);
     else
         return -1;
 }
@@ -197,7 +237,7 @@ s64int vfsClose(struct VNode *node)
 s64int vfsRead(struct VNode *node, u64int offset, u64int size, char *buffer)
 {
     if (node->fs && node->fs->op->read)
-        return node->fs->op->read(node->fs, node,offset,size,buffer);
+        return node->fs->op->read(node->fs, node->id, offset, size, buffer);
     else
         return -1;
 }
@@ -205,27 +245,16 @@ s64int vfsRead(struct VNode *node, u64int offset, u64int size, char *buffer)
 s64int vfsWrite(struct VNode *node, u64int offset, u64int size, char *buffer)
 {
     if (node->fs && node->fs->op->write)
-        return node->fs->op->write(node->fs, node,offset,size,buffer);
+        return node->fs->op->write(node->fs, node->id, offset, size, buffer);
     else
         return -1;
 }
 
-s64int vfsState(const char *path, struct VNodeInfo *info)
+s64int vfsState(const char *path, struct VNodeInfo *ni)
 {
     struct MountPoint *mt;
     char *remainPath;
     s64int ret;
-
-    remainPath = (char*)kMalloc(strlen(path)+1);
-
-    parsePath(path, &mt, remainPath);
-
-    if (mt && mt->fs && mt->fs->op->stat)
-        ret = mt->fs->op->stat(mt->fs, remainPath,info);
-    else
-        ret = -1;
-            
-    kFree(remainPath);
 
     return ret;
 }
@@ -236,17 +265,6 @@ s64int vfsCreateDirectory(const char *path)
     char *remainPath;
     s64int ret;
 
-    remainPath = (char*)kMalloc(strlen(path)+1);
-
-    parsePath(path, &mt, remainPath);
-
-    if (mt && mt->fs && mt->fs->op->mkdir)
-        ret = mt->fs->op->mkdir(mt->fs, remainPath);
-    else
-        ret = -1;
-            
-    kFree(remainPath);
-
     return ret;
 }
 
@@ -256,24 +274,13 @@ s64int vfsRemoveDirectory(const char *path)
     char *remainPath;
     s64int ret;
 
-    remainPath = (char*)kMalloc(strlen(path)+1);
-
-    parsePath(path, &mt, remainPath);
-
-    if (mt && mt->fs && mt->fs->op->rmdir)
-        ret = mt->fs->op->rmdir(mt->fs, remainPath);
-    else
-        ret = -1;
-            
-    kFree(remainPath);
-
     return ret;
 }
 
-s64int vfsReadDirectory(struct VNode *node, u64int startIndex, u64int bufSize, char *buffer)
+s64int vfsReadDirectory(struct VNode *node, u64int bufSize, char *buffer)
 {
     if (node->fs && node->fs->op->readdir)
-        return node->fs->op->readdir(node->fs, node,startIndex,bufSize,buffer);
+        return node->fs->op->readdir(node->fs, node->id, bufSize, buffer);
     else
         return -1;
 }

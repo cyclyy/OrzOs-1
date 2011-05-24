@@ -2320,6 +2320,8 @@ SYMINFO_NUM	elfdef.h	362;"	d
 SYSCALLS_H	syscalls.h	2;"	d
 SYSCALL_H	syscall.h	2;"	d
 SYSDEF_H	sysdef.h	2;"	d
+TAR_LINK_DIR	fs/bootfs.c	17;"	d	file:
+TAR_LINK_FILE	fs/bootfs.c	18;"	d	file:
 TASK_H	task.h	2;"	d
 TASK_INTR_WAIT	task.h	18;"	d
 TASK_READY	task.h	17;"	d
@@ -2332,6 +2334,7 @@ TLSFFreePtr	tlsf.h	/^struct TLSFFreePtr {$/;"	s
 TLSFHeader	tlsf.h	/^struct TLSFHeader {$/;"	s
 TLSF_H	tlsf.h	20;"	d
 TLSF_SIGNATURE	tlsf.h	39;"	d
+TOLOWER	util.c	485;"	d	file:
 TSS	dtable.h	/^struct TSS {$/;"	s
 TSSEntry	dtable.h	/^struct TSSEntry {$/;"	s
 TSSPtr	dtable.h	/^struct TSSPtr {$/;"	s
@@ -2438,6 +2441,8 @@ apm_table	multiboot.h	/^    u32int apm_table;$/;"	m	struct:multiboot
 arg	kobject.c	/^    } arg;$/;"	m	struct:KDirectoryProcessData	typeref:union:KDirectoryProcessData::__anon50	file:
 arr	testmod.c	/^u32int arr[63] = {1};$/;"	v
 atapi_packet	ide.c	/^u8int atapi_packet[12] = {0xA8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};$/;"	v
+atoi	util.c	/^s32int atoi(const char *nptr)$/;"	f
+atol	util.h	64;"	d
 attach	pci.h	/^    s32int (*attach)(pci_dev_t *pci_dev);$/;"	m	struct:__anon4
 avail	paging.h	/^    u32int avail : 3;$/;"	m	struct:__anon55
 availMemory	kmm.c	/^u64int availMemory() $/;"	f
@@ -2471,13 +2476,15 @@ block_no	fs/ext2fs.c	/^static u32int block_no(fs_t *fs,struct ext2_inode *inode,
 bmide	ide.c	/^    u16int bmide; \/\/ Bus Master IDE$/;"	m	struct:ide_channel_regs	file:
 boot_device	multiboot.h	/^    u32int boot_device;$/;"	m	struct:multiboot
 boot_loader_name	multiboot.h	/^    u32int boot_loader_name;$/;"	m	struct:multiboot
-bootfsClose	fs/bootfs.c	/^s64int bootfsClose(struct FileSystem *fs, struct VNode *node)$/;"	f
+bootfsClose	fs/bootfs.c	/^s64int bootfsClose(struct FileSystem *fs, s64int id)$/;"	f
 bootfsDriver	fs/bootfs.c	/^struct FileSystemDriver bootfsDriver = {$/;"	v	typeref:struct:FileSystemDriver
+bootfsFinddir	fs/bootfs.c	/^s64int bootfsFinddir(struct FileSystem *fs, s64int id, const char *name)$/;"	f
 bootfsMount	fs/bootfs.c	/^s64int bootfsMount(struct FileSystemDriver *driver, struct FileSystem **fs, const char *source, u64int flags, void *data)$/;"	f
-bootfsOpen	fs/bootfs.c	/^s64int bootfsOpen(struct FileSystem *fs, const char *path, u64int flags, struct VNode **pnode)$/;"	f
-bootfsRead	fs/bootfs.c	/^s64int bootfsRead(struct FileSystem *fs, struct VNode *node, u64int offset, u64int size, char *buffer)$/;"	f
-bootfsReaddir	fs/bootfs.c	/^s64int bootfsReaddir(struct FileSystem *fs, struct VNode *node, u64int startIndex, u64int bufSize, char *buf)$/;"	f
-bootfsStat	fs/bootfs.c	/^s64int bootfsStat(struct FileSystem *fs, const char *path, struct VNodeInfo *info)$/;"	f
+bootfsOpen	fs/bootfs.c	/^s64int bootfsOpen(struct FileSystem *fs, s64int id)$/;"	f
+bootfsRead	fs/bootfs.c	/^s64int bootfsRead(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer)$/;"	f
+bootfsReaddir	fs/bootfs.c	/^s64int bootfsReaddir(struct FileSystem *fs, s64int id, u64int bufSize, char *buf)$/;"	f
+bootfsRoot	fs/bootfs.c	/^s64int bootfsRoot(struct FileSystem *fs)$/;"	f
+bootfsStat	fs/bootfs.c	/^s64int bootfsStat(struct FileSystem *fs, s64int id, struct VNodeInfo *info)$/;"	f
 bootfsUnmount	fs/bootfs.c	/^s64int bootfsUnmount(struct FileSystemDriver *driver, struct FileSystem *fs)$/;"	f
 brk	vm.h	/^    u32int brk;$/;"	m	struct:vm_struct
 buf	fs/bootfs.c	/^    char *buf;$/;"	m	struct:BootFSData	file:
@@ -2517,7 +2524,7 @@ clone_table	paging.c	/^page_table_t *clone_table(page_table_t *table, u32int *ph
 clone_task_directory	task.c	/^page_directory_t* clone_task_directory(page_directory_t *dir, vm_t *vm)$/;"	f
 clone_vm	vm.c	/^vm_t *clone_vm(vm_t *vm)$/;"	f
 clone_vma	vm.c	/^vma_t *clone_vma(vma_t *vma)$/;"	f
-close	vfs.h	/^    s64int (*close)(struct FileSystem *fs, struct VNode *);$/;"	m	struct:FileSystemOperation
+close	vfs.h	/^    s64int (*close)(struct FileSystem *fs, s64int id);$/;"	m	struct:FileSystemOperation
 close	vfs2.h	/^    s64int   (*close)   (file_t *f);$/;"	m	struct:VnodeOperations
 cmdline	multiboot.h	/^    u32int cmdline;$/;"	m	struct:multiboot
 cmdline	multiboot.h	/^    u32int cmdline;$/;"	m	struct:multiboot_mod_list
@@ -2686,6 +2693,7 @@ ext2fs_subnodes	fs/ext2fs.c	/^s32int   ext2fs_subnodes(vnode_t *dir, vnode_t ***
 ext2fs_vnode_priv_t	fs/ext2fs.c	/^} ext2fs_vnode_priv_t;$/;"	t	typeref:struct:__anon21	file:
 ext2fs_vops	fs/ext2fs.c	/^struct vnode_operations ext2fs_vops = {$/;"	v	typeref:struct:vnode_operations
 ext2fs_write	fs/ext2fs.c	/^s32int   ext2fs_write   (file_t *f, u32int offset, u32int sz, u8int *buf)$/;"	f
+extractPath	vfs.c	/^s64int extractPath(char *path, char *name)$/;"	f
 extract_cpio	cpio.c	/^s32int extract_cpio(u8int *buf, u32int size)$/;"	f
 f	file.h	/^    file_t *f;$/;"	m	struct:fd_struct
 f_ops	dev.h	/^    struct file_operations *f_ops;$/;"	m	struct:dev_struct	typeref:struct:dev_struct::file_operations
@@ -2712,6 +2720,7 @@ findDir	kobject.c	/^        } findDir;$/;"	m	union:KDirectoryProcessData::__anon
 findMountPointPrefix	vfs.c	/^struct MountPoint *findMountPointPrefix(const char *path)$/;"	f
 find_child	fs/ramfs.c	/^static vnode_t *find_child(vnode_t *dir, char *name)$/;"	f	file:
 find_dev	dev.c	/^dev_t *find_dev(u32int id)$/;"	f
+finddir	vfs.h	/^    s64int (*finddir)(struct FileSystem *fs, s64int id, const char *name);$/;"	m	struct:FileSystemOperation
 first_frame	paging.c	/^u32int first_frame()$/;"	f
 flBitmap	tlsf.h	/^    u64int flBitmap;$/;"	m	struct:TLSFHeader
 flags	file.h	/^    u32int flags;$/;"	m	struct:dentry_struct
@@ -2793,6 +2802,7 @@ h_i_uid_high	fs/ext2fs.h	/^            u16int  h_i_uid_high;$/;"	m	struct:ext2_i
 handle_timer_queue	task.c	/^void handle_timer_queue()$/;"	f
 handle_user_page_fault	task.c	/^s32int handle_user_page_fault(u32int fault_addr, u32int rw)$/;"	f
 head	task.h	/^    wait_queue_node_t *head;$/;"	m	struct:__anon45
+headerList	fs/bootfs.c	/^    struct TarHeader **headerList;$/;"	m	struct:BootFSData	typeref:struct:BootFSData::TarHeader	file:
 header_cpio_struct	cpio.h	/^typedef struct header_cpio_struct {$/;"	s
 header_cpio_t	cpio.h	/^} header_cpio_t;$/;"	t	typeref:struct:header_cpio_struct
 header_type	pci.h	/^    u8int header_type;$/;"	m	struct:__anon1
@@ -2912,9 +2922,11 @@ irq	pci.h	/^    u8int irq, interrupt_pin;$/;"	m	struct:__anon1
 irqDispatcher	interrupt.c	/^void irqDispatcher(struct RegisterState *rs)$/;"	f
 irq_common_stub	isr.s	/^irq_common_stub:$/;"	l
 isEmptyEntry	fs/bootfs.c	/^s64int isEmptyEntry(char *buf)$/;"	f
+isdigit	util.c	490;"	d	file:
 isrDispatcher	interrupt.c	/^void isrDispatcher(struct RegisterState *rs)$/;"	f
 isr_common_stub	isr.s	/^isr_common_stub:$/;"	l
 ist	dtable.h	/^        u64int ist[7];$/;"	m	struct:TSS
+isxdigit	util.c	486;"	d	file:
 item_order_array	order_array.c	/^type_t item_order_array(u32int idx, order_array_t *array)$/;"	f
 ja	loader32.s	/^ja  .L1$/;"	l
 jb	loader32.s	/^jb noinitrd$/;"	l
@@ -3015,7 +3027,6 @@ memory	bootinfo.h	/^    u64int memory;$/;"	m	struct:BootInfo
 memoryMapped	kmm.c	/^int memoryMapped = 0;$/;"	v
 memset	common.c	/^void memset(void *addr, u8int c, u32int n)$/;"	f
 memset	util.c	/^void memset(void *addr, u8int c, u64int n)$/;"	f
-mkdir	vfs.h	/^    s64int (*mkdir)(struct FileSystem *fs, const char *name);$/;"	m	struct:FileSystemOperation
 mkdir	vfs2.h	/^    s64int   (*mkdir)   (vnode_t *dir, char *name, u64int flags);$/;"	m	struct:VnodeOperations
 mmap_addr	multiboot.h	/^    u32int mmap_addr;$/;"	m	struct:multiboot
 mmap_length	multiboot.h	/^    u32int mmap_length;$/;"	m	struct:multiboot
@@ -3189,7 +3200,7 @@ offsetMiddle	dtable.h	/^    u16int offsetMiddle;$/;"	m	struct:IDTEntry
 op	kobject.c	/^    u64int op;$/;"	m	struct:KDirectoryProcessData	file:
 op	vfs.h	/^    struct FileSystemDriverOperation *op;$/;"	m	struct:FileSystemDriver	typeref:struct:FileSystemDriver::FileSystemDriverOperation
 op	vfs.h	/^    struct FileSystemOperation *op;$/;"	m	struct:FileSystem	typeref:struct:FileSystem::FileSystemOperation
-open	vfs.h	/^    s64int (*open)(struct FileSystem *fs, const char *path, u64int flags, struct VNode **ret);$/;"	m	struct:FileSystemOperation
+open	vfs.h	/^    s64int (*open)(struct FileSystem *fs, s64int id);$/;"	m	struct:FileSystemOperation
 open	vfs2.h	/^    s64int   (*open)    (const char *);$/;"	m	struct:VnodeOperations
 or	loader32.s	/^or eax, 1 << 31              ; Set the PG-bit, which is the 32nd bit (bit 31).$/;"	l
 or	loader32.s	/^or eax, 1 << 5               ; Set the PAE-bit, which is the 6th bit (bit 5).$/;"	l
@@ -3319,7 +3330,7 @@ ramfs_vnode_priv_t	fs/ramfs.c	/^} ramfs_vnode_priv_t;$/;"	t	typeref:struct:__ano
 ramfs_write	fs/ramfs.c	/^s32int   ramfs_write   (file_t *f, u32int offset, u32int sz, u8int *buf)$/;"	f
 rbp	process.h	/^    u64int rip, rsp, rbp;$/;"	m	struct:Process
 rdmsr	loader32.s	/^rdmsr                        ; Read from the model-specific register.$/;"	l
-read	vfs.h	/^    s64int (*read)(struct FileSystem *fs, struct VNode *node, u64int offset, u64int size, char *buffer);$/;"	m	struct:FileSystemOperation
+read	vfs.h	/^    s64int (*read)(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer);$/;"	m	struct:FileSystemOperation
 read	vfs2.h	/^    s64int   (*read)    (file_t *f, u64int offset, u64int sz, u8int *buffer);$/;"	m	struct:VnodeOperations
 readDir	kobject.c	/^        } readDir;$/;"	m	union:KDirectoryProcessData::__anon50	typeref:struct:KDirectoryProcessData::__anon50::__anon51	file:
 read_blks	disk.h	/^    u32int (*read_blks)(disk_t *disk, u32int start_blk, u32int nr_blks, u8int *buf);$/;"	m	struct:disk_struct
@@ -3328,7 +3339,7 @@ read_pci_config_dword	pci.c	/^MEXPORT(read_pci_config_dword);$/;"	v
 read_pci_config_dword	pci.c	/^u32int read_pci_config_dword(u32int bus, u32int slot, u32int func, u32int off)$/;"	f
 read_pci_dev_config_dword	pci.c	/^MEXPORT(read_pci_dev_config_dword);$/;"	v
 read_pci_dev_config_dword	pci.c	/^u32int read_pci_dev_config_dword(pci_dev_t *dev, u32int off)$/;"	f
-readdir	vfs.h	/^    s64int (*readdir)(struct FileSystem *fs, struct VNode *node, u64int startIndex, u64int bufSize, char *buf);$/;"	m	struct:FileSystemOperation
+readdir	vfs.h	/^    s64int (*readdir)(struct FileSystem *fs, s64int id, u64int bufSize, char *buf);$/;"	m	struct:FileSystemOperation
 real_dentry_len	fs/ext2fs.c	/^static u32int real_dentry_len(struct ext2_dir_entry *d)$/;"	f	file:
 rec_len	fs/ext2fs.h	/^	u16int	rec_len;		\/* Directory entry length *\/$/;"	m	struct:ext2_dir_entry
 recur	prog/init.c	/^int recur(int i)$/;"	f
@@ -3363,10 +3374,10 @@ ri_gp_value	elfdef.h	/^  Elf32_Sword	ri_gp_value;		\/* $gp register value *\/$/;
 ri_gprmask	elfdef.h	/^  Elf32_Word	ri_gprmask;		\/* General registers used *\/$/;"	m	struct:__anon41
 rip	interrupt.h	/^    u64int rip, cs, rflags, rsp, ss;$/;"	m	struct:RegisterState
 rip	process.h	/^    u64int rip, rsp, rbp;$/;"	m	struct:Process
-rmdir	vfs.h	/^    s64int (*rmdir)(struct FileSystem *fs, const char *name);$/;"	m	struct:FileSystemOperation
 rmdir	vfs2.h	/^    s64int   (*rmdir)   (vnode_t *dir, char *name);$/;"	m	struct:VnodeOperations
 rom_bar	pci.h	/^            u16int rom_bar;$/;"	m	struct:__anon1::__anon2::__anon3
 root	fs/ramfs.c	/^    vnode_t *root;$/;"	m	struct:__anon18	file:
+root	vfs.h	/^    s64int (*root)(struct FileSystem *fs);$/;"	m	struct:FileSystemOperation
 rootDirName	fs/bootfs.c	/^    char rootDirName[100];$/;"	m	struct:BootFSData	file:
 rootNode	vfs.c	/^struct VNode *rootNode = 0;$/;"	v	typeref:struct:VNode
 rqNext	process.h	/^    struct Process *rqNext, *rqPrev;$/;"	m	struct:Process	typeref:struct:Process::Process
@@ -3502,7 +3513,7 @@ start_blk	disk.h	/^    u32int start_blk;$/;"	m	struct:partition_struct
 start_brk	vm.h	/^    u32int start_brk;$/;"	m	struct:vm_struct
 start_stack	vm.h	/^    u32int start_stack; \/\/ task's userspace stack, usually 0xd0000000 start_stack > end_stack$/;"	m	struct:vm_struct
 startupinfo	loader32.s	/^startupinfo:$/;"	l
-stat	vfs.h	/^    s64int (*stat)(struct FileSystem *fs, const char *path, struct VNodeInfo *info);$/;"	m	struct:FileSystemOperation
+stat	vfs.h	/^    s64int (*stat)(struct FileSystem *fs, s64int id, struct VNodeInfo *ni);$/;"	m	struct:FileSystemOperation
 state	process.h	/^    u64int state;$/;"	m	struct:Process
 state	task.h	/^    u32int state;$/;"	m	struct:task
 stosd	loader32.s	/^stosd$/;"	l
@@ -3524,6 +3535,8 @@ strrstr	common.c	/^char *strrstr(char *s1, char *s2)$/;"	f
 strrstr	util.c	/^char *strrstr(const char *s1, const char *s2)$/;"	f
 strstr	common.c	/^char *strstr(char *s1, char *s2)$/;"	f
 strstr	util.c	/^char *strstr(const char *s1, const char *s2)$/;"	f
+strtol	util.c	/^s64int strtol(const char *cp,char **endp,u32int base)$/;"	f
+strtoul	util.c	/^u64int strtoul(const char *cp,char **endp,u32int base)$/;"	f
 subclass	pci.h	/^    u8int revision, prog_if, subclass, class_code;$/;"	m	struct:__anon1
 subnodes	file.h	/^    struct vnode_struct **subnodes;$/;"	m	struct:dir_struct	typeref:struct:dir_struct::vnode_struct
 subsystem	pci.h	/^            u16int subsystem;$/;"	m	struct:__anon1::__anon2::__anon3
@@ -3643,11 +3656,11 @@ verify_program_header	task.c	/^u32int verify_program_header(Elf32_Ehdr *header) 
 vfsClose	vfs.c	/^s64int vfsClose(struct VNode *node)$/;"	f
 vfsCreateDirectory	vfs.c	/^s64int vfsCreateDirectory(const char *path)$/;"	f
 vfsMount	vfs.c	/^s64int vfsMount(const char *dest, const char *source, const char *fsType, u64int flags, void *data)$/;"	f
-vfsOpen	vfs.c	/^s64int vfsOpen(const char *path, u64int flags, struct VNode **node)$/;"	f
+vfsOpen	vfs.c	/^s64int vfsOpen(const char *path, u64int flags, struct VNode *node)$/;"	f
 vfsRead	vfs.c	/^s64int vfsRead(struct VNode *node, u64int offset, u64int size, char *buffer)$/;"	f
-vfsReadDirectory	vfs.c	/^s64int vfsReadDirectory(struct VNode *node, u64int startIndex, u64int bufSize, char *buffer)$/;"	f
+vfsReadDirectory	vfs.c	/^s64int vfsReadDirectory(struct VNode *node, u64int bufSize, char *buffer)$/;"	f
 vfsRemoveDirectory	vfs.c	/^s64int vfsRemoveDirectory(const char *path)$/;"	f
-vfsState	vfs.c	/^s64int vfsState(const char *path, struct VNodeInfo *info)$/;"	f
+vfsState	vfs.c	/^s64int vfsState(const char *path, struct VNodeInfo *ni)$/;"	f
 vfsUnmount	vfs.c	/^s64int vfsUnmount(const char *path)$/;"	f
 vfsWrite	vfs.c	/^s64int vfsWrite(struct VNode *node, u64int offset, u64int size, char *buffer)$/;"	f
 vfs_abs_path	vfs2.c	/^char* vfs_abs_path(char *p)$/;"	f
@@ -3707,7 +3720,7 @@ wake_up_one	task.c	/^void wake_up_one(wait_queue_t *wq)$/;"	f
 work_path	task.h	/^    char *work_path;$/;"	m	struct:task
 wq	i8042.c	/^wait_queue_t *wq = 0;$/;"	v
 wq	ide.c	/^wait_queue_t wq = {0};$/;"	v
-write	vfs.h	/^    s64int (*write)(struct FileSystem *fs, struct VNode *node, u64int offset, u64int size, char *buffer);$/;"	m	struct:FileSystemOperation
+write	vfs.h	/^    s64int (*write)(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer);$/;"	m	struct:FileSystemOperation
 write	vfs2.h	/^    s64int   (*write)   (file_t *f, u64int offset, u64int sz, u8int *buffer);$/;"	m	struct:VnodeOperations
 write_blks	disk.h	/^    u32int (*write_blks)(disk_t *disk, u32int start_blk, u32int nr_blks, u8int *buf);$/;"	m	struct:disk_struct
 write_pci_config_byte	pci.c	/^MEXPORT(write_pci_config_byte);$/;"	v

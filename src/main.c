@@ -21,8 +21,14 @@ u64int kmain(struct BootInfo *si)
     initTSS();
     initMultitasking();
     initVFS();
-    vfsMount("Boot",0,"tarfs",0,(void*)getBootInfo()->initrdAddr);
+    DBG("InitAddr:%x", getBootInfo()->initrdAddr);
     DBG("AvailMem:%dKB",availMemory()/1024);
+    vfsMount("Boot",0,"bootfs",0,(void*)getBootInfo()->initrdAddr);
+    struct VNode node;
+    vfsOpen("Boot:/a.txt",0,&node);
+    char buf[1000];
+    s64int n;
+    n = vfsRead(&node, 0, 1000, buf);
 
     for(;;);
     // never return here;

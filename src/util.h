@@ -55,6 +55,14 @@ void printk(char *fmt, ...);
 char *dirname(char *dest, const char *s);
 char *basename(char *dest, const char *s);
 
+u64int strtoul(const char *cp,char **endp,u32int base);
+
+s64int strtol(const char *cp,char **endp,u32int base);
+
+s32int atoi(const char *nptr);
+
+#define atol(x) atoi(x)
+
 /*
 void insl(u16int port, u32int buffer, u32int quads);
 
@@ -69,4 +77,4 @@ void outsw(u16int port, u32int buffer, u32int words);
 void outsb(u16int port, u32int buffer, u32int bytes);
 */
 
-#endif
+#endif /* UTIL_H */
