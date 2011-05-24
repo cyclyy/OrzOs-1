@@ -4,7 +4,7 @@
 #include "common.h"
 
 #define PAGE_SIZE 0x1000
-#define PAGE_MASK 0xfffff000
+#define PAGE_MASK 0xfffffffffffff000
 
 #define PFAULT_HANDLED   0
 #define PFAULT_EACCESS   1
@@ -53,4 +53,4 @@ page_directory_t *clone_directory(page_directory_t *dir);
 
 //void dump_tables(page_directory_t *dir);
 
-#endif
+#endif /* PAGING_H */

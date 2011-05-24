@@ -6,7 +6,7 @@
 #include "kmm.h"
 #include "vmm.h"
 #include "util.h"
-#include "process.h"
+#include "task.h"
 #include "bootinfo.h"
 #include "vfs.h"
 
@@ -29,6 +29,17 @@ u64int kmain(struct BootInfo *si)
     char buf[1000];
     s64int n;
     n = vfsRead(&node, 0, 1000, buf);
+    printk(buf);
+
+    if (kFork(0)) {
+        for(;;) {
+            DBG("Parent");
+        }
+    } else {
+        for(;;) {
+            DBG("Child");
+        }
+    }
 
     for(;;);
     // never return here;

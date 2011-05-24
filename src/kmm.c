@@ -118,8 +118,6 @@ void mapPagesVtoP(u64int vaddr, u64int paddr, u64int n, struct PML4E *pml4e)
         vaddr += PAGE_SIZE;
         paddr += PAGE_SIZE;
     }
-
-    printk("pt Alloced:%x\n",vaddr);
 }
 
 /*-----------------------------------------------------------------------------
@@ -151,6 +149,26 @@ void unmapPages(u64int vaddr, u64int n)
         vaddr += PAGE_SIZE;
     }
 
+}
+
+u64int getPAddr(u64int vaddr, struct PML4E *pml4e)
+{
+    u64int *page;
+    struct PageTable *pt;
+    struct PageDirectory *pd;
+    struct PageDirectoryPointer *pdp;
+
+    pdp = getPDP(pml4e, vaddr);
+    if (!pdp)
+        return 0;
+    pd = getPD(pdp, vaddr);
+    if (!pd)
+        return 0;
+    pt = getPT(pd, vaddr);
+    if (!pt)
+        return 0;
+    page = getPage(pt, vaddr);
+    return *page & PAGE_MASK;
 }
 
 void initMemoryManagement(u64int totalHighMem, u64int freePMemStartAddr)

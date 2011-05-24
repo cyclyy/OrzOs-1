@@ -25,8 +25,8 @@
 #define FLOOR_PAGE_ALIGN(x) (x & (~0 & PAGE_SIZE))
 #define ROUND_MEM_ALIGN(x) ((x+PTR_SIZE-1) & (~0 - PTR_SIZE + 1))
 
-#define VADDR_TO_PADDR(x) ((x>=CODE_LOAD_ADDR)?(x-CODE_LOAD_ADDR):(x-HEAP_START_ADDR))
-#define PADDR_TO_VADDR(x) (x+HEAP_START_ADDR)
+#define VADDR_TO_PADDR(x) ((((u64int)x)>=CODE_LOAD_ADDR)?(((u64int)x)-CODE_LOAD_ADDR):(((u64int)x)-HEAP_START_ADDR))
+#define PADDR_TO_VADDR(x) (((u64int)x)+HEAP_START_ADDR)
 
 struct PageTable {
     u64int page[512];
@@ -73,4 +73,4 @@ u64int kMalloc(u64int size);
 
 void kFree(void *addr);
 
-#endif
+#endif /* KMM_H */

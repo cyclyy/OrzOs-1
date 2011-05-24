@@ -2,6 +2,8 @@
 #define SYSDEF_H
 
 #define PAGE_SIZE 4096
+#define PAGE_LOG2_SIZE 12
+#define PAGE_MASK 0xfffffffffffff000
 #define PTR_SIZE 8
 
 #define KERNEL_STACK_TOP    0xffffffffe0000000
@@ -22,4 +24,4 @@ typedef signed int      s32int;
 typedef unsigned long   u64int;
 typedef signed long     s64int;
 
-#endif //TYPES_H
+#endif /* SYSDEF_H */

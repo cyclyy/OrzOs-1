@@ -15,7 +15,7 @@ s64int bootfsFinddir(struct FileSystem *fs, s64int id, const char *name);
 s64int bootfsStat(struct FileSystem *fs, s64int id, struct VNodeInfo *info);
 
 #define TAR_LINK_DIR    '5'
-#define TAR_LINK_FILE   0
+#define TAR_LINK_FILE   '0'
 
 struct TarHeader {
     char name[100];

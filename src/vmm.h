@@ -45,16 +45,21 @@ struct VMA {
 };
 
 struct VM {
+    u64int cr3;
     struct VMA *vmaHead;
 };
 
 struct VM *vmCreate();
 
-u64int vmAddArea(struct VM *vm, u64int start, u64int size, u64int flags);
+s64int vmDestroy(struct VM *vm);
+
+struct VM *vmCopy(struct VM *vm, u64int flags);
+
+s64int vmAddArea(struct VM *vm, u64int start, u64int size, u64int flags);
 
 struct VMA *vmQueryArea(struct VM *vm, u64int addr);
 
-u64int vmRemoveArea(struct VM *vm,struct VMA *vma);
+s64int vmRemoveArea(struct VM *vm,struct VMA *vma);
 
-#endif
+#endif /* VMM_H */
 

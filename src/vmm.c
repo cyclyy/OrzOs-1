@@ -32,6 +32,39 @@ struct VMA *vmaCreate(u64int start, u64int size, u64int flags)
     return vma;
 }
 
+struct VMA *vmaCopy(struct VMA *oldVMA, struct PML4E *pml4e, u64int flags)
+{
+    struct VMA *newVMA;
+    u64int i, vaddr, vaddr2, paddr, paddr2, deepCopy;
+
+    newVMA = (struct VMA*)kMalloc(sizeof(struct VMA));
+    memcpy(newVMA, oldVMA, sizeof(struct VMA));
+    if (oldVMA->flags & VMA_STATUS_USED) {
+        if (oldVMA->flags & VMA_OWNER_KERNEL) {
+            if (oldVMA->flags & VMA_TYPE_STACK) 
+                deepCopy = 1;
+            else
+                deepCopy = 0;
+        } else {
+            deepCopy = 1;
+        }
+        vaddr = newVMA->start;
+        for (i=0; i<newVMA->size >> PAGE_LOG2_SIZE; i++) {
+            if (deepCopy) {
+                paddr2 = getPAddr(vaddr,getPML4E()); 
+                vaddr2 = kMallocEx(PAGE_SIZE,1,&paddr);
+                memcpy((void*)vaddr2, (void*)PADDR_TO_VADDR(paddr2), PAGE_SIZE);
+            } else {
+                paddr = getPAddr(vaddr,getPML4E()); 
+            }
+            mapPagesVtoP(vaddr, paddr, 1, pml4e);
+            vaddr += PAGE_SIZE;
+        }
+    }
+
+    return newVMA;
+}
+
 struct VM *vmCreate()
 {
     struct VM *vm;
@@ -40,6 +73,9 @@ struct VM *vmCreate()
 
     vm = (struct VM*)kMalloc(sizeof(struct VM));
     memset(vm,0,sizeof(struct VM));
+
+    asm volatile("mov %%cr3,%0":"=r"(vm->cr3)::);
+    vm->cr3 = vm->cr3 & 0xfffffffffffff000;
 
     // reserved first 4KB
     vm->vmaHead = vmaCreate(0, PAGE_SIZE, VMA_STATUS_INVALID);
@@ -103,18 +139,54 @@ struct VM *vmCreate()
     return vm;
 }
 
-u64int vmAddArea(struct VM *vm, u64int start, u64int size, u64int flags)
+struct VM *vmCopy(struct VM *oldVM, u64int flags)
 {
+    struct VM *newVM;
+    struct VMA *vma, *newVMA, *v;
+    struct PML4E *pml4e;
 
+    newVM = (struct VM *)kMalloc(sizeof(struct VM));
+    memset(newVM, 0, sizeof(struct VM));
+    pml4e = (struct PML4E *)kMallocEx(sizeof(struct PML4E),1,0);
+    newVM->cr3 = VADDR_TO_PADDR(pml4e);
+    memset(pml4e, 0, sizeof(struct PML4E));
+    vma = oldVM->vmaHead;
+    v = 0;
+    while (vma) {
+        newVMA = vmaCopy(vma, pml4e, flags);
+        
+        if (!v) 
+            newVM->vmaHead = newVMA;
+        else {
+            newVMA->prev = v;
+            v->next = newVMA;
+        }
+        v = newVMA; 
+        vma = vma->next;
+    }
+
+    return newVM;
+}
+
+s64int vmDestroy(struct VM *vm)
+{
+    kFree(vm);
+    return 0;
+}
+
+s64int vmAddArea(struct VM *vm, u64int start, u64int size, u64int flags)
+{
+    return 0;
 }
 
 struct VMA *vmQueryArea(struct VM *vm, u64int addr)
 {
+    return 0;
 }
 
-u64int vmRemoveArea(struct VM *vm,struct VMA *vma)
+s64int vmRemoveArea(struct VM *vm,struct VMA *vma)
 {
-
+    return 0;
 }
 
 void vmaDump(struct VMA *vma)
