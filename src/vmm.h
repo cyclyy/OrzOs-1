@@ -49,7 +49,10 @@ struct VM {
     struct VMA *vmaHead;
 };
 
+struct VM *vmInit();
 struct VM *vmCreate();
+
+s64int vmTruncate(struct VM *vm);
 
 s64int vmDestroy(struct VM *vm);
 
@@ -60,6 +63,11 @@ s64int vmAddArea(struct VM *vm, u64int start, u64int size, u64int flags);
 struct VMA *vmQueryArea(struct VM *vm, u64int addr);
 
 s64int vmRemoveArea(struct VM *vm,struct VMA *vma);
+
+// copy between different address space, dest and src must be page aligned
+s64int vmemcpy(struct VM *destVM, void *dest, struct VM *srcVM, void *src, u64int size);
+
+void vmDump(struct VM *vm);
 
 #endif /* VMM_H */
 

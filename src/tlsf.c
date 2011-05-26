@@ -18,6 +18,8 @@
 
 #include "tlsf.h"
 #include "kmm.h"
+#include "sysdef.h"
+#include "paging.h"
 #include "util.h"
 
 u64int msBit(u64int x)
@@ -204,7 +206,7 @@ void tlsfFree(struct TLSFHeader *tlsf, struct TLSFBlock *blk)
     struct TLSFBlock *prevBlock, *nextBlock;
 
     if (blk->signature != TLSF_SIGNATURE)
-        printk("Free bad pointer\n");
+        PANIC("Free bad pointer\n");
 
     blk->ptr.free.prev = blk->ptr.free.next = 0;
     prevBlock = blk->prev;

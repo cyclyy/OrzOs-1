@@ -9,6 +9,7 @@
 #include "task.h"
 #include "bootinfo.h"
 #include "vfs.h"
+#include "paging.h"
 
 u64int kmain(struct BootInfo *si)
 {
@@ -23,7 +24,7 @@ u64int kmain(struct BootInfo *si)
     initVFS();
     DBG("InitAddr:%x", getBootInfo()->initrdAddr);
     DBG("AvailMem:%dKB",availMemory()/1024);
-    vfsMount("Boot",0,"bootfs",0,(void*)getBootInfo()->initrdAddr);
+    vfsMount("Boot",0,"bootfs",0,(void*)PADDR_TO_VADDR(getBootInfo()->initrdAddr));
     struct VNode node;
     vfsOpen("Boot:/a.txt",0,&node);
     char buf[1000];
@@ -31,17 +32,9 @@ u64int kmain(struct BootInfo *si)
     n = vfsRead(&node, 0, 1000, buf);
     printk(buf);
 
-    if (kFork(0)) {
-        for(;;) {
-            DBG("Parent");
-        }
-    } else {
-        for(;;) {
-            DBG("Child");
-        }
-    }
+    kNewTask("Boot:/init", 0);
 
-    for(;;);
+    rootTask();
     // never return here;
     return 0;
 } 

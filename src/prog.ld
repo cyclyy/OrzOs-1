@@ -2,9 +2,10 @@
 /*            Correct place.  */
 
 ENTRY(main)
+OUTPUT_FORMAT(elf64-x86-64)
 SECTIONS
 {
-  .text 0x40000000 :
+  .text 0x0000040000000000:
   {
     code = .; _code = .; __code = .;
     *(.text)

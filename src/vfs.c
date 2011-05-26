@@ -234,7 +234,7 @@ s64int vfsClose(struct VNode *node)
         return -1;
 }
 
-s64int vfsRead(struct VNode *node, u64int offset, u64int size, char *buffer)
+s64int vfsRead(struct VNode *node, u64int offset, u64int size, void *buffer)
 {
     if (node->fs && node->fs->op->read)
         return node->fs->op->read(node->fs, node->id, offset, size, buffer);

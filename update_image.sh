@@ -1,19 +1,7 @@
 #! /bin/bash
 
-rm initrd/boot/init
-rm initrd/boot/modules/testmod.o
-rm initrd/boot/modules/i8042.o
-rm initrd/boot/modules/pci.o
-rm initrd/boot/modules/ide.o
-rm initrd/boot/modules/ext2fs.o
-mkdir initrd/boot 2>/dev/null
-mkdir initrd/boot/modules 2>/dev/null
-cp src/prog/init initrd/boot/
-cp src/testmod.o initrd/boot/modules/
-cp src/i8042.o initrd/boot/modules/
-cp src/pci.o initrd/boot/modules/
-cp src/ide.o initrd/boot/modules/
-cp src/fs/ext2fs.o initrd/boot/modules/
+rm  initrd/init
+cp src/prog/init initrd/
 rm initrd.tar
 tar cvf initrd.tar initrd/
 ls c.img 2>/dev/null || bximage -hd -mode=flat -size=10 -q c.img

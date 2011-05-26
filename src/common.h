@@ -93,4 +93,4 @@ char *basename(char *s);
 
 u32int sprintf(char *buf, char *fmt, ...);
 
-#endif
+#endif /* COMMON_H */

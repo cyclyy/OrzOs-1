@@ -67,7 +67,7 @@ s64int vfsUnmount(const char *path);
 
 s64int vfsOpen(const char *path, u64int flags, struct VNode *node);
 s64int vfsClose(struct VNode *node);
-s64int vfsRead(struct VNode *node, u64int offset, u64int size, char *buffer);
+s64int vfsRead(struct VNode *node, u64int offset, u64int size, void *buffer);
 s64int vfsWrite(struct VNode *node, u64int offset, u64int size, char *buffer);
 s64int vfsState(const char *path, struct VNodeInfo *ni);
 
