@@ -162,8 +162,10 @@ s64int parsePath(const char *path, struct MountPoint **mt, char *remainPath)
     else
         strcpy(remainPath,"/");
 
+    /*
     DBG((*mt)->name);
     DBG(path + strlen((*mt)->name) +1);
+    */
 
     return 0;
 }
@@ -199,7 +201,7 @@ s64int vfsOpen(const char *path, u64int flags, struct VNode *node)
     ret = 0;
     remainPath = (char*)kMalloc(strlen(path)+1);
     parsePath(path, &mt, remainPath);
-    DBG(remainPath);
+    //DBG(remainPath);
 
     if (mt) {
         node->fs = mt->fs;

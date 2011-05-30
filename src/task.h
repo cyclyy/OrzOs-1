@@ -30,8 +30,6 @@ void initMultitasking();
 
 void rootTask();
 
-void schedule();
-
 s64int kNewTask(const char *path, u64int flags);
 
 void kExitTask(s64int exitCode);

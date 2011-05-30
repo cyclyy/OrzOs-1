@@ -7,17 +7,16 @@ static IsrHandlerFunc interruptHandlers[256] = {0};
 void isrDispatcher(struct RegisterState *rs)
 {
     u64int cr2;
-    printk("Interrupt %d %x %x\n",rs->number, rs->rip, rs->errcode);
-    asm("mov %%cr2, %0":"=r"(cr2));
-    printk("cr2 %x\n",cr2);
     if (interruptHandlers[rs->number]) {
         IsrHandlerFunc handler = interruptHandlers[rs->number];
         handler(rs);
     } else {
+        printk("Interrupt %d %x %x\n",rs->number, rs->rip, rs->errcode);
+        asm("mov %%cr2, %0":"=r"(cr2));
+        printk("cr2 %x\n",cr2);
         //printk("Isr_code:%d, eip: %p\n",rs->number,regs.eip);
-        //PANIC("unhandled exception.");
+        PANIC("unhandled exception.");
     }
-    for(;;);
 }
 
 void irqDispatcher(struct RegisterState *rs)
@@ -38,7 +37,7 @@ void irqDispatcher(struct RegisterState *rs)
     }
 }
 
-void registerInterruptHandler(u32int n, IsrHandlerFunc handler)
+void registerInterruptHandler(u64int n, IsrHandlerFunc handler)
 {
     interruptHandlers[n] = handler;
 }

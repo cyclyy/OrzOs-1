@@ -10,6 +10,7 @@
 #include "bootinfo.h"
 #include "vfs.h"
 #include "paging.h"
+#include "ksyscall.h"
 
 u64int kmain(struct BootInfo *si)
 {
@@ -22,6 +23,7 @@ u64int kmain(struct BootInfo *si)
     initTSS();
     initMultitasking();
     initVFS();
+    initSyscalls();
     DBG("InitAddr:%x", getBootInfo()->initrdAddr);
     DBG("AvailMem:%dKB",availMemory()/1024);
     vfsMount("Boot",0,"bootfs",0,(void*)PADDR_TO_VADDR(getBootInfo()->initrdAddr));
@@ -32,8 +34,12 @@ u64int kmain(struct BootInfo *si)
     n = vfsRead(&node, 0, 1000, buf);
     printk(buf);
 
-    kNewTask("Boot:/init", 0);
+    DBG("AvailMem:%dKB",availMemory()/1024);
+    u64int i;
+    for (i=0; i<200; i++)
+        kNewTask("Boot:/init", 0);
 
+    DBG("AvailMem:%dKB",availMemory()/1024);
     rootTask();
     // never return here;
     return 0;

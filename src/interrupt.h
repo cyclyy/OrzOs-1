@@ -21,15 +21,14 @@
 #define IRQ15 47
 
 struct RegisterState {
-    //u64int ds;
-    //u64int rdi, rsi, rbp, rsp, rbx, rdx, rcx, rax;
+    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;
     u64int number, errcode;
-    u64int rip, cs, rflags, rsp, ss;
+    u64int rip, cs, rflags, rsp0, ss0;
 };
 
 typedef void (*IsrHandlerFunc)(struct RegisterState *);
 
-void registerInterruptHandler(u32int n, IsrHandlerFunc handler);
+void registerInterruptHandler(u64int n, IsrHandlerFunc handler);
 
 // general isr handler
 void isrDispatcher(struct RegisterState *regs);
@@ -40,5 +39,5 @@ void irqDispatcher(struct RegisterState *rs);
 void initInterrupt();
 
 
-#endif
+#endif /* INTERRUPT_H */
 

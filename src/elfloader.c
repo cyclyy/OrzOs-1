@@ -76,7 +76,7 @@ s64int loadElfProgram(const char *path, struct Program *prog, struct VM *vm)
                             ret = -1;
                             break;
                         }
-                        DBG("%x,%x",vm,currentTask->vm);
+                        //DBG("%x,%x",vm,currentTask->vm);
                         vmemcpy(vm, (void*)(phdr[i].p_vaddr+j), currentTask->vm, buffer, PAGE_SIZE);
                     }
                     if (remain) {

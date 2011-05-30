@@ -108,7 +108,7 @@ AT_SYSINFO	elf.h	961;"	d
 AT_SYSINFO_EHDR	elf.h	962;"	d
 AT_UCACHEBSIZE	elf.h	945;"	d
 AT_UID	elf.h	927;"	d
-BASE_QUANTUM	task.c	11;"	d	file:
+BASE_QUANTUM	schedule.c	5;"	d	file:
 BLOCK_FREE	tlsf.h	35;"	d
 BLOCK_OVERHEAD	tlsf.h	31;"	d
 BLOCK_SIZE	tlsf.h	34;"	d
@@ -123,7 +123,7 @@ CIS	pci.h	/^            u32int CIS;$/;"	m	struct:__anon2::__anon3::__anon4
 CODE_LOAD_ADDR	sysdef.h	15;"	d
 COMMON_H	common.h	2;"	d
 CORE_LDFLAGS	Makefile	/^CORE_LDFLAGS=-Tcore.ld -M=allsymbol.map -z max-page-size=0x1000$/;"	m
-CORE_SOURCES	Makefile	/^CORE_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o dtable.o flushdtable.o isr.o interrupt.o tlsf.o kobject.o vfs.o screen.o task.o taskasm.o paging.o elfloader.o fs\/bootfs.o$/;"	m
+CORE_SOURCES	Makefile	/^CORE_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o dtable.o flushdtable.o isr.o interrupt.o tlsf.o kobject.o vfs.o screen.o task.o taskasm.o paging.o elfloader.o waitqueue.o schedule.o semaphore.o mutex.o message.o ksyscall.o fs\/bootfs.o$/;"	m
 CPIO_FT_DIR	cpio.h	9;"	d
 CPIO_FT_FILE	cpio.h	8;"	d
 CPIO_FT_MASK	cpio.h	7;"	d
@@ -824,6 +824,7 @@ KOBJECT_H	kobject.h	2;"	d
 KOD	kobject.h	/^struct KOD$/;"	s
 KObject	kobject.h	/^struct KObject$/;"	s
 KObjectListNode	kobject.c	/^struct KObjectListNode$/;"	s	file:
+KSYSCALL_H	ksyscall.h	2;"	d
 Key_0	key.h	96;"	d
 Key_1	key.h	97;"	d
 Key_2	key.h	98;"	d
@@ -1007,18 +1008,23 @@ MBOOT_HEADER_FLAGS	loader32.s	/^MBOOT_HEADER_FLAGS  equ (MBOOT_PAGE_ALIGN | MBOO
 MBOOT_HEADER_MAGIC	loader32.s	/^MBOOT_HEADER_MAGIC  equ 0x1BADB002 ; Multiboot Magic value$/;"	d
 MBOOT_MEM_INFO	loader32.s	/^MBOOT_MEM_INFO      equ 1<<1    ; Provide your kernel with memory info$/;"	d
 MBOOT_PAGE_ALIGN	loader32.s	/^MBOOT_PAGE_ALIGN    equ 1<<0    ; Load kernel and modules on a page boundary$/;"	d
+MESSAGE_H	message.h	2;"	d
 MEXPORT	module.h	5;"	d
 MIN	common.h	8;"	d
 MIN	util.h	10;"	d
 MIN_BLOCK_SIZE	tlsf.h	29;"	d
-MLFQ_LEVELS	task.c	12;"	d	file:
-MLFQ_MAX_LEVEL	task.c	13;"	d	file:
+MLFQ_LEVELS	schedule.c	6;"	d	file:
+MLFQ_MAX_LEVEL	schedule.c	7;"	d	file:
 MODULE_CLEANUP	module.h	11;"	d
 MODULE_H	module.h	2;"	d
 MODULE_INIT	module.h	10;"	d
 MOD_SOURCES	Makefile	/^MOD_SOURCES = testmod.o            \\$/;"	m
 MULTIBOOT_H	multiboot.h	2;"	d
+MUTEX_H	mutex.h	2;"	d
+Message	message.h	/^struct Message {$/;"	s
+MessageQueue	message.h	/^struct MessageQueue {$/;"	s
 MountPoint	vfs.c	/^struct MountPoint {$/;"	s	file:
+Mutex	mutex.h	/^struct Mutex {$/;"	s
 NM	Makefile	/^NM = x86_64-pc-elf-nm$/;"	m
 NT_386_IOPERM	elf.h	591;"	d
 NT_386_TLS	elf.h	590;"	d
@@ -1047,7 +1053,7 @@ NT_PSTATUS	elf.h	579;"	d
 NT_TASKSTRUCT	elf.h	574;"	d
 NT_UTSNAME	elf.h	582;"	d
 NT_VERSION	elf.h	595;"	d
-N_SYSCALLS	syscalls.c	9;"	d	file:
+N_SYSCALLS	ksyscall.c	10;"	d	file:
 ODK_EXCEPTIONS	elf.h	1447;"	d
 ODK_FILL	elf.h	1450;"	d
 ODK_HWAND	elf.h	1452;"	d
@@ -1120,7 +1126,7 @@ PF_X	elf.h	562;"	d
 PML4E	paging.h	/^struct PML4E {$/;"	s
 PROGRAM_H	program.h	2;"	d
 PROG_LDFLAGS	Makefile	/^PROG_LDFLAGS=-Tprog.ld -z max-page-size=0x1000$/;"	m
-PROG_SOURCES	Makefile	/^PROG_SOURCES = prog\/init.o   $/;"	m
+PROG_SOURCES	Makefile	/^PROG_SOURCES = prog\/init.o  syscall.o $/;"	m
 PTR_SIZE	sysdef.h	9;"	d
 PT_ARM_EXIDX	elf.h	2243;"	d
 PT_DYNAMIC	elf.h	541;"	d
@@ -2104,11 +2110,13 @@ R_X86_64_TPOFF32	elf.h	2604;"	d
 R_X86_64_TPOFF64	elf.h	2596;"	d
 RegisterState	interrupt.h	/^struct RegisterState {$/;"	s
 RootObject	kobject.c	/^struct KObject *RootObject = 0;$/;"	v	typeref:struct:KObject
+SCHEDULE_H	schedule.h	2;"	d
 SCREEN_H	screen.h	2;"	d
 SEEK_CUR	file.h	14;"	d
 SEEK_END	file.h	15;"	d
 SEEK_SET	file.h	13;"	d
 SELFMAG	elf.h	99;"	d
+SEMAPHORE_H	semaphore.h	2;"	d
 SHF_ALLOC	elf.h	331;"	d
 SHF_ALPHA_GPREL	elf.h	1885;"	d
 SHF_ARM_COMDEF	elf.h	2233;"	d
@@ -2297,9 +2305,9 @@ SYMINFO_FLG_LAZYLOAD	elf.h	397;"	d
 SYMINFO_FLG_PASSTHRU	elf.h	395;"	d
 SYMINFO_NONE	elf.h	400;"	d
 SYMINFO_NUM	elf.h	402;"	d
-SYSCALLS_H	syscalls.h	2;"	d
 SYSCALL_H	syscall.h	2;"	d
 SYSDEF_H	sysdef.h	2;"	d
+Semaphore	semaphore.h	/^struct Semaphore {$/;"	s
 TAR_LINK_DIR	fs/bootfs.c	17;"	d	file:
 TAR_LINK_FILE	fs/bootfs.c	18;"	d	file:
 TASK_H	task.h	2;"	d
@@ -2324,6 +2332,7 @@ TSSEntry	dtable.h	/^struct TSSEntry {$/;"	s
 TSSPtr	dtable.h	/^struct TSSPtr {$/;"	s
 TarHeader	fs/bootfs.c	/^struct TarHeader {$/;"	s	file:
 Task	task.h	/^struct Task {$/;"	s
+TestSyscall	syscall.h	/^DECL_SYSCALL_0(TestSyscall);$/;"	v
 USER_ADDR_START	task2.h	15;"	d
 USER_END_ADDR	sysdef.h	19;"	d
 USER_STACK_SIZE	sysdef.h	21;"	d
@@ -2385,8 +2394,9 @@ VNode	vfs.h	/^struct VNode$/;"	s
 VNodeInfo	vfs.h	/^struct VNodeInfo$/;"	s
 Vnode	vfs2.h	/^struct Vnode {$/;"	s
 VnodeOperations	vfs2.h	/^struct VnodeOperations {$/;"	s
+WAITQUEUE_H	waitqueue.h	2;"	d
+WaitQueue	waitqueue.h	/^struct WaitQueue {$/;"	s
 _INTSIZEOF	common.h	17;"	d
-_syscall_test	syscalls.c	/^void _syscall_test()$/;"	f
 a_type	elf.h	/^  u32int a_type;		\/* Entry type *\/$/;"	m	struct:__anon49
 a_type	elf.h	/^  u64int a_type;		\/* Entry type *\/$/;"	m	struct:__anon51
 a_un	elf.h	/^    } a_un;$/;"	m	struct:__anon49	typeref:union:__anon49::__anon50
@@ -2420,6 +2430,8 @@ always_inline	sysdef.h	4;"	d
 and	loader32.s	/^and rax, 0xfffffffffffff000$/;"	l
 apm_table	multiboot.h	/^    u32int apm_table;$/;"	m	struct:multiboot
 arg	kobject.c	/^    } arg;$/;"	m	struct:KDirectoryProcessData	typeref:union:KDirectoryProcessData::__anon69	file:
+arg1	message.h	/^    u64int arg1;$/;"	m	struct:Message
+arg2	message.h	/^    u64int arg2;$/;"	m	struct:Message
 arr	testmod.c	/^u32int arr[63] = {1};$/;"	v
 atapi_packet	ide.c	/^u8int atapi_packet[12] = {0xA8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};$/;"	v
 atoi	util.c	/^s32int atoi(const char *nptr)$/;"	f
@@ -2454,6 +2466,8 @@ blockEnd	tlsf.h	/^    struct TLSFBlock *blockEnd;$/;"	m	struct:TLSFHeader	typere
 blockHead	tlsf.h	/^    struct TLSFBlock *blockHead;$/;"	m	struct:TLSFHeader	typeref:struct:TLSFHeader::TLSFBlock
 block_no	fs/ext2fs.c	/^static u32int block_no(fs_t *fs,struct ext2_inode *inode, u32int off)$/;"	f	file:
 bmide	ide.c	/^    u16int bmide; \/\/ Bus Master IDE$/;"	m	struct:ide_channel_regs	file:
+bodyBuf	message.h	/^    void *bodyBuf;$/;"	m	struct:Message
+bodyLen	message.h	/^    u64int bodyLen;$/;"	m	struct:Message
 boot_device	multiboot.h	/^    u32int boot_device;$/;"	m	struct:multiboot
 boot_loader_name	multiboot.h	/^    u32int boot_loader_name;$/;"	m	struct:multiboot
 bootfsClose	fs/bootfs.c	/^s64int bootfsClose(struct FileSystem *fs, s64int id)$/;"	f
@@ -2518,11 +2532,12 @@ copy_from_user	task2.c	/^s32int copy_from_user(void *kbuf, void *ubuf, u32int n)
 copy_physical_frame	process.s	/^copy_physical_frame:$/;"	l
 copy_to_user	task2.c	/^s32int copy_to_user(void *ubuf, void *kbuf, u32int n)$/;"	f
 count	kobject.c	/^    u64int count;$/;"	m	struct:KDirectoryObjectData	file:
+count	semaphore.h	/^    u64int count;$/;"	m	struct:Semaphore
 covered	vfs2.h	/^    vnode_t *covered;$/;"	m	struct:Vnode
 cr3	vmm.h	/^    u64int cr3;$/;"	m	struct:VM
 create_order_array	order_array.c	/^order_array_t create_order_array(u32int max_size, less_than_func_t func)$/;"	f
 createfs	vfs2.h	/^    fs_t* (*createfs)(struct fs_driver *, char *path, u64int flags, void *data);$/;"	m	struct:VFSDriverOperation
-cs	interrupt.h	/^    u64int rip, cs, rflags, rsp, ss;$/;"	m	struct:RegisterState
+cs	interrupt.h	/^    u64int rip, cs, rflags, rsp0, ss0;$/;"	m	struct:RegisterState
 ctrl	ide.c	/^    u16int ctrl;  \/\/ Control Base$/;"	m	struct:ide_channel_regs	file:
 currentTask	task.c	/^struct Task *currentTask = 0;$/;"	v	typeref:struct:Task
 current_task	task2.c	/^task_t *current_task = 0;$/;"	v
@@ -2721,6 +2736,7 @@ finddir	vfs.h	/^    s64int (*finddir)(struct FileSystem *fs, s64int id, const ch
 flBitmap	tlsf.h	/^    u64int flBitmap;$/;"	m	struct:TLSFHeader
 flags	file.h	/^    u32int flags;$/;"	m	struct:dentry_struct
 flags	file.h	/^    u32int flags;$/;"	m	struct:file_struct
+flags	message.h	/^    u64int flags;$/;"	m	struct:Message
 flags	multiboot.h	/^    u32int flags;$/;"	m	struct:multiboot
 flags	vfs.h	/^    u64int flags;$/;"	m	struct:VNode
 flags	vfs2.h	/^    u64int flags;   \/\/filetype $/;"	m	struct:Vnode
@@ -2729,7 +2745,6 @@ flags	vmm.h	/^    u64int flags;$/;"	m	struct:VMA
 flushGDT	flushdtable.s	/^flushGDT:$/;"	l
 flushIDT	flushdtable.s	/^flushIDT:$/;"	l
 flushTSS	flushdtable.s	/^flushTSS:$/;"	l
-fork	syscall.h	/^DECL_SYSCALL_0(fork);$/;"	v
 fork	task2.c	/^u32int fork()$/;"	f
 free	tlsf.h	/^        struct TLSFFreePtr free;$/;"	m	union:TLSFBlock::__anon68	typeref:struct:TLSFBlock::__anon68::TLSFFreePtr
 freeMemStartAddr	bootinfo.h	/^    u64int freeMemStartAddr;$/;"	m	struct:BootInfo
@@ -2795,7 +2810,9 @@ h_i_translator	fs/ext2fs.h	/^            u32int  h_i_translator;$/;"	m	struct:ex
 h_i_uid_high	fs/ext2fs.h	/^            u16int  h_i_uid_high;$/;"	m	struct:ext2_inode::__anon13::__anon15
 handle_timer_queue	task2.c	/^void handle_timer_queue()$/;"	f
 handle_user_page_fault	task2.c	/^s32int handle_user_page_fault(u32int fault_addr, u32int rw)$/;"	f
+head	message.h	/^    struct Message *head, *tail;$/;"	m	struct:MessageQueue	typeref:struct:MessageQueue::Message
 head	task2.h	/^    wait_queue_node_t *head;$/;"	m	struct:__anon1
+head	waitqueue.h	/^    struct Task *head, *tail;$/;"	m	struct:WaitQueue	typeref:struct:WaitQueue::Task
 headerList	fs/bootfs.c	/^    struct TarHeader **headerList;$/;"	m	struct:BootFSData	typeref:struct:BootFSData::TarHeader	file:
 header_cpio_struct	cpio.h	/^typedef struct header_cpio_struct {$/;"	s
 header_cpio_t	cpio.h	/^} header_cpio_t;$/;"	t	typeref:struct:header_cpio_struct
@@ -2865,13 +2882,13 @@ initInterrupt	interrupt.c	/^void initInterrupt()$/;"	f
 initMemoryManagement	kmm.c	/^void initMemoryManagement(u64int totalHighMem, u64int freePMemStartAddr)$/;"	f
 initMultitasking	task.c	/^void initMultitasking()$/;"	f
 initObjectTree	kobject.c	/^void initObjectTree()$/;"	f
+initSyscalls	ksyscall.c	/^void initSyscalls()$/;"	f
 initTSS	dtable.c	/^void initTSS()$/;"	f
 initTimer	interrupt.c	/^void initTimer(u16int freq)$/;"	f
 initVFS	vfs.c	/^void initVFS()$/;"	f
 init_module_system	module.c	/^void init_module_system(u32int num, u32int size, u32int addr, u32int strndx)$/;"	f
 init_multitasking	task2.c	/^void init_multitasking()$/;"	f
 init_pci	pci.c	/^static void init_pci()$/;"	f	file:
-init_syscalls	syscalls.c	/^void init_syscalls()$/;"	f
 init_timer	timer.c	/^void init_timer(u32int freq)$/;"	f
 init_vfs	vfs2.c	/^void init_vfs()$/;"	f
 initialStack	bootinfo.h	/^    u64int initialStack;$/;"	m	struct:BootInfo
@@ -2931,9 +2948,12 @@ jmp	loader32.s	/^jmp rbx$/;"	l
 jumpToUserTaskEntry	task.c	/^void jumpToUserTaskEntry()$/;"	f
 kExitTask	task.c	/^void kExitTask(s64int exitCode)$/;"	f
 kFree	kmm.c	/^void kFree(void *addr)$/;"	f
+kGetMessage	message.c	/^s64int kGetMessage(u64int *pid, u64int *arg1, u64int *arg2,$/;"	f
 kMalloc	kmm.c	/^u64int kMalloc(u64int size)$/;"	f
 kMallocEx	kmm.c	/^u64int kMallocEx(u64int size, u64int pageAligned, u64int *physicalAddr)$/;"	f
 kNewTask	task.c	/^s64int kNewTask(const char *path, u64int flags)$/;"	f
+kPostMessage	message.c	/^s64int kPostMessage(u64int pid, u64int arg1, u64int arg2,$/;"	f
+kSendMessage	message.c	/^s64int kSendMessage(u64int pid, u64int arg1, u64int arg2,$/;"	f
 kbd_node	fs/initrdfs.c	/^vnode_t *kbd_node;$/;"	v
 kbdus	i8042.c	/^u32int kbdus[128] =$/;"	v
 kernel64	loader32.s	/^kernel64:$/;"	l
@@ -3141,6 +3161,10 @@ move_cursor	screen.c	/^void move_cursor()$/;"	f
 move_stack	task2.c	/^void move_stack(u32int new_start, u32int sz)$/;"	f
 msBit	tlsf.c	/^u64int msBit(u64int x)$/;"	f
 mtime	fs/bootfs.c	/^    char mtime[12];$/;"	m	struct:TarHeader	file:
+mtxCreate	mutex.c	/^struct Mutex *mtxCreate()$/;"	f
+mtxDestroy	mutex.c	/^void mtxDestroy(struct Mutex *mtx)$/;"	f
+mtxLock	mutex.c	/^s64int mtxLock(struct Mutex *mtx)$/;"	f
+mtxUnlock	mutex.c	/^s64int mtxUnlock(struct Mutex *mtx)$/;"	f
 multiboot	multiboot.h	/^typedef struct multiboot {$/;"	s
 multiboot_mod_list	multiboot.h	/^struct multiboot_mod_list$/;"	s
 multiboot_module_t	multiboot.h	/^typedef struct multiboot_mod_list multiboot_module_t;$/;"	t	typeref:struct:multiboot_mod_list
@@ -3176,6 +3200,7 @@ next	disk.h	/^    disk_t *next;$/;"	m	struct:disk_struct
 next	disk.h	/^    partition_t *next;$/;"	m	struct:partition_struct
 next	kobject.c	/^    struct KObjectListNode *next, *prev;$/;"	m	struct:KObjectListNode	typeref:struct:KObjectListNode::KObjectListNode	file:
 next	kobject.h	/^    struct Klass *next, *prev;$/;"	m	struct:Klass	typeref:struct:Klass::Klass
+next	message.h	/^    struct Message *next, *prev;$/;"	m	struct:Message	typeref:struct:Message::Message
 next	module.h	/^    struct module_struct *next;$/;"	m	struct:module_struct	typeref:struct:module_struct::module_struct
 next	pci.h	/^    pci_dev_t *next;$/;"	m	struct:pci_dev_struct
 next	task.h	/^    struct Task *next, *prev;$/;"	m	struct:Task	typeref:struct:Task::Task
@@ -3198,9 +3223,11 @@ nr_bgs	fs/ext2fs.c	/^    u32int nr_bgs;$/;"	m	struct:__anon21	file:
 nr_blks	disk.h	/^    u32int nr_blks;$/;"	m	struct:disk_struct
 nr_blks	disk.h	/^    u32int nr_blks;$/;"	m	struct:partition_struct
 nsubs	file.h	/^    u32int nsubs;$/;"	m	struct:dir_struct
-nsyscalls	syscalls.c	/^u32int nsyscalls = N_SYSCALLS;$/;"	v
+nsyscalls	ksyscall.c	/^u64int nsyscalls = N_SYSCALLS;$/;"	v
 num	fs/bootfs.c	/^    u64int num;$/;"	m	struct:BootFSData	file:
+num	message.h	/^    u64int num;$/;"	m	struct:MessageQueue
 num	multiboot.h	/^    u32int num;$/;"	m	struct:multiboot
+num	waitqueue.h	/^    u64int num;$/;"	m	struct:WaitQueue
 number	interrupt.h	/^    u64int number, errcode;$/;"	m	struct:RegisterState
 object	kobject.c	/^            struct KObject *object;$/;"	m	struct:KDirectoryProcessData::__anon69::__anon71	typeref:struct:KDirectoryProcessData::__anon69::__anon71::KObject	file:
 object	kobject.c	/^            struct KObject *object;$/;"	m	struct:KDirectoryProcessData::__anon69::__anon72	typeref:struct:KDirectoryProcessData::__anon69::__anon72::KObject	file:
@@ -3274,6 +3301,7 @@ pci_present	pci.c	/^MEXPORT(pci_present);$/;"	v
 pci_present	pci.c	/^s32int pci_present()$/;"	f
 pd	paging.h	/^    u64int pd[512];$/;"	m	struct:PageDirectoryPointer
 pdp	paging.h	/^    u64int pdp[512];$/;"	m	struct:PML4E
+pid	message.h	/^    u64int pid;$/;"	m	struct:Message
 pid	task.h	/^    u64int pid;$/;"	m	struct:Task
 pid	task2.h	/^    u32int pid;$/;"	m	struct:task
 place_order_array	order_array.c	/^order_array_t place_order_array(void *addr, u32int max_size, less_than_func_t func)$/;"	f
@@ -3281,6 +3309,7 @@ pop	loader32.s	/^pop rbx$/;"	l
 ppid	task2.h	/^    u32int ppid;$/;"	m	struct:task
 prev	kobject.c	/^    struct KObjectListNode *next, *prev;$/;"	m	struct:KObjectListNode	typeref:struct:KObjectListNode::	file:
 prev	kobject.h	/^    struct Klass *next, *prev;$/;"	m	struct:Klass	typeref:struct:Klass::
+prev	message.h	/^    struct Message *next, *prev;$/;"	m	struct:Message	typeref:struct:Message::
 prev	task.h	/^    struct Task *next, *prev;$/;"	m	struct:Task	typeref:struct:Task::
 prev	task2.h	/^    struct timer_queue_struct *prev;$/;"	m	struct:timer_queue_struct	typeref:struct:timer_queue_struct::timer_queue_struct
 prev	task2.h	/^    struct wait_queue_node_struct *prev;$/;"	m	struct:wait_queue_node_struct	typeref:struct:wait_queue_node_struct::wait_queue_node_struct
@@ -3314,6 +3343,10 @@ push	loader32.s	/^push    ebx                   ; Load multiboot header location
 put_block	fs/ext2fs.c	/^static s32int put_block(fs_t *fs, u8int *buf, u32int blk_no)$/;"	f	file:
 put_inode	fs/ext2fs.c	/^static s32int put_inode(fs_t *fs, struct ext2_inode *inode, u32int ino)$/;"	f	file:
 put_inode_blocks	fs/ext2fs.c	/^static s32int put_inode_blocks(fs_t *fs,u8int *buf,struct ext2_inode *inode,u32int start_blk,u32int n_blks)$/;"	f	file:
+r10	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
+r11	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
+r8	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
+r9	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 r_addend	elf.h	/^  Elf32_Sword	r_addend;		\/* Addend *\/$/;"	m	struct:__anon33
 r_addend	elf.h	/^  Elf64_Sxword	r_addend;		\/* Addend *\/$/;"	m	struct:__anon34
 r_info	elf.h	/^  Elf32_Word	r_info;			\/* Relocation type and symbol index *\/$/;"	m	struct:__anon31
@@ -3348,8 +3381,14 @@ ramfs_rmdir	fs/ramfs.c	/^s32int   ramfs_rmdir   (vnode_t *dir, char *name)$/;"	f
 ramfs_subnodes	fs/ramfs.c	/^s32int   ramfs_subnodes(vnode_t *dir, vnode_t ***nodes)$/;"	f
 ramfs_vnode_priv_t	fs/ramfs.c	/^} ramfs_vnode_priv_t;$/;"	t	typeref:struct:__anon20	file:
 ramfs_write	fs/ramfs.c	/^s32int   ramfs_write   (file_t *f, u32int offset, u32int sz, u8int *buf)$/;"	f
+rax	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
+rbp	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 rbp	task.h	/^    u64int rip, rsp, rbp;$/;"	m	struct:Task
+rbx	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
+rcx	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
+rdi	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 rdmsr	loader32.s	/^rdmsr                        ; Read from the model-specific register.$/;"	l
+rdx	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 read	vfs.h	/^    s64int (*read)(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer);$/;"	m	struct:FileSystemOperation
 read	vfs2.h	/^    s64int   (*read)    (file_t *f, u64int offset, u64int sz, u8int *buffer);$/;"	m	struct:VnodeOperations
 readDir	kobject.c	/^        } readDir;$/;"	m	union:KDirectoryProcessData::__anon69	typeref:struct:KDirectoryProcessData::__anon69::__anon70	file:
@@ -3365,7 +3404,7 @@ real_dentry_len	fs/ext2fs.c	/^static u32int real_dentry_len(struct ext2_dir_entr
 rec_len	fs/ext2fs.h	/^	u16int	rec_len;		\/* Directory entry length *\/$/;"	m	struct:ext2_dir_entry
 ref	kobject.h	/^    u64int ref;$/;"	m	struct:KObject
 registerFileSystemDriver	vfs.c	/^s64int registerFileSystemDriver(struct FileSystemDriver *driver)$/;"	f
-registerInterruptHandler	interrupt.c	/^void registerInterruptHandler(u32int n, IsrHandlerFunc handler)$/;"	f
+registerInterruptHandler	interrupt.c	/^void registerInterruptHandler(u64int n, IsrHandlerFunc handler)$/;"	f
 register_fs_driver	vfs2.c	/^void register_fs_driver(fs_driver_t *driver)$/;"	f
 register_pci_driver	pci.c	/^MEXPORT(register_pci_driver);$/;"	v
 register_pci_driver	pci.c	/^void register_pci_driver(pci_driver_t *drv)$/;"	f
@@ -3388,11 +3427,11 @@ reserved5	dtable.h	/^        u16int reserved5;$/;"	m	struct:TSS
 resolve_symbol	module.c	/^static u32int resolve_symbol(char *sym_name)$/;"	f	file:
 ret_code	task2.h	/^    u32int ret_code;$/;"	m	struct:task
 revision	pci.h	/^    u8int revision, prog_if, subclass, class_code;$/;"	m	struct:__anon2
-rflags	interrupt.h	/^    u64int rip, cs, rflags, rsp, ss;$/;"	m	struct:RegisterState
+rflags	interrupt.h	/^    u64int rip, cs, rflags, rsp0, ss0;$/;"	m	struct:RegisterState
 ri_cprmask	elf.h	/^  Elf32_Word	ri_cprmask[4];		\/* Coprocessor registers used *\/$/;"	m	struct:__anon60
 ri_gp_value	elf.h	/^  Elf32_Sword	ri_gp_value;		\/* $gp register value *\/$/;"	m	struct:__anon60
 ri_gprmask	elf.h	/^  Elf32_Word	ri_gprmask;		\/* General registers used *\/$/;"	m	struct:__anon60
-rip	interrupt.h	/^    u64int rip, cs, rflags, rsp, ss;$/;"	m	struct:RegisterState
+rip	interrupt.h	/^    u64int rip, cs, rflags, rsp0, ss0;$/;"	m	struct:RegisterState
 rip	task.h	/^    u64int rip, rsp, rbp;$/;"	m	struct:Task
 rmdir	vfs2.h	/^    s64int   (*rmdir)   (vnode_t *dir, char *name);$/;"	m	struct:VnodeOperations
 rom_bar	pci.h	/^            u16int rom_bar;$/;"	m	struct:__anon2::__anon3::__anon4
@@ -3401,14 +3440,18 @@ root	vfs.h	/^    s64int (*root)(struct FileSystem *fs);$/;"	m	struct:FileSystemO
 rootDirName	fs/bootfs.c	/^    char rootDirName[100];$/;"	m	struct:BootFSData	file:
 rootNode	vfs.c	/^struct VNode *rootNode = 0;$/;"	v	typeref:struct:VNode
 rootTask	task.c	/^void rootTask()$/;"	f
+rqAdd	schedule.c	/^void rqAdd(struct Task *task)$/;"	f
 rqNext	task.h	/^    struct Task *rqNext, *rqPrev;$/;"	m	struct:Task	typeref:struct:Task::Task
 rqPrev	task.h	/^    struct Task *rqNext, *rqPrev;$/;"	m	struct:Task	typeref:struct:Task::
-rsp	interrupt.h	/^    u64int rip, cs, rflags, rsp, ss;$/;"	m	struct:RegisterState
+rqRemove	schedule.c	/^void rqRemove(struct Task *task)$/;"	f
+rsi	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
+rsp	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 rsp	task.h	/^    u64int rip, rsp, rbp;$/;"	m	struct:Task
 rsp0	dtable.h	/^        u64int rsp0;       $/;"	m	struct:TSS
+rsp0	interrupt.h	/^    u64int rip, cs, rflags, rsp0, ss0;$/;"	m	struct:RegisterState
 rsp1	dtable.h	/^        u64int rsp1;$/;"	m	struct:TSS
 rsp2	dtable.h	/^        u64int rsp2;$/;"	m	struct:TSS
-runQueue	task.c	/^struct Task *runQueue[MLFQ_LEVELS] = {0};$/;"	v	typeref:struct:Task
+runQueue	schedule.c	/^struct Task *runQueue[MLFQ_LEVELS] = {0};$/;"	v	typeref:struct:Task
 s16int	common.h	/^typedef          short s16int;$/;"	t
 s16int	sysdef.h	/^typedef signed short    s16int;$/;"	t
 s32int	common.h	/^typedef          int   s32int;$/;"	t
@@ -3466,7 +3509,7 @@ s_uuid	fs/ext2fs.h	/^    u8int    s_uuid[16];     \/* 128-bit uuid for volume *\
 s_volume_name	fs/ext2fs.h	/^    char    s_volume_name[16];  \/* volume name *\/$/;"	m	struct:ext2_super_block
 s_wtime	fs/ext2fs.h	/^    u32int  s_wtime;        \/* Write time *\/$/;"	m	struct:ext2_super_block
 sb	fs/ext2fs.c	/^    struct ext2_super_block sb;$/;"	m	struct:__anon21	typeref:struct:__anon21::ext2_super_block	file:
-schedule	task.c	/^void schedule()$/;"	f
+schedule	schedule.c	/^void schedule()$/;"	f
 scr_clear	screen.c	/^void scr_clear()$/;"	f
 scr_putch	screen.c	/^void scr_putch(char c)$/;"	f
 scr_puthex	screen.c	/^void scr_puthex(u64int i)$/;"	f
@@ -3475,6 +3518,13 @@ scr_puts	screen.c	/^void scr_puts(const char *s)$/;"	f
 scroll	screen.c	/^void scroll()$/;"	f
 section	elf.h	/^  Elf32_Section section;	\/* Section header index of section affected,$/;"	m	struct:__anon61
 selector	dtable.h	/^    u16int selector;$/;"	m	struct:IDTEntry
+sem	mutex.h	/^    struct Semaphore *sem;$/;"	m	struct:Mutex	typeref:struct:Mutex::Semaphore
+semCreate	semaphore.c	/^struct Semaphore *semCreate(u64int count)$/;"	f
+semDestroy	semaphore.c	/^void semDestroy(struct Semaphore *sem)$/;"	f
+semGetting	message.h	/^    struct  Semaphore *semGetting, *semSending;$/;"	m	struct:MessageQueue	typeref:struct:MessageQueue::Semaphore
+semSending	message.h	/^    struct  Semaphore *semGetting, *semSending;$/;"	m	struct:MessageQueue	typeref:struct:MessageQueue::
+semSignal	semaphore.c	/^s64int semSignal(struct Semaphore *sem)$/;"	f
+semWait	semaphore.c	/^s64int semWait(struct Semaphore *sem)$/;"	f
 setBit	tlsf.c	/^void setBit(u64int *x, u64int i)$/;"	f
 setBootInfo	bootinfo.c	/^void setBootInfo(struct BootInfo *bi)$/;"	f
 setGDT	dtable.c	/^void setGDT(struct GDTEntry *entry, u32int base, u32int limit, u8int access, u8int granunarity)$/;"	f
@@ -3519,6 +3569,7 @@ size	vfs.h	/^    u64int size;$/;"	m	struct:DirectoryRecord
 size	vfs.h	/^    u64int size;$/;"	m	struct:VNodeInfo
 size	vmm.h	/^    u64int size;$/;"	m	struct:VMA
 slBitmap	tlsf.h	/^    u64int slBitmap[REAL_FLI];                  \/* i -> 2^(FLI_OFFSET+i) *\/$/;"	m	struct:TLSFHeader
+sleepOn	waitqueue.c	/^void sleepOn(struct WaitQueue *wq)$/;"	f
 sleep_for_ticks	task2.c	/^void sleep_for_ticks(u32int sleep_ticks)$/;"	f
 sleep_on	task2.c	/^void sleep_on(wait_queue_t *wq)$/;"	f
 slices	task.h	/^    u64int slices;$/;"	m	struct:Task
@@ -3527,7 +3578,7 @@ sprintf	common.c	/^u32int sprintf(char *buf, char *fmt, ...)$/;"	f
 sprintf	util.c	/^u64int sprintf(char *buf, char *fmt, ...)$/;"	f
 sqNext	task.h	/^    struct Task *sqNext, *sqPrev;$/;"	m	struct:Task	typeref:struct:Task::Task
 sqPrev	task.h	/^    struct Task *sqNext, *sqPrev;$/;"	m	struct:Task	typeref:struct:Task::
-ss	interrupt.h	/^    u64int rip, cs, rflags, rsp, ss;$/;"	m	struct:RegisterState
+ss0	interrupt.h	/^    u64int rip, cs, rflags, rsp0, ss0;$/;"	m	struct:RegisterState
 st_info	elf.h	/^  unsigned char	st_info;		\/* Symbol type and binding *\/$/;"	m	struct:__anon27
 st_info	elf.h	/^  unsigned char	st_info;		\/* Symbol type and binding *\/$/;"	m	struct:__anon28
 st_name	elf.h	/^  Elf32_Word	st_name;		\/* Symbol name (string tbl index) *\/$/;"	m	struct:__anon27
@@ -3603,10 +3654,13 @@ sys_rename	vfs2.c	/^s32int          sys_rename  (char *path, char *name)$/;"	f
 sys_rm	vfs2.c	/^s32int          sys_rm      (char *path)$/;"	f
 sys_rmdir	vfs2.c	/^s32int          sys_rmdir   (char *path)$/;"	f
 sys_unmap	task2.c	/^s32int sys_unmap(u32int addr, u32int length)$/;"	f
-syscall_handler	syscalls.c	/^void syscall_handler(registers_t *regs)$/;"	f
+syscallHandler	ksyscall.c	/^void syscallHandler(struct RegisterState *regs)$/;"	f
+syscallTest	ksyscall.c	/^void syscallTest()$/;"	f
 syscall_mount	vfs2.c	/^void syscall_mount(char *src, char* dst, u32int flags, void *data)$/;"	f
-syscalls	syscalls.c	/^void *syscalls[N_SYSCALLS] = {$/;"	v
+syscalls	ksyscall.c	/^void *syscalls[N_SYSCALLS] = {$/;"	v
 sz	order_array.h	/^    u32int sz;$/;"	m	struct:__anon74
+tail	message.h	/^    struct Message *head, *tail;$/;"	m	struct:MessageQueue	typeref:struct:MessageQueue::
+tail	waitqueue.h	/^    struct Task *head, *tail;$/;"	m	struct:WaitQueue	typeref:struct:WaitQueue::
 task	task2.h	/^    task_t *task;$/;"	m	struct:timer_queue_struct
 task	task2.h	/^    task_t *task;$/;"	m	struct:wait_queue_node_struct
 task	task2.h	/^typedef struct task {$/;"	s
@@ -3770,11 +3824,14 @@ vsprintf	util.c	/^u64int vsprintf(char *buf, char *fmt, va_list ap)$/;"	f
 wait_queue_node_struct	task2.h	/^typedef struct wait_queue_node_struct {$/;"	s
 wait_queue_node_t	task2.h	/^} wait_queue_node_t;$/;"	t	typeref:struct:wait_queue_node_struct
 wait_queue_t	task2.h	/^} wait_queue_t;$/;"	t	typeref:struct:__anon1
+wakeUpAll	waitqueue.c	/^void wakeUpAll(struct WaitQueue *wq)$/;"	f
+wakeUpOne	waitqueue.c	/^void wakeUpOne(struct WaitQueue *wq)$/;"	f
 wake_up_all	task2.c	/^void wake_up_all(wait_queue_t *wq)$/;"	f
 wake_up_one	task2.c	/^void wake_up_one(wait_queue_t *wq)$/;"	f
 work_path	task2.h	/^    char *work_path;$/;"	m	struct:task
 wq	i8042.c	/^wait_queue_t *wq = 0;$/;"	v
 wq	ide.c	/^wait_queue_t wq = {0};$/;"	v
+wq	semaphore.h	/^    struct WaitQueue *wq;$/;"	m	struct:Semaphore	typeref:struct:Semaphore::WaitQueue
 write	vfs.h	/^    s64int (*write)(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer);$/;"	m	struct:FileSystemOperation
 write	vfs2.h	/^    s64int   (*write)   (file_t *f, u64int offset, u64int sz, u8int *buffer);$/;"	m	struct:VnodeOperations
 write_blks	disk.h	/^    u32int (*write_blks)(disk_t *disk, u32int start_blk, u32int nr_blks, u8int *buf);$/;"	m	struct:disk_struct

@@ -436,13 +436,13 @@ s64int vmemcpy(struct VM *destVM, void *dest, struct VM *srcVM, void *src, u64in
     for (i=0; i<size; i+=PAGE_SIZE) {
         daddr = PADDR_TO_VADDR(getPAddr((u64int)dest+i, destPML4E));
         saddr = PADDR_TO_VADDR(getPAddr((u64int)src+i, srcPML4E));
-        DBG("daddr:%x,saddr:%x",daddr,saddr);
+        //DBG("daddr:%x,saddr:%x",daddr,saddr);
         memcpy((void*)daddr, (void*)saddr, PAGE_SIZE);
     }
     if (remain) {
         daddr = PADDR_TO_VADDR(getPAddr((u64int)dest+size, destPML4E));
         saddr = PADDR_TO_VADDR(getPAddr((u64int)src+size, srcPML4E));
-        DBG("daddr:%x,saddr:%x",daddr,saddr);
+        //DBG("daddr:%x,saddr:%x",daddr,saddr);
         memcpy((void*)daddr, (void*)saddr, remain);
     }
     return 0;

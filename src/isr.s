@@ -75,7 +75,7 @@ DEF_ISR_NOERRCODE 128
 
 isr_common_stub:
     multipush rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11
-    lea rdi, [rsp + 12*8]
+    mov rdi, rsp
     call isrDispatcher
     multipop  rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11
     add rsp, 16
@@ -103,7 +103,7 @@ DEF_IRQ 15,47
 
 irq_common_stub:
     multipush rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11
-    lea rdi, [rsp + 12*8]
+    mov rdi, rsp
     call irqDispatcher
     multipop rax, rbx, rcx, rdx, rsi, rdi, rsp, rbp, r8, r9, r10, r11
     add rsp, 16
