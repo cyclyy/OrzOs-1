@@ -1,13 +1,19 @@
 #include "i8042.h"
-#include "screen.h"
-#include "dev.h"
-#include "isr.h"
-#include "kheap.h"
+#include "device.h"
+#include "util.h"
+#include "interrupt.h"
+#include "kmm.h"
 #include "task.h"
 #include "key.h"
-#include "module.h"
+#include "waitqueue.h"
 
-u32int kbdus[128] =
+s64int i8042_Open(struct Device *dev);
+s64int i8042_Close(struct Device *dev);
+s64int i8042_Read(struct Device *dev, u64int offset, u64int size, char *buffer);
+s64int i8042_Probe();
+void i8042_ISR(struct RegisterState *regs);
+
+u64int kbdus[128] =
 {
     0,  Key_Escape, Key_1, Key_2, Key_3, Key_4, Key_5, Key_6, Key_7, Key_8, /* 9 */
     Key_9, Key_0, Key_Minus, Key_Equal, Key_Backspace, /* Backspace */
@@ -47,109 +53,120 @@ u32int kbdus[128] =
     0,    /* All other keys are undefined */
 };      
 
-dev_t *dev_i8042;
+struct Device *dev;
 
-wait_queue_t *wq = 0;
+struct WaitQueue *wq = 0;
 
-u8int in_escape = 0;
-u32int key;
+u8int inEscape = 0;
+u64int key;
 
-struct file_operations dev_i8042_fops = {
-    .open  = &i8042_open,
-    .close = &i8042_close,
-    .read  = &i8042_read,
-    .write = &i8042_write,
+struct DeviceOperation i8042_Ops = {
+    .open  = &i8042_Open,
+    .close = &i8042_Close,
+    .read  = &i8042_Read,
 };
 
-void module_i8042_init()
+void i8042_Init()
 {
-    /*printk("I'm module_i8042_init\n");*/
-    dev_i8042 = (dev_t*)kmalloc(sizeof(dev_t));
-    memset(dev_i8042, 0, sizeof(dev_t));
-    dev_i8042->dev_id = 0x10000;
-    dev_i8042->f_ops  = &dev_i8042_fops;
+    struct Device *dev;
+    dev = (struct Device*)kMalloc(sizeof(struct Device));
+    memset(dev, 0, sizeof(struct Device));
+    dev->id = 0x10000;
+    dev->op  = &i8042_Ops;
 
-    if (i8042_probe() == 0) {
-        wq = (wait_queue_t*)kmalloc(sizeof(wait_queue_t));
-        memset(wq, 0, sizeof(wait_queue_t));
-        add_dev(dev_i8042);
-        vfs_mknod("/dev/kbd",dev_i8042->dev_id,0);
-        outb(0x64,0x60);
+    if (i8042_Probe() == 0) {
+        /*
+        cleanupBuffers();
         outb(0x64,0xAE);
-        /*printk("%p\n",inb(0x60));*/
-        register_interrupt_handler(IRQ1, &i8042_irq);
+        */
+        addDevice(dev);
+        vfsCreateObject("Device:/Keyboard",dev->id);
+        wq = (struct WaitQueue*)kMalloc(sizeof(struct WaitQueue));
+        memset(wq, 0, sizeof(struct WaitQueue));
+        registerInterruptHandler(IRQ1, &i8042_ISR);
     } else {
         printk("failed to init i8042.\n");
-        kfree(dev_i8042);
-        dev_i8042 = 0;
+        kFree(dev);
+        dev = 0;
     }
 }
 
-void module_i8042_cleanup()
+void i8042_Cleanup()
 {
     /*printk("I'm module_i8042_cleanup\n");*/
-    if (dev_i8042) {
-        register_interrupt_handler(IRQ1, 0);
-        del_dev(dev_i8042);
+    if (dev) {
+        registerInterruptHandler(IRQ1, 0);
+        removeDevice(dev);
+        wakeUpAll(wq);
+        kFree(wq);
     }
 }
 
-s32int i8042_probe()
+void cleanupBuffers()
 {
-    while (inb(0x64) & 1)
+    while ((inb(0x64) & 3))
         inb(0x60);
+}
 
-    // doesn't perform test since it'll failed in VirtualBox
-    return 0;
+void prepareRead()
+{
+    while ((inb(0x64) & 1)==0)
+        ;
+}
 
-    outb(0x64,0x60);
+void prepareWrite()
+{
+    while ((inb(0x64) & 2))
+        inb(0x60);
+}
+
+s64int i8042_Probe()
+{
+    cleanupBuffers();
     outb(0x64,0xAA);
+    prepareRead();
     if (inb(0x60) != 0x55)
         return -1;
 
-    outb(0x64,0x60);
+    cleanupBuffers();
     outb(0x64,0xAB);
+    prepareRead();
     if (inb(0x60) != 0)
         return -1;
 
     return 0;
 }
 
-s32int i8042_read(file_t *f, u32int offset, u32int sz, u8int *buffer)
+s64int i8042_Read(struct Device *dev, u64int offset, u64int size, char *buffer)
 {
     /*printk("%s\n", __FUNCTION__);*/
-    if ((sz<4) || !buffer)
+    if ((size<4) || !buffer)
         return 0;
 
-    sleep_on(wq);
+    sleepOn(wq);
 
-    *(u32int*)buffer = key;
+    *(u64int*)buffer = key;
 
     return 4;
 }
 
-s32int i8042_write(file_t *f, u32int offset, u32int sz, u8int *buffer)
+s64int i8042_Open(struct Device *dev)
 {
     return 0;
 }
 
-s32int i8042_open(file_t *f)
+s64int i8042_Close(struct Device *dev)
 {
     return 0;
 }
 
-s32int i8042_close(file_t *f)
-{
-    return 0;
-}
-
-void i8042_irq(registers_t *regs)
+void i8042_ISR(struct RegisterState *regs)
 {
     u8int ch = inb(0x60);
     u8int c = ch;
 
     if (ch == 0xe0) {
-        in_escape = 1;
+        inEscape = 1;
         return;
     }
 
@@ -158,8 +175,8 @@ void i8042_irq(registers_t *regs)
     }
     key = kbdus[c];
 
-    if (in_escape) {
-        in_escape = 0;
+    if (inEscape) {
+        inEscape = 0;
         switch (key) {
             case Key_LeftControl:
                 key = Key_RightControl;
@@ -207,11 +224,6 @@ void i8042_irq(registers_t *regs)
         key |= Key_Release_Mask;
     }
 
-    /*printk("i8042_irq\n");*/
-    wake_up_all(wq);
+    wakeUpAll(wq);
 }
-
-MODULE_INIT(module_i8042_init);
-MODULE_CLEANUP(module_i8042_cleanup);
-MEXPORT(i8042_irq);
 

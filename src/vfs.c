@@ -2,6 +2,7 @@
 #include "kmm.h"
 #include "util.h"
 #include "fs/bootfs.h"
+#include "fs/devfs.h"
 
 struct MountPoint {
     char *name;
@@ -130,12 +131,10 @@ s64int vfsUnmount(const char *path)
 
 struct MountPoint *findMountPointPrefix(const char *path)
 {
-    struct MountPoint *mt, *bestMt = 0;
-    u64int bestLen = 0, pathLen, nameLen;
+    struct MountPoint *mt = 0;
     char buf[MAX_NAME_LEN+1];
     char *s;
 
-    pathLen = strlen(path);
     strcpy(buf,path);
     s = strchr(buf,':');
     if (!s)
@@ -194,7 +193,6 @@ s64int extractPath(char *path, char *name)
 s64int vfsOpen(const char *path, u64int flags, struct VNode *node)
 {
     struct MountPoint *mt;
-    struct VNode n1, n2;
     char *remainPath, name[MAX_NAME_LEN];
     s64int ret, id;
 
@@ -261,11 +259,81 @@ s64int vfsState(const char *path, struct VNodeInfo *ni)
     return ret;
 }
 
-s64int vfsCreateDirectory(const char *path)
+s64int vfsLookup(const char *path, struct VNode *node)
 {
     struct MountPoint *mt;
-    char *remainPath;
+    char *remainPath, name[MAX_NAME_LEN];
+    s64int ret, id;
+
+    ret = 0;
+    remainPath = (char*)kMalloc(strlen(path)+1);
+    parsePath(path, &mt, remainPath);
+    //DBG(remainPath);
+
+    if (mt) {
+        node->fs = mt->fs;
+        id = mt->fs->op->root(mt->fs);
+        while (1) {
+            ret = extractPath(remainPath, name);
+            if (ret <= 0)
+                break;
+            id = mt->fs->op->finddir(mt->fs, id, name);
+            if (id <= 0) {
+                ret = -1;
+                break;
+            }
+        }
+        if (ret==0) {
+            node->id = id;
+        }
+    } else
+        ret = -1;
+            
+    kFree(remainPath);
+
+    return ret;
+}
+
+s64int vfsCreateObject(const char *path, s64int objid)
+{
+    char *dirPath, baseName[MAX_NAME_LEN];
+    struct VNode node;
     s64int ret;
+
+    ret = 0;
+    dirPath = (char*)kMalloc(strlen(path)+1);
+    dirname(dirPath, path);
+    basename(baseName, path);
+    ret = vfsLookup(dirPath, &node);
+    if (ret == 0) {
+        if (node.fs && node.fs->op->mkobj)
+            ret = node.fs->op->mkobj(node.fs, node.id, baseName, objid);
+        else
+            ret = -1;
+    }
+    kFree(dirPath);
+
+    return ret;
+}
+
+s64int vfsCreateDirectory(const char *path)
+{
+    char *dirPath, baseName[MAX_NAME_LEN];
+    struct VNode node;
+    s64int ret;
+
+    ret = 0;
+    dirPath = (char*)kMalloc(strlen(path)+1);
+    dirname(dirPath, path);
+    basename(baseName, path);
+    ret = vfsLookup(dirPath, &node);
+    if (ret == 0) {
+        if (node.fs && node.fs->op->mkdir)
+            ret = node.fs->op->mkdir(node.fs, node.id, baseName);
+        else
+            ret = -1;
+    }
+    kFree(dirPath);
 
     return ret;
 }
@@ -290,4 +358,5 @@ s64int vfsReadDirectory(struct VNode *node, u64int bufSize, char *buffer)
 void initVFS()
 {
     registerFileSystemDriver(&bootfsDriver);
+    registerFileSystemDriver(&devfsDriver);
 }

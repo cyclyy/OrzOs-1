@@ -1,21 +1,3 @@
-/*
- * =============================================================================
- *
- *       Filename:  vmm.h
- *
- *    Description:  Manage Address Space
- *
- *        Version:  1.0
- *        Created:  2011年05月17日 22时20分50秒
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  Wang Hoi (whoi), fearee@gmail.com
- *        Company:  
- *
- * =============================================================================
- */
-
 #ifndef VMM_H
 #define VMM_H
 
@@ -46,8 +28,11 @@ struct VMA {
 
 struct VM {
     u64int cr3;
+    s64int ref;
     struct VMA *vmaHead;
 };
+
+extern struct VM *kernelVM;
 
 struct VM *vmInit();
 struct VM *vmCreate();
@@ -66,6 +51,10 @@ s64int vmRemoveArea(struct VM *vm,struct VMA *vma);
 
 // copy between different address space, dest and src must be page aligned
 s64int vmemcpy(struct VM *destVM, void *dest, struct VM *srcVM, void *src, u64int size);
+
+struct VM *vmRef(struct VM *vm);
+
+s64int vmDeref(struct VM *vm);
 
 void vmDump(struct VM *vm);
 

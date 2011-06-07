@@ -215,10 +215,8 @@ void initTSS()
     flushTSS();
 }
 
-/*
-void set_kernel_stack(u32int esp)
+void setKernelStack(u64int rsp)
 {
-    tss0.esp0 = esp;
+    tss0.rsp0 = rsp;
 }
-*/
 

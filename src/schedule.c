@@ -1,5 +1,6 @@
 #include "schedule.h"
 #include "task.h"
+#include "dtable.h"
 #include "util.h"
 
 #define BASE_QUANTUM    10
@@ -65,20 +66,19 @@ void schedule()
     rsp = newTask->rsp;
     rbp = newTask->rbp;
     rip = newTask->rip;
+    setKernelStack(newTask->rsp0);
+
     currentTask = newTask;
-
-//    DBG("%d",currentTask->pid);
-
     asm("cli;               \
-         mov %0, %%rsp;     \
-         mov %1, %%rbp;     \
-         mov %2, %%rbx;     \
-         mov %3, %%cr3;     \
-         movq $0x123, %%rax;\
-         sti;               \
-         jmp *%%rbx"
-         ::"r"(rsp), "r"(rbp), "r"(rip), "r"(currentTask->vm->cr3));
-         
+            mov %0, %%rsp;     \
+            mov %1, %%rbp;     \
+            mov %2, %%rbx;     \
+            mov %3, %%cr3;     \
+            movq $0x123, %%rax;\
+            sti;               \
+            jmp *%%rbx"
+            ::"r"(rsp), "r"(rbp), "r"(rip), "r"(currentTask->vm->cr3));
+
 }
 
 void rqAdd(struct Task *task)

@@ -199,6 +199,9 @@ struct VM *vmInit()
 
 //    vmDump(vm);
     kernelVM = vm;
+
+    vmRef(vm);
+
     return vm;
 }
 
@@ -227,6 +230,8 @@ struct VM *vmCopy(struct VM *oldVM, u64int flags)
         v = newVMA; 
         vma = vma->next;
     }
+
+    vmRef(newVM);
 
     return newVM;
 }
@@ -445,6 +450,25 @@ s64int vmemcpy(struct VM *destVM, void *dest, struct VM *srcVM, void *src, u64in
         //DBG("daddr:%x,saddr:%x",daddr,saddr);
         memcpy((void*)daddr, (void*)saddr, remain);
     }
+    return 0;
+}
+
+struct VM *vmRef(struct VM *vm)
+{
+    vm->ref++;
+    return vm;
+}
+
+s64int vmDeref(struct VM *vm)
+{
+    if (vm->ref<=0)
+        return -1;
+
+    vm->ref--;
+
+    if (vm->ref == 0)
+        return vmDestroy(vm);
+
     return 0;
 }
 

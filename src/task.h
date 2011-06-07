@@ -18,7 +18,7 @@ struct Task {
     s64int exitCode;
     struct VM *vm;
     struct Program *prog;
-    u64int rip, rsp, rbp;
+    u64int rsp0, rsp3, rip3, rip, rsp, rbp;
     struct Task *next, *prev;
     struct Task *rqNext, *rqPrev;
     struct Task *sqNext, *sqPrev;

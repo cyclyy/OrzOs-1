@@ -1,15 +1,16 @@
-#include "dev.h"
-#include "screen.h"
+#include "device.h"
+#include "kmm.h"
+#include "util.h"
 
-dev_t *devs = 0;
+struct Device *devs = 0;
 
-void add_dev(dev_t *dev)
+void addDevice(struct Device *dev)
 {
     dev->next = devs;
     devs = dev;
 }
 
-void del_dev(dev_t *dev)
+void removeDevice(struct Device *dev)
 {
     if (!dev)
         return;
@@ -17,7 +18,7 @@ void del_dev(dev_t *dev)
     if (dev == devs) {
         devs = devs->next;
     } else {
-        dev_t *p = devs;
+        struct Device *p = devs;
 
         while ((p->next) && (p->next != dev))
             p = p->next;
@@ -29,16 +30,21 @@ void del_dev(dev_t *dev)
     dev->next = 0;
 }
 
-dev_t *find_dev(u32int id)
+struct Device *findDevice(u64int id)
 {
-    dev_t *p = devs;
+    struct Device *p = devs;
 
     while (p) {
-        if (p->dev_id == id)
+        if (p->id == id)
             return p;
         p = p->next;
     }
 
     return 0;
+}
+
+struct Device *getAllDevices()
+{
+    return devs;
 }
 

@@ -11,6 +11,7 @@
 #include "vfs.h"
 #include "paging.h"
 #include "ksyscall.h"
+#include "i8042.h"
 
 u64int kmain(struct BootInfo *si)
 {
@@ -27,19 +28,10 @@ u64int kmain(struct BootInfo *si)
     DBG("InitAddr:%x", getBootInfo()->initrdAddr);
     DBG("AvailMem:%dKB",availMemory()/1024);
     vfsMount("Boot",0,"bootfs",0,(void*)PADDR_TO_VADDR(getBootInfo()->initrdAddr));
-    struct VNode node;
-    vfsOpen("Boot:/a.txt",0,&node);
-    char buf[1000];
-    s64int n;
-    n = vfsRead(&node, 0, 1000, buf);
-    printk(buf);
+    vfsMount("Device",0,"devfs",0,0);
+    i8042_Init();
+    kNewTask("Boot:/init", 0);
 
-    DBG("AvailMem:%dKB",availMemory()/1024);
-    u64int i;
-    for (i=0; i<200; i++)
-        kNewTask("Boot:/init", 0);
-
-    DBG("AvailMem:%dKB",availMemory()/1024);
     rootTask();
     // never return here;
     return 0;

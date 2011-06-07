@@ -91,5 +91,7 @@ struct TSSPtr {
 
 void initTSS();
 
-#endif
+void setKernelStack(u64int rsp);
+
+#endif /* DTABLE_H */
 

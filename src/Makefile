@@ -5,7 +5,10 @@ AR = x86_64-pc-elf-ar
 LD = x86_64-pc-elf-ld
 NM = x86_64-pc-elf-nm
 
-CORE_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o dtable.o flushdtable.o isr.o interrupt.o tlsf.o kobject.o vfs.o screen.o task.o taskasm.o paging.o elfloader.o waitqueue.o schedule.o semaphore.o mutex.o message.o ksyscall.o fs/bootfs.o
+CORE_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o dtable.o flushdtable.o isr.o \
+			   interrupt.o tlsf.o kobject.o vfs.o screen.o task.o taskasm.o paging.o \
+			   elfloader.o waitqueue.o schedule.o semaphore.o mutex.o message.o \
+			   ksyscall.o device.o i8042.o fs/bootfs.o fs/devfs.o
 
 MOD_SOURCES = testmod.o            \
               i8042.o              \
