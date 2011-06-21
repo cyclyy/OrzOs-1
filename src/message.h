@@ -3,30 +3,73 @@
 
 #include "sysdef.h"
 #include "semaphore.h"
+#include "waitqueue.h"
 
-struct Message {
-    u64int flags;
-    u64int pid;
-    u64int arg1;
-    u64int arg2;
-    u64int bodyLen;
-    void *bodyBuf;
+struct Client;
+struct Server;
+struct Message;
+struct MessageQueue;
+
+#define CLIENT_STATUS_READY             0
+#define CLIENT_STATUS_SEND_BLOCKED      1
+#define CLIENT_STATUS_REPLY_BLOCKED     2
+
+#define SERVER_STATUS_READY             0
+#define SERVER_STATUS_RECEIVE_BLOCKED   1
+
+struct Server
+{
+    s64int port;
+    struct Task *ownerTask;
+    struct Client *clients;
+    struct MessageQueue *receiveMQ, *replyMQ;
+    struct WaitQueue *receiveWQ, *sendWQ;
+    struct Server *next, *prev;
+};
+
+struct Client
+{
+    struct Task *ownerTask;
+    struct Server *server;
+    struct Client *next, *prev;
+};
+
+struct Message
+{
+    u64int type;
+    struct Task *task;
+    struct Client *client;
+    struct Server *server;
+    char *src, *dest;
+    u64int srcSize, destSize;
     struct Message *next, *prev;
 };
 
-struct MessageQueue {
-    u64int num;
-    struct  Semaphore *semGetting, *semSending;
+struct MessageQueue
+{
+    u64int size;
     struct Message *head, *tail;
 };
 
-s64int kGetMessage(u64int *pid, u64int *arg1, u64int *arg2,
-        u64int *bodyLen, u64int bufLen, void *buf);
+struct IPCManager
+{
+    struct Server *servers;
+};
 
-s64int kPostMessage(u64int pid, u64int arg1, u64int arg2,
-        u64int bodyLen, void *bodyBuf);
+struct Server *kCreateServer(u64int port);
 
-s64int kSendMessage(u64int pid, u64int arg1, u64int arg2,
-        u64int bodyLen, void *bodyBuf);
+s64int kDestroyServer(struct Server *server);
+
+struct Client *kConnect(u64int port);
+
+s64int kDisconnect(struct Client *client);
+
+s64int kSend(struct Client *client, char *src, u64int srcSize, char *dest, u64int destSize);
+
+struct Client *kReceive(struct Server *server, char *buf, u64int bufSize);
+
+s64int kReply(struct Client *client, char *buf, u64int bufSize);
+
+void initIPC();
 
 #endif /* MESSAGE_H */

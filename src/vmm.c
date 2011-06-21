@@ -1,27 +1,39 @@
-/*
- * =============================================================================
- *
- *       Filename:  vmm.c
- *
- *    Description:  Manage Virtual Memory Areas
- *
- *        Version:  1.0
- *        Created:  2011年05月17日 23时46分07秒
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  Wang Hoi (whoi), fearee@gmail.com
- *        Company:  
- *
- * =============================================================================
- */
-
 #include "vmm.h"
 #include "paging.h"
 #include "kmm.h"
 #include "util.h"
 
 struct VM *kernelVM = 0;
+
+static struct VMA *findFreeArea(struct VM *vm, u64int size, u64int startBound, 
+        u64int endBound, u64int direct)
+{
+    struct VMA *v;
+
+    if (((direct != VMA_DIR_UP) && (direct != VMA_DIR_DOWN)) 
+            || (size > endBound - startBound))
+        return 0;
+
+    if (direct == VMA_DIR_UP) {
+        v = vmQueryAreaByAddr(vm, startBound);
+        while (v && (v->start < endBound)) {
+            if ((v->flags == VMA_STATUS_FREE) && 
+                    (MAX(startBound, v->start) + size <= MIN(endBound, v->start+v->size)))
+                return v;
+            v = v->next;
+        }
+        return 0;
+    } else {
+        v = vmQueryAreaByAddr(vm, endBound);
+        while (v && (v->start + v->size > startBound)) {
+            if ((v->flags == VMA_STATUS_FREE) && 
+                    (MAX(startBound, v->start) + size <= MIN(endBound, v->start+v->size)))
+                return v;
+            v = v->prev;
+        }
+        return 0;
+    }
+}
 
 struct VMA *vmaCreate(u64int start, u64int size, u64int flags)
 {
@@ -282,16 +294,19 @@ s64int vmDestroy(struct VM *vm)
                 if (pt != kPT) {
                     DBG("Free pt %x",buildVAddr(i,j,k,0));
                     kFree(pt);
+                    pd->pt[k] = 0;
                 }
             }
             if (pd != kPD) {
                 DBG("Free pd %x",buildVAddr(i,j,0,0));
                 kFree(pd);
+                pdp->pd[j] = 0;
             }
         }
         if (pdp != kPDP) {
             DBG("Free pdp %x",buildVAddr(i,0,0,0));
             kFree(pdp);
+            pml4e->pdp[i] = 0;
         }
     }
     DBG("Free pml4e");
@@ -309,7 +324,7 @@ s64int vmAddArea(struct VM *vm, u64int start, u64int size, u64int flags)
 
     pml4e = (struct PML4E *)PADDR_TO_VADDR(vm->cr3);
 
-    v = vmQueryArea(vm, start);
+    v = vmQueryAreaByAddr(vm, start);
     if ((v->flags & VMA_STATUS_FREE) && (v->start+v->size>=start+size)) {
         if (start > v->start) {
             vma = vmaCreate(v->start, start - v->start, VMA_STATUS_FREE);
@@ -353,7 +368,41 @@ s64int vmAddArea(struct VM *vm, u64int start, u64int size, u64int flags)
     }
 }
 
-struct VMA *vmQueryArea(struct VM *vm, u64int addr)
+u64int vmAllocArea(struct VM *vm, u64int startHint, u64int size, 
+        u64int startBound, u64int endBound, u64int direct, u64int flags)
+{
+    struct VMA *v;
+
+    if ((direct != VMA_DIR_UP) && (direct != VMA_DIR_DOWN))
+        return 0;
+
+    flags |= VMA_STATUS_USED;
+    if (startHint) {
+        if ((startHint >= startBound) && (startHint + size <= endBound))
+            if (vmAddArea(vm, startHint, size, flags)==0) {
+                v = vmQueryAreaByAddr(vm, startHint);
+                return v->start;
+            } else 
+                return 0;
+        else 
+            return 0;
+    }
+    v = findFreeArea(vm, size, startBound, endBound, direct);
+    if (!v)
+        return 0;
+    if (v->size == size) {
+        v->flags = flags;
+        return v->start;
+    } else if (direct==VMA_DIR_UP) {
+        vmAddArea(vm,v->start,size,flags);
+        return v->start;
+    } else {
+        vmAddArea(vm,v->start+(v->size-size),size,flags);
+        return v->start + (v->size-size);
+    }
+}
+
+struct VMA *vmQueryAreaByAddr(struct VM *vm, u64int addr)
 {
     struct VMA *v;
     v = vm->vmaHead;
@@ -427,6 +476,7 @@ void vmDump(struct VM *vm)
     }
 }
 
+/*
 s64int vmemcpy(struct VM *destVM, void *dest, struct VM *srcVM, void *src, u64int size)
 {
     u64int daddr, saddr;
@@ -452,6 +502,48 @@ s64int vmemcpy(struct VM *destVM, void *dest, struct VM *srcVM, void *src, u64in
     }
     return 0;
 }
+*/
+
+u64int vmemcpy(struct VM *destVM, void *dest, struct VM *srcVM, void *src, u64int size)
+{
+    u64int remain, srcAddr, destAddr, srcSize, destSize, n, d1, d2;
+    struct PML4E *destPML4E, *srcPML4E;
+
+    destPML4E = (struct PML4E*)PADDR_TO_VADDR(destVM->cr3);
+    srcPML4E = (struct PML4E*)PADDR_TO_VADDR(srcVM->cr3);
+
+    srcAddr = (u64int)src;
+    destAddr = (u64int)dest;
+    remain = size;
+    srcSize = PAGE_SIZE - srcAddr % PAGE_SIZE;
+    destSize = PAGE_SIZE - destAddr % PAGE_SIZE;
+    d1 = PADDR_TO_VADDR(getPAddr(srcAddr,srcPML4E));
+    d2 = PADDR_TO_VADDR(getPAddr(destAddr,destPML4E));
+
+    while (d1 && d2 && remain) {
+        n = MIN( MIN(srcSize, destSize), remain);
+        memcpy((void*)d2,(void*)d1,n);
+        remain -= n;
+        srcSize -= n;
+        destSize -= n;
+        srcAddr += n;
+        destAddr += n;
+        if (srcSize == 0) {
+            d1 = PADDR_TO_VADDR(getPAddr(srcAddr,srcPML4E));
+            srcSize = PAGE_SIZE;
+        } else {
+            d1 += n;
+        }
+        if (destSize == 0) {
+            d2 = PADDR_TO_VADDR(getPAddr(destAddr,destPML4E));
+            destSize = PAGE_SIZE;
+        } else {
+            d2 += n;
+        }
+    }
+
+    return size - remain;
+}
 
 struct VM *vmRef(struct VM *vm)
 {
@@ -470,5 +562,15 @@ s64int vmDeref(struct VM *vm)
         return vmDestroy(vm);
 
     return 0;
+}
+
+u64int copyFromUser(void *dest, void *src, u64int size)
+{
+    return copyUnsafe(dest,src,size);
+}
+
+u64int copyToUser(void *dest, void *src, u64int size)
+{
+    return copyUnsafe(dest,src,size);
 }
 

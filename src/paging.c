@@ -140,7 +140,11 @@ u64int getPAddr(u64int vaddr, struct PML4E *pml4e)
     if (!pt)
         return 0;
     page = getPage(pt, vaddr);
-    return *page & PAGE_MASK;
+    if (*page & PAGE_MASK) {
+        return (*page & PAGE_MASK) + (vaddr % PAGE_SIZE);
+    } else {
+        return 0;
+    }
 }
 
 void parseVAddr(u64int vaddr, u64int *pml4eIdx, u64int *pdpIdx, u64int *pdIdx, u64int *ptIdx)

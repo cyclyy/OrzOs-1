@@ -10,8 +10,16 @@ struct WaitQueue {
 
 void sleepOn(struct WaitQueue *wq);
 
+void wakeUp(struct WaitQueue *wq, struct Task *task);
+
 void wakeUpOne(struct WaitQueue *wq);
 
 void wakeUpAll(struct WaitQueue *wq);
+
+struct Task *wqTakeFirst(struct WaitQueue *wq);
+
+void wqAppend(struct WaitQueue *wq, struct Task *t);
+
+struct WaitQueue *wqCreate();
 
 #endif /* WAITQUEUE_H */

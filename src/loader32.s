@@ -125,7 +125,7 @@ cmp eax, 1
 jb nokernel
 mov rdi, kernel64.imageAddr
 xor rsi, rsi
-mov esi, [rbx+24]
+mov rsi, [rbx+24]
 lodsd 
 stosd
 mov eax, 0

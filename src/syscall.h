@@ -64,5 +64,13 @@
 
 DECL_SYSCALL_0(TestSyscall);
 DECL_SYSCALL_1(PutChar, char);
+DECL_SYSCALL_1(CreateServer, s64int);
+DECL_SYSCALL_1(DestroyServer, s64int);
+DECL_SYSCALL_1(Connect, s64int);
+DECL_SYSCALL_1(Disconnect, s64int);
+DECL_SYSCALL_5(Send, s64int, char *, u64int, char *, u64int);
+DECL_SYSCALL_3(Receive, s64int, char *, u64int);
+DECL_SYSCALL_3(Reply, s64int, char *, u64int);
+DECL_SYSCALL_2(NewTask, char *, u64int);
 
 #endif /* SYSCALL_H */

@@ -31,7 +31,7 @@ struct VNode
 struct FileSystemOperation
 {
     s64int (*root)(struct FileSystem *fs);
-    s64int (*open)(struct FileSystem *fs, s64int id);
+    s64int (*open)(struct FileSystem *fs, s64int id, s64int *openId);
     s64int (*close)(struct FileSystem *fs, s64int id);
     s64int (*read)(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer);
     s64int (*write)(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer);
@@ -41,6 +41,8 @@ struct FileSystemOperation
     s64int (*finddir)(struct FileSystem *fs, s64int id, const char *name);
     s64int (*mkobj)(struct FileSystem *fs, s64int id, const char *name, s64int objid);
     s64int (*mkdir)(struct FileSystem *fs, s64int id, const char *name);
+    s64int (*remove)(struct FileSystem *fs, s64int id, const char *name);
+    s64int (*rmdir)(struct FileSystem *fs, s64int id, const char *name);
 };
 
 struct FileSystem

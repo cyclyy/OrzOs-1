@@ -3,6 +3,10 @@
 
 #include "sysdef.h"
 
+#define DIVIDE_ZERO_FAULT   0
+#define GP_FAULT            13
+#define PAGE_FAULT          14
+
 #define IRQ0 32
 #define IRQ1 33
 #define IRQ2 34

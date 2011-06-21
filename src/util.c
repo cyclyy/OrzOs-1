@@ -529,4 +529,13 @@ s32int atoi(const char *nptr)
     return strtol(nptr, (char **)0, 10);
 }
 
+void clearBit(u64int *x, u64int i)
+{
+    x[i>>6] &= ~(1 << (i & 0x3f));
+}
+
+void setBit(u64int *x, u64int i)
+{
+    x[i>>6] |= 1 << (i & 0x3f);
+}
 

@@ -18,6 +18,9 @@
 #define VMA_TYPE_HEAP       32
 #define VMA_TYPE_MASK       48
 
+#define VMA_DIR_UP          0
+#define VMA_DIR_DOWN        0
+
 struct VMA {
     u64int start;
     u64int size;
@@ -45,18 +48,27 @@ struct VM *vmCopy(struct VM *vm, u64int flags);
 
 s64int vmAddArea(struct VM *vm, u64int start, u64int size, u64int flags);
 
-struct VMA *vmQueryArea(struct VM *vm, u64int addr);
+u64int vmAllocArea(struct VM *vm, u64int startHint, u64int size, 
+        u64int startBound, u64int endBound, u64int direct, u64int flags);
+
+struct VMA *vmQueryAreaByAddr(struct VM *vm, u64int addr);
 
 s64int vmRemoveArea(struct VM *vm,struct VMA *vma);
 
 // copy between different address space, dest and src must be page aligned
-s64int vmemcpy(struct VM *destVM, void *dest, struct VM *srcVM, void *src, u64int size);
+u64int vmemcpy(struct VM *destVM, void *dest, struct VM *srcVM, void *src, u64int size);
 
 struct VM *vmRef(struct VM *vm);
 
 s64int vmDeref(struct VM *vm);
 
 void vmDump(struct VM *vm);
+
+extern u64int copyUnsafe(void *dest, void *src, u64int size);
+
+u64int copyFromUser(void *dest, void *src, u64int size);
+
+u64int copyToUser(void *dest, void *src, u64int size);
 
 #endif /* VMM_H */
 

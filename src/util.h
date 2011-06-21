@@ -64,6 +64,10 @@ s32int atoi(const char *nptr);
 
 #define atol(x) atoi(x)
 
+void clearBit(u64int *x, u64int i);
+
+void setBit(u64int *x, u64int i);
+
 /*
 void insl(u16int port, u32int buffer, u32int quads);
 

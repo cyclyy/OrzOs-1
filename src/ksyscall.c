@@ -4,14 +4,24 @@
 #include "task.h"
 #include "vfs.h"
 #include "screen.h"
+#include "syscall/ozipc.h"
+#include "syscall/oztask.h"
 
 void syscallTest();
 
-#define N_SYSCALLS 2
+#define N_SYSCALLS 10
 
 void *syscalls[N_SYSCALLS] = {
     &syscallTest,
     &scr_putch,
+    OzCreateServer,
+    OzDestroyServer,
+    OzConnect,
+    OzDisconnect,
+    OzSend,
+    OzReceive,
+    OzReply,
+    OzNewTask,
 };
 
 u64int nsyscalls = N_SYSCALLS;
@@ -39,8 +49,8 @@ void syscallHandler(struct RegisterState *regs)
                   pop %%rbx;\
                   pop %%rbx;\
                   pop %%rbx;"
-                  : "=a"(ret) : "D"(regs->rdi), "S"(regs->rsi), "d"(regs->rdx), 
-                    "c"(regs->rcx), "b"(regs->rbx), "r"(func));
+                  : "=a"(ret) : "D"(regs->rbx), "S"(regs->rcx), "d"(regs->rdx), 
+                    "c"(regs->rsi), "b"(regs->rdi), "r"(func));
 
 
 //    asm volatile("xchg %bx,%bx");

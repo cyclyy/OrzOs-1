@@ -1,5 +1,6 @@
 // main.c -- Defines the C-code kernel entry point, calls initialisation routines.
 
+#include "except.h"
 #include "sysdef.h"
 #include "screen.h"
 #include "interrupt.h"
@@ -11,6 +12,8 @@
 #include "vfs.h"
 #include "paging.h"
 #include "ksyscall.h"
+#include "message.h"
+#include "except.h"
 #include "i8042.h"
 
 u64int kmain(struct BootInfo *si)
@@ -25,11 +28,17 @@ u64int kmain(struct BootInfo *si)
     initMultitasking();
     initVFS();
     initSyscalls();
-    DBG("InitAddr:%x", getBootInfo()->initrdAddr);
-    DBG("AvailMem:%dKB",availMemory()/1024);
+    initCpuExceptions();
+    initIPC();
+
     vfsMount("Boot",0,"bootfs",0,(void*)PADDR_TO_VADDR(getBootInfo()->initrdAddr));
     vfsMount("Device",0,"devfs",0,0);
+
     i8042_Init();
+
+    DBG("InitAddr:%x", getBootInfo()->initrdAddr);
+    DBG("AvailMem:%dKB",availMemory()/1024);
+
     kNewTask("Boot:/init", 0);
 
     rootTask();

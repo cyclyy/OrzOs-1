@@ -16,6 +16,8 @@ struct FileSystemDriver *fsDrivers = 0;
 
 struct VNode *rootNode = 0;
 
+s64int vfsLookup(const char *path, struct VNode *node);
+
 struct FileSystemDriver *getFSDriver(const char *name)
 {
     struct FileSystemDriver *d;
@@ -81,7 +83,7 @@ s64int vfsMount(const char *dest, const char *source, const char *fsType, u64int
 
     driver = getFSDriver(fsType);
 
-    if (!driver)
+    if (!driver || !driver->op)
         return -1;
 
     if (!driver->op->mount)
@@ -215,8 +217,7 @@ s64int vfsOpen(const char *path, u64int flags, struct VNode *node)
             }
         }
         if (ret==0) {
-            node->id = id;
-            ret = mt->fs->op->open(mt->fs, id);
+            ret = mt->fs->op->open(mt->fs, id, &node->id);
         }
     } else
         ret = -1;
@@ -252,9 +253,16 @@ s64int vfsWrite(struct VNode *node, u64int offset, u64int size, char *buffer)
 
 s64int vfsState(const char *path, struct VNodeInfo *ni)
 {
-    struct MountPoint *mt;
-    char *remainPath;
+    struct VNode node;
     s64int ret;
+
+    ret = vfsLookup(path, &node);
+    if (ret == 0) {
+        if (node.fs && node.fs->op->stat)
+            ret = node.fs->op->stat(node.fs, node.id, ni);
+        else
+            ret = -1;
+    }
 
     return ret;
 }
@@ -340,9 +348,22 @@ s64int vfsCreateDirectory(const char *path)
 
 s64int vfsRemoveDirectory(const char *path)
 {
-    struct MountPoint *mt;
-    char *remainPath;
+    char *dirPath, baseName[MAX_NAME_LEN];
+    struct VNode node;
     s64int ret;
+
+    ret = 0;
+    dirPath = (char*)kMalloc(strlen(path)+1);
+    dirname(dirPath, path);
+    basename(baseName, path);
+    ret = vfsLookup(dirPath, &node);
+    if (ret == 0) {
+        if (node.fs && node.fs->op->mkdir)
+            ret = node.fs->op->rmdir(node.fs, node.id, baseName);
+        else
+            ret = -1;
+    }
+    kFree(dirPath);
 
     return ret;
 }

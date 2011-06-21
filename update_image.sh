@@ -2,6 +2,13 @@
 
 rm  initrd/init
 cp src/prog/init initrd/
+rm  initrd/server
+cp src/prog/server initrd/
+rm  initrd/client
+cp src/prog/client initrd/
+
+rm  initrd/init
+cp src/prog/init initrd/
 rm initrd.tar
 tar cvf initrd.tar initrd/
 ls c.img 2>/dev/null || bximage -hd -mode=flat -size=10 -q c.img

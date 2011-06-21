@@ -7,7 +7,7 @@ s64int bootfsMount(struct FileSystemDriver *driver, struct FileSystem **fs, cons
 s64int bootfsUnmount(struct FileSystemDriver *driver, struct FileSystem *fs);
 
 s64int bootfsRoot(struct FileSystem *fs);
-s64int bootfsOpen(struct FileSystem *fs, s64int id);
+s64int bootfsOpen(struct FileSystem *fs, s64int id, s64int *openId);
 s64int bootfsClose(struct FileSystem *fs, s64int id);
 s64int bootfsRead(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer);
 s64int bootfsReaddir(struct FileSystem *fs, s64int id, u64int bufSize, char *buf);
@@ -128,8 +128,9 @@ s64int bootfsRoot(struct FileSystem *fs)
     return 1;
 }
 
-s64int bootfsOpen(struct FileSystem *fs, s64int id)
+s64int bootfsOpen(struct FileSystem *fs, s64int id, s64int *openId)
 {
+    *openId = id;
     return 0;
 }
 
@@ -224,8 +225,7 @@ s64int bootfsReaddir(struct FileSystem *fs, s64int id, u64int bufSize, char *buf
 s64int bootfsFinddir(struct FileSystem *fs, s64int id, const char *name)
 {
     struct BootFSData *fsData;
-    struct TarHeader *hd, *hd1;
-    struct DirectoryRecord *drec;
+    struct TarHeader *hd;
     s64int ret, i;
     char *s;
 

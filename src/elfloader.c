@@ -50,7 +50,8 @@ s64int loadElfProgram(const char *path, struct Program *prog, struct VM *vm)
     ehdr = (Elf64_Ehdr *)kMalloc(sizeof(Elf64_Ehdr));
     if (!ehdr)
         return -1;
-    buffer = (char*)kMallocEx(PAGE_SIZE, 1, 0);
+    //buffer = (char*)kMallocEx(PAGE_SIZE, 1, 0);
+    buffer = (char*)kMalloc(PAGE_SIZE);
     n = vfsRead(&node, 0, sizeof(Elf64_Ehdr), ehdr);
 
     if ((n == sizeof(Elf64_Ehdr)) && isValidElfHeader(ehdr)) {

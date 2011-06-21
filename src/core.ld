@@ -17,9 +17,13 @@ SECTIONS
 
   .data :
   {
-      data = .;
+     data = .;
      *(.data)
      *(.rodata)
+     . = ALIGN(8);
+     exceptTable = .;
+     *(.exTable)
+     exceptTableEnd = .;
      . = ALIGN(4096);
   }
 

@@ -1,24 +1,17 @@
 #include "waitqueue.h"
+#include "kmm.h"
+#include "util.h"
 #include "schedule.h"
 
 void sleepOn(struct WaitQueue *wq)
 {
     currentTask->state = TASK_STATE_WAIT;
     rqRemove(currentTask);
-    currentTask->sqNext = 0;
-    currentTask->sqPrev = wq->tail;
-    if (wq->tail)
-        wq->tail->sqNext = currentTask;
-    wq->tail = currentTask;
-
-    if (!wq->head)
-        wq->head = currentTask;
-
-    wq->num++;
+    wqAppend(wq,currentTask);
     schedule();
 }
 
-void wakeUpOne(struct WaitQueue *wq)
+void wakeUp(struct WaitQueue *wq, struct Task *task)
 {
     struct Task *t;
 
@@ -26,14 +19,28 @@ void wakeUpOne(struct WaitQueue *wq)
         return;
 
     wq->num--;
-    t = wq->head;
+    t = task;
+    if (wq->head == t)
+        wq->head = wq->head->sqNext;
+    if (wq->tail == t)
+        wq->tail = wq->tail->sqPrev;
     t->state = TASK_STATE_READY;
     rqAdd(t);
-    wq->head = t->sqNext;
-    if (wq->head)
-        wq->head->sqPrev = 0;
-    if (wq->tail == t)
-        wq->tail = 0;
+
+    return;
+}
+
+void wakeUpOne(struct WaitQueue *wq)
+{
+    struct Task *t;
+
+    t = wqTakeFirst(wq);
+
+    if (!t)
+        return;
+
+    t->state = TASK_STATE_READY;
+    rqAdd(t);
 }
 
 void wakeUpAll(struct WaitQueue *wq)
@@ -42,3 +49,44 @@ void wakeUpAll(struct WaitQueue *wq)
         wakeUpOne(wq);
 }
 
+struct Task *wqTakeFirst(struct WaitQueue *wq)
+{
+    struct Task *t;
+
+    if (!wq->num)
+        return 0;
+
+    wq->num--;
+    t = wq->head;
+    wq->head = t->sqNext;
+    if (wq->head)
+        wq->head->sqPrev = 0;
+    if (wq->tail == t)
+        wq->tail = 0;
+
+    return t;
+}
+
+void wqAppend(struct WaitQueue *wq, struct Task *t)
+{
+    t->sqNext = 0;
+    t->sqPrev = wq->tail;
+    if (wq->tail)
+        wq->tail->sqNext = t;
+    wq->tail = t;
+
+    if (!wq->head)
+        wq->head = t;
+
+    wq->num++;
+}
+
+struct WaitQueue *wqCreate()
+{
+    struct WaitQueue *wq;
+
+    wq = (struct WaitQueue*)kMalloc(sizeof(struct WaitQueue));
+    memset(wq,0,sizeof(struct WaitQueue));
+
+    return wq;
+}

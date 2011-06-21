@@ -2,6 +2,7 @@
 #include "task.h"
 #include "dtable.h"
 #include "util.h"
+#include "vmm.h"
 
 #define BASE_QUANTUM    10
 #define MLFQ_LEVELS     4

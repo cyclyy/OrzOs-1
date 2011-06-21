@@ -22,7 +22,9 @@
 #define USER_STACK_BOTTOM   0x0000070000000000
 #define USER_STACK_SIZE     0x2000
 
-#define MAX_NAME_LEN    100
+#define MAX_NAME_LEN        100
+#define MAX_IPC_PORT        1024
+#define MAX_HANDLE_NUMBER   1024
 
 typedef unsigned char   u8int;
 typedef signed char     s8int;

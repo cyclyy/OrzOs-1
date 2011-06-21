@@ -32,16 +32,6 @@ u64int lsBit(u64int x)
     return __builtin_ffs(x) - 1;
 }
 
-void clearBit(u64int *x, u64int i)
-{
-    x[i>>6] &= ~(1 << (i & 0x3f));
-}
-
-void setBit(u64int *x, u64int i)
-{
-    x[i>>6] |= 1 << (i & 0x3f);
-}
-
 void tlsfAllocMapping(u64int *size, u64int *fl, u64int *sl)
 {
     u64int t;

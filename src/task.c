@@ -3,13 +3,15 @@
 #include "sysdef.h"
 #include "kmm.h"
 #include "vmm.h"
+#include "program.h"
+#include "handle.h"
 #include "util.h"
 #include "bootinfo.h"
 #include "interrupt.h"
-#include "program.h"
 #include "elfloader.h"
 #include "vfs.h"
 
+struct Task *kernelTask = 0;
 struct Task *taskQueue = 0;
 struct Task *deadQueue = 0;
 struct Task *currentTask = 0;
@@ -67,16 +69,15 @@ void timerHandler(struct RegisterState *rs)
 
 void initMultitasking()
 {
-    struct Task *task;
-
     moveKernelStack();
 
-    task = (struct Task *)kMalloc(sizeof(struct Task));
-    memset(task, 0, sizeof(struct Task));
-    task->state = TASK_STATE_READY;
-    task->vm = vmInit();
+    kernelTask = (struct Task *)kMalloc(sizeof(struct Task));
+    memset(kernelTask, 0, sizeof(struct Task));
+    kernelTask->state = TASK_STATE_READY;
+    kernelTask->vm = vmInit();
+    kernelTask->handleTable = htCreate();
 
-    currentTask = task;
+    currentTask = kernelTask;
     //memset(runQueue,0,PTR_SIZE*MLFQ_LEVELS);
     //runQueue[0] = currentTask;
     //currentTask->rqNext = currentTask->rqPrev = currentTask;
@@ -134,11 +135,12 @@ s64int kNewKernelThread(void *entry)
     newTask->priority = 0;
     newTask->pid = ++lastPid;
     newTask->prog = 0;
-    newTask->vm = vmRef(kernelVM);
+    newTask->vm = vmRef(kernelTask->vm);
+    newTask->handleTable = htRef(kernelTask->handleTable);
     newTask->rip = (u64int)&startKernelThread;
     newTask->rip3 = (u64int)entry;
     for (i=KERNEL_STACK_TOP; i>KERNEL_STACK_BOTTOM; i-=2*KERNEL_STACK_SIZE) {
-        vma = vmQueryArea(kernelVM, i-KERNEL_STACK_SIZE);
+        vma = vmQueryAreaByAddr(kernelVM, i-KERNEL_STACK_SIZE);
         if (vma && (vma->flags & VMA_STATUS_FREE)) {
             vmAddArea(kernelVM, i-KERNEL_STACK_SIZE, KERNEL_STACK_SIZE, 
                     VMA_STATUS_USED | VMA_OWNER_KERNEL | VMA_TYPE_STACK);
@@ -176,12 +178,13 @@ s64int kNewThread(void *entry)
     newTask->state = TASK_STATE_READY;
     newTask->priority = 0;
     newTask->pid = ++lastPid;
-    newTask->prog = currentTask->prog;
+    newTask->prog = progRef(currentTask->prog);
     newTask->vm = vmRef(currentTask->vm);
+    newTask->handleTable = htRef(currentTask->handleTable);
     newTask->rip = (u64int)&startUserThread;
     newTask->rip3 = (u64int)entry;
     for (i=KERNEL_STACK_TOP; i>KERNEL_STACK_BOTTOM; i-=2*KERNEL_STACK_SIZE) {
-        vma = vmQueryArea(newTask->vm, i-KERNEL_STACK_SIZE);
+        vma = vmQueryAreaByAddr(newTask->vm, i-KERNEL_STACK_SIZE);
         if (vma && (vma->flags & VMA_STATUS_FREE)) {
             vmAddArea(newTask->vm, i-KERNEL_STACK_SIZE, KERNEL_STACK_SIZE, 
                     VMA_STATUS_USED | VMA_OWNER_KERNEL | VMA_TYPE_STACK);
@@ -193,7 +196,7 @@ s64int kNewThread(void *entry)
         goto cleanup;
 
     for (i=USER_STACK_TOP; i>USER_STACK_BOTTOM; i-=2*USER_STACK_SIZE) {
-        vma = vmQueryArea(newTask->vm, i-USER_STACK_SIZE);
+        vma = vmQueryAreaByAddr(newTask->vm, i-USER_STACK_SIZE);
         if (vma && (vma->flags & VMA_STATUS_FREE)) {
             vmAddArea(newTask->vm, i-USER_STACK_SIZE, USER_STACK_SIZE, 
                     VMA_STATUS_USED | VMA_OWNER_USER | VMA_TYPE_STACK);
@@ -236,6 +239,7 @@ s64int kNewTask(const char *path, u64int flags)
     newTask->rsp0 = KERNEL_STACK_TOP;
     newTask->vm = vmCreate();
     newTask->prog = (struct Program*)kMalloc(sizeof(struct Program));
+    newTask->handleTable = htCreate();
     memset(newTask->prog, 0, sizeof(struct Program));
     ret = loadElfProgram(path, newTask->prog, newTask->vm);
     newTask->rsp3 = USER_STACK_TOP;
@@ -285,10 +289,6 @@ void testThread()
 void rootTask()
 {
     struct Task *t;
-    int i;
-
-    for (i=0; i<3; i++)
-        kNewKernelThread(testThread);
 
     while (1) {
         asm("cli");
@@ -299,8 +299,10 @@ void rootTask()
                 t->prev->next = t->next;
             if (t->next)
                 t->next->prev = t->prev;
-            vmDeref(t->vm);
-            kFree(t->prog);
+            if (t->vm)
+                vmDeref(t->vm);
+            if (t->prog)
+                progDeref(t->prog);
             kFree(t);
             deadQueue = deadQueue->sqNext;
         }
