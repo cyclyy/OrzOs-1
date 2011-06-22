@@ -34,9 +34,12 @@ struct Client
     struct Client *next, *prev;
 };
 
+#define MESSAGE_TYPE_SEND   1
+#define MESSAGE_TYPE_POST   2
+
 struct Message
 {
-    u64int type;
+    s64int type;
     struct Task *task;
     struct Client *client;
     struct Server *server;
@@ -64,11 +67,13 @@ struct Client *kConnect(u64int port);
 
 s64int kDisconnect(struct Client *client);
 
+s64int kPost(struct Client *client, char *src, u64int srcSize);
+
 s64int kSend(struct Client *client, char *src, u64int srcSize, char *dest, u64int destSize);
 
-struct Client *kReceive(struct Server *server, char *buf, u64int bufSize);
+struct Message *kReceive(struct Server *server, char *buf, u64int bufSize);
 
-s64int kReply(struct Client *client, char *buf, u64int bufSize);
+s64int kReply(struct Message *message, char *buf, u64int bufSize);
 
 void initIPC();
 

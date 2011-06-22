@@ -89,6 +89,10 @@ struct Message *findReplyMessage(struct Client *client)
     struct MessageQueue *mq;
     struct Message *msg;
 
+    if (!client) {
+        return 0;
+    }
+
     mq = client->server->replyMQ;
     msg = mq->head;
     while (msg && (msg->client != client)) {
@@ -182,12 +186,40 @@ s64int kDisconnect(struct Client *client)
     return 0;
 }
 
+s64int kPost(struct Client *client, char *src, u64int srcSize)
+{
+    struct Message *msg;
+    char *buf;
+    u64int n;
+
+    buf = (char *)kMalloc(srcSize);
+    n = copyFromUser(buf, src, srcSize);
+
+    if (n!=srcSize) {
+        kFree(buf);
+        return -1;
+    }
+
+    msg = (struct Message *)kMalloc(sizeof(struct Message));
+    memset(msg,0,sizeof(struct Message));
+    msg->type = MESSAGE_TYPE_POST;
+    msg->server = client->server;
+    msg->src = buf;
+    msg->srcSize = srcSize;
+    msg->client = client;
+    msg->task = currentTask;
+    mqAppend(client->server->receiveMQ,msg);
+    wakeUpOne(msg->server->receiveWQ);
+    return 0;
+}
+
 s64int kSend(struct Client *client, char *src, u64int srcSize, char *dest, u64int destSize)
 {
     struct Message *msg;
 
     msg = (struct Message *)kMalloc(sizeof(struct Message));
     memset(msg,0,sizeof(struct Message));
+    msg->type = MESSAGE_TYPE_SEND;
     msg->task = currentTask;
     msg->client = client;
     msg->server = client->server;
@@ -201,9 +233,8 @@ s64int kSend(struct Client *client, char *src, u64int srcSize, char *dest, u64in
     return 0;
 }
 
-struct Client *kReceive(struct Server *server, char *buf, u64int bufSize)
+struct Message *kReceive(struct Server *server, char *buf, u64int bufSize)
 {
-    struct Client *client;
     struct Message *msg;
     struct Task *t;
 
@@ -211,30 +242,37 @@ struct Client *kReceive(struct Server *server, char *buf, u64int bufSize)
         sleepOn(server->receiveWQ);
 
     msg = mqTakeFirst(server->receiveMQ);
-    mqAppend(server->replyMQ, msg);
-    client = msg->client;
-
-    t = msg->task;
-    vmemcpy(currentTask->vm, buf, t->vm, msg->src, MIN(bufSize,msg->srcSize));
-
-    return client;
+    if (msg->type == MESSAGE_TYPE_SEND) {
+        mqAppend(server->replyMQ, msg);
+        t = msg->task;
+        vmemcpy(currentTask->vm, buf, t->vm, msg->src, MIN(bufSize,msg->srcSize));
+        return msg;
+    } else if (msg->type == MESSAGE_TYPE_POST) {
+        vmemcpy(currentTask->vm, buf, kernelVM, msg->src, MIN(bufSize,msg->srcSize));
+        kFree(msg->src);
+        kFree(msg);
+        return 0;
+    }
+    return 0;
 }
 
-s64int kReply(struct Client *client, char *buf, u64int bufSize)
+s64int kReply(struct Message *msg, char *buf, u64int bufSize)
 {
-    struct Message *msg;
     struct Task *t;
 
-    msg = findReplyMessage(client);
     if (!msg) {
         return -1;
     }
-    mqRemove(client->server->replyMQ, msg);
-    wakeUp(client->server->sendWQ, msg->task);
-
-    t = msg->task;
-    vmemcpy(t->vm, msg->dest, currentTask->vm, buf, MIN(bufSize,msg->destSize));
-
-    return 0;
+    if (msg->client) {
+        t = msg->task;
+        vmemcpy(t->vm, msg->dest, currentTask->vm, buf, MIN(bufSize,msg->destSize));
+        mqRemove(msg->server->replyMQ, msg);
+        kFree(msg);
+        wakeUp(msg->server->sendWQ, t);
+        return 0;
+    } else {
+        kFree(msg);
+        return -1;
+    }
 }
 

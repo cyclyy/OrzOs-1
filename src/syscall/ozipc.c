@@ -27,7 +27,23 @@ s64int OzCreateServer(s64int port)
 
 s64int OzDestroyServer(s64int serverId)
 {
-    return 0;
+    struct Handle *handle;
+    s64int ret;
+
+    if (!IS_VALID_HANDLE_INDEX(serverId)) {
+        return -1;
+    }
+    
+    handle = &currentTask->handleTable->handle[serverId];
+    if (handle->type == HANDLE_SERVER) {
+        ret = kDestroyServer((struct Server*)handle->pointer);
+        currentTask->handleTable->used--;
+        handle->type = HANDLE_FREE;
+        handle->pointer = 0;
+        return ret;
+    } else {
+        return -1;
+    }
 }
 
 s64int OzConnect(s64int port)
@@ -55,6 +71,7 @@ s64int OzConnect(s64int port)
 s64int OzDisconnect(s64int clientId)
 {
     struct Handle *handle;
+    s64int ret;
 
     if (!IS_VALID_HANDLE_INDEX(clientId)) {
         return -1;
@@ -62,7 +79,11 @@ s64int OzDisconnect(s64int clientId)
     
     handle = &currentTask->handleTable->handle[clientId];
     if (handle->type == HANDLE_CLIENT) {
-        return kDisconnect((struct Client*)handle->pointer);
+        ret = kDisconnect((struct Client*)handle->pointer);
+        currentTask->handleTable->used--;
+        handle->type = HANDLE_FREE;
+        handle->pointer = 0;
+        return ret;
     } else {
         return -1;
     }
@@ -84,34 +105,7 @@ s64int OzSend(s64int clientId, char *src, u64int srcSize, char *dest, u64int des
     }
 }
 
-s64int OzReceive(s64int clientId, char *buf, u64int bufSize)
-{
-    struct Handle *handle;
-    struct Client *client;
-    s64int i;
-
-    if (!IS_VALID_HANDLE_INDEX(clientId)) {
-        return -1;
-    }
-    
-    handle = &currentTask->handleTable->handle[clientId];
-    if (handle->type == HANDLE_SERVER) {
-        client = kReceive((struct Server*)handle->pointer, buf, bufSize);
-        i = htFindFreeIndex(currentTask->handleTable);
-        if (i<0) {
-            return -1;
-        }
-        currentTask->handleTable->used++;
-        handle = &currentTask->handleTable->handle[i];
-        handle->type = HANDLE_CLIENT;
-        handle->pointer = client;
-        return i;
-    } else {
-        return -1;
-    }
-}
-
-s64int OzReply(s64int clientId, char *buf, u64int bufSize)
+s64int OzPost(s64int clientId, char *src, u64int srcSize)
 {
     struct Handle *handle;
 
@@ -121,7 +115,58 @@ s64int OzReply(s64int clientId, char *buf, u64int bufSize)
     
     handle = &currentTask->handleTable->handle[clientId];
     if (handle->type == HANDLE_CLIENT) {
-        return kReply((struct Client*)handle->pointer, buf, bufSize);
+        return kPost((struct Client*)handle->pointer, src, srcSize);
+    } else {
+        return -1;
+    }
+}
+
+s64int OzReceive(s64int clientId, char *buf, u64int bufSize)
+{
+    struct Handle *handle;
+    struct Message *msg;
+    s64int i;
+
+    if (!IS_VALID_HANDLE_INDEX(clientId)) {
+        return -1;
+    }
+    
+    handle = &currentTask->handleTable->handle[clientId];
+    if (handle->type == HANDLE_SERVER) {
+        msg = (struct Message *)kReceive((struct Server*)handle->pointer, buf, bufSize);
+        if (!msg) {
+            return 0;
+        }
+        i = htFindFreeIndex(currentTask->handleTable);
+        if (i<0) {
+            return -1;
+        }
+        currentTask->handleTable->used++;
+        handle = &currentTask->handleTable->handle[i];
+        handle->type = HANDLE_MESSAGE;
+        handle->pointer = msg;
+        return i;
+    } else {
+        return -1;
+    }
+}
+
+s64int OzReply(s64int msgId, char *buf, u64int bufSize)
+{
+    struct Handle *handle;
+    s64int ret;
+
+    if ((!IS_VALID_HANDLE_INDEX(msgId)) || (msgId==0)) {
+        return -1;
+    }
+    
+    handle = &currentTask->handleTable->handle[msgId];
+    if (handle->type == HANDLE_MESSAGE) {
+        ret = kReply((struct Message*)handle->pointer, buf, bufSize);
+        currentTask->handleTable->used--;
+        handle->type = HANDLE_FREE;
+        handle->pointer = 0;
+        return ret;
     } else {
         return -1;
     }

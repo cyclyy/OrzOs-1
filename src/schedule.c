@@ -70,6 +70,7 @@ void schedule()
     setKernelStack(newTask->rsp0);
 
     currentTask = newTask;
+    //DBG("%d",newTask->pid);
     asm("cli;               \
             mov %0, %%rsp;     \
             mov %1, %%rbp;     \

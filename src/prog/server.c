@@ -3,7 +3,6 @@
 int main()
 {
     char buf[10];
-    char c = 'M';
     s64int server, client;
 
     server = CreateServer(100);
@@ -16,7 +15,12 @@ int main()
     while (1) {
         client = Receive(server, buf, 10);
         buf[0] -= 32;
-        Reply(client, buf, 1);
+        if (client) {
+            Reply(client, buf, 1);
+        } else {
+            PutChar(buf[0]);
+            PutChar('\n');
+        }
     }
 }
 

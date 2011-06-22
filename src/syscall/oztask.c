@@ -13,4 +13,9 @@ s64int OzNewTask(char *path, u64int flags)
     return kNewTask(s,flags);
 }
 
+s64int OzExitTask(s64int status)
+{
+    kExitTask(status);
+}
+
 // vim: sw=4 sts=4 et tw=100

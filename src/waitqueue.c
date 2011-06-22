@@ -11,11 +11,11 @@ void sleepOn(struct WaitQueue *wq)
     schedule();
 }
 
-void wakeUp(struct WaitQueue *wq, struct Task *task)
+void wakeUpEx(struct WaitQueue *wq, struct Task *task, s64int wakeCode)
 {
     struct Task *t;
 
-    if (!wq->num)
+    if (!wq->num || !task)
         return;
 
     wq->num--;
@@ -25,13 +25,20 @@ void wakeUp(struct WaitQueue *wq, struct Task *task)
     if (wq->tail == t)
         wq->tail = wq->tail->sqPrev;
     t->state = TASK_STATE_READY;
+    t->wakeCode = wakeCode;
     rqAdd(t);
 
     return;
 }
 
+void wakeUp(struct WaitQueue *wq, struct Task *task)
+{
+    wakeUpEx(wq,task,0);
+}
+
 void wakeUpOne(struct WaitQueue *wq)
 {
+    wakeUpEx(wq,wq->head,0);
     struct Task *t;
 
     t = wqTakeFirst(wq);

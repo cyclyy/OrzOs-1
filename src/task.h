@@ -18,6 +18,7 @@ struct Task {
     u64int ticks;
     u64int slices;
     s64int exitCode;
+    s64int wakeCode;
     struct VM *vm;
     struct Program *prog;
     struct HandleTable *handleTable;

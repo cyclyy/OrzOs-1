@@ -69,8 +69,10 @@ DECL_SYSCALL_1(DestroyServer, s64int);
 DECL_SYSCALL_1(Connect, s64int);
 DECL_SYSCALL_1(Disconnect, s64int);
 DECL_SYSCALL_5(Send, s64int, char *, u64int, char *, u64int);
+DECL_SYSCALL_3(Post, s64int, char *, u64int);
 DECL_SYSCALL_3(Receive, s64int, char *, u64int);
 DECL_SYSCALL_3(Reply, s64int, char *, u64int);
 DECL_SYSCALL_2(NewTask, char *, u64int);
+DECL_SYSCALL_1(ExitTask, s64int);
 
 #endif /* SYSCALL_H */

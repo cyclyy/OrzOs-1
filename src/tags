@@ -785,6 +785,7 @@ GRP_COMDAT	elf.h	349;"	d
 HANDLE_CLIENT	handle.h	11;"	d
 HANDLE_FREE	handle.h	8;"	d
 HANDLE_H	handle.h	2;"	d
+HANDLE_MESSAGE	handle.h	12;"	d
 HANDLE_SERVER	handle.h	10;"	d
 HANDLE_VNODE	handle.h	9;"	d
 HEAP_START_ADDR	sysdef.h	15;"	d
@@ -1034,6 +1035,8 @@ MBOOT_HEADER_MAGIC	loader32.s	/^MBOOT_HEADER_MAGIC  equ 0x1BADB002 ; Multiboot M
 MBOOT_MEM_INFO	loader32.s	/^MBOOT_MEM_INFO      equ 1<<1    ; Provide your kernel with memory info$/;"	d
 MBOOT_PAGE_ALIGN	loader32.s	/^MBOOT_PAGE_ALIGN    equ 1<<0    ; Load kernel and modules on a page boundary$/;"	d
 MESSAGE_H	message.h	2;"	d
+MESSAGE_TYPE_POST	message.h	38;"	d
+MESSAGE_TYPE_SEND	message.h	37;"	d
 MEXPORT	module.h	5;"	d
 MIN	common.h	8;"	d
 MIN	util.h	10;"	d
@@ -1119,9 +1122,11 @@ OzConnect	syscall/ozipc.c	/^s64int OzConnect(s64int port)$/;"	f
 OzCreateServer	syscall/ozipc.c	/^s64int OzCreateServer(s64int port)$/;"	f
 OzDestroyServer	syscall/ozipc.c	/^s64int OzDestroyServer(s64int serverId)$/;"	f
 OzDisconnect	syscall/ozipc.c	/^s64int OzDisconnect(s64int clientId)$/;"	f
+OzExitTask	syscall/oztask.c	/^s64int OzExitTask(s64int status)$/;"	f
 OzNewTask	syscall/oztask.c	/^s64int OzNewTask(char *path, u64int flags)$/;"	f
+OzPost	syscall/ozipc.c	/^s64int OzPost(s64int clientId, char *src, u64int srcSize)$/;"	f
 OzReceive	syscall/ozipc.c	/^s64int OzReceive(s64int clientId, char *buf, u64int bufSize)$/;"	f
-OzReply	syscall/ozipc.c	/^s64int OzReply(s64int clientId, char *buf, u64int bufSize)$/;"	f
+OzReply	syscall/ozipc.c	/^s64int OzReply(s64int msgId, char *buf, u64int bufSize)$/;"	f
 OzSend	syscall/ozipc.c	/^s64int OzSend(s64int clientId, char *src, u64int srcSize, char *dest, u64int destSize)$/;"	f
 PADDR_TO_VADDR	paging.h	14;"	d
 PAGE_FAULT	interrupt.h	8;"	d
@@ -3008,8 +3013,9 @@ kMallocEx	kmm.c	/^u64int kMallocEx(u64int size, u64int pageAligned, u64int *phys
 kNewKernelThread	task.c	/^s64int kNewKernelThread(void *entry)$/;"	f
 kNewTask	task.c	/^s64int kNewTask(const char *path, u64int flags)$/;"	f
 kNewThread	task.c	/^s64int kNewThread(void *entry)$/;"	f
-kReceive	message.c	/^struct Client *kReceive(struct Server *server, char *buf, u64int bufSize)$/;"	f
-kReply	message.c	/^s64int kReply(struct Client *client, char *buf, u64int bufSize)$/;"	f
+kPost	message.c	/^s64int kPost(struct Client *client, char *src, u64int srcSize)$/;"	f
+kReceive	message.c	/^struct Message *kReceive(struct Server *server, char *buf, u64int bufSize)$/;"	f
+kReply	message.c	/^s64int kReply(struct Message *msg, char *buf, u64int bufSize)$/;"	f
 kSend	message.c	/^s64int kSend(struct Client *client, char *src, u64int srcSize, char *dest, u64int destSize)$/;"	f
 kbdus	i8042.c	/^u64int kbdus[128] =$/;"	v
 kernel64	loader32.s	/^kernel64:$/;"	l
@@ -3776,7 +3782,7 @@ tss0	dtable.c	/^struct TSS tss0;$/;"	v	typeref:struct:TSS
 type	fs/devfs.c	/^    u8int type;$/;"	m	struct:DevFSNode	file:
 type	handle.h	/^    u64int type;$/;"	m	struct:Handle
 type	ide.c	/^    u8int type;        \/\/ 0: ATA, 1:ATAPI.$/;"	m	struct:ide_device	file:
-type	message.h	/^    u64int type;$/;"	m	struct:Message
+type	message.h	/^    s64int type;$/;"	m	struct:Message
 type0	pci.h	/^        } type0;$/;"	m	union:__anon12::__anon13	typeref:struct:__anon12::__anon13::__anon14
 typeAttr	dtable.h	/^    u8int typeAttr;$/;"	m	struct:IDTEntry
 typeAttr	dtable.h	/^    u8int typeAttr;$/;"	m	struct:TSSEntry
@@ -3919,8 +3925,10 @@ vsprintf	util.c	/^u64int vsprintf(char *buf, char *fmt, va_list ap)$/;"	f
 wait_queue_node_struct	task2.h	/^typedef struct wait_queue_node_struct {$/;"	s
 wait_queue_node_t	task2.h	/^} wait_queue_node_t;$/;"	t	typeref:struct:wait_queue_node_struct
 wait_queue_t	task2.h	/^} wait_queue_t;$/;"	t	typeref:struct:__anon11
+wakeCode	task.h	/^    s64int wakeCode;$/;"	m	struct:Task
 wakeUp	waitqueue.c	/^void wakeUp(struct WaitQueue *wq, struct Task *task)$/;"	f
 wakeUpAll	waitqueue.c	/^void wakeUpAll(struct WaitQueue *wq)$/;"	f
+wakeUpEx	waitqueue.c	/^void wakeUpEx(struct WaitQueue *wq, struct Task *task, s64int wakeCode)$/;"	f
 wakeUpOne	waitqueue.c	/^void wakeUpOne(struct WaitQueue *wq)$/;"	f
 wake_up_all	task2.c	/^void wake_up_all(wait_queue_t *wq)$/;"	f
 wake_up_one	task2.c	/^void wake_up_one(wait_queue_t *wq)$/;"	f

@@ -303,6 +303,9 @@ void rootTask()
                 vmDeref(t->vm);
             if (t->prog)
                 progDeref(t->prog);
+            if (t->handleTable) {
+                htDeref(t->handleTable);
+            }
             kFree(t);
             deadQueue = deadQueue->sqNext;
         }
