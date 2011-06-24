@@ -80,7 +80,7 @@ s64int vfsState(const char *path, struct VNodeInfo *ni);
 s64int vfsCreateObject(const char *name, s64int id);
 s64int vfsCreateDirectory(const char *name);
 s64int vfsRemoveDirectory(const char *name);
-s64int vfsReadDirectory(struct VNode *vnd, u64int bufSize, char *buf);
+s64int vfsReadDirectory(struct VNode *node, u64int bufSize, char *buf);
 
 void initVFS();
 

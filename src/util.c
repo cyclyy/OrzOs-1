@@ -344,7 +344,7 @@ char *strdup(const char *s)
 }
 */
 
-void printk(char *fmt, ...)
+void printk(const char *fmt, ...)
 {
     if (!fmt) 
         return;

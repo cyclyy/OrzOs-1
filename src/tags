@@ -4,6 +4,10 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
+A	x86emu/x86emu/regs.h	/^	i386_general_register A, B, C, D;$/;"	m	struct:i386_general_regs
+ACCESS_FLAG	x86emu/x86emu/regs.h	208;"	d
+ALL_FLAGS	x86emu/validate.c	56;"	d	file:
+ALPHA_UALOADS	x86emu/sys.c	60;"	d	file:
 AR	Makefile	/^AR = x86_64-pc-elf-ar$/;"	m
 ASFLAGS	Makefile	/^ASFLAGS=-felf64$/;"	m
 ASSERT	common.h	12;"	d
@@ -108,22 +112,42 @@ AT_SYSINFO	elf.h	961;"	d
 AT_SYSINFO_EHDR	elf.h	962;"	d
 AT_UCACHEBSIZE	elf.h	945;"	d
 AT_UID	elf.h	927;"	d
+B	x86emu/x86emu/regs.h	/^	i386_general_register A, B, C, D;$/;"	m	struct:i386_general_regs
 BASE_QUANTUM	schedule.c	7;"	d	file:
 BLOCK_FREE	tlsf.h	35;"	d
 BLOCK_OVERHEAD	tlsf.h	31;"	d
 BLOCK_SIZE	tlsf.h	34;"	d
 BOOTFS_H	fs/bootfs.h	2;"	d
 BOOTINFO_H	bootinfo.h	20;"	d
+BP	x86emu/x86emu/regs.h	/^	i386_general_register SP, BP, SI, DI, IP;$/;"	m	struct:i386_special_regs
 BootFSData	fs/bootfs.c	/^struct BootFSData {$/;"	s	file:
 BootInfo	bootinfo.h	/^struct BootInfo {$/;"	s
+C	x86emu/x86emu/regs.h	/^	i386_general_register A, B, C, D;$/;"	m	struct:i386_general_regs
+CALL_TRACE	x86emu/x86emu/debug.h	164;"	d
+CALL_TRACE	x86emu/x86emu/debug.h	175;"	d
 CC	Makefile	/^CC = x86_64-pc-elf-gcc$/;"	m
-CFLAGS	Makefile	/^CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Wall -I. -g$/;"	m
-CIS	pci.h	/^            u32int CIS;$/;"	m	struct:__anon12::__anon13::__anon14
+CFLAGS	Makefile	/^CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g$/;"	m
+CHECK_DATA_ACCESS	x86emu/x86emu/debug.h	55;"	d
+CHECK_DATA_ACCESS	x86emu/x86emu/debug.h	60;"	d
+CHECK_DATA_ACCESS_F	x86emu/x86emu/debug.h	49;"	d
+CHECK_IP_FETCH	x86emu/x86emu/debug.h	52;"	d
+CHECK_IP_FETCH	x86emu/x86emu/debug.h	57;"	d
+CHECK_IP_FETCH_F	x86emu/x86emu/debug.h	46;"	d
+CHECK_MEM_ACCESS	x86emu/x86emu/debug.h	54;"	d
+CHECK_MEM_ACCESS	x86emu/x86emu/debug.h	59;"	d
+CHECK_MEM_ACCESS_F	x86emu/x86emu/debug.h	48;"	d
+CHECK_SP_ACCESS	x86emu/x86emu/debug.h	53;"	d
+CHECK_SP_ACCESS	x86emu/x86emu/debug.h	58;"	d
+CHECK_SP_ACCESS_F	x86emu/x86emu/debug.h	47;"	d
+CIS	pci.h	/^            u32int CIS;$/;"	m	struct:__anon23::__anon24::__anon25
+CLEARALL_FLAG	x86emu/x86emu/regs.h	209;"	d
+CLEAR_FLAG	x86emu/x86emu/regs.h	207;"	d
 CLIENT_STATUS_READY	message.h	13;"	d
 CLIENT_STATUS_REPLY_BLOCKED	message.h	15;"	d
 CLIENT_STATUS_SEND_BLOCKED	message.h	14;"	d
-CODE_LOAD_ADDR	sysdef.h	16;"	d
+CODE_LOAD_ADDR	sysdef.h	18;"	d
 COMMON_H	common.h	2;"	d
+CONDITIONAL_SET_FLAG	x86emu/x86emu/regs.h	211;"	d
 CORE_LDFLAGS	Makefile	/^CORE_LDFLAGS=-Tcore.ld -M=allsymbol.map -z max-page-size=0x1000$/;"	m
 CORE_SOURCES	Makefile	/^CORE_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o dtable.o flushdtable.o isr.o \\$/;"	m
 CPIO_FT_DIR	cpio.h	9;"	d
@@ -131,14 +155,82 @@ CPIO_FT_FILE	cpio.h	8;"	d
 CPIO_FT_MASK	cpio.h	7;"	d
 CPIO_H	cpio.h	2;"	d
 CPIO_MAGIC	cpio.h	6;"	d
+CS	x86emu/x86emu/regs.h	/^    u16 CS, DS, SS, ES, FS, GS;$/;"	m	struct:i386_segment_regs
 Client	message.h	/^struct Client$/;"	s
+D	x86emu/x86emu/regs.h	/^	i386_general_register A, B, C, D;$/;"	m	struct:i386_general_regs
+DB	x86emu/x86emu/debug.h	180;"	d
+DB	x86emu/x86emu/debug.h	182;"	d
 DBG	util.h	7;"	d
+DEBUG_BREAK	x86emu/x86emu/debug.h	69;"	d
+DEBUG_BREAK	x86emu/x86emu/debug.h	88;"	d
+DEBUG_BREAK_F	x86emu/x86emu.h	173;"	d
+DEBUG_DECODE	x86emu/x86emu/debug.h	65;"	d
+DEBUG_DECODE	x86emu/x86emu/debug.h	84;"	d
+DEBUG_DECODE_F	x86emu/x86emu.h	169;"	d
+DEBUG_DECODE_NOPRINT	x86emu/x86emu/debug.h	81;"	d
+DEBUG_DECODE_NOPRINT	x86emu/x86emu/debug.h	99;"	d
+DEBUG_DECODE_NOPRINT_F	x86emu/x86emu.h	184;"	d
+DEBUG_DISASSEMBLE	x86emu/x86emu/debug.h	68;"	d
+DEBUG_DISASSEMBLE	x86emu/x86emu/debug.h	87;"	d
+DEBUG_DISASSEMBLE_F	x86emu/x86emu.h	172;"	d
+DEBUG_EXIT	x86emu/x86emu.h	185;"	d
+DEBUG_FS	x86emu/x86emu/debug.h	73;"	d
+DEBUG_FS	x86emu/x86emu/debug.h	91;"	d
+DEBUG_FS_F	x86emu/x86emu.h	176;"	d
+DEBUG_INSTRUMENT	x86emu/x86emu/debug.h	64;"	d
+DEBUG_INSTRUMENT	x86emu/x86emu/debug.h	83;"	d
+DEBUG_INSTRUMENT_F	x86emu/x86emu.h	180;"	d
+DEBUG_IO_TRACE	x86emu/x86emu/debug.h	80;"	d
+DEBUG_IO_TRACE	x86emu/x86emu/debug.h	98;"	d
+DEBUG_IO_TRACE_F	x86emu/x86emu.h	182;"	d
+DEBUG_MEM_TRACE	x86emu/x86emu/debug.h	79;"	d
+DEBUG_MEM_TRACE	x86emu/x86emu/debug.h	97;"	d
+DEBUG_MEM_TRACE_F	x86emu/x86emu.h	181;"	d
+DEBUG_PROC	x86emu/x86emu/debug.h	74;"	d
+DEBUG_PROC	x86emu/x86emu/debug.h	92;"	d
+DEBUG_PROC_F	x86emu/x86emu.h	177;"	d
+DEBUG_SAVE_IP_CS	x86emu/x86emu/debug.h	71;"	d
+DEBUG_SAVE_IP_CS	x86emu/x86emu/debug.h	90;"	d
+DEBUG_SAVE_IP_CS_F	x86emu/x86emu.h	175;"	d
+DEBUG_STEP	x86emu/x86emu/debug.h	67;"	d
+DEBUG_STEP	x86emu/x86emu/debug.h	86;"	d
+DEBUG_STEP_F	x86emu/x86emu.h	171;"	d
+DEBUG_SVC	x86emu/x86emu/debug.h	70;"	d
+DEBUG_SVC	x86emu/x86emu/debug.h	89;"	d
+DEBUG_SVC_F	x86emu/x86emu.h	174;"	d
+DEBUG_SYS	x86emu/x86emu/debug.h	78;"	d
+DEBUG_SYS	x86emu/x86emu/debug.h	96;"	d
+DEBUG_SYSINT	x86emu/x86emu/debug.h	75;"	d
+DEBUG_SYSINT	x86emu/x86emu/debug.h	93;"	d
+DEBUG_SYSINT_F	x86emu/x86emu.h	178;"	d
+DEBUG_SYS_F	x86emu/x86emu.h	186;"	d
+DEBUG_TRACE	x86emu/x86emu/debug.h	66;"	d
+DEBUG_TRACE	x86emu/x86emu/debug.h	85;"	d
+DEBUG_TRACECALL	x86emu/x86emu/debug.h	76;"	d
+DEBUG_TRACECALL	x86emu/x86emu/debug.h	94;"	d
+DEBUG_TRACECALLREGS	x86emu/x86emu/debug.h	77;"	d
+DEBUG_TRACECALLREGS	x86emu/x86emu/debug.h	95;"	d
+DEBUG_TRACECALL_F	x86emu/x86emu.h	179;"	d
+DEBUG_TRACECALL_REGS_F	x86emu/x86emu.h	183;"	d
+DEBUG_TRACE_F	x86emu/x86emu.h	170;"	d
 DECL_SYSCALL_0	syscall.h	6;"	d
 DECL_SYSCALL_1	syscall.h	7;"	d
 DECL_SYSCALL_2	syscall.h	8;"	d
 DECL_SYSCALL_3	syscall.h	9;"	d
 DECL_SYSCALL_4	syscall.h	10;"	d
 DECL_SYSCALL_5	syscall.h	11;"	d
+DECODE_CLEAR_SEGOVR	x86emu/x86emu/decode.h	50;"	d
+DECODE_PRINTF	x86emu/x86emu/debug.h	104;"	d
+DECODE_PRINTF	x86emu/x86emu/debug.h	127;"	d
+DECODE_PRINTF2	x86emu/x86emu/debug.h	106;"	d
+DECODE_PRINTF2	x86emu/x86emu/debug.h	128;"	d
+DECODE_PRINTINSTR256	x86emu/x86emu/fpu_regs.h	112;"	d
+DECODE_PRINTINSTR256	x86emu/x86emu/fpu_regs.h	116;"	d
+DECODE_PRINTINSTR32	x86emu/x86emu/fpu_regs.h	110;"	d
+DECODE_PRINTINSTR32	x86emu/x86emu/fpu_regs.h	115;"	d
+DECODE_RM_BYTE_REGISTER	x86emu/x86emu/decode.h	47;"	d
+DECODE_RM_LONG_REGISTER	x86emu/x86emu/decode.h	49;"	d
+DECODE_RM_WORD_REGISTER	x86emu/x86emu/decode.h	48;"	d
 DEFN_SYSCALL_0	syscall.h	13;"	d
 DEFN_SYSCALL_1	syscall.h	21;"	d
 DEFN_SYSCALL_2	syscall.h	29;"	d
@@ -222,8 +314,10 @@ DF_P1_LAZYLOAD	elf.h	761;"	d
 DF_STATIC_TLS	elf.h	734;"	d
 DF_SYMBOLIC	elf.h	731;"	d
 DF_TEXTREL	elf.h	732;"	d
+DI	x86emu/x86emu/regs.h	/^	i386_general_register SP, BP, SI, DI, IP;$/;"	m	struct:i386_special_regs
 DISK_H	disk.h	2;"	d
 DIVIDE_ZERO_FAULT	interrupt.h	6;"	d
+DS	x86emu/x86emu/regs.h	/^    u16 CS, DS, SS, ES, FS, GS;$/;"	m	struct:i386_segment_regs
 DTABLE_H	dtable.h	2;"	d
 DTF_1_CONFEXP	elf.h	758;"	d
 DTF_1_PARINIT	elf.h	757;"	d
@@ -603,6 +697,10 @@ EM_VPP500	elf.h	163;"	d
 EM_X86_64	elf.h	196;"	d
 EM_XTENSA	elf.h	227;"	d
 EM_ZSP	elf.h	212;"	d
+END_OF_INSTR	x86emu/x86emu/debug.h	155;"	d
+END_OF_INSTR	x86emu/x86emu/debug.h	159;"	d
+END_OF_INSTR_NO_TRACE	x86emu/x86emu/debug.h	156;"	d
+END_OF_INSTR_NO_TRACE	x86emu/x86emu/debug.h	160;"	d
 ENFILE	errno.h	26;"	d
 ENODEV	errno.h	22;"	d
 ENOENT	errno.h	5;"	d
@@ -618,6 +716,7 @@ EPIPE	errno.h	35;"	d
 ERANGE	errno.h	37;"	d
 EROFS	errno.h	33;"	d
 ERRNO_H	errno.h	2;"	d
+ES	x86emu/x86emu/regs.h	/^    u16 CS, DS, SS, ES, FS, GS;$/;"	m	struct:i386_segment_regs
 ESPIPE	errno.h	32;"	d
 ESRCH	errno.h	6;"	d
 ETXTBSY	errno.h	29;"	d
@@ -661,15 +760,15 @@ EXT2_FEATURE_RO_COMPAT_ANY	fs/ext2fs.h	49;"	d
 EXT2_FEATURE_RO_COMPAT_BTREE_DIR	fs/ext2fs.h	48;"	d
 EXT2_FEATURE_RO_COMPAT_LARGE_FILE	fs/ext2fs.h	47;"	d
 EXT2_FEATURE_RO_COMPAT_SPARSE_SUPER	fs/ext2fs.h	46;"	d
-EXT2_FT_BLKDEV	fs/ext2fs.h	/^    EXT2_FT_BLKDEV      = 4,$/;"	e	enum:__anon63
-EXT2_FT_CHRDEV	fs/ext2fs.h	/^    EXT2_FT_CHRDEV      = 3,$/;"	e	enum:__anon63
-EXT2_FT_DIR	fs/ext2fs.h	/^    EXT2_FT_DIR     = 2,$/;"	e	enum:__anon63
-EXT2_FT_FIFO	fs/ext2fs.h	/^    EXT2_FT_FIFO        = 5,$/;"	e	enum:__anon63
-EXT2_FT_MAX	fs/ext2fs.h	/^    EXT2_FT_MAX$/;"	e	enum:__anon63
-EXT2_FT_REG_FILE	fs/ext2fs.h	/^    EXT2_FT_REG_FILE    = 1,$/;"	e	enum:__anon63
-EXT2_FT_SOCK	fs/ext2fs.h	/^    EXT2_FT_SOCK        = 6,$/;"	e	enum:__anon63
-EXT2_FT_SYMLINK	fs/ext2fs.h	/^    EXT2_FT_SYMLINK     = 7,$/;"	e	enum:__anon63
-EXT2_FT_UNKNOWN	fs/ext2fs.h	/^    EXT2_FT_UNKNOWN     = 0,$/;"	e	enum:__anon63
+EXT2_FT_BLKDEV	fs/ext2fs.h	/^    EXT2_FT_BLKDEV      = 4,$/;"	e	enum:__anon74
+EXT2_FT_CHRDEV	fs/ext2fs.h	/^    EXT2_FT_CHRDEV      = 3,$/;"	e	enum:__anon74
+EXT2_FT_DIR	fs/ext2fs.h	/^    EXT2_FT_DIR     = 2,$/;"	e	enum:__anon74
+EXT2_FT_FIFO	fs/ext2fs.h	/^    EXT2_FT_FIFO        = 5,$/;"	e	enum:__anon74
+EXT2_FT_MAX	fs/ext2fs.h	/^    EXT2_FT_MAX$/;"	e	enum:__anon74
+EXT2_FT_REG_FILE	fs/ext2fs.h	/^    EXT2_FT_REG_FILE    = 1,$/;"	e	enum:__anon74
+EXT2_FT_SOCK	fs/ext2fs.h	/^    EXT2_FT_SOCK        = 6,$/;"	e	enum:__anon74
+EXT2_FT_SYMLINK	fs/ext2fs.h	/^    EXT2_FT_SYMLINK     = 7,$/;"	e	enum:__anon74
+EXT2_FT_UNKNOWN	fs/ext2fs.h	/^    EXT2_FT_UNKNOWN     = 0,$/;"	e	enum:__anon74
 EXT2_GOOD_OLD_REV	fs/ext2fs.h	34;"	d
 EXT2_IND_BLOCK	fs/ext2fs.h	90;"	d
 EXT2_MAGIC	fs/ext2fs.h	6;"	d
@@ -716,80 +815,112 @@ E_MIPS_ARCH_5	elf.h	1327;"	d
 E_MIPS_ARCH_64	elf.h	1329;"	d
 Elf32_Addr	elf.h	/^typedef u32int Elf32_Addr;$/;"	t
 Elf32_Conflict	elf.h	/^typedef Elf32_Addr Elf32_Conflict;$/;"	t
-Elf32_Dyn	elf.h	/^} Elf32_Dyn;$/;"	t	typeref:struct:__anon30
-Elf32_Ehdr	elf.h	/^} Elf32_Ehdr;$/;"	t	typeref:struct:__anon16
+Elf32_Dyn	elf.h	/^} Elf32_Dyn;$/;"	t	typeref:struct:__anon41
+Elf32_Ehdr	elf.h	/^} Elf32_Ehdr;$/;"	t	typeref:struct:__anon27
 Elf32_Half	elf.h	/^typedef u16int Elf32_Half;$/;"	t
-Elf32_Lib	elf.h	/^} Elf32_Lib;$/;"	t	typeref:struct:__anon56
-Elf32_Move	elf.h	/^} Elf32_Move;$/;"	t	typeref:struct:__anon48
-Elf32_Nhdr	elf.h	/^} Elf32_Nhdr;$/;"	t	typeref:struct:__anon46
+Elf32_Lib	elf.h	/^} Elf32_Lib;$/;"	t	typeref:struct:__anon67
+Elf32_Move	elf.h	/^} Elf32_Move;$/;"	t	typeref:struct:__anon59
+Elf32_Nhdr	elf.h	/^} Elf32_Nhdr;$/;"	t	typeref:struct:__anon57
 Elf32_Off	elf.h	/^typedef u32int Elf32_Off;$/;"	t
-Elf32_Phdr	elf.h	/^} Elf32_Phdr;$/;"	t	typeref:struct:__anon28
-Elf32_RegInfo	elf.h	/^} Elf32_RegInfo;$/;"	t	typeref:struct:__anon53
-Elf32_Rel	elf.h	/^} Elf32_Rel;$/;"	t	typeref:struct:__anon24
-Elf32_Rela	elf.h	/^} Elf32_Rela;$/;"	t	typeref:struct:__anon26
+Elf32_Phdr	elf.h	/^} Elf32_Phdr;$/;"	t	typeref:struct:__anon39
+Elf32_RegInfo	elf.h	/^} Elf32_RegInfo;$/;"	t	typeref:struct:__anon64
+Elf32_Rel	elf.h	/^} Elf32_Rel;$/;"	t	typeref:struct:__anon35
+Elf32_Rela	elf.h	/^} Elf32_Rela;$/;"	t	typeref:struct:__anon37
 Elf32_Section	elf.h	/^typedef u16int Elf32_Section;$/;"	t
-Elf32_Shdr	elf.h	/^} Elf32_Shdr;$/;"	t	typeref:struct:__anon18
+Elf32_Shdr	elf.h	/^} Elf32_Shdr;$/;"	t	typeref:struct:__anon29
 Elf32_Sword	elf.h	/^typedef	s32int  Elf32_Sword;$/;"	t
 Elf32_Sxword	elf.h	/^typedef	s64int  Elf32_Sxword;$/;"	t
-Elf32_Sym	elf.h	/^} Elf32_Sym;$/;"	t	typeref:struct:__anon20
-Elf32_Syminfo	elf.h	/^} Elf32_Syminfo;$/;"	t	typeref:struct:__anon22
-Elf32_Verdaux	elf.h	/^} Elf32_Verdaux;$/;"	t	typeref:struct:__anon36
-Elf32_Verdef	elf.h	/^} Elf32_Verdef;$/;"	t	typeref:struct:__anon34
-Elf32_Vernaux	elf.h	/^} Elf32_Vernaux;$/;"	t	typeref:struct:__anon40
-Elf32_Verneed	elf.h	/^} Elf32_Verneed;$/;"	t	typeref:struct:__anon38
+Elf32_Sym	elf.h	/^} Elf32_Sym;$/;"	t	typeref:struct:__anon31
+Elf32_Syminfo	elf.h	/^} Elf32_Syminfo;$/;"	t	typeref:struct:__anon33
+Elf32_Verdaux	elf.h	/^} Elf32_Verdaux;$/;"	t	typeref:struct:__anon47
+Elf32_Verdef	elf.h	/^} Elf32_Verdef;$/;"	t	typeref:struct:__anon45
+Elf32_Vernaux	elf.h	/^} Elf32_Vernaux;$/;"	t	typeref:struct:__anon51
+Elf32_Verneed	elf.h	/^} Elf32_Verneed;$/;"	t	typeref:struct:__anon49
 Elf32_Versym	elf.h	/^typedef Elf32_Half Elf32_Versym;$/;"	t
 Elf32_Word	elf.h	/^typedef u32int Elf32_Word;$/;"	t
 Elf32_Xword	elf.h	/^typedef u64int Elf32_Xword;$/;"	t
-Elf32_auxv_t	elf.h	/^} Elf32_auxv_t;$/;"	t	typeref:struct:__anon42
-Elf32_gptab	elf.h	/^} Elf32_gptab;$/;"	t	typeref:union:__anon50
+Elf32_auxv_t	elf.h	/^} Elf32_auxv_t;$/;"	t	typeref:struct:__anon53
+Elf32_gptab	elf.h	/^} Elf32_gptab;$/;"	t	typeref:union:__anon61
 Elf64_Addr	elf.h	/^typedef u64int Elf64_Addr;$/;"	t
-Elf64_Dyn	elf.h	/^} Elf64_Dyn;$/;"	t	typeref:struct:__anon32
-Elf64_Ehdr	elf.h	/^} Elf64_Ehdr;$/;"	t	typeref:struct:__anon17
+Elf64_Dyn	elf.h	/^} Elf64_Dyn;$/;"	t	typeref:struct:__anon43
+Elf64_Ehdr	elf.h	/^} Elf64_Ehdr;$/;"	t	typeref:struct:__anon28
 Elf64_Half	elf.h	/^typedef u16int Elf64_Half;$/;"	t
-Elf64_Lib	elf.h	/^} Elf64_Lib;$/;"	t	typeref:struct:__anon57
-Elf64_Move	elf.h	/^} Elf64_Move;$/;"	t	typeref:struct:__anon49
-Elf64_Nhdr	elf.h	/^} Elf64_Nhdr;$/;"	t	typeref:struct:__anon47
+Elf64_Lib	elf.h	/^} Elf64_Lib;$/;"	t	typeref:struct:__anon68
+Elf64_Move	elf.h	/^} Elf64_Move;$/;"	t	typeref:struct:__anon60
+Elf64_Nhdr	elf.h	/^} Elf64_Nhdr;$/;"	t	typeref:struct:__anon58
 Elf64_Off	elf.h	/^typedef u64int Elf64_Off;$/;"	t
-Elf64_Phdr	elf.h	/^} Elf64_Phdr;$/;"	t	typeref:struct:__anon29
-Elf64_Rel	elf.h	/^} Elf64_Rel;$/;"	t	typeref:struct:__anon25
-Elf64_Rela	elf.h	/^} Elf64_Rela;$/;"	t	typeref:struct:__anon27
+Elf64_Phdr	elf.h	/^} Elf64_Phdr;$/;"	t	typeref:struct:__anon40
+Elf64_Rel	elf.h	/^} Elf64_Rel;$/;"	t	typeref:struct:__anon36
+Elf64_Rela	elf.h	/^} Elf64_Rela;$/;"	t	typeref:struct:__anon38
 Elf64_Section	elf.h	/^typedef u16int Elf64_Section;$/;"	t
-Elf64_Shdr	elf.h	/^} Elf64_Shdr;$/;"	t	typeref:struct:__anon19
+Elf64_Shdr	elf.h	/^} Elf64_Shdr;$/;"	t	typeref:struct:__anon30
 Elf64_Sword	elf.h	/^typedef	s32int  Elf64_Sword;$/;"	t
 Elf64_Sxword	elf.h	/^typedef	s64int  Elf64_Sxword;$/;"	t
-Elf64_Sym	elf.h	/^} Elf64_Sym;$/;"	t	typeref:struct:__anon21
-Elf64_Syminfo	elf.h	/^} Elf64_Syminfo;$/;"	t	typeref:struct:__anon23
-Elf64_Verdaux	elf.h	/^} Elf64_Verdaux;$/;"	t	typeref:struct:__anon37
-Elf64_Verdef	elf.h	/^} Elf64_Verdef;$/;"	t	typeref:struct:__anon35
-Elf64_Vernaux	elf.h	/^} Elf64_Vernaux;$/;"	t	typeref:struct:__anon41
-Elf64_Verneed	elf.h	/^} Elf64_Verneed;$/;"	t	typeref:struct:__anon39
+Elf64_Sym	elf.h	/^} Elf64_Sym;$/;"	t	typeref:struct:__anon32
+Elf64_Syminfo	elf.h	/^} Elf64_Syminfo;$/;"	t	typeref:struct:__anon34
+Elf64_Verdaux	elf.h	/^} Elf64_Verdaux;$/;"	t	typeref:struct:__anon48
+Elf64_Verdef	elf.h	/^} Elf64_Verdef;$/;"	t	typeref:struct:__anon46
+Elf64_Vernaux	elf.h	/^} Elf64_Vernaux;$/;"	t	typeref:struct:__anon52
+Elf64_Verneed	elf.h	/^} Elf64_Verneed;$/;"	t	typeref:struct:__anon50
 Elf64_Versym	elf.h	/^typedef Elf64_Half Elf64_Versym;$/;"	t
 Elf64_Word	elf.h	/^typedef u32int Elf64_Word;$/;"	t
 Elf64_Xword	elf.h	/^typedef u64int Elf64_Xword;$/;"	t
-Elf64_auxv_t	elf.h	/^} Elf64_auxv_t;$/;"	t	typeref:struct:__anon44
-Elf_Options	elf.h	/^} Elf_Options;$/;"	t	typeref:struct:__anon54
-Elf_Options_Hw	elf.h	/^} Elf_Options_Hw;$/;"	t	typeref:struct:__anon55
+Elf64_auxv_t	elf.h	/^} Elf64_auxv_t;$/;"	t	typeref:struct:__anon55
+Elf_Options	elf.h	/^} Elf_Options;$/;"	t	typeref:struct:__anon65
+Elf_Options_Hw	elf.h	/^} Elf_Options_Hw;$/;"	t	typeref:struct:__anon66
 ExceptTable	except.h	/^struct ExceptTable$/;"	s
+FB_AF	x86emu/x86emu/regs.h	176;"	d
+FB_CF	x86emu/x86emu/regs.h	174;"	d
+FB_DF	x86emu/x86emu/regs.h	181;"	d
+FB_IF	x86emu/x86emu/regs.h	180;"	d
+FB_OF	x86emu/x86emu/regs.h	182;"	d
+FB_PF	x86emu/x86emu/regs.h	175;"	d
+FB_SF	x86emu/x86emu/regs.h	178;"	d
+FB_TF	x86emu/x86emu/regs.h	179;"	d
+FB_ZF	x86emu/x86emu/regs.h	177;"	d
 FD_INVALID	file.h	6;"	d
+FETCH_DECODE_MODRM	x86emu/x86emu/decode.h	46;"	d
 FILE_H	file.h	2;"	d
+FLAGS	x86emu/x86emu/regs.h	/^	u32 FLAGS;$/;"	m	struct:i386_special_regs
 FLI_OFFSET	tlsf.h	27;"	d
 FLOOR_PAGE_ALIGN	paging.h	7;"	d
+FS	x86emu/x86emu/regs.h	/^    u16 CS, DS, SS, ES, FS, GS;$/;"	m	struct:i386_segment_regs
+F_AF	x86emu/x86emu/regs.h	197;"	d
+F_ALL_CALC	x86emu/x86emu/regs.h	218;"	d
+F_ALWAYS_ON	x86emu/x86emu/regs.h	185;"	d
+F_CF	x86emu/x86emu/regs.h	195;"	d
+F_DF	x86emu/x86emu/regs.h	202;"	d
+F_IF	x86emu/x86emu/regs.h	201;"	d
+F_MSK	x86emu/x86emu/regs.h	191;"	d
+F_OF	x86emu/x86emu/regs.h	203;"	d
+F_PF	x86emu/x86emu/regs.h	196;"	d
+F_PF_CALC	x86emu/x86emu/regs.h	214;"	d
+F_SF	x86emu/x86emu/regs.h	199;"	d
+F_SF_CALC	x86emu/x86emu/regs.h	216;"	d
+F_TF	x86emu/x86emu/regs.h	200;"	d
+F_ZF	x86emu/x86emu/regs.h	198;"	d
+F_ZF_CALC	x86emu/x86emu/regs.h	215;"	d
 FileSystem	vfs.h	/^struct FileSystem$/;"	s
 FileSystemDriver	vfs.h	/^struct FileSystemDriver$/;"	s
 FileSystemDriverOperation	vfs.h	/^struct FileSystemDriverOperation$/;"	s
 FileSystemOperation	vfs.h	/^struct FileSystemOperation$/;"	s
 GDTEntry	dtable.h	/^struct GDTEntry {$/;"	s
 GDTPtr	dtable.h	/^struct GDTPtr {$/;"	s
+GET_SEGMENT	x86emu/decode.c	264;"	d	file:
 GP_FAULT	interrupt.h	7;"	d
 GRP_COMDAT	elf.h	349;"	d
+GS	x86emu/x86emu/regs.h	/^    u16 CS, DS, SS, ES, FS, GS;$/;"	m	struct:i386_segment_regs
+Gen_reg_t	x86emu/x86emu/regs.h	/^typedef struct i386_general_regs Gen_reg_t;$/;"	t	typeref:struct:i386_general_regs
+HALT_SYS	x86emu/x86emu.h	160;"	d
+HALT_SYS	x86emu/x86emu.h	164;"	d
 HANDLE_CLIENT	handle.h	11;"	d
 HANDLE_FREE	handle.h	8;"	d
 HANDLE_H	handle.h	2;"	d
 HANDLE_MESSAGE	handle.h	12;"	d
 HANDLE_SERVER	handle.h	10;"	d
 HANDLE_VNODE	handle.h	9;"	d
-HEAP_START_ADDR	sysdef.h	15;"	d
-HIGHMEM_START_ADDR	sysdef.h	14;"	d
+HEAP_START_ADDR	sysdef.h	17;"	d
+HIGHMEM_START_ADDR	sysdef.h	16;"	d
 HWCAP_SPARC_BLKINIT	elf.h	1295;"	d
 HWCAP_SPARC_FLUSH	elf.h	1289;"	d
 HWCAP_SPARC_MULDIV	elf.h	1292;"	d
@@ -801,17 +932,33 @@ HWCAP_SPARC_V9	elf.h	1293;"	d
 HZ	timer.h	6;"	d
 Handle	handle.h	/^struct Handle$/;"	s
 HandleTable	handle.h	/^struct HandleTable$/;"	s
+I16_reg	x86emu/x86emu/regs.h	/^	I16_reg_t   I16_reg;$/;"	m	union:__anon15
+I16_reg_t	x86emu/x86emu/regs.h	/^	} I16_reg_t;$/;"	t	typeref:struct:__anon10
+I16_reg_t	x86emu/x86emu/regs.h	/^	} I16_reg_t;$/;"	t	typeref:struct:__anon13
+I32_reg	x86emu/x86emu/regs.h	/^	I32_reg_t   I32_reg;$/;"	m	union:__anon15
+I32_reg_t	x86emu/x86emu/regs.h	/^	} I32_reg_t;$/;"	t	typeref:struct:__anon12
+I32_reg_t	x86emu/x86emu/regs.h	/^	} I32_reg_t;$/;"	t	typeref:struct:__anon9
 I8042_H	i8042.h	2;"	d
+I8_reg	x86emu/x86emu/regs.h	/^	I8_reg_t    I8_reg;$/;"	m	union:__anon15
+I8_reg_t	x86emu/x86emu/regs.h	/^	} I8_reg_t;$/;"	t	typeref:struct:__anon11
+I8_reg_t	x86emu/x86emu/regs.h	/^	} I8_reg_t;$/;"	t	typeref:struct:__anon14
+IA64_UALOADS	x86emu/sys.c	215;"	d	file:
 IDE_ATA	ide.h	54;"	d
 IDE_ATAPI	ide.h	55;"	d
 IDE_H	ide.h	2;"	d
 IDTEntry	dtable.h	/^struct IDTEntry {$/;"	s
 IDTPtr	dtable.h	/^struct IDTPtr {$/;"	s
+INC_DECODED_INST_LEN	x86emu/x86emu/debug.h	115;"	d
+INC_DECODED_INST_LEN	x86emu/x86emu/debug.h	126;"	d
 INTERRUPT_H	interrupt.h	2;"	d
+INTR_ASYNCH	x86emu/x86emu/regs.h	257;"	d
+INTR_HALTED	x86emu/x86emu/regs.h	258;"	d
+INTR_SYNCH	x86emu/x86emu/regs.h	256;"	d
 INVLPG	paging.c	7;"	d	file:
 IO_BITMAP_BITS	dtable.h	6;"	d
 IO_BITMAP_BYTES	dtable.h	7;"	d
 IO_BITMAP_LONGS	dtable.h	8;"	d
+IP	x86emu/x86emu/regs.h	/^	i386_general_register SP, BP, SI, DI, IP;$/;"	m	struct:i386_special_regs
 IPCManager	message.h	/^struct IPCManager$/;"	s
 IRQ0	interrupt.h	10;"	d
 IRQ1	interrupt.h	11;"	d
@@ -837,11 +984,11 @@ KDIR_OP_READDIR	kobject.c	6;"	d	file:
 KDIR_OP_REMOVEOBJECT	kobject.c	8;"	d	file:
 KDirectoryObjectData	kobject.c	/^struct KDirectoryObjectData$/;"	s	file:
 KDirectoryProcessData	kobject.c	/^struct KDirectoryProcessData$/;"	s	file:
-KERNEL_STACK_BOTTOM	sysdef.h	12;"	d
-KERNEL_STACK_SIZE	sysdef.h	13;"	d
+KERNEL_STACK_BOTTOM	sysdef.h	14;"	d
+KERNEL_STACK_SIZE	sysdef.h	15;"	d
 KERNEL_STACK_SIZE	task2.h	10;"	d
 KERNEL_STACK_START	task2.h	9;"	d
-KERNEL_STACK_TOP	sysdef.h	11;"	d
+KERNEL_STACK_TOP	sysdef.h	13;"	d
 KEY_H	key.h	2;"	d
 KMM_H	kmm.h	20;"	d
 KOBJECT_H	kobject.h	2;"	d
@@ -1010,19 +1157,20 @@ LL_IGNORE_INT_VER	elf.h	1668;"	d
 LL_NONE	elf.h	1666;"	d
 LL_REQUIRE_MINOR	elf.h	1669;"	d
 LOADBASE	loader32.s	/^LOADBASE            equ 0x100000$/;"	d
+M	x86emu/x86emu/regs.h	325;"	d
 MAGIC_BREAK	common.h	6;"	d
 MAGIC_BREAK	util.h	6;"	d
 MAP_ADDR_P_TO_V	paging.c	8;"	d	file:
 MAP_ADDR_V_TO_P	paging.c	9;"	d	file:
 MAX	common.h	9;"	d
 MAX	util.h	11;"	d
-MAX_CODE_SIZE	sysdef.h	17;"	d
+MAX_CODE_SIZE	sysdef.h	19;"	d
 MAX_FLI	tlsf.h	26;"	d
-MAX_HANDLE_NUMBER	sysdef.h	27;"	d
-MAX_IPC_PORT	sysdef.h	26;"	d
+MAX_HANDLE_NUMBER	sysdef.h	29;"	d
+MAX_IPC_PORT	sysdef.h	28;"	d
 MAX_MMAP_LENGTH	task2.h	23;"	d
 MAX_NAME_LEN	common.h	14;"	d
-MAX_NAME_LEN	sysdef.h	25;"	d
+MAX_NAME_LEN	sysdef.h	27;"	d
 MAX_PATH_LEN	common.h	15;"	d
 MAX_SLI	tlsf.h	25;"	d
 MAX_SLI_LOG2	tlsf.h	24;"	d
@@ -1030,10 +1178,11 @@ MAX_SYMBOLS	module.h	13;"	d
 MAX_TASK_FDS	task2.h	22;"	d
 MBOOT_AOUT_KLUDGE	loader32.s	/^MBOOT_AOUT_KLUDGE   equ 1<<16$/;"	d
 MBOOT_CHECKSUM	loader32.s	/^MBOOT_CHECKSUM      equ -(MBOOT_HEADER_MAGIC + MBOOT_HEADER_FLAGS)$/;"	d
-MBOOT_HEADER_FLAGS	loader32.s	/^MBOOT_HEADER_FLAGS  equ (MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO | MBOOT_AOUT_KLUDGE)$/;"	d
+MBOOT_HEADER_FLAGS	loader32.s	/^MBOOT_HEADER_FLAGS  equ (MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO |  MBOOT_AOUT_KLUDGE | MBOOT_VIDEO_INFO)$/;"	d
 MBOOT_HEADER_MAGIC	loader32.s	/^MBOOT_HEADER_MAGIC  equ 0x1BADB002 ; Multiboot Magic value$/;"	d
 MBOOT_MEM_INFO	loader32.s	/^MBOOT_MEM_INFO      equ 1<<1    ; Provide your kernel with memory info$/;"	d
 MBOOT_PAGE_ALIGN	loader32.s	/^MBOOT_PAGE_ALIGN    equ 1<<0    ; Load kernel and modules on a page boundary$/;"	d
+MBOOT_VIDEO_INFO	loader32.s	/^MBOOT_VIDEO_INFO    equ 1<<2    ; Provide your kernel with vbe info$/;"	d
 MESSAGE_H	message.h	2;"	d
 MESSAGE_TYPE_POST	message.h	38;"	d
 MESSAGE_TYPE_SEND	message.h	37;"	d
@@ -1081,7 +1230,13 @@ NT_PSTATUS	elf.h	579;"	d
 NT_TASKSTRUCT	elf.h	574;"	d
 NT_UTSNAME	elf.h	582;"	d
 NT_VERSION	elf.h	595;"	d
-N_SYSCALLS	ksyscall.c	12;"	d	file:
+NULL	sysdef.h	6;"	d
+NUM32	x86emu/x86emu/types.h	104;"	d
+NUM32	x86emu/x86emu/types.h	71;"	d
+NUM32	x86emu/x86emu/types.h	80;"	d
+NUM32	x86emu/x86emu/types.h	82;"	d
+N_SYSCALLS	ksyscall.c	13;"	d	file:
+OBJS	x86emu/Makefile	/^OBJS = decode.o fpu.o ops.o ops2.o prim_ops.o sys.o$/;"	m
 ODK_EXCEPTIONS	elf.h	1447;"	d
 ODK_FILL	elf.h	1450;"	d
 ODK_HWAND	elf.h	1452;"	d
@@ -1112,30 +1267,37 @@ OHW_R8KPFETCH	elf.h	1474;"	d
 OPAD_POSTFIX	elf.h	1479;"	d
 OPAD_PREFIX	elf.h	1478;"	d
 OPAD_SYMBOL	elf.h	1480;"	d
+OZFS_H	syscall/ozfs.h	2;"	d
 OZIPC_H	syscall/ozipc.h	2;"	d
 OZTASK_H	syscall/oztask.h	2;"	d
 O_EXEC	file.h	11;"	d
 O_RDONLY	file.h	8;"	d
 O_RDWR	file.h	10;"	d
 O_WRONLY	file.h	9;"	d
+OzClose	syscall/ozfs.c	/^s64int OzClose(s64int fd)$/;"	f
 OzConnect	syscall/ozipc.c	/^s64int OzConnect(s64int port)$/;"	f
 OzCreateServer	syscall/ozipc.c	/^s64int OzCreateServer(s64int port)$/;"	f
 OzDestroyServer	syscall/ozipc.c	/^s64int OzDestroyServer(s64int serverId)$/;"	f
 OzDisconnect	syscall/ozipc.c	/^s64int OzDisconnect(s64int clientId)$/;"	f
 OzExitTask	syscall/oztask.c	/^s64int OzExitTask(s64int status)$/;"	f
 OzNewTask	syscall/oztask.c	/^s64int OzNewTask(char *path, u64int flags)$/;"	f
+OzOpen	syscall/ozfs.c	/^s64int OzOpen(char *path, s64int flags)$/;"	f
 OzPost	syscall/ozipc.c	/^s64int OzPost(s64int clientId, char *src, u64int srcSize)$/;"	f
+OzRead	syscall/ozfs.c	/^s64int OzRead(s64int fd, u64int offset, u64int size, char *buffer)$/;"	f
+OzReadDirectory	syscall/ozfs.c	/^s64int OzReadDirectory(s64int fd, u64int bufSize, char *buffer)$/;"	f
 OzReceive	syscall/ozipc.c	/^s64int OzReceive(s64int clientId, char *buf, u64int bufSize)$/;"	f
 OzReply	syscall/ozipc.c	/^s64int OzReply(s64int msgId, char *buf, u64int bufSize)$/;"	f
 OzSend	syscall/ozipc.c	/^s64int OzSend(s64int clientId, char *src, u64int srcSize, char *dest, u64int destSize)$/;"	f
+OzWrite	syscall/ozfs.c	/^s64int OzWrite(s64int fd, u64int offset, u64int size, char *buffer)$/;"	f
 PADDR_TO_VADDR	paging.h	14;"	d
 PAGE_FAULT	interrupt.h	8;"	d
-PAGE_LOG2_SIZE	sysdef.h	7;"	d
-PAGE_MASK	sysdef.h	8;"	d
-PAGE_SIZE	sysdef.h	6;"	d
+PAGE_LOG2_SIZE	sysdef.h	9;"	d
+PAGE_MASK	sysdef.h	10;"	d
+PAGE_SIZE	sysdef.h	8;"	d
 PAGING_H	paging.h	2;"	d
 PANIC	common.h	11;"	d
 PANIC	util.h	8;"	d
+PARITY	x86emu/prim_ops.c	120;"	d	file:
 PCI_BAR0_OFFSET	pci.h	6;"	d
 PCI_BAR1_OFFSET	pci.h	7;"	d
 PCI_BAR2_OFFSET	pci.h	8;"	d
@@ -1164,10 +1326,11 @@ PF_R	elf.h	564;"	d
 PF_W	elf.h	563;"	d
 PF_X	elf.h	562;"	d
 PML4E	paging.h	/^struct PML4E {$/;"	s
+PRIM_OPS_NO_REDEFINE_ASM	x86emu/prim_ops.c	103;"	d	file:
 PROGRAM_H	program.h	2;"	d
 PROG_LDFLAGS	Makefile	/^PROG_LDFLAGS=-Tprog.ld -z max-page-size=0x1000$/;"	m
 PROG_SOURCES	Makefile	/^PROG_SOURCES = prog\/init.o  prog\/server.o prog\/client.o syscall.o $/;"	m
-PTR_SIZE	sysdef.h	9;"	d
+PTR_SIZE	sysdef.h	11;"	d
 PT_ARM_EXIDX	elf.h	2243;"	d
 PT_DYNAMIC	elf.h	541;"	d
 PT_GNU_EH_FRAME	elf.h	549;"	d
@@ -1221,6 +1384,8 @@ Program	program.h	/^struct Program {$/;"	s
 QUIET	Makefile	/^QUIET = @$/;"	m
 RAMFS_H	fs/ramfs.h	2;"	d
 REAL_FLI	tlsf.h	30;"	d
+RETURN_TRACE	x86emu/x86emu/debug.h	169;"	d
+RETURN_TRACE	x86emu/x86emu/debug.h	176;"	d
 RHF_CORD	elf.h	1639;"	d
 RHF_DEFAULT_DELAY_LOAD	elf.h	1636;"	d
 RHF_DELTA_C_PLUS_PLUS	elf.h	1633;"	d
@@ -1366,6 +1531,8 @@ R_68K_PLT32O	elf.h	1089;"	d
 R_68K_PLT8	elf.h	1088;"	d
 R_68K_PLT8O	elf.h	1091;"	d
 R_68K_RELATIVE	elf.h	1095;"	d
+R_AH	x86emu/x86emu/regs.h	120;"	d
+R_AL	x86emu/x86emu/regs.h	121;"	d
 R_ALPHA_BRADDR	elf.h	1900;"	d
 R_ALPHA_COPY	elf.h	1908;"	d
 R_ALPHA_DTPMOD64	elf.h	1915;"	d
@@ -1451,6 +1618,14 @@ R_ARM_TLS_LDO32	elf.h	2295;"	d
 R_ARM_TLS_LE32	elf.h	2299;"	d
 R_ARM_TLS_TPOFF32	elf.h	2272;"	d
 R_ARM_XPC25	elf.h	2268;"	d
+R_AX	x86emu/x86emu/regs.h	130;"	d
+R_BH	x86emu/x86emu/regs.h	122;"	d
+R_BL	x86emu/x86emu/regs.h	123;"	d
+R_BP	x86emu/x86emu/regs.h	143;"	d
+R_BP	x86emu/x86emu/regs.h	151;"	d
+R_BX	x86emu/x86emu/regs.h	131;"	d
+R_CH	x86emu/x86emu/regs.h	124;"	d
+R_CL	x86emu/x86emu/regs.h	125;"	d
 R_CRIS_16	elf.h	2554;"	d
 R_CRIS_16_GOT	elf.h	2565;"	d
 R_CRIS_16_GOTPLT	elf.h	2567;"	d
@@ -1472,6 +1647,29 @@ R_CRIS_JUMP_SLOT	elf.h	2563;"	d
 R_CRIS_NONE	elf.h	2552;"	d
 R_CRIS_NUM	elf.h	2573;"	d
 R_CRIS_RELATIVE	elf.h	2564;"	d
+R_CS	x86emu/x86emu/regs.h	166;"	d
+R_CX	x86emu/x86emu/regs.h	132;"	d
+R_DH	x86emu/x86emu/regs.h	126;"	d
+R_DI	x86emu/x86emu/regs.h	145;"	d
+R_DI	x86emu/x86emu/regs.h	153;"	d
+R_DL	x86emu/x86emu/regs.h	127;"	d
+R_DS	x86emu/x86emu/regs.h	167;"	d
+R_DX	x86emu/x86emu/regs.h	133;"	d
+R_EAX	x86emu/x86emu/regs.h	136;"	d
+R_EBP	x86emu/x86emu/regs.h	159;"	d
+R_EBX	x86emu/x86emu/regs.h	137;"	d
+R_ECX	x86emu/x86emu/regs.h	138;"	d
+R_EDI	x86emu/x86emu/regs.h	161;"	d
+R_EDX	x86emu/x86emu/regs.h	139;"	d
+R_EFLG	x86emu/x86emu/regs.h	163;"	d
+R_EIP	x86emu/x86emu/regs.h	162;"	d
+R_ES	x86emu/x86emu/regs.h	169;"	d
+R_ESI	x86emu/x86emu/regs.h	160;"	d
+R_ESP	x86emu/x86emu/regs.h	158;"	d
+R_FLG	x86emu/x86emu/regs.h	147;"	d
+R_FLG	x86emu/x86emu/regs.h	155;"	d
+R_FS	x86emu/x86emu/regs.h	170;"	d
+R_GS	x86emu/x86emu/regs.h	171;"	d
 R_IA64_COPY	elf.h	2401;"	d
 R_IA64_DIR32LSB	elf.h	2346;"	d
 R_IA64_DIR32MSB	elf.h	2345;"	d
@@ -1553,6 +1751,8 @@ R_IA64_TPREL22	elf.h	2406;"	d
 R_IA64_TPREL64I	elf.h	2407;"	d
 R_IA64_TPREL64LSB	elf.h	2409;"	d
 R_IA64_TPREL64MSB	elf.h	2408;"	d
+R_IP	x86emu/x86emu/regs.h	146;"	d
+R_IP	x86emu/x86emu/regs.h	154;"	d
 R_M32R_10_PCREL	elf.h	2653;"	d
 R_M32R_10_PCREL_RELA	elf.h	2666;"	d
 R_M32R_16	elf.h	2650;"	d
@@ -2025,6 +2225,10 @@ R_SH_TLS_LD_32	elf.h	2448;"	d
 R_SH_TLS_LE_32	elf.h	2451;"	d
 R_SH_TLS_TPOFF32	elf.h	2454;"	d
 R_SH_USES	elf.h	2438;"	d
+R_SI	x86emu/x86emu/regs.h	144;"	d
+R_SI	x86emu/x86emu/regs.h	152;"	d
+R_SP	x86emu/x86emu/regs.h	142;"	d
+R_SP	x86emu/x86emu/regs.h	150;"	d
 R_SPARC_10	elf.h	1218;"	d
 R_SPARC_11	elf.h	1219;"	d
 R_SPARC_13	elf.h	1196;"	d
@@ -2117,6 +2321,7 @@ R_SPARC_WDISP19	elf.h	1229;"	d
 R_SPARC_WDISP22	elf.h	1193;"	d
 R_SPARC_WDISP30	elf.h	1192;"	d
 R_SPARC_WPLT30	elf.h	1203;"	d
+R_SS	x86emu/x86emu/regs.h	168;"	d
 R_X86_64_16	elf.h	2590;"	d
 R_X86_64_32	elf.h	2588;"	d
 R_X86_64_32S	elf.h	2589;"	d
@@ -2151,6 +2356,8 @@ R_X86_64_TPOFF32	elf.h	2604;"	d
 R_X86_64_TPOFF64	elf.h	2596;"	d
 RegisterState	interrupt.h	/^struct RegisterState {$/;"	s
 RootObject	kobject.c	/^struct KObject *RootObject = 0;$/;"	v	typeref:struct:KObject
+SAVE_IP_CS	x86emu/x86emu/debug.h	119;"	d
+SAVE_IP_CS	x86emu/x86emu/debug.h	129;"	d
 SCHEDULE_H	schedule.h	2;"	d
 SCREEN_H	screen.h	2;"	d
 SEEK_CUR	file.h	14;"	d
@@ -2160,6 +2367,7 @@ SELFMAG	elf.h	99;"	d
 SEMAPHORE_H	semaphore.h	2;"	d
 SERVER_STATUS_READY	message.h	17;"	d
 SERVER_STATUS_RECEIVE_BLOCKED	message.h	18;"	d
+SET_FLAG	x86emu/x86emu/regs.h	206;"	d
 SHF_ALLOC	elf.h	331;"	d
 SHF_ALPHA_GPREL	elf.h	1885;"	d
 SHF_ARM_COMDEF	elf.h	2233;"	d
@@ -2294,8 +2502,15 @@ SHT_SUNW_move	elf.h	315;"	d
 SHT_SUNW_syminfo	elf.h	317;"	d
 SHT_SYMTAB	elf.h	293;"	d
 SHT_SYMTAB_SHNDX	elf.h	307;"	d
+SI	x86emu/x86emu/regs.h	/^	i386_general_register SP, BP, SI, DI, IP;$/;"	m	struct:i386_special_regs
+SINGLE_STEP	x86emu/x86emu/debug.h	144;"	d
+SINGLE_STEP	x86emu/x86emu/debug.h	146;"	d
 SMALL_BLOCK	tlsf.h	28;"	d
+SP	x86emu/x86emu/regs.h	/^	i386_general_register SP, BP, SI, DI, IP;$/;"	m	struct:i386_special_regs
 SPLIT_THREHOLD	tlsf.h	32;"	d
+SS	x86emu/x86emu/regs.h	/^    u16 CS, DS, SS, ES, FS, GS;$/;"	m	struct:i386_segment_regs
+START_OF_INSTR	x86emu/x86emu/debug.h	154;"	d
+START_OF_INSTR	x86emu/x86emu/debug.h	158;"	d
 STB_GLOBAL	elf.h	419;"	d
 STB_GNU_UNIQUE	elf.h	423;"	d
 STB_HIOS	elf.h	424;"	d
@@ -2350,6 +2565,22 @@ SYMINFO_NONE	elf.h	400;"	d
 SYMINFO_NUM	elf.h	402;"	d
 SYSCALL_H	syscall.h	2;"	d
 SYSDEF_H	sysdef.h	2;"	d
+SYSMODE_CLRMASK	x86emu/x86emu/regs.h	246;"	d
+SYSMODE_EXTRN_INTR	x86emu/x86emu/regs.h	236;"	d
+SYSMODE_HALTED	x86emu/x86emu/regs.h	237;"	d
+SYSMODE_INTR_PENDING	x86emu/x86emu/regs.h	235;"	d
+SYSMODE_PREFIX_ADDR	x86emu/x86emu/regs.h	234;"	d
+SYSMODE_PREFIX_DATA	x86emu/x86emu/regs.h	233;"	d
+SYSMODE_PREFIX_REPE	x86emu/x86emu/regs.h	231;"	d
+SYSMODE_PREFIX_REPNE	x86emu/x86emu/regs.h	232;"	d
+SYSMODE_SEGMASK	x86emu/x86emu/regs.h	239;"	d
+SYSMODE_SEGOVR_CS	x86emu/x86emu/regs.h	225;"	d
+SYSMODE_SEGOVR_DS	x86emu/x86emu/regs.h	226;"	d
+SYSMODE_SEGOVR_ES	x86emu/x86emu/regs.h	227;"	d
+SYSMODE_SEGOVR_FS	x86emu/x86emu/regs.h	228;"	d
+SYSMODE_SEGOVR_GS	x86emu/x86emu/regs.h	229;"	d
+SYSMODE_SEGOVR_SS	x86emu/x86emu/regs.h	230;"	d
+SYSMODE_SEG_DS_SS	x86emu/x86emu/regs.h	224;"	d
 Semaphore	semaphore.h	/^struct Semaphore {$/;"	s
 Server	message.h	/^struct Server$/;"	s
 TAR_LINK_DIR	fs/bootfs.c	17;"	d	file:
@@ -2370,7 +2601,11 @@ TLSFFreePtr	tlsf.h	/^struct TLSFFreePtr {$/;"	s
 TLSFHeader	tlsf.h	/^struct TLSFHeader {$/;"	s
 TLSF_H	tlsf.h	20;"	d
 TLSF_SIGNATURE	tlsf.h	39;"	d
+TOGGLE_FLAG	x86emu/x86emu/regs.h	205;"	d
 TOLOWER	util.c	485;"	d	file:
+TRACE_AND_STEP	x86emu/x86emu/debug.h	149;"	d
+TRACE_REGS	x86emu/x86emu/debug.h	133;"	d
+TRACE_REGS	x86emu/x86emu/debug.h	140;"	d
 TSS	dtable.h	/^struct TSS {$/;"	s
 TSSEntry	dtable.h	/^struct TSSEntry {$/;"	s
 TSSPtr	dtable.h	/^struct TSSPtr {$/;"	s
@@ -2378,15 +2613,54 @@ TarHeader	fs/bootfs.c	/^struct TarHeader {$/;"	s	file:
 Task	task.h	/^struct Task {$/;"	s
 TestSyscall	syscall.h	/^DECL_SYSCALL_0(TestSyscall);$/;"	v
 USER_ADDR_START	task2.h	15;"	d
-USER_END_ADDR	sysdef.h	20;"	d
-USER_STACK_BOTTOM	sysdef.h	22;"	d
-USER_STACK_SIZE	sysdef.h	23;"	d
+USER_END_ADDR	sysdef.h	22;"	d
+USER_STACK_BOTTOM	sysdef.h	24;"	d
+USER_STACK_SIZE	sysdef.h	25;"	d
 USER_STACK_SIZE	task2.h	13;"	d
 USER_STACK_START	task2.h	12;"	d
-USER_STACK_TOP	sysdef.h	21;"	d
-USER_START_ADDR	sysdef.h	19;"	d
+USER_STACK_TOP	sysdef.h	23;"	d
+USER_START_ADDR	sysdef.h	21;"	d
 UTIL_H	util.h	2;"	d
 VADDR_TO_PADDR	paging.h	15;"	d
+VAL_BYTE_BYTE_BINARY	x86emu/validate.c	125;"	d	file:
+VAL_BYTE_DIV	x86emu/validate.c	460;"	d	file:
+VAL_BYTE_MUL	x86emu/validate.c	336;"	d	file:
+VAL_BYTE_ROTATE	x86emu/validate.c	167;"	d	file:
+VAL_BYTE_UNARY	x86emu/validate.c	308;"	d	file:
+VAL_END_BINARY	x86emu/validate.c	109;"	d	file:
+VAL_END_TERNARY	x86emu/validate.c	225;"	d	file:
+VAL_END_UNARY	x86emu/validate.c	295;"	d	file:
+VAL_FAIL_BYTE_BYTE_BINARY	x86emu/validate.c	85;"	d	file:
+VAL_FAIL_BYTE_UNARY	x86emu/validate.c	274;"	d	file:
+VAL_FAIL_LONG_LONG_BINARY	x86emu/validate.c	101;"	d	file:
+VAL_FAIL_LONG_LONG_TERNARY	x86emu/validate.c	217;"	d	file:
+VAL_FAIL_LONG_UNARY	x86emu/validate.c	288;"	d	file:
+VAL_FAIL_WORD_UNARY	x86emu/validate.c	281;"	d	file:
+VAL_FAIL_WORD_WORD_BINARY	x86emu/validate.c	93;"	d	file:
+VAL_FAIL_WORD_WORD_TERNARY	x86emu/validate.c	209;"	d	file:
+VAL_LONG_DIV	x86emu/validate.c	549;"	d	file:
+VAL_LONG_LONG_BINARY	x86emu/validate.c	139;"	d	file:
+VAL_LONG_MUL	x86emu/validate.c	418;"	d	file:
+VAL_LONG_ROTATE	x86emu/validate.c	181;"	d	file:
+VAL_LONG_ROTATE_DBL	x86emu/validate.c	251;"	d	file:
+VAL_LONG_UNARY	x86emu/validate.c	329;"	d	file:
+VAL_START_BINARY	x86emu/validate.c	58;"	d	file:
+VAL_START_TERNARY	x86emu/validate.c	188;"	d	file:
+VAL_START_UNARY	x86emu/validate.c	258;"	d	file:
+VAL_TEST_BINARY	x86emu/validate.c	70;"	d	file:
+VAL_TEST_BINARY_VOID	x86emu/validate.c	77;"	d	file:
+VAL_TEST_TERNARY	x86emu/validate.c	202;"	d	file:
+VAL_TEST_UNARY	x86emu/validate.c	268;"	d	file:
+VAL_VOID_BYTE_BINARY	x86emu/validate.c	146;"	d	file:
+VAL_VOID_LONG_BINARY	x86emu/validate.c	160;"	d	file:
+VAL_VOID_WORD_BINARY	x86emu/validate.c	153;"	d	file:
+VAL_WORD_BYTE_UNARY	x86emu/validate.c	322;"	d	file:
+VAL_WORD_DIV	x86emu/validate.c	504;"	d	file:
+VAL_WORD_MUL	x86emu/validate.c	376;"	d	file:
+VAL_WORD_ROTATE	x86emu/validate.c	174;"	d	file:
+VAL_WORD_ROTATE_DBL	x86emu/validate.c	244;"	d	file:
+VAL_WORD_UNARY	x86emu/validate.c	315;"	d	file:
+VAL_WORD_WORD_BINARY	x86emu/validate.c	132;"	d	file:
 VER_DEF_CURRENT	elf.h	794;"	d
 VER_DEF_NONE	elf.h	793;"	d
 VER_DEF_NUM	elf.h	795;"	d
@@ -2444,14 +2718,360 @@ Vnode	vfs2.h	/^struct Vnode {$/;"	s
 VnodeOperations	vfs2.h	/^struct VnodeOperations {$/;"	s
 WAITQUEUE_H	waitqueue.h	2;"	d
 WaitQueue	waitqueue.h	/^struct WaitQueue {$/;"	s
+X86API	x86emu/x86emu.h	46;"	d
+X86API	x86emu/x86emu.h	51;"	d
+X86APIP	x86emu/x86emu.h	47;"	d
+X86APIP	x86emu/x86emu.h	52;"	d
+X86EMU_SOURCES	Makefile	/^X86EMU_SOURCES = x86emu\/decode.o x86emu\/fpu.o x86emu\/ops.o x86emu\/ops2.o x86emu\/prim_ops.o x86emu\/sys.o$/;"	m
+X86EMU_UNUSED	x86emu/fpu.c	/^void x86emuOp_esc_coprocess_d8(u8 X86EMU_UNUSED(op1))$/;"	f
+X86EMU_UNUSED	x86emu/fpu.c	/^void x86emuOp_esc_coprocess_d9(u8 X86EMU_UNUSED(op1))$/;"	f
+X86EMU_UNUSED	x86emu/fpu.c	/^void x86emuOp_esc_coprocess_da(u8 X86EMU_UNUSED(op1))$/;"	f
+X86EMU_UNUSED	x86emu/fpu.c	/^void x86emuOp_esc_coprocess_db(u8 X86EMU_UNUSED(op1))$/;"	f
+X86EMU_UNUSED	x86emu/fpu.c	/^void x86emuOp_esc_coprocess_dc(u8 X86EMU_UNUSED(op1))$/;"	f
+X86EMU_UNUSED	x86emu/fpu.c	/^void x86emuOp_esc_coprocess_dd(u8 X86EMU_UNUSED(op1))$/;"	f
+X86EMU_UNUSED	x86emu/fpu.c	/^void x86emuOp_esc_coprocess_de(u8 X86EMU_UNUSED(op1))$/;"	f
+X86EMU_UNUSED	x86emu/fpu.c	/^void x86emuOp_esc_coprocess_df(u8 X86EMU_UNUSED(op1))$/;"	f
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_aaa(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_aad(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_aam(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_aas(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_adc_byte_AL_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_adc_byte_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_adc_byte_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_adc_word_AX_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_adc_word_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_adc_word_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_add_byte_AL_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_add_byte_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_add_byte_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_add_word_AX_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_add_word_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_add_word_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_and_byte_AL_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_and_byte_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_and_byte_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_and_word_AX_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_and_word_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_and_word_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_call_far_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_call_near_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_cbw(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_clc(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_cld(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_cli(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_cmc(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_cmp_byte_AL_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_cmp_byte_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_cmp_byte_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_cmp_word_AX_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_cmp_word_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_cmp_word_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_cmps_byte(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_cmps_word(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_cwd(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_daa(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_das(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_dec_AX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_dec_BP(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_dec_BX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_dec_CX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_dec_DI(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_dec_DX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_dec_SI(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_dec_SP(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_enter(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_halt(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_imul_byte_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_imul_word_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_in_byte_AL_DX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_in_byte_AL_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_in_word_AX_DX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_in_word_AX_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_inc_AX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_inc_BP(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_inc_BX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_inc_CX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_inc_DI(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_inc_DX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_inc_SI(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_inc_SP(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_ins_byte(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_ins_word(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_int3(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_int_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_into(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_iret(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jcxz(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_byte_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_far_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_B(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_BE(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_L(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_LE(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_NB(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_NBE(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_NL(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_NLE(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_NO(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_NP(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_NS(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_NZ(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_O(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_P(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_S(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_jump_near_Z(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_lahf(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_lds_R_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_lea_word_R_M(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_leave(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_les_R_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_lock(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_lods_byte(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_lods_word(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_loop(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_loope(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_loopne(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_AL_M_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_AX_M_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_M_AL_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_M_AX_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_byte_AH_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_byte_AL_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_byte_BH_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_byte_BL_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_byte_CH_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_byte_CL_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_byte_DH_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_byte_DL_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_byte_RM_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_byte_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_byte_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_word_AX_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_word_BP_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_word_BX_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_word_CX_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_word_DI_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_word_DX_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_word_RM_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_word_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_word_RM_SR(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_word_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_word_SI_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_word_SP_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_mov_word_SR_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_movs_byte(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_movs_word(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_nop(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_opc80_byte_RM_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_opc81_word_RM_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_opc82_byte_RM_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_opc83_word_RM_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_opcC0_byte_RM_MEM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_opcC1_word_RM_MEM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_opcD0_byte_RM_1(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_opcD1_word_RM_1(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_opcD2_byte_RM_CL(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_opcD3_word_RM_CL(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_opcF6_byte_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_opcF7_word_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_opcFE_byte_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_opcFF_word_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_or_byte_AL_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_or_byte_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_or_byte_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_or_word_AX_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_or_word_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_or_word_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_out_byte_DX_AL(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_out_byte_IMM_AL(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_out_word_DX_AX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_out_word_IMM_AX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_outs_byte(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_outs_word(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_pop_AX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_pop_BP(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_pop_BX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_pop_CX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_pop_DI(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_pop_DS(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_pop_DX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_pop_ES(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_pop_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_pop_SI(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_pop_SP(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_pop_SS(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_pop_all(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_popf_word(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_prefix_addr(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_prefix_data(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_push_AX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_push_BP(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_push_BX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_push_CS(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_push_CX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_push_DI(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_push_DS(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_push_DX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_push_ES(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_push_SI(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_push_SP(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_push_SS(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_push_all(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_push_byte_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_push_word_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_pushf_word(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_repe(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_repne(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_ret_far(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_ret_far_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_ret_near(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_ret_near_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_sahf(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_sbb_byte_AL_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_sbb_byte_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_sbb_byte_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_sbb_word_AX_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_sbb_word_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_sbb_word_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_scas_byte(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_scas_word(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_segovr_CS(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_segovr_DS(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_segovr_ES(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_segovr_FS(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_segovr_GS(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_segovr_SS(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_stc(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_std(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_sti(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_stos_byte(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_stos_word(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_sub_byte_AL_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_sub_byte_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_sub_byte_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_sub_word_AX_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_sub_word_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_sub_word_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_test_AL_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_test_AX_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_test_byte_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_test_word_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_two_byte(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_wait(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xchg_byte_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xchg_word_AX_BP(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xchg_word_AX_BX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xchg_word_AX_CX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xchg_word_AX_DI(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xchg_word_AX_DX(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xchg_word_AX_SI(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xchg_word_AX_SP(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xchg_word_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xlat(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xor_byte_AL_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xor_byte_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xor_byte_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xor_word_AX_IMM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xor_word_RM_R(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops.c	/^static void x86emuOp_xor_word_R_RM(u8 X86EMU_UNUSED(op1))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_bsf(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_bsr(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_bswap(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_btX_I(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_bt_R(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_btc_R(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_btr_R(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_bts_R(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_cpuid(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_group_g(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_imul_R_RM(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_lfs_R_IMM(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_lgs_R_IMM(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_lss_R_IMM(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_movsx_byte_R_RM(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_movsx_word_R_RM(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_movzx_byte_R_RM(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_movzx_word_R_RM(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_pop_FS(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_pop_GS(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_push_FS(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_push_GS(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_rdtsc(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_shld_CL(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_shld_IMM(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_shrd_CL(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/ops2.c	/^static void x86emuOp2_shrd_IMM(u8 X86EMU_UNUSED(op2))$/;"	f	file:
+X86EMU_UNUSED	x86emu/x86emu/x86emui.h	59;"	d
+X86EMU_UNUSED	x86emu/x86emu/x86emui.h	61;"	d
+X86EMU_dump_memory	x86emu/debug.c	/^void X86EMU_dump_memory (u16 seg, u16 off, u32 amt)$/;"	f
+X86EMU_exec	x86emu/decode.c	/^void X86EMU_exec(void)$/;"	f
+X86EMU_halt_sys	x86emu/decode.c	/^void X86EMU_halt_sys(void)$/;"	f
+X86EMU_intrFuncs	x86emu/x86emu.h	/^typedef void (X86APIP X86EMU_intrFuncs)(int num);$/;"	t
+X86EMU_memFuncs	x86emu/x86emu.h	/^	} X86EMU_memFuncs;$/;"	t	typeref:struct:__anon19
+X86EMU_pioAddr	x86emu/x86emu.h	/^typedef int X86EMU_pioAddr;$/;"	t
+X86EMU_pioAddr	x86emu/x86emu/types.h	/^typedef u16 X86EMU_pioAddr;$/;"	t
+X86EMU_pioFuncs	x86emu/x86emu.h	/^	} X86EMU_pioFuncs;$/;"	t	typeref:struct:__anon18
+X86EMU_prepareForInt	x86emu/sys.c	/^void X86EMU_prepareForInt($/;"	f
+X86EMU_regs	x86emu/x86emu/regs.h	/^	} X86EMU_regs;$/;"	t	typeref:struct:__anon16
+X86EMU_setupIntrFuncs	x86emu/sys.c	/^void X86EMU_setupIntrFuncs($/;"	f
+X86EMU_setupMemFuncs	x86emu/sys.c	/^void X86EMU_setupMemFuncs($/;"	f
+X86EMU_setupPioFuncs	x86emu/sys.c	/^void X86EMU_setupPioFuncs($/;"	f
+X86EMU_sysEnv	x86emu/x86emu/regs.h	/^	} X86EMU_sysEnv;$/;"	t	typeref:struct:__anon17
+X86EMU_trace_off	x86emu/debug.c	/^int X86EMU_trace_off(void)$/;"	f
+X86EMU_trace_on	x86emu/debug.c	/^int X86EMU_trace_on(void)$/;"	f
+X86EMU_trace_regs	x86emu/debug.c	/^void X86EMU_trace_regs (void)$/;"	f
+X86EMU_trace_xregs	x86emu/debug.c	/^void X86EMU_trace_xregs (void)$/;"	f
+X86_FPU_BSD	x86emu/x86emu/fpu_regs.h	81;"	d
+X86_FPU_DOUBLE	x86emu/x86emu/fpu_regs.h	79;"	d
+X86_FPU_FLOAT	x86emu/x86emu/fpu_regs.h	78;"	d
+X86_FPU_LDBL	x86emu/x86emu/fpu_regs.h	80;"	d
+X86_FPU_LONG	x86emu/x86emu/fpu_regs.h	77;"	d
+X86_FPU_REGTYP	x86emu/x86emu/fpu_regs.h	73;"	d
+X86_FPU_SHORT	x86emu/x86emu/fpu_regs.h	76;"	d
+X86_FPU_STKTOP	x86emu/x86emu/fpu_regs.h	83;"	d
+X86_FPU_VALID	x86emu/x86emu/fpu_regs.h	72;"	d
+X86_FPU_WORD	x86emu/x86emu/fpu_regs.h	75;"	d
+XOR2	x86emu/prim_ops.c	121;"	d	file:
+_INLINE	x86emu/x86emu/x86emui.h	51;"	d
+_INLINE	x86emu/x86emu/x86emui.h	53;"	d
 _INTSIZEOF	common.h	17;"	d
-a_type	elf.h	/^  u32int a_type;		\/* Entry type *\/$/;"	m	struct:__anon42
-a_type	elf.h	/^  u64int a_type;		\/* Entry type *\/$/;"	m	struct:__anon44
-a_un	elf.h	/^    } a_un;$/;"	m	struct:__anon42	typeref:union:__anon42::__anon43
-a_un	elf.h	/^    } a_un;$/;"	m	struct:__anon44	typeref:union:__anon44::__anon45
-a_val	elf.h	/^      u32int a_val;		\/* Integer value *\/$/;"	m	union:__anon42::__anon43
-a_val	elf.h	/^      u64int a_val;		\/* Integer value *\/$/;"	m	union:__anon44::__anon45
+_X86EMU_env	x86emu/sys.c	/^X86EMU_sysEnv		_X86EMU_env;		\/* Global emulator machine state *\/$/;"	v
+_X86EMU_intrTab	x86emu/sys.c	/^X86EMU_intrFuncs	_X86EMU_intrTab[256];$/;"	v
+__HAS_LONG_LONG__	x86emu/x86emu/types.h	65;"	d
+__HAS_LONG_LONG__	x86emu/x86emu/types.h	67;"	d
+__HAVE_INLINE_ASSEMBLER__	x86emu/x86emu/prim_asm.h	49;"	d
+__X86EMU_DEBUG_H	x86emu/x86emu/debug.h	40;"	d
+__X86EMU_DECODE_H	x86emu/x86emu/decode.h	40;"	d
+__X86EMU_FPU_H	x86emu/x86emu/fpu.h	40;"	d
+__X86EMU_FPU_REGS_H	x86emu/x86emu/fpu_regs.h	40;"	d
+__X86EMU_OPS_H	x86emu/x86emu/ops.h	40;"	d
+__X86EMU_PRIM_ASM_H	x86emu/x86emu/prim_asm.h	44;"	d
+__X86EMU_PRIM_OPS_H	x86emu/x86emu/prim_ops.h	40;"	d
+__X86EMU_REGS_H	x86emu/x86emu/regs.h	40;"	d
+__X86EMU_TYPES_H	x86emu/x86emu/types.h	41;"	d
+__X86EMU_X86EMUI_H	x86emu/x86emu/x86emui.h	43;"	d
+__X86EMU_X86EMU_H	x86emu/x86emu.h	42;"	d
+__pad	x86emu/x86emu/regs.h	/^    u8                          __pad[3];$/;"	m	struct:__anon16
+__uldq	x86emu/sys.c	/^__uldq (const unsigned long * r11)$/;"	f	file:
+__una_u16	x86emu/sys.c	/^struct __una_u16 { unsigned short x __attribute__((packed)); };$/;"	s	file:
+__una_u32	x86emu/sys.c	/^struct __una_u32 { unsigned int   x __attribute__((packed)); };$/;"	s	file:
+__una_u64	x86emu/sys.c	/^struct __una_u64 { unsigned long  x __attribute__((packed)); };$/;"	s	file:
+a_type	elf.h	/^  u32int a_type;		\/* Entry type *\/$/;"	m	struct:__anon53
+a_type	elf.h	/^  u64int a_type;		\/* Entry type *\/$/;"	m	struct:__anon55
+a_un	elf.h	/^    } a_un;$/;"	m	struct:__anon53	typeref:union:__anon53::__anon54
+a_un	elf.h	/^    } a_un;$/;"	m	struct:__anon55	typeref:union:__anon55::__anon56
+a_val	elf.h	/^      u32int a_val;		\/* Integer value *\/$/;"	m	union:__anon53::__anon54
+a_val	elf.h	/^      u64int a_val;		\/* Integer value *\/$/;"	m	union:__anon55::__anon56
+aaa_word	x86emu/prim_ops.c	/^u16 aaa_word(u16 d)$/;"	f
+aad_word	x86emu/prim_ops.c	/^u16 aad_word(u16 d)$/;"	f
+aam_word	x86emu/prim_ops.c	/^u16 aam_word(u8 d)$/;"	f
+aas_word	x86emu/prim_ops.c	/^u16 aas_word(u16 d)$/;"	f
+abs	util.h	71;"	d
 access	dtable.h	/^    u8int access;$/;"	m	struct:GDTEntry
+adc_byte	x86emu/prim_ops.c	/^u8 adc_byte(u8 d, u8 s)$/;"	f
+adc_long	x86emu/prim_ops.c	/^u32 adc_long(u32 d, u32 s)$/;"	f
+adc_word	x86emu/prim_ops.c	/^u16 adc_word(u16 d, u16 s)$/;"	f
 add	loader32.s	/^add     eax,4$/;"	l
 add	loader32.s	/^add ebx, 0x1000              ; Add 0x1000 to the B-register.$/;"	l
 add	loader32.s	/^add edi, 0x1000              ; Add 0x1000 to the destination index.$/;"	l
@@ -2468,21 +3088,27 @@ add	loader32.s	/^add rsi, rbx                ; RDX is the Programe Header Offset
 add	loader32.s	/^add rsp, VIRTUALBASE$/;"	l
 addDevice	device.c	/^void addDevice(struct Device *dev)$/;"	f
 addObject	kobject.c	/^        } addObject;$/;"	m	union:KDirectoryProcessData::__anon1	typeref:struct:KDirectoryProcessData::__anon1::__anon4	file:
+add_byte	x86emu/prim_ops.c	/^u8 add_byte(u8 d, u8 s)$/;"	f
 add_child	fs/ramfs.c	/^static void add_child(vnode_t *dir, vnode_t *node)$/;"	f	file:
 add_disk	disk.c	/^void add_disk(disk_t *disk)$/;"	f
+add_long	x86emu/prim_ops.c	/^u32 add_long(u32 d, u32 s)$/;"	f
 add_partition	disk.c	/^void add_partition(disk_t *disk, u8int type, u32int start_blk, u32int nr_blks, u32int *start_part_no)$/;"	f
+add_word	x86emu/prim_ops.c	/^u16 add_word(u16 d, u16 s)$/;"	f
 addr	module.h	/^    u32int addr;$/;"	m	struct:module_struct
 addr	multiboot.h	/^    u32int addr;$/;"	m	struct:multiboot
 alloc_vnode	fs/ext2fs.c	/^static vnode_t *alloc_vnode(fs_t *fs,struct ext2_inode *inode)$/;"	f	file:
 always_inline	sysdef.h	4;"	d
 and	loader32.s	/^and rax, 0xfffffffffffff000$/;"	l
+and_byte	x86emu/prim_ops.c	/^u8 and_byte(u8 d, u8 s)$/;"	f
+and_long	x86emu/prim_ops.c	/^u32 and_long(u32 d, u32 s)$/;"	f
+and_word	x86emu/prim_ops.c	/^u16 and_word(u16 d, u16 s)$/;"	f
 apm_table	multiboot.h	/^    u32int apm_table;$/;"	m	struct:multiboot
 arg	kobject.c	/^    } arg;$/;"	m	struct:KDirectoryProcessData	typeref:union:KDirectoryProcessData::__anon1	file:
 arr	testmod.c	/^u32int arr[63] = {1};$/;"	v
 atapi_packet	ide.c	/^u8int atapi_packet[12] = {0xA8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};$/;"	v
 atoi	util.c	/^s32int atoi(const char *nptr)$/;"	f
 atol	util.h	65;"	d
-attach	pci.h	/^    s32int (*attach)(pci_dev_t *pci_dev);$/;"	m	struct:__anon15
+attach	pci.h	/^    s32int (*attach)(pci_dev_t *pci_dev);$/;"	m	struct:__anon26
 availMemory	kmm.c	/^u64int availMemory() $/;"	f
 base	dtable.h	/^    u64int base;$/;"	m	struct:GDTPtr
 base	dtable.h	/^    u64int base;$/;"	m	struct:IDTPtr
@@ -2505,9 +3131,10 @@ bg_inode_table	fs/ext2fs.h	/^    u32int  bg_inode_table;     \/* Inodes table bl
 bg_pad	fs/ext2fs.h	/^    u16int  bg_pad;$/;"	m	struct:ext2_group_desc
 bg_reserved	fs/ext2fs.h	/^    u32int  bg_reserved[3];$/;"	m	struct:ext2_group_desc
 bg_used_dirs_count	fs/ext2fs.h	/^    u16int  bg_used_dirs_count; \/* Directories count *\/$/;"	m	struct:ext2_group_desc
-bgs	fs/ext2fs.c	/^    struct ext2_group_desc *bgs;$/;"	m	struct:__anon59	typeref:struct:__anon59::ext2_group_desc	file:
+bgs	fs/ext2fs.c	/^    struct ext2_group_desc *bgs;$/;"	m	struct:__anon70	typeref:struct:__anon70::ext2_group_desc	file:
+bios_interrupt	main.c	/^static void bios_interrupt(unsigned char num, X86EMU_regs *regs)$/;"	f	file:
 blk_size	disk.h	/^    u32int blk_size;$/;"	m	struct:disk_struct
-blk_size	fs/ext2fs.c	/^    u32int blk_size;$/;"	m	struct:__anon59	file:
+blk_size	fs/ext2fs.c	/^    u32int blk_size;$/;"	m	struct:__anon70	file:
 blockEnd	tlsf.h	/^    struct TLSFBlock *blockEnd;$/;"	m	struct:TLSFHeader	typeref:struct:TLSFHeader::TLSFBlock
 blockHead	tlsf.h	/^    struct TLSFBlock *blockHead;$/;"	m	struct:TLSFHeader	typeref:struct:TLSFHeader::TLSFBlock
 block_no	fs/ext2fs.c	/^static u32int block_no(fs_t *fs,struct ext2_inode *inode, u32int off)$/;"	f	file:
@@ -2525,10 +3152,12 @@ bootfsRoot	fs/bootfs.c	/^s64int bootfsRoot(struct FileSystem *fs)$/;"	f
 bootfsStat	fs/bootfs.c	/^s64int bootfsStat(struct FileSystem *fs, s64int id, struct VNodeInfo *info)$/;"	f
 bootfsUnmount	fs/bootfs.c	/^s64int bootfsUnmount(struct FileSystemDriver *driver, struct FileSystem *fs)$/;"	f
 brk	vm.h	/^    u32int brk;$/;"	m	struct:vm_struct
+bswap_32	x86emu/ops2.c	43;"	d	file:
+bswap_32	x86emu/ops2.c	44;"	d	file:
 buf	fs/bootfs.c	/^    char *buf;$/;"	m	struct:BootFSData	file:
 buf	kobject.c	/^            char *buf;$/;"	m	struct:KDirectoryProcessData::__anon1::__anon2	file:
 bufSize	kobject.c	/^            u64int bufSize;$/;"	m	struct:KDirectoryProcessData::__anon1::__anon2	file:
-buffer	fs/ramfs.c	/^    u8int *buffer;$/;"	m	struct:__anon62	file:
+buffer	fs/ramfs.c	/^    u8int *buffer;$/;"	m	struct:__anon73	file:
 buffer	tlsf.h	/^        u8int *buffer;$/;"	m	union:TLSFBlock::__anon8
 buffer	vfs.h	/^    char buffer[1];$/;"	m	struct:DirectoryRecord
 buildVAddr	paging.c	/^u64int buildVAddr(u64int pml4eIdx, u64int pdpIdx, u64int pdIdx, u64int ptIdx)$/;"	f
@@ -2547,11 +3176,12 @@ c_uid	cpio.h	/^    u16int c_uid;$/;"	m	struct:header_cpio_struct
 capabilities	ide.c	/^    u16int capabilities;        \/\/ Features.$/;"	m	struct:ide_device	file:
 channel	ide.c	/^    u8int channel;     \/\/ 0 (Primary Channel) or 1 (Secondary Channel).$/;"	m	struct:ide_device	file:
 channels	ide.c	/^} channels[2];$/;"	v	typeref:struct:ide_channel_regs
+check	x86emu/x86emu/regs.h	/^	int                         check;$/;"	m	struct:__anon16
 checkSum	fs/bootfs.c	/^    char checkSum[8];$/;"	m	struct:TarHeader	file:
 children	fs/devfs.c	/^    struct DevFSNode *children;$/;"	m	struct:DevFSNode	typeref:struct:DevFSNode::DevFSNode	file:
-children	fs/ramfs.c	/^    vnode_list_t *children;$/;"	m	struct:__anon62	file:
+children	fs/ramfs.c	/^    vnode_list_t *children;$/;"	m	struct:__anon73	file:
 children	kobject.c	/^    struct KObjectListNode *children;$/;"	m	struct:KDirectoryObjectData	typeref:struct:KDirectoryObjectData::KObjectListNode	file:
-class_code	pci.h	/^    u8int revision, prog_if, subclass, class_code;$/;"	m	struct:__anon12
+class_code	pci.h	/^    u8int revision, prog_if, subclass, class_code;$/;"	m	struct:__anon23
 cleanup	module.h	/^    module_cleanup_func cleanup;$/;"	m	struct:module_struct
 cleanupBuffers	i8042.c	/^void cleanupBuffers()$/;"	f
 clearBit	util.c	/^void clearBit(u64int *x, u64int i)$/;"	f
@@ -2572,6 +3202,9 @@ cmdline	multiboot.h	/^    u32int cmdline;$/;"	m	struct:multiboot_mod_list
 cmp	loader32.s	/^cmp eax, 1$/;"	l
 cmp	loader32.s	/^cmp eax, 2$/;"	l
 cmp	loader32.s	/^cmp rax, rbx$/;"	l
+cmp_byte	x86emu/prim_ops.c	/^u8 cmp_byte(u8 d, u8 s)$/;"	f
+cmp_long	x86emu/prim_ops.c	/^u32 cmp_long(u32 d, u32 s)$/;"	f
+cmp_word	x86emu/prim_ops.c	/^u16 cmp_word(u16 d, u16 s)$/;"	f
 command_sets	ide.c	/^    u32int command_sets; \/\/ Command Sets Supported.$/;"	m	struct:ide_device	file:
 commonFaultHandler	except.c	/^void commonFaultHandler(struct RegisterState *regs)$/;"	f
 config	pci.h	/^    pci_config_t *config;$/;"	m	struct:pci_dev_struct
@@ -2586,6 +3219,7 @@ copy_to_user	task2.c	/^s32int copy_to_user(void *ubuf, void *kbuf, u32int n)$/;"
 count	kobject.c	/^    u64int count;$/;"	m	struct:KDirectoryObjectData	file:
 count	semaphore.h	/^    u64int count;$/;"	m	struct:Semaphore
 covered	vfs2.h	/^    vnode_t *covered;$/;"	m	struct:Vnode
+cpuid	x86emu/prim_ops.c	/^void cpuid (void)$/;"	f
 cr3	vmm.h	/^    u64int cr3;$/;"	m	struct:VM
 createfs	vfs2.h	/^    fs_t* (*createfs)(struct fs_driver *, char *path, u64int flags, void *data);$/;"	m	struct:VFSDriverOperation
 cs	interrupt.h	/^    u64int rip, cs, rflags, rsp0, ss0;$/;"	m	struct:RegisterState
@@ -2595,14 +3229,16 @@ current_task	task2.c	/^task_t *current_task = 0;$/;"	v
 cursor_x	screen.c	/^u8int cursor_x, cursor_y;$/;"	v
 cursor_y	screen.c	/^u8int cursor_x, cursor_y;$/;"	v
 d	file.h	/^    dir_t *d;$/;"	m	struct:fd_struct
-d_ptr	elf.h	/^      Elf32_Addr d_ptr;			\/* Address value *\/$/;"	m	union:__anon30::__anon31
-d_ptr	elf.h	/^      Elf64_Addr d_ptr;			\/* Address value *\/$/;"	m	union:__anon32::__anon33
-d_tag	elf.h	/^  Elf32_Sword	d_tag;			\/* Dynamic entry type *\/$/;"	m	struct:__anon30
-d_tag	elf.h	/^  Elf64_Sxword	d_tag;			\/* Dynamic entry type *\/$/;"	m	struct:__anon32
-d_un	elf.h	/^    } d_un;$/;"	m	struct:__anon30	typeref:union:__anon30::__anon31
-d_un	elf.h	/^    } d_un;$/;"	m	struct:__anon32	typeref:union:__anon32::__anon33
-d_val	elf.h	/^      Elf32_Word d_val;			\/* Integer value *\/$/;"	m	union:__anon30::__anon31
-d_val	elf.h	/^      Elf64_Xword d_val;		\/* Integer value *\/$/;"	m	union:__anon32::__anon33
+d_ptr	elf.h	/^      Elf32_Addr d_ptr;			\/* Address value *\/$/;"	m	union:__anon41::__anon42
+d_ptr	elf.h	/^      Elf64_Addr d_ptr;			\/* Address value *\/$/;"	m	union:__anon43::__anon44
+d_tag	elf.h	/^  Elf32_Sword	d_tag;			\/* Dynamic entry type *\/$/;"	m	struct:__anon41
+d_tag	elf.h	/^  Elf64_Sxword	d_tag;			\/* Dynamic entry type *\/$/;"	m	struct:__anon43
+d_un	elf.h	/^    } d_un;$/;"	m	struct:__anon41	typeref:union:__anon41::__anon42
+d_un	elf.h	/^    } d_un;$/;"	m	struct:__anon43	typeref:union:__anon43::__anon44
+d_val	elf.h	/^      Elf32_Word d_val;			\/* Integer value *\/$/;"	m	union:__anon41::__anon42
+d_val	elf.h	/^      Elf64_Xword d_val;		\/* Integer value *\/$/;"	m	union:__anon43::__anon44
+daa_byte	x86emu/prim_ops.c	/^u8 daa_byte(u8 d)$/;"	f
+das_byte	x86emu/prim_ops.c	/^u8 das_byte(u8 d)$/;"	f
 data	kobject.h	/^    void *data;$/;"	m	struct:KOD
 data	kobject.h	/^    void *data;$/;"	m	struct:KObject
 data	kobject.h	/^    void *data;$/;"	m	struct:Klass
@@ -2615,8 +3251,12 @@ db	loader32.s	/^db 0                         ; Granularity.$/;"	l
 db	loader32.s	/^db 00100000b                 ; Granularity.$/;"	l
 db	loader32.s	/^db 10010010b                 ; Access.$/;"	l
 db	loader32.s	/^db 10011010b                 ; Access.$/;"	l
-dd	loader32.s	/^dd  00                       ; End of kernel '.data' section.$/;"	l
-dd	loader32.s	/^dd  00                       ; End of kernel.$/;"	l
+dd	loader32.s	/^dd  0                       ; End of kernel '.data' section.$/;"	l
+dd	loader32.s	/^dd  0                       ; End of kernel.$/;"	l
+dd	loader32.s	/^dd  0                       ; Grub graphical mode_type: linear mode$/;"	l
+dd	loader32.s	/^dd  16                       ; color depth$/;"	l
+dd	loader32.s	/^dd  600                       ; height$/;"	l
+dd	loader32.s	/^dd  800                       ; width$/;"	l
 dd	loader32.s	/^dd  MBOOT_CHECKSUM            ; To ensure that the above values are correct$/;"	l
 dd	loader32.s	/^dd  MBOOT_HEADER_FLAGS        ; How GRUB should load your file \/ settings$/;"	l
 dd	loader32.s	/^dd  MBOOT_HEADER_MAGIC        ; GRUB will search for this value on each$/;"	l
@@ -2624,7 +3264,21 @@ dd	loader32.s	/^dd  mboot                     ; Location of this descriptor$/;"	
 dd	loader32.s	/^dd  mboot                   ; Start of kernel '.text' (code) section.$/;"	l
 dd	loader32.s	/^dd  start                     ; Kernel entry point (initial EIP).$/;"	l
 deadQueue	task.c	/^struct Task *deadQueue = 0;$/;"	v	typeref:struct:Task
-deattach	pci.h	/^    s32int (*deattach)(pci_dev_t *pci_dev);$/;"	m	struct:__anon15
+deattach	pci.h	/^    s32int (*deattach)(pci_dev_t *pci_dev);$/;"	m	struct:__anon26
+debug	x86emu/x86emu/regs.h	/^	int                         debug;$/;"	m	struct:__anon16
+dec_byte	x86emu/prim_ops.c	/^u8 dec_byte(u8 d)$/;"	f
+dec_long	x86emu/prim_ops.c	/^u32 dec_long(u32 d)$/;"	f
+dec_word	x86emu/prim_ops.c	/^u16 dec_word(u16 d)$/;"	f
+decode_buf	x86emu/x86emu/regs.h	/^    char                        decode_buf[32]; \/* encoded byte stream  *\/$/;"	m	struct:__anon16
+decode_rm00_address	x86emu/decode.c	/^u32 decode_rm00_address($/;"	f
+decode_rm01_address	x86emu/decode.c	/^u32 decode_rm01_address($/;"	f
+decode_rm10_address	x86emu/decode.c	/^u32 decode_rm10_address($/;"	f
+decode_rm_byte_register	x86emu/decode.c	/^u8* decode_rm_byte_register($/;"	f
+decode_rm_long_register	x86emu/decode.c	/^u32* decode_rm_long_register($/;"	f
+decode_rm_seg_register	x86emu/decode.c	/^u16* decode_rm_seg_register($/;"	f
+decode_rm_word_register	x86emu/decode.c	/^u16* decode_rm_word_register($/;"	f
+decode_sib_address	x86emu/decode.c	/^u32 decode_sib_address(int sib, int mod)$/;"	f
+decoded_buf	x86emu/x86emu/regs.h	/^    char                        decoded_buf[256]; \/* disassembled strings *\/$/;"	m	struct:__anon16
 del_disk	disk.c	/^void del_disk(disk_t *disk)$/;"	f
 dentry_struct	file.h	/^typedef struct dentry_struct {$/;"	s
 dentry_t	file.h	/^} dentry_t;$/;"	t	typeref:struct:dentry_struct
@@ -2635,7 +3289,7 @@ destructKDirectory	kobject.c	/^void destructKDirectory(struct Klass *self, struc
 dev	i8042.c	/^struct Device *dev;$/;"	v	typeref:struct:Device
 dev_id	disk.h	/^    u32int dev_id;$/;"	m	struct:disk_struct
 dev_id	vfs2.h	/^    u64int dev_id;   \/\/ set by fs driver to identify the vnode, or (major, minor) if it's a device$/;"	m	struct:Vnode
-devf	fs/ext2fs.c	/^    file_t *devf;$/;"	m	struct:__anon59	file:
+devf	fs/ext2fs.c	/^    file_t *devf;$/;"	m	struct:__anon70	file:
 devfsClose	fs/devfs.c	/^s64int devfsClose(struct FileSystem *fs, s64int id)$/;"	f
 devfsCreateObject	fs/devfs.c	/^s64int devfsCreateObject(struct FileSystem *fs, s64int id, const char *name, s64int objid)$/;"	f
 devfsDriver	fs/devfs.c	/^struct FileSystemDriver devfsDriver = {$/;"	v	typeref:struct:FileSystemDriver
@@ -2647,7 +3301,7 @@ devfsReaddir	fs/devfs.c	/^s64int devfsReaddir(struct FileSystem *fs, s64int id, 
 devfsRoot	fs/devfs.c	/^s64int devfsRoot(struct FileSystem *fs)$/;"	f
 devfsStat	fs/devfs.c	/^s64int devfsStat(struct FileSystem *fs, s64int id, struct VNodeInfo *info)$/;"	f
 devfsUnmount	fs/devfs.c	/^s64int devfsUnmount(struct FileSystemDriver *driver, struct FileSystem *fs)$/;"	f
-device	pci.h	/^    u16int vendor, device;$/;"	m	struct:__anon12
+device	pci.h	/^    u16int vendor, device;$/;"	m	struct:__anon23
 devs	device.c	/^struct Device *devs = 0;$/;"	v	typeref:struct:Device
 dir	task2.h	/^    page_directory_t *dir;$/;"	m	struct:task
 dir_close	file.c	/^s32int dir_close(dir_t *d)$/;"	f
@@ -2657,6 +3311,7 @@ dir_t	file.h	/^} dir_t;$/;"	t	typeref:struct:dir_struct
 directoryKlass	kobject.c	/^struct Klass *directoryKlass = 0;$/;"	v	typeref:struct:Klass
 dirname	common.c	/^char *dirname(char *dest, char *s)$/;"	f
 dirname	util.c	/^char *dirname(char *dest, const char *s)$/;"	f
+disassemble_forward	x86emu/debug.c	/^static void disassemble_forward (u16 seg, u16 off, int n)$/;"	f	file:
 disk	disk.h	/^    disk_t *disk;$/;"	m	struct:partition_struct
 disk_close	disk.c	/^static s32int disk_close(file_t *f)$/;"	f	file:
 disk_fops	disk.c	/^struct file_operations disk_fops = {$/;"	v	typeref:struct:file_operations
@@ -2666,6 +3321,12 @@ disk_struct	disk.h	/^struct disk_struct {$/;"	s
 disk_t	disk.h	/^typedef struct disk_struct disk_t; $/;"	t	typeref:struct:disk_struct
 disk_write	disk.c	/^static s32int disk_write(file_t *f, u32int offset, u32int sz, u8int *buf)$/;"	f	file:
 disks	disk.c	/^disk_t *disks = 0;$/;"	v
+div_byte	x86emu/prim_ops.c	/^void div_byte(u8 s)$/;"	f
+div_long	x86emu/prim_ops.c	/^void div_long(u32 s)$/;"	f
+div_word	x86emu/prim_ops.c	/^void div_word(u16 s)$/;"	f
+doRead	syscall/ozfs.c	/^s64int doRead(struct VNode *node, u64int offset, u64int size, char *buffer)$/;"	f
+doReadDirectory	syscall/ozfs.c	/^s64int doReadDirectory(struct VNode *node, u64int bufSize, char *buf)$/;"	f
+doWrite	syscall/ozfs.c	/^s64int doWrite(struct VNode *node, u64int offset, u64int size, char *buffer)$/;"	f
 do_disk_read	disk.c	/^static u32int do_disk_read(disk_t *d, u32int offset, u32int sz, u8int *buf)$/;"	f	file:
 do_disk_write	disk.c	/^static u32int do_disk_write(disk_t *d, u32int offset, u32int sz, u8int *buf)$/;"	f	file:
 dot_dentry	fs/ext2fs.c	/^struct ext2_dir_entry dot_dentry = {$/;"	v	typeref:struct:ext2_dir_entry
@@ -2688,40 +3349,45 @@ drv	ide.c	/^pci_driver_t drv = { $/;"	v
 dump	kobject.h	/^    void (*dump)(struct KObject *);$/;"	m	struct:KObject
 dumpKDirectory	kobject.c	/^void dumpKDirectory(struct KObject *object)$/;"	f
 dump_pci_dev	pci.c	/^static void dump_pci_dev(pci_dev_t *dev)$/;"	f	file:
+dval	x86emu/x86emu/fpu_regs.h	/^    double              dval;$/;"	m	union:x86_fpu_reg_u
 dw	loader32.s	/^dw $ - gdt64 - 1             ; Limit.$/;"	l
 dw	loader32.s	/^dw 0                         ; Base (low).$/;"	l
 dw	loader32.s	/^dw 0                         ; Limit (low).$/;"	l
-e_ehsize	elf.h	/^  Elf32_Half	e_ehsize;		\/* ELF header size in bytes *\/$/;"	m	struct:__anon16
-e_ehsize	elf.h	/^  Elf64_Half	e_ehsize;		\/* ELF header size in bytes *\/$/;"	m	struct:__anon17
-e_entry	elf.h	/^  Elf32_Addr	e_entry;		\/* Entry point virtual address *\/$/;"	m	struct:__anon16
-e_entry	elf.h	/^  Elf64_Addr	e_entry;		\/* Entry point virtual address *\/$/;"	m	struct:__anon17
-e_flags	elf.h	/^  Elf32_Word	e_flags;		\/* Processor-specific flags *\/$/;"	m	struct:__anon16
-e_flags	elf.h	/^  Elf64_Word	e_flags;		\/* Processor-specific flags *\/$/;"	m	struct:__anon17
-e_ident	elf.h	/^  unsigned char	e_ident[EI_NIDENT];	\/* Magic number and other info *\/$/;"	m	struct:__anon16
-e_ident	elf.h	/^  unsigned char	e_ident[EI_NIDENT];	\/* Magic number and other info *\/$/;"	m	struct:__anon17
-e_machine	elf.h	/^  Elf32_Half	e_machine;		\/* Architecture *\/$/;"	m	struct:__anon16
-e_machine	elf.h	/^  Elf64_Half	e_machine;		\/* Architecture *\/$/;"	m	struct:__anon17
-e_phentsize	elf.h	/^  Elf32_Half	e_phentsize;		\/* Program header table entry size *\/$/;"	m	struct:__anon16
-e_phentsize	elf.h	/^  Elf64_Half	e_phentsize;		\/* Program header table entry size *\/$/;"	m	struct:__anon17
-e_phnum	elf.h	/^  Elf32_Half	e_phnum;		\/* Program header table entry count *\/$/;"	m	struct:__anon16
-e_phnum	elf.h	/^  Elf64_Half	e_phnum;		\/* Program header table entry count *\/$/;"	m	struct:__anon17
-e_phoff	elf.h	/^  Elf32_Off	e_phoff;		\/* Program header table file offset *\/$/;"	m	struct:__anon16
-e_phoff	elf.h	/^  Elf64_Off	e_phoff;		\/* Program header table file offset *\/$/;"	m	struct:__anon17
-e_shentsize	elf.h	/^  Elf32_Half	e_shentsize;		\/* Section header table entry size *\/$/;"	m	struct:__anon16
-e_shentsize	elf.h	/^  Elf64_Half	e_shentsize;		\/* Section header table entry size *\/$/;"	m	struct:__anon17
-e_shnum	elf.h	/^  Elf32_Half	e_shnum;		\/* Section header table entry count *\/$/;"	m	struct:__anon16
-e_shnum	elf.h	/^  Elf64_Half	e_shnum;		\/* Section header table entry count *\/$/;"	m	struct:__anon17
-e_shoff	elf.h	/^  Elf32_Off	e_shoff;		\/* Section header table file offset *\/$/;"	m	struct:__anon16
-e_shoff	elf.h	/^  Elf64_Off	e_shoff;		\/* Section header table file offset *\/$/;"	m	struct:__anon17
-e_shstrndx	elf.h	/^  Elf32_Half	e_shstrndx;		\/* Section header string table index *\/$/;"	m	struct:__anon16
-e_shstrndx	elf.h	/^  Elf64_Half	e_shstrndx;		\/* Section header string table index *\/$/;"	m	struct:__anon17
-e_type	elf.h	/^  Elf32_Half	e_type;			\/* Object file type *\/$/;"	m	struct:__anon16
-e_type	elf.h	/^  Elf64_Half	e_type;			\/* Object file type *\/$/;"	m	struct:__anon17
-e_version	elf.h	/^  Elf32_Word	e_version;		\/* Object file version *\/$/;"	m	struct:__anon16
-e_version	elf.h	/^  Elf64_Word	e_version;		\/* Object file version *\/$/;"	m	struct:__anon17
+e_ehsize	elf.h	/^  Elf32_Half	e_ehsize;		\/* ELF header size in bytes *\/$/;"	m	struct:__anon27
+e_ehsize	elf.h	/^  Elf64_Half	e_ehsize;		\/* ELF header size in bytes *\/$/;"	m	struct:__anon28
+e_entry	elf.h	/^  Elf32_Addr	e_entry;		\/* Entry point virtual address *\/$/;"	m	struct:__anon27
+e_entry	elf.h	/^  Elf64_Addr	e_entry;		\/* Entry point virtual address *\/$/;"	m	struct:__anon28
+e_flags	elf.h	/^  Elf32_Word	e_flags;		\/* Processor-specific flags *\/$/;"	m	struct:__anon27
+e_flags	elf.h	/^  Elf64_Word	e_flags;		\/* Processor-specific flags *\/$/;"	m	struct:__anon28
+e_ident	elf.h	/^  unsigned char	e_ident[EI_NIDENT];	\/* Magic number and other info *\/$/;"	m	struct:__anon27
+e_ident	elf.h	/^  unsigned char	e_ident[EI_NIDENT];	\/* Magic number and other info *\/$/;"	m	struct:__anon28
+e_machine	elf.h	/^  Elf32_Half	e_machine;		\/* Architecture *\/$/;"	m	struct:__anon27
+e_machine	elf.h	/^  Elf64_Half	e_machine;		\/* Architecture *\/$/;"	m	struct:__anon28
+e_phentsize	elf.h	/^  Elf32_Half	e_phentsize;		\/* Program header table entry size *\/$/;"	m	struct:__anon27
+e_phentsize	elf.h	/^  Elf64_Half	e_phentsize;		\/* Program header table entry size *\/$/;"	m	struct:__anon28
+e_phnum	elf.h	/^  Elf32_Half	e_phnum;		\/* Program header table entry count *\/$/;"	m	struct:__anon27
+e_phnum	elf.h	/^  Elf64_Half	e_phnum;		\/* Program header table entry count *\/$/;"	m	struct:__anon28
+e_phoff	elf.h	/^  Elf32_Off	e_phoff;		\/* Program header table file offset *\/$/;"	m	struct:__anon27
+e_phoff	elf.h	/^  Elf64_Off	e_phoff;		\/* Program header table file offset *\/$/;"	m	struct:__anon28
+e_reg	x86emu/x86emu/regs.h	/^    u32 e_reg;$/;"	m	struct:__anon12
+e_reg	x86emu/x86emu/regs.h	/^    u32 e_reg;$/;"	m	struct:__anon9
+e_shentsize	elf.h	/^  Elf32_Half	e_shentsize;		\/* Section header table entry size *\/$/;"	m	struct:__anon27
+e_shentsize	elf.h	/^  Elf64_Half	e_shentsize;		\/* Section header table entry size *\/$/;"	m	struct:__anon28
+e_shnum	elf.h	/^  Elf32_Half	e_shnum;		\/* Section header table entry count *\/$/;"	m	struct:__anon27
+e_shnum	elf.h	/^  Elf64_Half	e_shnum;		\/* Section header table entry count *\/$/;"	m	struct:__anon28
+e_shoff	elf.h	/^  Elf32_Off	e_shoff;		\/* Section header table file offset *\/$/;"	m	struct:__anon27
+e_shoff	elf.h	/^  Elf64_Off	e_shoff;		\/* Section header table file offset *\/$/;"	m	struct:__anon28
+e_shstrndx	elf.h	/^  Elf32_Half	e_shstrndx;		\/* Section header string table index *\/$/;"	m	struct:__anon27
+e_shstrndx	elf.h	/^  Elf64_Half	e_shstrndx;		\/* Section header string table index *\/$/;"	m	struct:__anon28
+e_type	elf.h	/^  Elf32_Half	e_type;			\/* Object file type *\/$/;"	m	struct:__anon27
+e_type	elf.h	/^  Elf64_Half	e_type;			\/* Object file type *\/$/;"	m	struct:__anon28
+e_version	elf.h	/^  Elf32_Word	e_version;		\/* Object file version *\/$/;"	m	struct:__anon27
+e_version	elf.h	/^  Elf64_Word	e_version;		\/* Object file version *\/$/;"	m	struct:__anon28
 ebp	task2.h	/^    u32int ebp;$/;"	m	struct:task
 eip	task2.h	/^    u32int eip;$/;"	m	struct:task
 empty_dentry	fs/ext2fs.c	/^struct ext2_dir_entry empty_dentry = {$/;"	v	typeref:struct:ext2_dir_entry
+enc_pos	x86emu/x86emu/regs.h	/^    int                         enc_pos;$/;"	m	struct:__anon16
+enc_str_pos	x86emu/x86emu/regs.h	/^    int                         enc_str_pos;$/;"	m	struct:__anon16
 end	vm.h	/^    u32int end;$/;"	m	struct:vma_struct
 end_stack	vm.h	/^    u32int end_stack;   \/\/ initially (0xd0000000 - 0x1000)$/;"	m	struct:vm_struct
 entry	program.h	/^    u64int entry;$/;"	m	struct:Program
@@ -2754,14 +3420,14 @@ ext2fs_mkdir	fs/ext2fs.c	/^s32int ext2fs_mkdir   (vnode_t *dir, char *name, u32i
 ext2fs_mknod	fs/ext2fs.c	/^s32int ext2fs_mknod   (vnode_t *dir, char *name, u32int dev_id, u32int flags)$/;"	f
 ext2fs_open	fs/ext2fs.c	/^s32int   ext2fs_open    (file_t *f)$/;"	f
 ext2fs_ops	fs/ext2fs.c	/^struct fs_operations ext2fs_ops = {$/;"	v	typeref:struct:fs_operations
-ext2fs_priv_t	fs/ext2fs.c	/^} ext2fs_priv_t;$/;"	t	typeref:struct:__anon59	file:
+ext2fs_priv_t	fs/ext2fs.c	/^} ext2fs_priv_t;$/;"	t	typeref:struct:__anon70	file:
 ext2fs_read	fs/ext2fs.c	/^s32int   ext2fs_read    (file_t *f, u32int offset, u32int sz, u8int *buf)$/;"	f
 ext2fs_removefs	fs/ext2fs.c	/^void    ext2fs_removefs(struct fs_driver *fs_drv, fs_t *fs)$/;"	f
 ext2fs_rename	fs/ext2fs.c	/^s32int ext2fs_rename (vnode_t *dir, char *old_name, char *name)$/;"	f
 ext2fs_rm	fs/ext2fs.c	/^s32int   ext2fs_rm      (vnode_t *dir, char *name)$/;"	f
 ext2fs_rmdir	fs/ext2fs.c	/^s32int   ext2fs_rmdir   (vnode_t *dir, char *name)$/;"	f
 ext2fs_subnodes	fs/ext2fs.c	/^s32int   ext2fs_subnodes(vnode_t *dir, vnode_t ***nodes)$/;"	f
-ext2fs_vnode_priv_t	fs/ext2fs.c	/^} ext2fs_vnode_priv_t;$/;"	t	typeref:struct:__anon60	file:
+ext2fs_vnode_priv_t	fs/ext2fs.c	/^} ext2fs_vnode_priv_t;$/;"	t	typeref:struct:__anon71	file:
 ext2fs_vops	fs/ext2fs.c	/^struct vnode_operations ext2fs_vops = {$/;"	v	typeref:struct:vnode_operations
 ext2fs_write	fs/ext2fs.c	/^s32int   ext2fs_write   (file_t *f, u32int offset, u32int sz, u8int *buf)$/;"	f
 extractPath	vfs.c	/^s64int extractPath(char *path, char *name)$/;"	f
@@ -2769,22 +3435,36 @@ extract_cpio	cpio.c	/^s32int extract_cpio(u8int *buf, u32int size)$/;"	f
 f	file.h	/^    file_t *f;$/;"	m	struct:fd_struct
 f_ops	file.h	/^    struct file_operations *f_ops;$/;"	m	struct:file_struct	typeref:struct:file_struct::file_operations
 f_ops	vfs2.h	/^    struct file_operations  *f_ops;$/;"	m	struct:Vnode	typeref:struct:Vnode::file_operations
-fd	file.h	/^    s32int fd;$/;"	m	struct:__anon58
+false	x86emu/validate.c	54;"	d	file:
+fd	file.h	/^    s32int fd;$/;"	m	struct:__anon69
 fd	task2.h	/^    struct fd_struct *fd[MAX_TASK_FDS];$/;"	m	struct:task	typeref:struct:task::fd_struct
 fd_struct	file.h	/^typedef struct fd_struct {$/;"	s
 fd_t	file.h	/^} fd_t;$/;"	t	typeref:struct:fd_struct
 fd_valid	file.c	/^static u32int fd_valid(u32int fd)$/;"	f	file:
-file	file.h	/^    file_t *file;$/;"	m	struct:__anon58
+fetch_byte_imm	x86emu/decode.c	/^u8 fetch_byte_imm(void)$/;"	f
+fetch_data_byte	x86emu/decode.c	/^u8 fetch_data_byte($/;"	f
+fetch_data_byte_abs	x86emu/decode.c	/^u8 fetch_data_byte_abs($/;"	f
+fetch_data_long	x86emu/decode.c	/^u32 fetch_data_long($/;"	f
+fetch_data_long_abs	x86emu/decode.c	/^u32 fetch_data_long_abs($/;"	f
+fetch_data_word	x86emu/decode.c	/^u16 fetch_data_word($/;"	f
+fetch_data_word_abs	x86emu/decode.c	/^u16 fetch_data_word_abs($/;"	f
+fetch_decode_modrm	x86emu/decode.c	/^void fetch_decode_modrm($/;"	f
+fetch_long_imm	x86emu/decode.c	/^u32 fetch_long_imm(void)$/;"	f
+fetch_word_imm	x86emu/decode.c	/^u16 fetch_word_imm(void)$/;"	f
+file	file.h	/^    file_t *file;$/;"	m	struct:__anon69
 file	task2.h	/^    file_t *file;$/;"	m	struct:task
 file_close	file.c	/^s32int file_close(file_t *f)$/;"	f
 file_lseek	file.c	/^s32int file_lseek(file_t *f, s32int offset, u32int whence)$/;"	f
-file_mapping_t	file.h	/^} file_mapping_t;$/;"	t	typeref:struct:__anon58
+file_mapping_t	file.h	/^} file_mapping_t;$/;"	t	typeref:struct:__anon69
 file_open	file.c	/^file_t* file_open(char *path, u32int flags)$/;"	f
 file_read	file.c	/^s32int file_read(file_t *f, void *buf, u32int sz)$/;"	f
 file_struct	file.h	/^struct file_struct {$/;"	s
 file_t	file.h	/^typedef struct file_struct file_t;$/;"	t	typeref:struct:file_struct
 file_type	fs/ext2fs.h	/^	u8int	file_type;$/;"	m	struct:ext2_dir_entry
 file_write	file.c	/^s32int file_write(file_t *f, void *buf, u32int sz)$/;"	f
+filler0	x86emu/x86emu/regs.h	/^	u16 filler0, x_reg;$/;"	m	struct:__anon10
+filler0	x86emu/x86emu/regs.h	/^	u8 filler0, filler1, h_reg, l_reg;$/;"	m	struct:__anon11
+filler1	x86emu/x86emu/regs.h	/^	u8 filler0, filler1, h_reg, l_reg;$/;"	m	struct:__anon11
 findDevice	device.c	/^struct Device *findDevice(u64int id)$/;"	f
 findDir	kobject.c	/^        } findDir;$/;"	m	union:KDirectoryProcessData::__anon1	typeref:struct:KDirectoryProcessData::__anon1::__anon3	file:
 findFreeArea	vmm.c	/^static struct VMA *findFreeArea(struct VM *vm, u64int size, u64int startBound, $/;"	f	file:
@@ -2824,9 +3504,11 @@ fs_drv_ops	vfs2.h	/^    struct fs_driver_operations *fs_drv_ops;$/;"	m	struct:fs
 fs_ops	vfs2.h	/^    struct fs_operations *fs_ops;$/;"	m	struct:fs_struct	typeref:struct:fs_struct::fs_operations
 fs_struct	vfs2.h	/^struct fs_struct {$/;"	s
 func	pci.h	/^    u32int bus, slot, func;$/;"	m	struct:pci_dev_struct
+fval	x86emu/x86emu/fpu_regs.h	/^    float               fval;$/;"	m	union:x86_fpu_reg_u
 gdt64	loader32.s	/^gdt64:                           ; Global Descriptor Table (64-bit).$/;"	l
 gdtPtr	dtable.c	/^struct GDTPtr   gdtPtr;$/;"	v	typeref:struct:GDTPtr
 gdtTable	dtable.c	/^struct GDTEntry gdtTable[8];$/;"	v	typeref:struct:GDTEntry
+gen	x86emu/x86emu/regs.h	/^    struct i386_general_regs    gen;$/;"	m	struct:__anon16	typeref:struct:__anon16::i386_general_regs
 general_protection_handler	task2.c	/^void general_protection_handler(registers_t *regs)$/;"	f
 getAllDevices	device.c	/^struct Device *getAllDevices()$/;"	f
 getBootInfo	bootinfo.c	/^struct BootInfo *getBootInfo()$/;"	f
@@ -2841,6 +3523,7 @@ getPT	paging.c	/^struct PageTable *getPT(struct PageDirectory *pd, u64int addr)$
 getPage	paging.c	/^u64int* getPage(struct PageTable *pt, u64int addr)$/;"	f
 getRoot	vfs2.h	/^    struct VnodeOperations *(*getRoot)(fs_t *fs);$/;"	m	struct:VFSOperation	typeref:struct:VFSOperation::getRoot
 get_block	fs/ext2fs.c	/^static s32int get_block(fs_t *fs, u8int *buf, u32int blk_no)$/;"	f	file:
+get_data_segment	x86emu/decode.c	/^_INLINE u32 get_data_segment(void)$/;"	f
 get_dentry_len	fs/ext2fs.c	/^static u32int get_dentry_len(u32int name_len)$/;"	f	file:
 get_free_bit	fs/ext2fs.c	/^static u32int get_free_bit(u8int *buf, u32int sz)$/;"	f	file:
 get_free_block	fs/ext2fs.c	/^static u32int get_free_block(fs_t *fs, u32int bg_hint)$/;"	f	file:
@@ -2857,41 +3540,47 @@ gid	fs/bootfs.c	/^    char gid[8];$/;"	m	struct:TarHeader	file:
 gid	vfs2.h	/^    u64int gid;$/;"	m	struct:Vnode
 globalBI	bootinfo.c	/^struct BootInfo *globalBI = 0;$/;"	v	typeref:struct:BootInfo
 granunarity	dtable.h	/^    u8int granunarity; \/\/ lower 4 bits of gran is higher 4 bits of limit;$/;"	m	struct:GDTEntry
-gt_bytes	elf.h	/^      Elf32_Word gt_bytes;		\/* This many bytes would be used *\/$/;"	m	struct:__anon50::__anon52
-gt_current_g_value	elf.h	/^      Elf32_Word gt_current_g_value;	\/* -G value used for compilation *\/$/;"	m	struct:__anon50::__anon51
-gt_entry	elf.h	/^    } gt_entry;				\/* Subsequent entries in section *\/$/;"	m	union:__anon50	typeref:struct:__anon50::__anon52
-gt_g_value	elf.h	/^      Elf32_Word gt_g_value;		\/* If this value were used for -G *\/$/;"	m	struct:__anon50::__anon52
-gt_header	elf.h	/^    } gt_header;			\/* First entry in section *\/$/;"	m	union:__anon50	typeref:struct:__anon50::__anon51
-gt_unused	elf.h	/^      Elf32_Word gt_unused;		\/* Not used *\/$/;"	m	struct:__anon50::__anon51
+gt_bytes	elf.h	/^      Elf32_Word gt_bytes;		\/* This many bytes would be used *\/$/;"	m	struct:__anon61::__anon63
+gt_current_g_value	elf.h	/^      Elf32_Word gt_current_g_value;	\/* -G value used for compilation *\/$/;"	m	struct:__anon61::__anon62
+gt_entry	elf.h	/^    } gt_entry;				\/* Subsequent entries in section *\/$/;"	m	union:__anon61	typeref:struct:__anon61::__anon63
+gt_g_value	elf.h	/^      Elf32_Word gt_g_value;		\/* If this value were used for -G *\/$/;"	m	struct:__anon61::__anon63
+gt_header	elf.h	/^    } gt_header;			\/* First entry in section *\/$/;"	m	union:__anon61	typeref:struct:__anon61::__anon62
+gt_unused	elf.h	/^      Elf32_Word gt_unused;		\/* Not used *\/$/;"	m	struct:__anon61::__anon62
 hClose	handle.c	/^void hClose(struct Handle *handle)$/;"	f
-h_i_author	fs/ext2fs.h	/^            u32int  h_i_author;$/;"	m	struct:ext2_inode::__anon68::__anon70
-h_i_frag	fs/ext2fs.h	/^            u8int    h_i_frag;   \/* Fragment number *\/$/;"	m	struct:ext2_inode::__anon68::__anon70
-h_i_fsize	fs/ext2fs.h	/^            u8int    h_i_fsize;  \/* Fragment size *\/$/;"	m	struct:ext2_inode::__anon68::__anon70
-h_i_gid_high	fs/ext2fs.h	/^            u16int  h_i_gid_high;$/;"	m	struct:ext2_inode::__anon68::__anon70
-h_i_mode_high	fs/ext2fs.h	/^            u16int  h_i_mode_high;$/;"	m	struct:ext2_inode::__anon68::__anon70
-h_i_translator	fs/ext2fs.h	/^            u32int  h_i_translator;$/;"	m	struct:ext2_inode::__anon64::__anon66
-h_i_uid_high	fs/ext2fs.h	/^            u16int  h_i_uid_high;$/;"	m	struct:ext2_inode::__anon68::__anon70
+h_i_author	fs/ext2fs.h	/^            u32int  h_i_author;$/;"	m	struct:ext2_inode::__anon79::__anon81
+h_i_frag	fs/ext2fs.h	/^            u8int    h_i_frag;   \/* Fragment number *\/$/;"	m	struct:ext2_inode::__anon79::__anon81
+h_i_fsize	fs/ext2fs.h	/^            u8int    h_i_fsize;  \/* Fragment size *\/$/;"	m	struct:ext2_inode::__anon79::__anon81
+h_i_gid_high	fs/ext2fs.h	/^            u16int  h_i_gid_high;$/;"	m	struct:ext2_inode::__anon79::__anon81
+h_i_mode_high	fs/ext2fs.h	/^            u16int  h_i_mode_high;$/;"	m	struct:ext2_inode::__anon79::__anon81
+h_i_translator	fs/ext2fs.h	/^            u32int  h_i_translator;$/;"	m	struct:ext2_inode::__anon75::__anon77
+h_i_uid_high	fs/ext2fs.h	/^            u16int  h_i_uid_high;$/;"	m	struct:ext2_inode::__anon79::__anon81
+h_reg	x86emu/x86emu/regs.h	/^	u8 filler0, filler1, h_reg, l_reg;$/;"	m	struct:__anon11
+h_reg	x86emu/x86emu/regs.h	/^	u8 l_reg, h_reg;$/;"	m	struct:__anon14
 handle	handle.h	/^    struct Handle handle[MAX_HANDLE_NUMBER];$/;"	m	struct:HandleTable	typeref:struct:HandleTable::Handle
 handleTable	task.h	/^    struct HandleTable *handleTable;$/;"	m	struct:Task	typeref:struct:Task::HandleTable
 handle_timer_queue	task2.c	/^void handle_timer_queue()$/;"	f
 handle_user_page_fault	task2.c	/^s32int handle_user_page_fault(u32int fault_addr, u32int rw)$/;"	f
 head	message.h	/^    struct Message *head, *tail;$/;"	m	struct:MessageQueue	typeref:struct:MessageQueue::Message
-head	task2.h	/^    wait_queue_node_t *head;$/;"	m	struct:__anon11
+head	task2.h	/^    wait_queue_node_t *head;$/;"	m	struct:__anon22
 head	waitqueue.h	/^    struct Task *head, *tail;$/;"	m	struct:WaitQueue	typeref:struct:WaitQueue::Task
 headerList	fs/bootfs.c	/^    struct TarHeader **headerList;$/;"	m	struct:BootFSData	typeref:struct:BootFSData::TarHeader	file:
 header_cpio_struct	cpio.h	/^typedef struct header_cpio_struct {$/;"	s
 header_cpio_t	cpio.h	/^} header_cpio_t;$/;"	t	typeref:struct:header_cpio_struct
-header_type	pci.h	/^    u8int header_type;$/;"	m	struct:__anon12
+header_type	pci.h	/^    u8int header_type;$/;"	m	struct:__anon23
 heap	kmm.c	/^struct TLSFHeader *heap = 0;$/;"	v	typeref:struct:TLSFHeader
 htCreate	handle.c	/^struct HandleTable *htCreate()$/;"	f
 htDeref	handle.c	/^s64int htDeref(struct HandleTable *ht)$/;"	f
 htDestory	handle.c	/^void htDestory(struct HandleTable *ht)$/;"	f
 htFindFreeIndex	handle.c	/^s64int htFindFreeIndex(struct HandleTable *ht)$/;"	f
 htRef	handle.c	/^struct HandleTable *htRef(struct HandleTable *ht)$/;"	f
-hurd1	fs/ext2fs.h	/^        } hurd1;$/;"	m	union:ext2_inode::__anon64	typeref:struct:ext2_inode::__anon64::__anon66
-hurd2	fs/ext2fs.h	/^        } hurd2;$/;"	m	union:ext2_inode::__anon68	typeref:struct:ext2_inode::__anon68::__anon70
-hwp_flags1	elf.h	/^  Elf32_Word hwp_flags1;	\/* Extra flags.  *\/$/;"	m	struct:__anon55
-hwp_flags2	elf.h	/^  Elf32_Word hwp_flags2;	\/* Extra flags.  *\/$/;"	m	struct:__anon55
+hurd1	fs/ext2fs.h	/^        } hurd1;$/;"	m	union:ext2_inode::__anon75	typeref:struct:ext2_inode::__anon75::__anon77
+hurd2	fs/ext2fs.h	/^        } hurd2;$/;"	m	union:ext2_inode::__anon79	typeref:struct:ext2_inode::__anon79::__anon81
+hwp_flags1	elf.h	/^  Elf32_Word hwp_flags1;	\/* Extra flags.  *\/$/;"	m	struct:__anon66
+hwp_flags2	elf.h	/^  Elf32_Word hwp_flags2;	\/* Extra flags.  *\/$/;"	m	struct:__anon66
+i386_general_register	x86emu/x86emu/regs.h	/^	} i386_general_register;$/;"	t	typeref:union:__anon15
+i386_general_regs	x86emu/x86emu/regs.h	/^struct i386_general_regs {$/;"	s
+i386_segment_regs	x86emu/x86emu/regs.h	/^struct i386_segment_regs {$/;"	s
+i386_special_regs	x86emu/x86emu/regs.h	/^struct i386_special_regs {$/;"	s
 i8042_Cleanup	i8042.c	/^void i8042_Cleanup()$/;"	f
 i8042_Close	i8042.c	/^s64int i8042_Close(struct Device *dev)$/;"	f
 i8042_ISR	i8042.c	/^void i8042_ISR(struct RegisterState *regs)$/;"	f
@@ -2914,7 +3603,7 @@ i_gid	fs/ext2fs.h	/^    u16int  i_gid;      \/* Low 16 bits of Group Id *\/$/;"	
 i_links_count	fs/ext2fs.h	/^    u16int  i_links_count;  \/* Links count *\/$/;"	m	struct:ext2_inode
 i_mode	fs/ext2fs.h	/^    u16int  i_mode;     \/* File mode *\/$/;"	m	struct:ext2_inode
 i_mtime	fs/ext2fs.h	/^    u32int  i_mtime;    \/* Modification time *\/$/;"	m	struct:ext2_inode
-i_pad1	fs/ext2fs.h	/^            u16int   i_pad1;$/;"	m	struct:ext2_inode::__anon68::__anon69
+i_pad1	fs/ext2fs.h	/^            u16int   i_pad1;$/;"	m	struct:ext2_inode::__anon79::__anon80
 i_size	fs/ext2fs.h	/^    u32int  i_size;     \/* Size in bytes *\/$/;"	m	struct:ext2_inode
 i_uid	fs/ext2fs.h	/^    u16int  i_uid;      \/* Low 16 bits of Owner Uid *\/$/;"	m	struct:ext2_inode
 id	device.h	/^    u64int id;$/;"	m	struct:Device
@@ -2941,12 +3630,22 @@ ide_write	ide.c	/^void ide_write(u8int channel, u8int reg, u8int data) {$/;"	f
 ide_write_blks	ide.c	/^u32int ide_write_blks(disk_t *disk, u32int start_blk, u32int nr_blks, u8int *buf)$/;"	f
 ide_write_sectors	ide.c	/^MEXPORT(ide_write_sectors);$/;"	v
 ide_write_sectors	ide.c	/^s32int ide_write_sectors(u8int drive, u8int numsects, u32int lba, u8int *buf)$/;"	f
+idiv_byte	x86emu/prim_ops.c	/^void idiv_byte(u8 s)$/;"	f
+idiv_long	x86emu/prim_ops.c	/^void idiv_long(u32 s)$/;"	f
+idiv_word	x86emu/prim_ops.c	/^void idiv_word(u16 s)$/;"	f
 idtPtr	dtable.c	/^struct IDTPtr idtPtr;$/;"	v	typeref:struct:IDTPtr
 idtTable	dtable.c	/^struct IDTEntry idtTable[256];$/;"	v	typeref:struct:IDTEntry
+imul_byte	x86emu/prim_ops.c	/^void imul_byte(u8 s)$/;"	f
+imul_long	x86emu/prim_ops.c	/^void imul_long(u32 s)$/;"	f
+imul_long_direct	x86emu/prim_ops.c	/^void imul_long_direct(u32 *res_lo, u32* res_hi,u32 d, u32 s)$/;"	f
+imul_word	x86emu/prim_ops.c	/^void imul_word(u16 s)$/;"	f
 inEscape	i8042.c	/^u8int inEscape = 0;$/;"	v
 inb	common.c	/^u8int inb(u16int port)$/;"	f
 inb	util.c	/^u8int inb(u16int port)$/;"	f
-info	elf.h	/^  Elf32_Word info;		\/* Kind-specific information.  *\/$/;"	m	struct:__anon54
+inc_byte	x86emu/prim_ops.c	/^u8 inc_byte(u8 d)$/;"	f
+inc_long	x86emu/prim_ops.c	/^u32 inc_long(u32 d)$/;"	f
+inc_word	x86emu/prim_ops.c	/^u16 inc_word(u16 d)$/;"	f
+info	elf.h	/^  Elf32_Word info;		\/* Kind-specific information.  *\/$/;"	m	struct:__anon65
 init	module.h	/^    module_init_func init;$/;"	m	struct:module_struct
 initCpuExceptions	except.c	/^void initCpuExceptions()$/;"	f
 initIDT	dtable.c	/^void initIDT()$/;"	f
@@ -2970,15 +3669,18 @@ initrdEnd	bootinfo.h	/^    u64int initrdEnd;$/;"	m	struct:BootInfo
 inl	common.c	/^u32int inl(u16int port)$/;"	f
 inl	util.c	/^u32int inl(u16int port)$/;"	f
 ino	vfs2.h	/^    u64int ino; $/;"	m	struct:Vnode
-inode	fs/ext2fs.c	/^    struct ext2_inode *inode;$/;"	m	struct:__anon60	typeref:struct:__anon60::ext2_inode	file:
+inode	fs/ext2fs.c	/^    struct ext2_inode *inode;$/;"	m	struct:__anon71	typeref:struct:__anon71::ext2_inode	file:
 inode	fs/ext2fs.h	/^	u32int	inode;			\/* Inode number *\/$/;"	m	struct:ext2_dir_entry
+ins	x86emu/prim_ops.c	/^void ins(int size)$/;"	f
 insb	common.c	/^void insb(u16int port, u32int buffer, u32int bytes) {$/;"	f
 insertFreeBlock	tlsf.c	/^void insertFreeBlock(struct TLSFBlock *blk, struct TLSFHeader *tlsf, u64int fl, u64int sl)$/;"	f
 insert_vma	vm.c	/^void insert_vma(vm_t *vm, vma_t *vma)$/;"	f
 insl	common.c	/^void insl(u16int port, u32int buffer, u32int quads) {$/;"	f
 insw	common.c	/^void insw(u16int port, u32int buffer, u32int words) {$/;"	f
 interruptHandlers	interrupt.c	/^static IsrHandlerFunc interruptHandlers[256] = {0};$/;"	v	file:
-interrupt_pin	pci.h	/^    u8int irq, interrupt_pin;$/;"	m	struct:__anon12
+interrupt_pin	pci.h	/^    u8int irq, interrupt_pin;$/;"	m	struct:__anon23
+intno	x86emu/x86emu/regs.h	/^    u8                          intno;$/;"	m	struct:__anon16
+intr	x86emu/x86emu/regs.h	/^    volatile int                intr;   \/* mask of pending interrupts *\/$/;"	m	struct:__anon16
 inw	common.c	/^u16int inw(u16int port)$/;"	f
 inw	util.c	/^u16int inw(u16int port)$/;"	f
 ioBitmapBase	dtable.h	/^        u16int ioBitmapBase;$/;"	m	struct:TSS
@@ -2986,7 +3688,7 @@ io_bitmap	dtable.h	/^        u64int io_bitmap[IO_BITMAP_LONGS + 1];$/;"	m	struct
 ioctl	device.h	/^    s64int (*ioctl)(struct Device *dev, s64int request, void *data);$/;"	m	struct:DeviceOperation
 ioctl	vfs.h	/^    s64int (*ioctl)(struct FileSystem *fs, s64int request, void *data);$/;"	m	struct:FileSystemOperation
 ipcManager	message.c	/^struct IPCManager *ipcManager = 0;$/;"	v	typeref:struct:IPCManager
-irq	pci.h	/^    u8int irq, interrupt_pin;$/;"	m	struct:__anon12
+irq	pci.h	/^    u8int irq, interrupt_pin;$/;"	m	struct:__anon23
 irqDispatcher	interrupt.c	/^void irqDispatcher(struct RegisterState *rs)$/;"	f
 irq_common_stub	isr.s	/^irq_common_stub:$/;"	l
 isEmptyEntry	fs/bootfs.c	/^s64int isEmptyEntry(char *buf)$/;"	f
@@ -3023,7 +3725,7 @@ kernelTask	task.c	/^struct Task *kernelTask = 0;$/;"	v	typeref:struct:Task
 kernelVM	vmm.c	/^struct VM *kernelVM = 0;$/;"	v	typeref:struct:VM
 kernel_stack	vm.h	/^    u32int kernel_stack; \/\/ kernel_stack is in kernel_heap, size is 4kb, [kernel_stack-0x1000, kernel_stack)$/;"	m	struct:vm_struct
 key	i8042.c	/^u64int key;$/;"	v
-kind	elf.h	/^  unsigned char kind;		\/* Determines interpretation of the$/;"	m	struct:__anon54
+kind	elf.h	/^  unsigned char kind;		\/* Determines interpretation of the$/;"	m	struct:__anon65
 klass	kobject.h	/^    struct Klass *klass;$/;"	m	struct:KObject	typeref:struct:KObject::Klass
 klassList	kobject.c	/^struct Klass *klassList = 0;$/;"	v	typeref:struct:Klass
 kmain	main.c	/^u64int kmain(struct BootInfo *si)$/;"	f
@@ -3041,25 +3743,30 @@ koRemoveObject	kobject.c	/^s64int koRemoveObject(const char *path)$/;"	f
 koUnregisterKlass	kobject.c	/^s64int koUnregisterKlass(struct Klass *klass)$/;"	f
 kstack	loader32.s	/^kstack:$/;"	l
 ksyms	module.c	/^symtab_t *ksyms = 0;$/;"	v
-l_checksum	elf.h	/^  Elf32_Word l_checksum;	\/* Checksum *\/$/;"	m	struct:__anon56
-l_checksum	elf.h	/^  Elf64_Word l_checksum;	\/* Checksum *\/$/;"	m	struct:__anon57
-l_flags	elf.h	/^  Elf32_Word l_flags;		\/* Flags *\/$/;"	m	struct:__anon56
-l_flags	elf.h	/^  Elf64_Word l_flags;		\/* Flags *\/$/;"	m	struct:__anon57
-l_i_frag	fs/ext2fs.h	/^            u8int    l_i_frag;   \/* Fragment number *\/$/;"	m	struct:ext2_inode::__anon68::__anon69
-l_i_fsize	fs/ext2fs.h	/^            u8int    l_i_fsize;  \/* Fragment size *\/$/;"	m	struct:ext2_inode::__anon68::__anon69
-l_i_gid_high	fs/ext2fs.h	/^            u16int  l_i_gid_high;   \/* were reserved2[0] *\/$/;"	m	struct:ext2_inode::__anon68::__anon69
-l_i_reserved1	fs/ext2fs.h	/^            u32int  l_i_reserved1;$/;"	m	struct:ext2_inode::__anon64::__anon65
-l_i_reserved2	fs/ext2fs.h	/^            u32int   l_i_reserved2;$/;"	m	struct:ext2_inode::__anon68::__anon69
-l_i_uid_high	fs/ext2fs.h	/^            u16int  l_i_uid_high;   \/* these 2 fields    *\/$/;"	m	struct:ext2_inode::__anon68::__anon69
-l_name	elf.h	/^  Elf32_Word l_name;		\/* Name (string table index) *\/$/;"	m	struct:__anon56
-l_name	elf.h	/^  Elf64_Word l_name;		\/* Name (string table index) *\/$/;"	m	struct:__anon57
-l_time_stamp	elf.h	/^  Elf32_Word l_time_stamp;	\/* Timestamp *\/$/;"	m	struct:__anon56
-l_time_stamp	elf.h	/^  Elf64_Word l_time_stamp;	\/* Timestamp *\/$/;"	m	struct:__anon57
-l_version	elf.h	/^  Elf32_Word l_version;		\/* Interface version *\/$/;"	m	struct:__anon56
-l_version	elf.h	/^  Elf64_Word l_version;		\/* Interface version *\/$/;"	m	struct:__anon57
+l_checksum	elf.h	/^  Elf32_Word l_checksum;	\/* Checksum *\/$/;"	m	struct:__anon67
+l_checksum	elf.h	/^  Elf64_Word l_checksum;	\/* Checksum *\/$/;"	m	struct:__anon68
+l_flags	elf.h	/^  Elf32_Word l_flags;		\/* Flags *\/$/;"	m	struct:__anon67
+l_flags	elf.h	/^  Elf64_Word l_flags;		\/* Flags *\/$/;"	m	struct:__anon68
+l_i_frag	fs/ext2fs.h	/^            u8int    l_i_frag;   \/* Fragment number *\/$/;"	m	struct:ext2_inode::__anon79::__anon80
+l_i_fsize	fs/ext2fs.h	/^            u8int    l_i_fsize;  \/* Fragment size *\/$/;"	m	struct:ext2_inode::__anon79::__anon80
+l_i_gid_high	fs/ext2fs.h	/^            u16int  l_i_gid_high;   \/* were reserved2[0] *\/$/;"	m	struct:ext2_inode::__anon79::__anon80
+l_i_reserved1	fs/ext2fs.h	/^            u32int  l_i_reserved1;$/;"	m	struct:ext2_inode::__anon75::__anon76
+l_i_reserved2	fs/ext2fs.h	/^            u32int   l_i_reserved2;$/;"	m	struct:ext2_inode::__anon79::__anon80
+l_i_uid_high	fs/ext2fs.h	/^            u16int  l_i_uid_high;   \/* these 2 fields    *\/$/;"	m	struct:ext2_inode::__anon79::__anon80
+l_name	elf.h	/^  Elf32_Word l_name;		\/* Name (string table index) *\/$/;"	m	struct:__anon67
+l_name	elf.h	/^  Elf64_Word l_name;		\/* Name (string table index) *\/$/;"	m	struct:__anon68
+l_reg	x86emu/x86emu/regs.h	/^	u8 filler0, filler1, h_reg, l_reg;$/;"	m	struct:__anon11
+l_reg	x86emu/x86emu/regs.h	/^	u8 l_reg, h_reg;$/;"	m	struct:__anon14
+l_time_stamp	elf.h	/^  Elf32_Word l_time_stamp;	\/* Timestamp *\/$/;"	m	struct:__anon67
+l_time_stamp	elf.h	/^  Elf64_Word l_time_stamp;	\/* Timestamp *\/$/;"	m	struct:__anon68
+l_version	elf.h	/^  Elf32_Word l_version;		\/* Interface version *\/$/;"	m	struct:__anon67
+l_version	elf.h	/^  Elf64_Word l_version;		\/* Interface version *\/$/;"	m	struct:__anon68
 lastPid	task.c	/^u64int lastPid = 0;$/;"	v
 last_pid	task2.c	/^u32int last_pid = 1;$/;"	v
-len	module.h	/^    u32int len;$/;"	m	struct:__anon10
+ldl_u	x86emu/sys.c	/^static __inline__ unsigned long ldl_u(unsigned int * r11)$/;"	f	file:
+ldq_u	x86emu/sys.c	/^static __inline__ unsigned long ldq_u(unsigned long * r11)$/;"	f	file:
+ldw_u	x86emu/sys.c	/^static __inline__ unsigned long ldw_u(unsigned short * r11)$/;"	f	file:
+len	module.h	/^    u32int len;$/;"	m	struct:__anon21
 length	vfs2.h	/^    u64int length;$/;"	m	struct:Vnode
 lgdt	loader32.s	/^lgdt [gdt64.pointer]         ; Load the 64-bit global descriptor table.$/;"	l
 limit	dtable.h	/^    u16int limit;$/;"	m	struct:GDTPtr
@@ -3070,8 +3777,8 @@ limitLow	dtable.h	/^    u16int limitLow;$/;"	m	struct:TSSEntry
 limitMiddle	dtable.h	/^    u8int limitMiddle;$/;"	m	struct:TSSEntry
 link	fs/bootfs.c	/^    char link;$/;"	m	struct:TarHeader	file:
 linkName	fs/bootfs.c	/^    char linkName[100];$/;"	m	struct:TarHeader	file:
-linux1	fs/ext2fs.h	/^        } linux1;$/;"	m	union:ext2_inode::__anon64	typeref:struct:ext2_inode::__anon64::__anon65
-linux2	fs/ext2fs.h	/^        } linux2;$/;"	m	union:ext2_inode::__anon68	typeref:struct:ext2_inode::__anon68::__anon69
+linux1	fs/ext2fs.h	/^        } linux1;$/;"	m	union:ext2_inode::__anon75	typeref:struct:ext2_inode::__anon75::__anon76
+linux2	fs/ext2fs.h	/^        } linux2;$/;"	m	union:ext2_inode::__anon79	typeref:struct:ext2_inode::__anon79::__anon80
 loadElfProgram	elfloader.c	/^s64int loadElfProgram(const char *path, struct Program *prog, struct VM *vm)$/;"	f
 load_module	module.c	/^module_t* load_module(char *path)$/;"	f
 load_program	task2.c	/^u32int load_program(file_t *f, vm_t *vm)$/;"	f
@@ -3085,33 +3792,40 @@ lodsq	loader32.s	/^lodsq                       ; virtual memory address$/;"	l
 lookup	vfs2.h	/^    struct Vnode *(*lookup)(struct Vnode *vnode, char *name);$/;"	m	struct:VFSOperation	typeref:struct:VFSOperation::lookup
 loop	loader32.s	/^loop .SetEntry1               ; Set the next entry.$/;"	l
 loop	loader32.s	/^loop .SetEntry2               ; Set the next entry.$/;"	l
+loop	loader32.s	/^loop .SetEntry3               ; Set the next entry.$/;"	l
+loop	loader32.s	/^loop .SetEntry4               ; Set the next entry.$/;"	l
 lsBit	tlsf.c	/^u64int lsBit(u64int x)$/;"	f
-m_i_frag	fs/ext2fs.h	/^            u8int    m_i_frag;   \/* Fragment number *\/$/;"	m	struct:ext2_inode::__anon68::__anon71
-m_i_fsize	fs/ext2fs.h	/^            u8int    m_i_fsize;  \/* Fragment size *\/$/;"	m	struct:ext2_inode::__anon68::__anon71
-m_i_reserved1	fs/ext2fs.h	/^            u32int  m_i_reserved1;$/;"	m	struct:ext2_inode::__anon64::__anon67
-m_i_reserved2	fs/ext2fs.h	/^            u32int   m_i_reserved2[2];$/;"	m	struct:ext2_inode::__anon68::__anon71
-m_info	elf.h	/^  Elf32_Word m_info;		\/* Size and index.  *\/$/;"	m	struct:__anon48
-m_info	elf.h	/^  Elf64_Xword m_info;		\/* Size and index.  *\/$/;"	m	struct:__anon49
-m_pad1	fs/ext2fs.h	/^            u16int   m_pad1;$/;"	m	struct:ext2_inode::__anon68::__anon71
-m_poffset	elf.h	/^  Elf32_Word m_poffset;		\/* Symbol offset.  *\/$/;"	m	struct:__anon48
-m_poffset	elf.h	/^  Elf64_Xword m_poffset;	\/* Symbol offset.  *\/$/;"	m	struct:__anon49
-m_repeat	elf.h	/^  Elf32_Half m_repeat;		\/* Repeat count.  *\/$/;"	m	struct:__anon48
-m_repeat	elf.h	/^  Elf64_Half m_repeat;		\/* Repeat count.  *\/$/;"	m	struct:__anon49
-m_stride	elf.h	/^  Elf32_Half m_stride;		\/* Stride info.  *\/$/;"	m	struct:__anon48
-m_stride	elf.h	/^  Elf64_Half m_stride;		\/* Stride info.  *\/$/;"	m	struct:__anon49
-m_value	elf.h	/^  Elf32_Xword m_value;		\/* Symbol value.  *\/$/;"	m	struct:__anon48
-m_value	elf.h	/^  Elf64_Xword m_value;		\/* Symbol value.  *\/$/;"	m	struct:__anon49
+lval	x86emu/x86emu/fpu_regs.h	/^    s32                 lval;$/;"	m	union:x86_fpu_reg_u
+m_i_frag	fs/ext2fs.h	/^            u8int    m_i_frag;   \/* Fragment number *\/$/;"	m	struct:ext2_inode::__anon79::__anon82
+m_i_fsize	fs/ext2fs.h	/^            u8int    m_i_fsize;  \/* Fragment size *\/$/;"	m	struct:ext2_inode::__anon79::__anon82
+m_i_reserved1	fs/ext2fs.h	/^            u32int  m_i_reserved1;$/;"	m	struct:ext2_inode::__anon75::__anon78
+m_i_reserved2	fs/ext2fs.h	/^            u32int   m_i_reserved2[2];$/;"	m	struct:ext2_inode::__anon79::__anon82
+m_info	elf.h	/^  Elf32_Word m_info;		\/* Size and index.  *\/$/;"	m	struct:__anon59
+m_info	elf.h	/^  Elf64_Xword m_info;		\/* Size and index.  *\/$/;"	m	struct:__anon60
+m_pad1	fs/ext2fs.h	/^            u16int   m_pad1;$/;"	m	struct:ext2_inode::__anon79::__anon82
+m_poffset	elf.h	/^  Elf32_Word m_poffset;		\/* Symbol offset.  *\/$/;"	m	struct:__anon59
+m_poffset	elf.h	/^  Elf64_Xword m_poffset;	\/* Symbol offset.  *\/$/;"	m	struct:__anon60
+m_repeat	elf.h	/^  Elf32_Half m_repeat;		\/* Repeat count.  *\/$/;"	m	struct:__anon59
+m_repeat	elf.h	/^  Elf64_Half m_repeat;		\/* Repeat count.  *\/$/;"	m	struct:__anon60
+m_stride	elf.h	/^  Elf32_Half m_stride;		\/* Stride info.  *\/$/;"	m	struct:__anon59
+m_stride	elf.h	/^  Elf64_Half m_stride;		\/* Stride info.  *\/$/;"	m	struct:__anon60
+m_value	elf.h	/^  Elf32_Xword m_value;		\/* Symbol value.  *\/$/;"	m	struct:__anon59
+m_value	elf.h	/^  Elf64_Xword m_value;		\/* Symbol value.  *\/$/;"	m	struct:__anon60
 main	prog/client.c	/^int main()$/;"	f
 main	prog/init.c	/^int main()$/;"	f
 main	prog/server.c	/^int main()$/;"	f
+main	x86emu/validate.c	/^int main(int argc)$/;"	f
 mapPagesVtoP	paging.c	/^void mapPagesVtoP(u64int vaddr, u64int paddr, u64int n, struct PML4E *pml4e, u64int user)$/;"	f
-masix1	fs/ext2fs.h	/^        } masix1;$/;"	m	union:ext2_inode::__anon64	typeref:struct:ext2_inode::__anon64::__anon67
-masix2	fs/ext2fs.h	/^        } masix2;$/;"	m	union:ext2_inode::__anon68	typeref:struct:ext2_inode::__anon68::__anon71
+masix1	fs/ext2fs.h	/^        } masix1;$/;"	m	union:ext2_inode::__anon75	typeref:struct:ext2_inode::__anon75::__anon78
+masix2	fs/ext2fs.h	/^        } masix2;$/;"	m	union:ext2_inode::__anon79	typeref:struct:ext2_inode::__anon79::__anon82
 mask	vfs2.h	/^    u64int mask;    \/\/permission$/;"	m	struct:Vnode
 matrix	tlsf.h	/^    struct TLSFBlock *matrix[REAL_FLI][MAX_SLI];$/;"	m	struct:TLSFHeader	typeref:struct:TLSFHeader::TLSFBlock
 maxSize	tlsf.h	/^    u64int maxSize;$/;"	m	struct:TLSFHeader
 mboot	loader32.s	/^mboot:$/;"	l
+mem_access_word	x86emu/prim_ops.c	/^u16 mem_access_word(int addr)$/;"	f
+mem_base	x86emu/x86emu/regs.h	/^	unsigned long	mem_base;$/;"	m	struct:__anon17
 mem_lower	multiboot.h	/^    u32int mem_lower;$/;"	m	struct:multiboot
+mem_size	x86emu/x86emu/regs.h	/^	unsigned long	mem_size;$/;"	m	struct:__anon17
 mem_upper	multiboot.h	/^    u32int mem_upper;$/;"	m	struct:multiboot
 memcmp	common.c	/^s32int memcmp(u8int *b1, u8int *b2, u32int n)$/;"	f
 memcpy	common.c	/^void *memcpy(void *dst, void *src, u32int n)$/;"	f
@@ -3128,6 +3842,7 @@ mmap_length	multiboot.h	/^    u32int mmap_length;$/;"	m	struct:multiboot
 mod_end	multiboot.h	/^    u32int mod_end;$/;"	m	struct:multiboot_mod_list
 mod_start	multiboot.h	/^    u32int mod_start;$/;"	m	struct:multiboot_mod_list
 mode	fs/bootfs.c	/^    char mode[8];$/;"	m	struct:TarHeader	file:
+mode	x86emu/x86emu/regs.h	/^    u32                         mode;$/;"	m	struct:__anon16
 model	ide.c	/^    u8int model[41];   \/\/ model in string.$/;"	m	struct:ide_device	file:
 mods_addr	multiboot.h	/^    u32int mods_addr;$/;"	m	struct:multiboot
 mods_count	multiboot.h	/^    u32int mods_count;$/;"	m	struct:multiboot
@@ -3158,11 +3873,12 @@ module_testmod_init	testmod.c	/^void module_testmod_init()$/;"	f
 modules	module.c	/^module_t *modules = 0;$/;"	v
 mount	vfs.h	/^    s64int (*mount)(struct FileSystemDriver *driver, struct FileSystem **fs, const char *source, u64int flags, void *data);$/;"	m	struct:FileSystemDriverOperation
 mountPoints	vfs.c	/^struct MountPoint *mountPoints = 0;$/;"	v	typeref:struct:MountPoint
-mount_root	main.c	/^void mount_root()$/;"	f
 mounts	vfs2.h	/^    } mounts[MAX_VFSMOUNTS];$/;"	m	struct:__anon6	typeref:struct:__anon6::__anon7
 mov	loader32.s	/^mov     eax,esp$/;"	l
 mov	loader32.s	/^mov DWORD [edi+0xff8], 0x3003      ; Set the double word at the destination index to 0x2003.$/;"	l
 mov	loader32.s	/^mov DWORD [edi+0xff8], 0x5003      ; Set the double word at the destination index to 0x2003.$/;"	l
+mov	loader32.s	/^mov DWORD [edi+8], 0x8003      ; Set the double word at the destination index to 0x4003.$/;"	l
+mov	loader32.s	/^mov DWORD [edi+8], 0x9003      ; Set the double word at the destination index to 0x4003.$/;"	l
 mov	loader32.s	/^mov DWORD [edi], 0x2003      ; Set the double word at the destination index to 0x2003.$/;"	l
 mov	loader32.s	/^mov DWORD [edi], 0x4003      ; Set the double word at the destination index to 0x3003.$/;"	l
 mov	loader32.s	/^mov DWORD [edi], 0x6003      ; Set the double word at the destination index to 0x4003.$/;"	l
@@ -3181,8 +3897,9 @@ mov	loader32.s	/^mov eax, [rbx+8]$/;"	l
 mov	loader32.s	/^mov eax, cr0                 ; Set the A-register to control register 0.$/;"	l
 mov	loader32.s	/^mov eax, cr4                 ; Set the A-register to control register 4.$/;"	l
 mov	loader32.s	/^mov ebx, 0x00000003          ; Set the B-register to 0x00000003.$/;"	l
+mov	loader32.s	/^mov ebx, 0x00200003          ; Set the B-register to 0x00000003.$/;"	l
 mov	loader32.s	/^mov ecx, 0xC0000080          ; Set the C-register to 0xC0000080, which is the EFER MSR.$/;"	l
-mov	loader32.s	/^mov ecx, 1024*7    ; Set the C-register to 4096.$/;"	l
+mov	loader32.s	/^mov ecx, 1024*9    ; Set the C-register to 4096.$/;"	l
 mov	loader32.s	/^mov ecx, 512                 ; Set the C-register to 512.$/;"	l
 mov	loader32.s	/^mov edi, 0x1000    ; Set the destination index to 0x1000.$/;"	l
 mov	loader32.s	/^mov edi, cr3       ; Set the destination index to control register 3.$/;"	l
@@ -3225,18 +3942,21 @@ mtxCreate	mutex.c	/^struct Mutex *mtxCreate()$/;"	f
 mtxDestroy	mutex.c	/^void mtxDestroy(struct Mutex *mtx)$/;"	f
 mtxLock	mutex.c	/^s64int mtxLock(struct Mutex *mtx)$/;"	f
 mtxUnlock	mutex.c	/^s64int mtxUnlock(struct Mutex *mtx)$/;"	f
+mul_byte	x86emu/prim_ops.c	/^void mul_byte(u8 s)$/;"	f
+mul_long	x86emu/prim_ops.c	/^void mul_long(u32 s)$/;"	f
+mul_word	x86emu/prim_ops.c	/^void mul_word(u16 s)$/;"	f
 multiboot	multiboot.h	/^typedef struct multiboot {$/;"	s
 multiboot_mod_list	multiboot.h	/^struct multiboot_mod_list$/;"	s
 multiboot_module_t	multiboot.h	/^typedef struct multiboot_mod_list multiboot_module_t;$/;"	t	typeref:struct:multiboot_mod_list
 multiboot_t	multiboot.h	/^} multiboot_t;$/;"	t	typeref:struct:multiboot
 n	vfs2.h	/^    u64int n;$/;"	m	struct:__anon6
 nIEN	ide.c	/^    u8int  nIEN;  \/\/ No Interrupt;$/;"	m	struct:ide_channel_regs	file:
-n_descsz	elf.h	/^  Elf32_Word n_descsz;			\/* Length of the note's descriptor.  *\/$/;"	m	struct:__anon46
-n_descsz	elf.h	/^  Elf64_Word n_descsz;			\/* Length of the note's descriptor.  *\/$/;"	m	struct:__anon47
-n_namesz	elf.h	/^  Elf32_Word n_namesz;			\/* Length of the note's name.  *\/$/;"	m	struct:__anon46
-n_namesz	elf.h	/^  Elf64_Word n_namesz;			\/* Length of the note's name.  *\/$/;"	m	struct:__anon47
-n_type	elf.h	/^  Elf32_Word n_type;			\/* Type of the note.  *\/$/;"	m	struct:__anon46
-n_type	elf.h	/^  Elf64_Word n_type;			\/* Type of the note.  *\/$/;"	m	struct:__anon47
+n_descsz	elf.h	/^  Elf32_Word n_descsz;			\/* Length of the note's descriptor.  *\/$/;"	m	struct:__anon57
+n_descsz	elf.h	/^  Elf64_Word n_descsz;			\/* Length of the note's descriptor.  *\/$/;"	m	struct:__anon58
+n_namesz	elf.h	/^  Elf32_Word n_namesz;			\/* Length of the note's name.  *\/$/;"	m	struct:__anon57
+n_namesz	elf.h	/^  Elf64_Word n_namesz;			\/* Length of the note's name.  *\/$/;"	m	struct:__anon58
+n_type	elf.h	/^  Elf32_Word n_type;			\/* Type of the note.  *\/$/;"	m	struct:__anon57
+n_type	elf.h	/^  Elf64_Word n_type;			\/* Type of the note.  *\/$/;"	m	struct:__anon58
 name	disk.h	/^    char *name;$/;"	m	struct:disk_struct
 name	file.h	/^    char name[MAX_NAME_LEN];$/;"	m	struct:dentry_struct
 name	fs/bootfs.c	/^    char name[100];$/;"	m	struct:TarHeader	file:
@@ -3246,15 +3966,18 @@ name	kobject.c	/^            const char *name;$/;"	m	struct:KDirectoryProcessDat
 name	kobject.c	/^            const char *name;$/;"	m	struct:KDirectoryProcessData::__anon1::__anon5	file:
 name	kobject.h	/^    char name[MAX_NAME_LEN];$/;"	m	struct:KObject
 name	kobject.h	/^    char name[MAX_NAME_LEN];$/;"	m	struct:Klass
-name	module.h	/^    char *name;$/;"	m	struct:__anon9
+name	module.h	/^    char *name;$/;"	m	struct:__anon20
 name	module.h	/^    char name[MAX_NAME_LEN];$/;"	m	struct:module_struct
-name	pci.h	/^    char name[MAX_NAME_LEN];$/;"	m	struct:__anon15
+name	pci.h	/^    char name[MAX_NAME_LEN];$/;"	m	struct:__anon26
 name	vfs.c	/^    char *name;$/;"	m	struct:MountPoint	file:
 name	vfs.h	/^    char name[MAX_NAME_LEN];$/;"	m	struct:FileSystemDriver
 name	vfs2.h	/^    char name[MAX_NAME_LEN]; \/\/filename$/;"	m	struct:Vnode
 name	vfs2.h	/^    char name[MAX_NAME_LEN];$/;"	m	struct:fs_driver
 name_len	fs/ext2fs.h	/^	u8int	name_len;		\/* Name length *\/$/;"	m	struct:ext2_dir_entry
-nchildren	fs/ramfs.c	/^    u32int nchildren;$/;"	m	struct:__anon62	file:
+nchildren	fs/ramfs.c	/^    u32int nchildren;$/;"	m	struct:__anon73	file:
+neg_byte	x86emu/prim_ops.c	/^u8 neg_byte(u8 s)$/;"	f
+neg_long	x86emu/prim_ops.c	/^u32 neg_long(u32 s)$/;"	f
+neg_word	x86emu/prim_ops.c	/^u16 neg_word(u16 s)$/;"	f
 next	device.h	/^    struct Device *next, *prev;$/;"	m	struct:Device	typeref:struct:Device::Device
 next	disk.h	/^    disk_t *next;$/;"	m	struct:disk_struct
 next	disk.h	/^    partition_t *next;$/;"	m	struct:partition_struct
@@ -3280,7 +4003,10 @@ next	vmm.h	/^    struct VMA *next;$/;"	m	struct:VMA	typeref:struct:VMA::VMA
 node	vfs2.h	/^    vnode_t *node;$/;"	m	struct:vnode_list_struct
 noinitrd	loader32.s	/^noinitrd:$/;"	l
 nokernel	loader32.s	/^nokernel:$/;"	l
-nr_bgs	fs/ext2fs.c	/^    u32int nr_bgs;$/;"	m	struct:__anon59	file:
+not_byte	x86emu/prim_ops.c	/^u8 not_byte(u8 s)$/;"	f
+not_long	x86emu/prim_ops.c	/^u32 not_long(u32 s)$/;"	f
+not_word	x86emu/prim_ops.c	/^u16 not_word(u16 s)$/;"	f
+nr_bgs	fs/ext2fs.c	/^    u32int nr_bgs;$/;"	m	struct:__anon70	file:
 nr_blks	disk.h	/^    u32int nr_blks;$/;"	m	struct:disk_struct
 nr_blks	disk.h	/^    u32int nr_blks;$/;"	m	struct:partition_struct
 nsubs	file.h	/^    u32int nsubs;$/;"	m	struct:dir_struct
@@ -3294,7 +4020,7 @@ object	kobject.c	/^            struct KObject *object;$/;"	m	struct:KDirectoryPr
 object	kobject.c	/^    struct KObject *object;$/;"	m	struct:KObjectListNode	typeref:struct:KObjectListNode::KObject	file:
 object	kobject.h	/^    struct KObject *object;$/;"	m	struct:KOD	typeref:struct:KOD::KObject
 objid	fs/devfs.c	/^    s64int objid;$/;"	m	struct:DevFSNode	file:
-offset	file.h	/^    u32int offset;$/;"	m	struct:__anon58
+offset	file.h	/^    u32int offset;$/;"	m	struct:__anon69
 offset	file.h	/^    u32int offset;$/;"	m	struct:dir_struct
 offset	file.h	/^    u32int offset;$/;"	m	struct:file_struct
 offsetHigh	dtable.h	/^    u32int offsetHigh;$/;"	m	struct:IDTEntry
@@ -3304,18 +4030,31 @@ op	device.h	/^    struct DeviceOperation *op;$/;"	m	struct:Device	typeref:struct
 op	kobject.c	/^    u64int op;$/;"	m	struct:KDirectoryProcessData	file:
 op	vfs.h	/^    struct FileSystemDriverOperation *op;$/;"	m	struct:FileSystemDriver	typeref:struct:FileSystemDriver::FileSystemDriverOperation
 op	vfs.h	/^    struct FileSystemOperation *op;$/;"	m	struct:FileSystem	typeref:struct:FileSystem::FileSystemOperation
+opc80_byte_operation	x86emu/ops.c	/^static u8 (*opc80_byte_operation[])(u8 d, u8 s) =$/;"	v	file:
+opc81_long_operation	x86emu/ops.c	/^static u32 (*opc81_long_operation[])(u32 d, u32 s) =$/;"	v	file:
+opc81_word_operation	x86emu/ops.c	/^static u16 (*opc81_word_operation[])(u16 d, u16 s) =$/;"	v	file:
+opc82_byte_operation	x86emu/ops.c	/^static u8 (*opc82_byte_operation[])(u8 s, u8 d) =$/;"	v	file:
+opc83_long_operation	x86emu/ops.c	/^static u32 (*opc83_long_operation[])(u32 s, u32 d) =$/;"	v	file:
+opc83_word_operation	x86emu/ops.c	/^static u16 (*opc83_word_operation[])(u16 s, u16 d) =$/;"	v	file:
+opcD0_byte_operation	x86emu/ops.c	/^static u8(*opcD0_byte_operation[])(u8 d, u8 s) =$/;"	v	file:
+opcD1_long_operation	x86emu/ops.c	/^static u32 (*opcD1_long_operation[])(u32 s, u8 d) =$/;"	v	file:
+opcD1_word_operation	x86emu/ops.c	/^static u16(*opcD1_word_operation[])(u16 s, u8 d) =$/;"	v	file:
 open	device.h	/^    s64int (*open)(struct Device *dev);$/;"	m	struct:DeviceOperation
 open	vfs.h	/^    s64int (*open)(struct FileSystem *fs, s64int id, s64int *openId);$/;"	m	struct:FileSystemOperation
 open	vfs2.h	/^    s64int   (*open)    (const char *);$/;"	m	struct:VnodeOperations
 or	loader32.s	/^or eax, 1 << 31              ; Set the PG-bit, which is the 32nd bit (bit 31).$/;"	l
 or	loader32.s	/^or eax, 1 << 5               ; Set the PAE-bit, which is the 6th bit (bit 5).$/;"	l
 or	loader32.s	/^or eax, 1 << 8               ; Set the LM-bit which is the 9th bit (bit 8).$/;"	l
-osd1	fs/ext2fs.h	/^    } osd1;             \/* OS dependent 1 *\/$/;"	m	struct:ext2_inode	typeref:union:ext2_inode::__anon64
-osd2	fs/ext2fs.h	/^    } osd2;             \/* OS dependent 2 *\/$/;"	m	struct:ext2_inode	typeref:union:ext2_inode::__anon68
+or_byte	x86emu/prim_ops.c	/^u8 or_byte(u8 d, u8 s)$/;"	f
+or_long	x86emu/prim_ops.c	/^u32 or_long(u32 d, u32 s)$/;"	f
+or_word	x86emu/prim_ops.c	/^u16 or_word(u16 d, u16 s)$/;"	f
+osd1	fs/ext2fs.h	/^    } osd1;             \/* OS dependent 1 *\/$/;"	m	struct:ext2_inode	typeref:union:ext2_inode::__anon75
+osd2	fs/ext2fs.h	/^    } osd2;             \/* OS dependent 2 *\/$/;"	m	struct:ext2_inode	typeref:union:ext2_inode::__anon79
 outb	common.c	/^void outb(u16int port, u8int value)$/;"	f
 outb	util.c	/^void outb(u16int port, u8int value)$/;"	f
 outl	common.c	/^void outl(u16int port, u32int value)$/;"	f
 outl	util.c	/^void outl(u16int port, u32int value)$/;"	f
+outs	x86emu/prim_ops.c	/^void outs(int size)$/;"	f
 outsb	common.c	/^void outsb(u16int port, u32int buffer, u32int bytes) {$/;"	f
 outsl	common.c	/^void outsl(u16int port, u32int buffer, u32int quads) {$/;"	f
 outsw	common.c	/^void outsw(u16int port, u32int buffer, u32int words) {$/;"	f
@@ -3323,23 +4062,29 @@ outw	common.c	/^void outw(u16int port, u16int value)$/;"	f
 outw	util.c	/^void outw(u16int port, u16int value)$/;"	f
 ownerTask	message.h	/^    struct Task *ownerTask;$/;"	m	struct:Client	typeref:struct:Client::Task
 ownerTask	message.h	/^    struct Task *ownerTask;$/;"	m	struct:Server	typeref:struct:Server::Task
-p_align	elf.h	/^  Elf32_Word	p_align;		\/* Segment alignment *\/$/;"	m	struct:__anon28
-p_align	elf.h	/^  Elf64_Xword	p_align;		\/* Segment alignment *\/$/;"	m	struct:__anon29
-p_filesz	elf.h	/^  Elf32_Word	p_filesz;		\/* Segment size in file *\/$/;"	m	struct:__anon28
-p_filesz	elf.h	/^  Elf64_Xword	p_filesz;		\/* Segment size in file *\/$/;"	m	struct:__anon29
-p_flags	elf.h	/^  Elf32_Word	p_flags;		\/* Segment flags *\/$/;"	m	struct:__anon28
-p_flags	elf.h	/^  Elf64_Word	p_flags;		\/* Segment flags *\/$/;"	m	struct:__anon29
-p_ino	fs/ext2fs.c	/^    u32int p_ino;$/;"	m	struct:__anon60	file:
-p_memsz	elf.h	/^  Elf32_Word	p_memsz;		\/* Segment size in memory *\/$/;"	m	struct:__anon28
-p_memsz	elf.h	/^  Elf64_Xword	p_memsz;		\/* Segment size in memory *\/$/;"	m	struct:__anon29
-p_offset	elf.h	/^  Elf32_Off	p_offset;		\/* Segment file offset *\/$/;"	m	struct:__anon28
-p_offset	elf.h	/^  Elf64_Off	p_offset;		\/* Segment file offset *\/$/;"	m	struct:__anon29
-p_paddr	elf.h	/^  Elf32_Addr	p_paddr;		\/* Segment physical address *\/$/;"	m	struct:__anon28
-p_paddr	elf.h	/^  Elf64_Addr	p_paddr;		\/* Segment physical address *\/$/;"	m	struct:__anon29
-p_type	elf.h	/^  Elf32_Word	p_type;			\/* Segment type *\/$/;"	m	struct:__anon28
-p_type	elf.h	/^  Elf64_Word	p_type;			\/* Segment type *\/$/;"	m	struct:__anon29
-p_vaddr	elf.h	/^  Elf32_Addr	p_vaddr;		\/* Segment virtual address *\/$/;"	m	struct:__anon28
-p_vaddr	elf.h	/^  Elf64_Addr	p_vaddr;		\/* Segment virtual address *\/$/;"	m	struct:__anon29
+p_align	elf.h	/^  Elf32_Word	p_align;		\/* Segment alignment *\/$/;"	m	struct:__anon39
+p_align	elf.h	/^  Elf64_Xword	p_align;		\/* Segment alignment *\/$/;"	m	struct:__anon40
+p_filesz	elf.h	/^  Elf32_Word	p_filesz;		\/* Segment size in file *\/$/;"	m	struct:__anon39
+p_filesz	elf.h	/^  Elf64_Xword	p_filesz;		\/* Segment size in file *\/$/;"	m	struct:__anon40
+p_flags	elf.h	/^  Elf32_Word	p_flags;		\/* Segment flags *\/$/;"	m	struct:__anon39
+p_flags	elf.h	/^  Elf64_Word	p_flags;		\/* Segment flags *\/$/;"	m	struct:__anon40
+p_inb	x86emu/sys.c	/^static u8 X86API p_inb($/;"	f	file:
+p_inl	x86emu/sys.c	/^static u32 X86API p_inl($/;"	f	file:
+p_ino	fs/ext2fs.c	/^    u32int p_ino;$/;"	m	struct:__anon71	file:
+p_inw	x86emu/sys.c	/^static u16 X86API p_inw($/;"	f	file:
+p_memsz	elf.h	/^  Elf32_Word	p_memsz;		\/* Segment size in memory *\/$/;"	m	struct:__anon39
+p_memsz	elf.h	/^  Elf64_Xword	p_memsz;		\/* Segment size in memory *\/$/;"	m	struct:__anon40
+p_offset	elf.h	/^  Elf32_Off	p_offset;		\/* Segment file offset *\/$/;"	m	struct:__anon39
+p_offset	elf.h	/^  Elf64_Off	p_offset;		\/* Segment file offset *\/$/;"	m	struct:__anon40
+p_outb	x86emu/sys.c	/^static void X86API p_outb($/;"	f	file:
+p_outl	x86emu/sys.c	/^static void X86API p_outl($/;"	f	file:
+p_outw	x86emu/sys.c	/^static void X86API p_outw($/;"	f	file:
+p_paddr	elf.h	/^  Elf32_Addr	p_paddr;		\/* Segment physical address *\/$/;"	m	struct:__anon39
+p_paddr	elf.h	/^  Elf64_Addr	p_paddr;		\/* Segment physical address *\/$/;"	m	struct:__anon40
+p_type	elf.h	/^  Elf32_Word	p_type;			\/* Segment type *\/$/;"	m	struct:__anon39
+p_type	elf.h	/^  Elf64_Word	p_type;			\/* Segment type *\/$/;"	m	struct:__anon40
+p_vaddr	elf.h	/^  Elf32_Addr	p_vaddr;		\/* Segment virtual address *\/$/;"	m	struct:__anon39
+p_vaddr	elf.h	/^  Elf64_Addr	p_vaddr;		\/* Segment virtual address *\/$/;"	m	struct:__anon40
 pad	multiboot.h	/^    u32int pad;$/;"	m	struct:multiboot_mod_list
 page	paging.h	/^    u64int page[512];$/;"	m	struct:PageTable
 pageFaultHandler	except.c	/^void pageFaultHandler(struct RegisterState *regs)$/;"	f
@@ -3348,6 +4093,7 @@ panic_assert	common.c	/^void panic_assert(const char *msg, const char *file, u32
 parent	kobject.h	/^    struct KObject *parent;$/;"	m	struct:KObject	typeref:struct:KObject::KObject
 parsePath	vfs.c	/^s64int parsePath(const char *path, struct MountPoint **mt, char *remainPath)$/;"	f
 parseVAddr	paging.c	/^void parseVAddr(u64int vaddr, u64int *pml4eIdx, u64int *pdpIdx, u64int *pdIdx, u64int *ptIdx)$/;"	f
+parse_line	x86emu/debug.c	/^static int parse_line (char *s, int *ps, int *n)$/;"	f	file:
 part_fops	disk.c	/^struct file_operations part_fops = {$/;"	v	typeref:struct:file_operations
 part_read	disk.c	/^static s32int part_read(file_t *f, u32int offset, u32int sz, u8int *buf)$/;"	f	file:
 part_write	disk.c	/^static s32int part_write(file_t *f, u32int offset, u32int sz, u8int *buf)$/;"	f	file:
@@ -3356,11 +4102,11 @@ partition_t	disk.h	/^typedef struct partition_struct partition_t;$/;"	t	typeref:
 path	module.h	/^    char path[MAX_NAME_LEN];$/;"	m	struct:module_struct
 path	task2.h	/^    char path[MAX_PATH_LEN];$/;"	m	struct:task
 path	vfs2.h	/^        char *path;$/;"	m	struct:__anon6::__anon7
-pci_config_t	pci.h	/^} pci_config_t;$/;"	t	typeref:struct:__anon12
+pci_config_t	pci.h	/^} pci_config_t;$/;"	t	typeref:struct:__anon23
 pci_dev_struct	pci.h	/^struct pci_dev_struct {$/;"	s
 pci_dev_t	pci.h	/^typedef struct pci_dev_struct pci_dev_t;$/;"	t	typeref:struct:pci_dev_struct
 pci_devs	pci.c	/^static pci_dev_t *pci_devs = 0;$/;"	v	file:
-pci_driver_t	pci.h	/^} pci_driver_t;$/;"	t	typeref:struct:__anon15
+pci_driver_t	pci.h	/^} pci_driver_t;$/;"	t	typeref:struct:__anon26
 pci_present	pci.c	/^MEXPORT(pci_present);$/;"	v
 pci_present	pci.c	/^s32int pci_present()$/;"	f
 pd	paging.h	/^    u64int pd[512];$/;"	m	struct:PageDirectoryPointer
@@ -3369,6 +4115,8 @@ pid	task.h	/^    u64int pid;$/;"	m	struct:Task
 pid	task2.h	/^    u32int pid;$/;"	m	struct:task
 pointer	handle.h	/^    void *pointer;$/;"	m	struct:Handle
 pop	loader32.s	/^pop rbx$/;"	l
+pop_long	x86emu/prim_ops.c	/^u32 pop_long(void)$/;"	f
+pop_word	x86emu/prim_ops.c	/^u16 pop_word(void)$/;"	f
 port	message.h	/^    s64int port;$/;"	m	struct:Server
 ppid	task2.h	/^    u32int ppid;$/;"	m	struct:task
 prepareRead	i8042.c	/^void prepareRead()$/;"	f
@@ -3390,7 +4138,11 @@ prev	vfs.h	/^    struct FileSystemDriver *next, *prev;$/;"	m	struct:FileSystemDr
 prev	vfs2.h	/^    struct vnode_list_struct *prev;$/;"	m	struct:vnode_list_struct	typeref:struct:vnode_list_struct::vnode_list_struct
 prev	vm.h	/^    struct vma_struct *prev;$/;"	m	struct:vma_struct	typeref:struct:vma_struct::vma_struct
 prev	vmm.h	/^    struct VMA *prev;$/;"	m	struct:VMA	typeref:struct:VMA::VMA
-printk	util.c	/^void printk(char *fmt, ...)$/;"	f
+print_decoded_instruction	x86emu/debug.c	/^static void print_decoded_instruction (void)$/;"	f	file:
+print_encoded_bytes	x86emu/debug.c	/^static void print_encoded_bytes (u16 s, u16 o)$/;"	f	file:
+print_flags	x86emu/validate.c	/^char * print_flags(char *buf,ulong flags)$/;"	f
+printk	util.c	/^void printk(const char *fmt, ...)$/;"	f
+printk	x86emu/validate.c	/^void printk(const char *fmt, ...)$/;"	f
 priority	task.h	/^    u64int priority;$/;"	m	struct:Task
 priv	device.h	/^    void *priv;$/;"	m	struct:Device
 priv	disk.h	/^    void *priv;$/;"	m	struct:disk_struct
@@ -3399,20 +4151,22 @@ priv	vfs2.h	/^    void *priv;$/;"	m	struct:Vnode
 priv	vfs2.h	/^    void *priv;$/;"	m	struct:fs_driver
 priv	vfs2.h	/^    void *priv;$/;"	m	struct:fs_struct
 priv	vm.h	/^    void *priv; \/* usually file_mapping_t* *\/$/;"	m	struct:vma_struct
-probe	pci.h	/^    s32int (*probe)(pci_dev_t *pci_dev);$/;"	m	struct:__anon15
+probe	pci.h	/^    s32int (*probe)(pci_dev_t *pci_dev);$/;"	m	struct:__anon26
 process	kobject.h	/^    s64int (*process)(struct KObject *object, void *data);$/;"	m	struct:KObject
 processKDirectory	kobject.c	/^s64int processKDirectory(struct KObject *object, void *data)$/;"	f
 prog	task.h	/^    struct Program *prog;$/;"	m	struct:Task	typeref:struct:Task::Program
 progCreate	program.c	/^struct Program *progCreate()$/;"	f
 progDeref	program.c	/^s64int progDeref(struct Program *prog)$/;"	f
 progRef	program.c	/^struct Program *progRef(struct Program *prog)$/;"	f
-prog_if	pci.h	/^    u8int revision, prog_if, subclass, class_code;$/;"	m	struct:__anon12
+prog_if	pci.h	/^    u8int revision, prog_if, subclass, class_code;$/;"	m	struct:__anon23
 pt	paging.h	/^    u64int pt[512];$/;"	m	struct:PageDirectory
 ptr	tlsf.h	/^    } ptr;$/;"	m	struct:TLSFBlock	typeref:union:TLSFBlock::__anon8
 ptr	vfs2.h	/^    vnode_t *ptr;$/;"	m	struct:Vnode
 push	loader32.s	/^push    0$/;"	l
 push	loader32.s	/^push    eax                   ; Initial esp  $/;"	l
 push	loader32.s	/^push    ebx                   ; Load multiboot header location$/;"	l
+push_long	x86emu/prim_ops.c	/^void push_long(u32 w)$/;"	f
+push_word	x86emu/prim_ops.c	/^void push_word(u16 w)$/;"	f
 put_block	fs/ext2fs.c	/^static s32int put_block(fs_t *fs, u8int *buf, u32int blk_no)$/;"	f	file:
 put_inode	fs/ext2fs.c	/^static s32int put_inode(fs_t *fs, struct ext2_inode *inode, u32int ino)$/;"	f	file:
 put_inode_blocks	fs/ext2fs.c	/^static s32int put_inode_blocks(fs_t *fs,u8int *buf,struct ext2_inode *inode,u32int start_blk,u32int n_blks)$/;"	f	file:
@@ -3420,16 +4174,16 @@ r10	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx
 r11	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 r8	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 r9	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
-r_addend	elf.h	/^  Elf32_Sword	r_addend;		\/* Addend *\/$/;"	m	struct:__anon26
-r_addend	elf.h	/^  Elf64_Sxword	r_addend;		\/* Addend *\/$/;"	m	struct:__anon27
-r_info	elf.h	/^  Elf32_Word	r_info;			\/* Relocation type and symbol index *\/$/;"	m	struct:__anon24
-r_info	elf.h	/^  Elf32_Word	r_info;			\/* Relocation type and symbol index *\/$/;"	m	struct:__anon26
-r_info	elf.h	/^  Elf64_Xword	r_info;			\/* Relocation type and symbol index *\/$/;"	m	struct:__anon25
-r_info	elf.h	/^  Elf64_Xword	r_info;			\/* Relocation type and symbol index *\/$/;"	m	struct:__anon27
-r_offset	elf.h	/^  Elf32_Addr	r_offset;		\/* Address *\/$/;"	m	struct:__anon24
-r_offset	elf.h	/^  Elf32_Addr	r_offset;		\/* Address *\/$/;"	m	struct:__anon26
-r_offset	elf.h	/^  Elf64_Addr	r_offset;		\/* Address *\/$/;"	m	struct:__anon25
-r_offset	elf.h	/^  Elf64_Addr	r_offset;		\/* Address *\/$/;"	m	struct:__anon27
+r_addend	elf.h	/^  Elf32_Sword	r_addend;		\/* Addend *\/$/;"	m	struct:__anon37
+r_addend	elf.h	/^  Elf64_Sxword	r_addend;		\/* Addend *\/$/;"	m	struct:__anon38
+r_info	elf.h	/^  Elf32_Word	r_info;			\/* Relocation type and symbol index *\/$/;"	m	struct:__anon35
+r_info	elf.h	/^  Elf32_Word	r_info;			\/* Relocation type and symbol index *\/$/;"	m	struct:__anon37
+r_info	elf.h	/^  Elf64_Xword	r_info;			\/* Relocation type and symbol index *\/$/;"	m	struct:__anon36
+r_info	elf.h	/^  Elf64_Xword	r_info;			\/* Relocation type and symbol index *\/$/;"	m	struct:__anon38
+r_offset	elf.h	/^  Elf32_Addr	r_offset;		\/* Address *\/$/;"	m	struct:__anon35
+r_offset	elf.h	/^  Elf32_Addr	r_offset;		\/* Address *\/$/;"	m	struct:__anon37
+r_offset	elf.h	/^  Elf64_Addr	r_offset;		\/* Address *\/$/;"	m	struct:__anon36
+r_offset	elf.h	/^  Elf64_Addr	r_offset;		\/* Address *\/$/;"	m	struct:__anon38
 ramfsOp	fs/ramfs.c	/^static struct FileSystemOperation ramfsOp = {$/;"	v	typeref:struct:FileSystemOperation	file:
 ramfs_cleanup	fs/ramfs.c	/^void    ramfs_cleanup(struct fs_driver *fs_drv)$/;"	f
 ramfs_close	fs/ramfs.c	/^s32int   ramfs_close   (file_t *f)$/;"	f
@@ -3445,22 +4199,31 @@ ramfs_mkdir	fs/ramfs.c	/^s32int ramfs_mkdir   (vnode_t *dir, char *name, u32int 
 ramfs_mknod	fs/ramfs.c	/^s32int ramfs_mknod   (vnode_t *dir, char *name, u32int dev_id, u32int flags)$/;"	f
 ramfs_open	fs/ramfs.c	/^s32int   ramfs_open    (file_t *f)$/;"	f
 ramfs_ops	fs/ramfs.c	/^struct fs_operations ramfs_ops = {$/;"	v	typeref:struct:fs_operations
-ramfs_priv_t	fs/ramfs.c	/^} ramfs_priv_t;$/;"	t	typeref:struct:__anon61	file:
+ramfs_priv_t	fs/ramfs.c	/^} ramfs_priv_t;$/;"	t	typeref:struct:__anon72	file:
 ramfs_read	fs/ramfs.c	/^s32int   ramfs_read    (file_t *f, u32int offset, u32int sz, u8int *buf)$/;"	f
 ramfs_removefs	fs/ramfs.c	/^void    ramfs_removefs(struct fs_driver *fs_drv, fs_t *fs)$/;"	f
 ramfs_rename	fs/ramfs.c	/^s32int ramfs_rename (vnode_t *dir, char *old_name, char *name)$/;"	f
 ramfs_rm	fs/ramfs.c	/^s32int   ramfs_rm      (vnode_t *dir, char *name)$/;"	f
 ramfs_rmdir	fs/ramfs.c	/^s32int   ramfs_rmdir   (vnode_t *dir, char *name)$/;"	f
 ramfs_subnodes	fs/ramfs.c	/^s32int   ramfs_subnodes(vnode_t *dir, vnode_t ***nodes)$/;"	f
-ramfs_vnode_priv_t	fs/ramfs.c	/^} ramfs_vnode_priv_t;$/;"	t	typeref:struct:__anon62	file:
+ramfs_vnode_priv_t	fs/ramfs.c	/^} ramfs_vnode_priv_t;$/;"	t	typeref:struct:__anon73	file:
 ramfs_write	fs/ramfs.c	/^s32int   ramfs_write   (file_t *f, u32int offset, u32int sz, u8int *buf)$/;"	f
 rax	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 rbp	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 rbp	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp;$/;"	m	struct:Task
 rbx	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
+rcl_byte	x86emu/prim_ops.c	/^u8 rcl_byte(u8 d, u8 s)$/;"	f
+rcl_long	x86emu/prim_ops.c	/^u32 rcl_long(u32 d, u8 s)$/;"	f
+rcl_word	x86emu/prim_ops.c	/^u16 rcl_word(u16 d, u8 s)$/;"	f
+rcr_byte	x86emu/prim_ops.c	/^u8 rcr_byte(u8 d, u8 s)$/;"	f
+rcr_long	x86emu/prim_ops.c	/^u32 rcr_long(u32 d, u8 s)$/;"	f
+rcr_word	x86emu/prim_ops.c	/^u16 rcr_word(u16 d, u8 s)$/;"	f
 rcx	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
+rdb	x86emu/sys.c	/^u8 X86API rdb($/;"	f
 rdi	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
+rdl	x86emu/sys.c	/^u32 X86API rdl($/;"	f
 rdmsr	loader32.s	/^rdmsr                        ; Read from the model-specific register.$/;"	l
+rdw	x86emu/sys.c	/^u16 X86API rdw($/;"	f
 rdx	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 read	device.h	/^    s64int (*read)(struct Device *dev, u64int offset, u64int size, char *buffer);$/;"	m	struct:DeviceOperation
 read	vfs.h	/^    s64int (*read)(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer);$/;"	m	struct:FileSystemOperation
@@ -3481,6 +4244,7 @@ ref	handle.h	/^    u64int ref;$/;"	m	struct:HandleTable
 ref	kobject.h	/^    u64int ref;$/;"	m	struct:KObject
 ref	program.h	/^    s64int ref;$/;"	m	struct:Program
 ref	vmm.h	/^    s64int ref;$/;"	m	struct:VM
+reg	x86emu/x86emu/fpu_regs.h	/^	union x86_fpu_reg_u reg;$/;"	m	struct:x86_fpu_reg	typeref:union:x86_fpu_reg::x86_fpu_reg_u
 registerFileSystemDriver	vfs.c	/^s64int registerFileSystemDriver(struct FileSystemDriver *driver)$/;"	f
 registerInterruptHandler	interrupt.c	/^void registerInterruptHandler(u64int n, IsrHandlerFunc handler)$/;"	f
 register_fs_driver	vfs2.c	/^void register_fs_driver(fs_driver_t *driver)$/;"	f
@@ -3506,23 +4270,29 @@ reserved4	dtable.h	/^        u32int reserved4;$/;"	m	struct:TSS
 reserved5	dtable.h	/^        u16int reserved5;$/;"	m	struct:TSS
 resolve_symbol	module.c	/^static u32int resolve_symbol(char *sym_name)$/;"	f	file:
 ret_code	task2.h	/^    u32int ret_code;$/;"	m	struct:task
-revision	pci.h	/^    u8int revision, prog_if, subclass, class_code;$/;"	m	struct:__anon12
+revision	pci.h	/^    u8int revision, prog_if, subclass, class_code;$/;"	m	struct:__anon23
 rflags	interrupt.h	/^    u64int rip, cs, rflags, rsp0, ss0;$/;"	m	struct:RegisterState
-ri_cprmask	elf.h	/^  Elf32_Word	ri_cprmask[4];		\/* Coprocessor registers used *\/$/;"	m	struct:__anon53
-ri_gp_value	elf.h	/^  Elf32_Sword	ri_gp_value;		\/* $gp register value *\/$/;"	m	struct:__anon53
-ri_gprmask	elf.h	/^  Elf32_Word	ri_gprmask;		\/* General registers used *\/$/;"	m	struct:__anon53
+ri_cprmask	elf.h	/^  Elf32_Word	ri_cprmask[4];		\/* Coprocessor registers used *\/$/;"	m	struct:__anon64
+ri_gp_value	elf.h	/^  Elf32_Sword	ri_gp_value;		\/* $gp register value *\/$/;"	m	struct:__anon64
+ri_gprmask	elf.h	/^  Elf32_Word	ri_gprmask;		\/* General registers used *\/$/;"	m	struct:__anon64
 rip	interrupt.h	/^    u64int rip, cs, rflags, rsp0, ss0;$/;"	m	struct:RegisterState
 rip	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp;$/;"	m	struct:Task
 rip3	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp;$/;"	m	struct:Task
 rmdir	vfs.h	/^    s64int (*rmdir)(struct FileSystem *fs, s64int id, const char *name);$/;"	m	struct:FileSystemOperation
 rmdir	vfs2.h	/^    s64int   (*rmdir)   (vnode_t *dir, char *name);$/;"	m	struct:VnodeOperations
-rom_bar	pci.h	/^            u16int rom_bar;$/;"	m	struct:__anon12::__anon13::__anon14
+rol_byte	x86emu/prim_ops.c	/^u8 rol_byte(u8 d, u8 s)$/;"	f
+rol_long	x86emu/prim_ops.c	/^u32 rol_long(u32 d, u8 s)$/;"	f
+rol_word	x86emu/prim_ops.c	/^u16 rol_word(u16 d, u8 s)$/;"	f
+rom_bar	pci.h	/^            u16int rom_bar;$/;"	m	struct:__anon23::__anon24::__anon25
 root	fs/devfs.c	/^    struct DevFSNode *root;$/;"	m	struct:DevFSData	typeref:struct:DevFSData::DevFSNode	file:
-root	fs/ramfs.c	/^    vnode_t *root;$/;"	m	struct:__anon61	file:
+root	fs/ramfs.c	/^    vnode_t *root;$/;"	m	struct:__anon72	file:
 root	vfs.h	/^    s64int (*root)(struct FileSystem *fs);$/;"	m	struct:FileSystemOperation
 rootDirName	fs/bootfs.c	/^    char rootDirName[100];$/;"	m	struct:BootFSData	file:
 rootNode	vfs.c	/^struct VNode *rootNode = 0;$/;"	v	typeref:struct:VNode
 rootTask	task.c	/^void rootTask()$/;"	f
+ror_byte	x86emu/prim_ops.c	/^u8 ror_byte(u8 d, u8 s)$/;"	f
+ror_long	x86emu/prim_ops.c	/^u32 ror_long(u32 d, u8 s)$/;"	f
+ror_word	x86emu/prim_ops.c	/^u16 ror_word(u16 d, u8 s)$/;"	f
 rqAdd	schedule.c	/^void rqAdd(struct Task *task)$/;"	f
 rqNext	task.h	/^    struct Task *rqNext, *rqPrev;$/;"	m	struct:Task	typeref:struct:Task::Task
 rqPrev	task.h	/^    struct Task *rqNext, *rqPrev;$/;"	m	struct:Task	typeref:struct:Task::
@@ -3537,11 +4307,19 @@ rsp1	dtable.h	/^        u64int rsp1;$/;"	m	struct:TSS
 rsp2	dtable.h	/^        u64int rsp2;$/;"	m	struct:TSS
 rsp3	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp;$/;"	m	struct:Task
 runQueue	schedule.c	/^struct Task *runQueue[MLFQ_LEVELS] = {0};$/;"	v	typeref:struct:Task
+s16	x86emu/x86emu/types.h	/^typedef short 				s16;$/;"	t
+s16	x86emu/x86emu/types.h	56;"	d
 s16int	common.h	/^typedef          short s16int;$/;"	t
 s16int	sysdef.h	/^typedef signed short    s16int;$/;"	t
+s32	x86emu/x86emu/types.h	/^typedef NUM32 				s32;$/;"	t
+s32	x86emu/x86emu/types.h	57;"	d
 s32int	common.h	/^typedef          int   s32int;$/;"	t
 s32int	sysdef.h	/^typedef signed int      s32int;$/;"	t
+s64	x86emu/x86emu/types.h	/^typedef long long 			s64;$/;"	t
+s64	x86emu/x86emu/types.h	58;"	d
 s64int	sysdef.h	/^typedef signed long     s64int;$/;"	t
+s8	x86emu/x86emu/types.h	/^typedef char 				s8;$/;"	t
+s8	x86emu/x86emu/types.h	55;"	d
 s8int	common.h	/^typedef          char  s8int;$/;"	t
 s8int	sysdef.h	/^typedef signed char     s8int;$/;"	t
 s_algorithm_usage_bitmap	fs/ext2fs.h	/^    u32int  s_algorithm_usage_bitmap; \/* For compression *\/$/;"	m	struct:ext2_super_block
@@ -3593,7 +4371,15 @@ s_state	fs/ext2fs.h	/^    u16int  s_state;        \/* File system state *\/$/;"	
 s_uuid	fs/ext2fs.h	/^    u8int    s_uuid[16];     \/* 128-bit uuid for volume *\/$/;"	m	struct:ext2_super_block
 s_volume_name	fs/ext2fs.h	/^    char    s_volume_name[16];  \/* volume name *\/$/;"	m	struct:ext2_super_block
 s_wtime	fs/ext2fs.h	/^    u32int  s_wtime;        \/* Write time *\/$/;"	m	struct:ext2_super_block
-sb	fs/ext2fs.c	/^    struct ext2_super_block sb;$/;"	m	struct:__anon59	typeref:struct:__anon59::ext2_super_block	file:
+sar_byte	x86emu/prim_ops.c	/^u8 sar_byte(u8 d, u8 s)$/;"	f
+sar_long	x86emu/prim_ops.c	/^u32 sar_long(u32 d, u8 s)$/;"	f
+sar_word	x86emu/prim_ops.c	/^u16 sar_word(u16 d, u8 s)$/;"	f
+saved_cs	x86emu/x86emu/regs.h	/^    u16                         saved_cs;$/;"	m	struct:__anon16
+saved_ip	x86emu/x86emu/regs.h	/^    u16                         saved_ip;$/;"	m	struct:__anon16
+sb	fs/ext2fs.c	/^    struct ext2_super_block sb;$/;"	m	struct:__anon70	typeref:struct:__anon70::ext2_super_block	file:
+sbb_byte	x86emu/prim_ops.c	/^u8 sbb_byte(u8 d, u8 s)$/;"	f
+sbb_long	x86emu/prim_ops.c	/^u32 sbb_long(u32 d, u32 s)$/;"	f
+sbb_word	x86emu/prim_ops.c	/^u16 sbb_word(u16 d, u16 s)$/;"	f
 schedule	schedule.c	/^void schedule()$/;"	f
 scr_clear	screen.c	/^void scr_clear()$/;"	f
 scr_putch	screen.c	/^void scr_putch(char c)$/;"	f
@@ -3601,7 +4387,8 @@ scr_puthex	screen.c	/^void scr_puthex(u64int i)$/;"	f
 scr_putn	screen.c	/^void scr_putn(u64int i)$/;"	f
 scr_puts	screen.c	/^void scr_puts(const char *s)$/;"	f
 scroll	screen.c	/^void scroll()$/;"	f
-section	elf.h	/^  Elf32_Section section;	\/* Section header index of section affected,$/;"	m	struct:__anon54
+section	elf.h	/^  Elf32_Section section;	\/* Section header index of section affected,$/;"	m	struct:__anon65
+seg	x86emu/x86emu/regs.h	/^    struct i386_segment_regs    seg;$/;"	m	struct:__anon16	typeref:struct:__anon16::i386_segment_regs
 selector	dtable.h	/^    u16int selector;$/;"	m	struct:IDTEntry
 sem	mutex.h	/^    struct Semaphore *sem;$/;"	m	struct:Mutex	typeref:struct:Mutex::Semaphore
 semCreate	semaphore.c	/^struct Semaphore *semCreate(u64int count)$/;"	f
@@ -3619,35 +4406,47 @@ setIDT	dtable.c	/^void setIDT(struct IDTEntry *entry, void* offaddr, u16int sele
 setKernelStack	dtable.c	/^void setKernelStack(u64int rsp)$/;"	f
 setTSS	dtable.c	/^void setTSS(struct GDTEntry *entry, u64int base, u64int limit)$/;"	f
 set_bit	fs/ext2fs.c	/^static s32int set_bit(u8int *buf, u32int off)$/;"	f	file:
-sh_addr	elf.h	/^  Elf32_Addr	sh_addr;		\/* Section virtual addr at execution *\/$/;"	m	struct:__anon18
-sh_addr	elf.h	/^  Elf64_Addr	sh_addr;		\/* Section virtual addr at execution *\/$/;"	m	struct:__anon19
-sh_addralign	elf.h	/^  Elf32_Word	sh_addralign;		\/* Section alignment *\/$/;"	m	struct:__anon18
-sh_addralign	elf.h	/^  Elf64_Xword	sh_addralign;		\/* Section alignment *\/$/;"	m	struct:__anon19
-sh_entsize	elf.h	/^  Elf32_Word	sh_entsize;		\/* Entry size if section holds table *\/$/;"	m	struct:__anon18
-sh_entsize	elf.h	/^  Elf64_Xword	sh_entsize;		\/* Entry size if section holds table *\/$/;"	m	struct:__anon19
-sh_flags	elf.h	/^  Elf32_Word	sh_flags;		\/* Section flags *\/$/;"	m	struct:__anon18
-sh_flags	elf.h	/^  Elf64_Xword	sh_flags;		\/* Section flags *\/$/;"	m	struct:__anon19
-sh_info	elf.h	/^  Elf32_Word	sh_info;		\/* Additional section information *\/$/;"	m	struct:__anon18
-sh_info	elf.h	/^  Elf64_Word	sh_info;		\/* Additional section information *\/$/;"	m	struct:__anon19
-sh_link	elf.h	/^  Elf32_Word	sh_link;		\/* Link to another section *\/$/;"	m	struct:__anon18
-sh_link	elf.h	/^  Elf64_Word	sh_link;		\/* Link to another section *\/$/;"	m	struct:__anon19
-sh_name	elf.h	/^  Elf32_Word	sh_name;		\/* Section name (string tbl index) *\/$/;"	m	struct:__anon18
-sh_name	elf.h	/^  Elf64_Word	sh_name;		\/* Section name (string tbl index) *\/$/;"	m	struct:__anon19
-sh_offset	elf.h	/^  Elf32_Off	sh_offset;		\/* Section file offset *\/$/;"	m	struct:__anon18
-sh_offset	elf.h	/^  Elf64_Off	sh_offset;		\/* Section file offset *\/$/;"	m	struct:__anon19
-sh_size	elf.h	/^  Elf32_Word	sh_size;		\/* Section size in bytes *\/$/;"	m	struct:__anon18
-sh_size	elf.h	/^  Elf64_Xword	sh_size;		\/* Section size in bytes *\/$/;"	m	struct:__anon19
-sh_type	elf.h	/^  Elf32_Word	sh_type;		\/* Section type *\/$/;"	m	struct:__anon18
-sh_type	elf.h	/^  Elf64_Word	sh_type;		\/* Section type *\/$/;"	m	struct:__anon19
+sh_addr	elf.h	/^  Elf32_Addr	sh_addr;		\/* Section virtual addr at execution *\/$/;"	m	struct:__anon29
+sh_addr	elf.h	/^  Elf64_Addr	sh_addr;		\/* Section virtual addr at execution *\/$/;"	m	struct:__anon30
+sh_addralign	elf.h	/^  Elf32_Word	sh_addralign;		\/* Section alignment *\/$/;"	m	struct:__anon29
+sh_addralign	elf.h	/^  Elf64_Xword	sh_addralign;		\/* Section alignment *\/$/;"	m	struct:__anon30
+sh_entsize	elf.h	/^  Elf32_Word	sh_entsize;		\/* Entry size if section holds table *\/$/;"	m	struct:__anon29
+sh_entsize	elf.h	/^  Elf64_Xword	sh_entsize;		\/* Entry size if section holds table *\/$/;"	m	struct:__anon30
+sh_flags	elf.h	/^  Elf32_Word	sh_flags;		\/* Section flags *\/$/;"	m	struct:__anon29
+sh_flags	elf.h	/^  Elf64_Xword	sh_flags;		\/* Section flags *\/$/;"	m	struct:__anon30
+sh_info	elf.h	/^  Elf32_Word	sh_info;		\/* Additional section information *\/$/;"	m	struct:__anon29
+sh_info	elf.h	/^  Elf64_Word	sh_info;		\/* Additional section information *\/$/;"	m	struct:__anon30
+sh_link	elf.h	/^  Elf32_Word	sh_link;		\/* Link to another section *\/$/;"	m	struct:__anon29
+sh_link	elf.h	/^  Elf64_Word	sh_link;		\/* Link to another section *\/$/;"	m	struct:__anon30
+sh_name	elf.h	/^  Elf32_Word	sh_name;		\/* Section name (string tbl index) *\/$/;"	m	struct:__anon29
+sh_name	elf.h	/^  Elf64_Word	sh_name;		\/* Section name (string tbl index) *\/$/;"	m	struct:__anon30
+sh_offset	elf.h	/^  Elf32_Off	sh_offset;		\/* Section file offset *\/$/;"	m	struct:__anon29
+sh_offset	elf.h	/^  Elf64_Off	sh_offset;		\/* Section file offset *\/$/;"	m	struct:__anon30
+sh_size	elf.h	/^  Elf32_Word	sh_size;		\/* Section size in bytes *\/$/;"	m	struct:__anon29
+sh_size	elf.h	/^  Elf64_Xword	sh_size;		\/* Section size in bytes *\/$/;"	m	struct:__anon30
+sh_type	elf.h	/^  Elf32_Word	sh_type;		\/* Section type *\/$/;"	m	struct:__anon29
+sh_type	elf.h	/^  Elf64_Word	sh_type;		\/* Section type *\/$/;"	m	struct:__anon30
+shl_byte	x86emu/prim_ops.c	/^u8 shl_byte(u8 d, u8 s)$/;"	f
+shl_long	x86emu/prim_ops.c	/^u32 shl_long(u32 d, u8 s)$/;"	f
+shl_word	x86emu/prim_ops.c	/^u16 shl_word(u16 d, u8 s)$/;"	f
+shld_long	x86emu/prim_ops.c	/^u32 shld_long (u32 d, u32 fill, u8 s)$/;"	f
+shld_word	x86emu/prim_ops.c	/^u16 shld_word (u16 d, u16 fill, u8 s)$/;"	f
 shndx	multiboot.h	/^    u32int shndx;$/;"	m	struct:multiboot
-si_boundto	elf.h	/^  Elf32_Half si_boundto;		\/* Direct bindings, symbol bound to *\/$/;"	m	struct:__anon22
-si_boundto	elf.h	/^  Elf64_Half si_boundto;		\/* Direct bindings, symbol bound to *\/$/;"	m	struct:__anon23
-si_flags	elf.h	/^  Elf32_Half si_flags;			\/* Per symbol flags *\/$/;"	m	struct:__anon22
-si_flags	elf.h	/^  Elf64_Half si_flags;			\/* Per symbol flags *\/$/;"	m	struct:__anon23
+shr_byte	x86emu/prim_ops.c	/^u8 shr_byte(u8 d, u8 s)$/;"	f
+shr_long	x86emu/prim_ops.c	/^u32 shr_long(u32 d, u8 s)$/;"	f
+shr_word	x86emu/prim_ops.c	/^u16 shr_word(u16 d, u8 s)$/;"	f
+shrd_long	x86emu/prim_ops.c	/^u32 shrd_long (u32 d, u32 fill, u8 s)$/;"	f
+shrd_word	x86emu/prim_ops.c	/^u16 shrd_word (u16 d, u16 fill, u8 s)$/;"	f
+si_boundto	elf.h	/^  Elf32_Half si_boundto;		\/* Direct bindings, symbol bound to *\/$/;"	m	struct:__anon33
+si_boundto	elf.h	/^  Elf64_Half si_boundto;		\/* Direct bindings, symbol bound to *\/$/;"	m	struct:__anon34
+si_flags	elf.h	/^  Elf32_Half si_flags;			\/* Per symbol flags *\/$/;"	m	struct:__anon33
+si_flags	elf.h	/^  Elf64_Half si_flags;			\/* Per symbol flags *\/$/;"	m	struct:__anon34
 signature	ide.c	/^    u16int signature;   \/\/ Drive Signature$/;"	m	struct:ide_device	file:
 signature	tlsf.h	/^    u64int signature;$/;"	m	struct:TLSFBlock
-size	elf.h	/^  unsigned char size;		\/* Size of descriptor, including header.  *\/$/;"	m	struct:__anon54
-size	file.h	/^    u32int size;$/;"	m	struct:__anon58
+sint	x86emu/x86emu/types.h	/^typedef int 				sint;$/;"	t
+sint	x86emu/x86emu/types.h	60;"	d
+size	elf.h	/^  unsigned char size;		\/* Size of descriptor, including header.  *\/$/;"	m	struct:__anon65
+size	file.h	/^    u32int size;$/;"	m	struct:__anon69
 size	fs/bootfs.c	/^    char size[12];$/;"	m	struct:TarHeader	file:
 size	ide.c	/^    u32int size;        \/\/ size in Sectors.$/;"	m	struct:ide_device	file:
 size	message.h	/^    u64int size;$/;"	m	struct:MessageQueue
@@ -3663,6 +4462,7 @@ sleep_for_ticks	task2.c	/^void sleep_for_ticks(u32int sleep_ticks)$/;"	f
 sleep_on	task2.c	/^void sleep_on(wait_queue_t *wq)$/;"	f
 slices	task.h	/^    u64int slices;$/;"	m	struct:Task
 slot	pci.h	/^    u32int bus, slot, func;$/;"	m	struct:pci_dev_struct
+spc	x86emu/x86emu/regs.h	/^    struct i386_special_regs    spc;$/;"	m	struct:__anon16	typeref:struct:__anon16::i386_special_regs
 sprintf	common.c	/^u32int sprintf(char *buf, char *fmt, ...)$/;"	f
 sprintf	util.c	/^u64int sprintf(char *buf, char *fmt, ...)$/;"	f
 sqNext	task.h	/^    struct Task *sqNext, *sqPrev;$/;"	m	struct:Task	typeref:struct:Task::Task
@@ -3670,18 +4470,18 @@ sqPrev	task.h	/^    struct Task *sqNext, *sqPrev;$/;"	m	struct:Task	typeref:stru
 src	message.h	/^    char *src, *dest;$/;"	m	struct:Message
 srcSize	message.h	/^    u64int srcSize, destSize;$/;"	m	struct:Message
 ss0	interrupt.h	/^    u64int rip, cs, rflags, rsp0, ss0;$/;"	m	struct:RegisterState
-st_info	elf.h	/^  unsigned char	st_info;		\/* Symbol type and binding *\/$/;"	m	struct:__anon20
-st_info	elf.h	/^  unsigned char	st_info;		\/* Symbol type and binding *\/$/;"	m	struct:__anon21
-st_name	elf.h	/^  Elf32_Word	st_name;		\/* Symbol name (string tbl index) *\/$/;"	m	struct:__anon20
-st_name	elf.h	/^  Elf64_Word	st_name;		\/* Symbol name (string tbl index) *\/$/;"	m	struct:__anon21
-st_other	elf.h	/^  unsigned char	st_other;		\/* Symbol visibility *\/$/;"	m	struct:__anon20
-st_other	elf.h	/^  unsigned char st_other;		\/* Symbol visibility *\/$/;"	m	struct:__anon21
-st_shndx	elf.h	/^  Elf32_Section	st_shndx;		\/* Section index *\/$/;"	m	struct:__anon20
-st_shndx	elf.h	/^  Elf64_Section	st_shndx;		\/* Section index *\/$/;"	m	struct:__anon21
-st_size	elf.h	/^  Elf32_Word	st_size;		\/* Symbol size *\/$/;"	m	struct:__anon20
-st_size	elf.h	/^  Elf64_Xword	st_size;		\/* Symbol size *\/$/;"	m	struct:__anon21
-st_value	elf.h	/^  Elf32_Addr	st_value;		\/* Symbol value *\/$/;"	m	struct:__anon20
-st_value	elf.h	/^  Elf64_Addr	st_value;		\/* Symbol value *\/$/;"	m	struct:__anon21
+st_info	elf.h	/^  unsigned char	st_info;		\/* Symbol type and binding *\/$/;"	m	struct:__anon31
+st_info	elf.h	/^  unsigned char	st_info;		\/* Symbol type and binding *\/$/;"	m	struct:__anon32
+st_name	elf.h	/^  Elf32_Word	st_name;		\/* Symbol name (string tbl index) *\/$/;"	m	struct:__anon31
+st_name	elf.h	/^  Elf64_Word	st_name;		\/* Symbol name (string tbl index) *\/$/;"	m	struct:__anon32
+st_other	elf.h	/^  unsigned char	st_other;		\/* Symbol visibility *\/$/;"	m	struct:__anon31
+st_other	elf.h	/^  unsigned char st_other;		\/* Symbol visibility *\/$/;"	m	struct:__anon32
+st_shndx	elf.h	/^  Elf32_Section	st_shndx;		\/* Section index *\/$/;"	m	struct:__anon31
+st_shndx	elf.h	/^  Elf64_Section	st_shndx;		\/* Section index *\/$/;"	m	struct:__anon32
+st_size	elf.h	/^  Elf32_Word	st_size;		\/* Symbol size *\/$/;"	m	struct:__anon31
+st_size	elf.h	/^  Elf64_Xword	st_size;		\/* Symbol size *\/$/;"	m	struct:__anon32
+st_value	elf.h	/^  Elf32_Addr	st_value;		\/* Symbol value *\/$/;"	m	struct:__anon31
+st_value	elf.h	/^  Elf64_Addr	st_value;		\/* Symbol value *\/$/;"	m	struct:__anon32
 start	loader32.s	/^start:$/;"	l
 start	vm.h	/^    u32int start; \/* page aligned start virtual address. *\/$/;"	m	struct:vma_struct
 start	vmm.h	/^    u64int start;$/;"	m	struct:VMA
@@ -3696,8 +4496,16 @@ startupinfo	loader32.s	/^startupinfo:$/;"	l
 stat	vfs.h	/^    s64int (*stat)(struct FileSystem *fs, s64int id, struct VNodeInfo *ni);$/;"	m	struct:FileSystemOperation
 state	task.h	/^    u64int state;$/;"	m	struct:Task
 state	task2.h	/^    u32int state;$/;"	m	struct:task
+stl_u	x86emu/sys.c	/^static __inline__ void stl_u(unsigned long r5, unsigned int * r11)$/;"	f	file:
+store_data_byte	x86emu/decode.c	/^void store_data_byte($/;"	f
+store_data_byte_abs	x86emu/decode.c	/^void store_data_byte_abs($/;"	f
+store_data_long	x86emu/decode.c	/^void store_data_long($/;"	f
+store_data_long_abs	x86emu/decode.c	/^void store_data_long_abs($/;"	f
+store_data_word	x86emu/decode.c	/^void store_data_word($/;"	f
+store_data_word_abs	x86emu/decode.c	/^void store_data_word_abs($/;"	f
 stosd	loader32.s	/^stosd$/;"	l
 stosq	loader32.s	/^stosq$/;"	l
+stq_u	x86emu/sys.c	/^static __inline__ void stq_u(unsigned long r5, unsigned long * r11)$/;"	f	file:
 stra	testmod.c	/^char stra[127];$/;"	v
 strbrk	common.c	/^u32int strbrk(char **result, const char *str, const char *delim)$/;"	f
 strchr	common.c	/^char *strchr(char *s1, char c)$/;"	f
@@ -3717,16 +4525,21 @@ strstr	common.c	/^char *strstr(char *s1, char *s2)$/;"	f
 strstr	util.c	/^char *strstr(const char *s1, const char *s2)$/;"	f
 strtol	util.c	/^s64int strtol(const char *cp,char **endp,u32int base)$/;"	f
 strtoul	util.c	/^u64int strtoul(const char *cp,char **endp,u32int base)$/;"	f
-subclass	pci.h	/^    u8int revision, prog_if, subclass, class_code;$/;"	m	struct:__anon12
+stw_u	x86emu/sys.c	/^static __inline__ void stw_u(unsigned long r5, unsigned short * r11)$/;"	f	file:
+sub_byte	x86emu/prim_ops.c	/^u8 sub_byte(u8 d, u8 s)$/;"	f
+sub_long	x86emu/prim_ops.c	/^u32 sub_long(u32 d, u32 s)$/;"	f
+sub_word	x86emu/prim_ops.c	/^u16 sub_word(u16 d, u16 s)$/;"	f
+subclass	pci.h	/^    u8int revision, prog_if, subclass, class_code;$/;"	m	struct:__anon23
 subnodes	file.h	/^    struct vnode_struct **subnodes;$/;"	m	struct:dir_struct	typeref:struct:dir_struct::vnode_struct
-subsystem	pci.h	/^            u16int subsystem;$/;"	m	struct:__anon12::__anon13::__anon14
-subvendor	pci.h	/^            u16int subvendor;$/;"	m	struct:__anon12::__anon13::__anon14
+subsystem	pci.h	/^            u16int subsystem;$/;"	m	struct:__anon23::__anon24::__anon25
+subvendor	pci.h	/^            u16int subvendor;$/;"	m	struct:__anon23::__anon24::__anon25
+sval	x86emu/x86emu/fpu_regs.h	/^    s16                 sval;$/;"	m	union:x86_fpu_reg_u
 switch_task	task2.c	/^void switch_task()$/;"	f
 switch_to_user_mode	task2.c	/^void switch_to_user_mode()$/;"	f
-symbol	module.h	/^    symbol_t symbol[MAX_SYMBOLS];$/;"	m	struct:__anon10
-symbol_t	module.h	/^} symbol_t;$/;"	t	typeref:struct:__anon9
+symbol	module.h	/^    symbol_t symbol[MAX_SYMBOLS];$/;"	m	struct:__anon21
+symbol_t	module.h	/^} symbol_t;$/;"	t	typeref:struct:__anon20
 symtab	module.h	/^    symtab_t *symtab;$/;"	m	struct:module_struct
-symtab_t	module.h	/^} symtab_t;$/;"	t	typeref:struct:__anon10
+symtab_t	module.h	/^} symtab_t;$/;"	t	typeref:struct:__anon21
 sync	vfs2.h	/^    void (*sync)(fs_t *fs);$/;"	m	struct:VFSOperation
 sys_chdir	vfs2.c	/^s32int          sys_chdir   (char *path)$/;"	f
 sys_create	vfs2.c	/^s32int          sys_create  (char *path, u32int flags)$/;"	f
@@ -3750,6 +4563,7 @@ syscallHandler	ksyscall.c	/^void syscallHandler(struct RegisterState *regs)$/;"	
 syscallTest	ksyscall.c	/^void syscallTest()$/;"	f
 syscall_mount	vfs2.c	/^void syscall_mount(char *src, char* dst, u32int flags, void *data)$/;"	f
 syscalls	ksyscall.c	/^void *syscalls[N_SYSCALLS] = {$/;"	v
+tag	x86emu/x86emu/fpu_regs.h	/^	char                tag;$/;"	m	struct:x86_fpu_reg
 tail	message.h	/^    struct Message *head, *tail;$/;"	m	struct:MessageQueue	typeref:struct:MessageQueue::
 tail	waitqueue.h	/^    struct Task *head, *tail;$/;"	m	struct:WaitQueue	typeref:struct:WaitQueue::
 task	message.h	/^    struct Task *task;$/;"	m	struct:Message	typeref:struct:Message::Task
@@ -3759,7 +4573,12 @@ task	task2.h	/^typedef struct task {$/;"	s
 taskQueue	task.c	/^struct Task *taskQueue = 0;$/;"	v	typeref:struct:Task
 task_queue	task2.c	/^task_t *task_queue = 0;$/;"	v
 task_t	task2.h	/^} task_t;$/;"	t	typeref:struct:task
+tenbytes	x86emu/x86emu/fpu_regs.h	/^    s8                  tenbytes[10];$/;"	m	union:x86_fpu_reg_u
 testThread	task.c	/^void testThread()$/;"	f
+testVBE	main.c	/^void testVBE()$/;"	f
+test_byte	x86emu/prim_ops.c	/^void test_byte(u8 d, u8 s)$/;"	f
+test_long	x86emu/prim_ops.c	/^void test_long(u32 d, u32 s)$/;"	f
+test_word	x86emu/prim_ops.c	/^void test_word(u16 d, u16 s)$/;"	f
 ticks	task.h	/^    u64int ticks;$/;"	m	struct:Task
 ticks	timer.c	/^u32int ticks = 0;$/;"	v
 timerHandler	task.c	/^void timerHandler(struct RegisterState *rs)$/;"	f
@@ -3778,24 +4597,37 @@ tlsfMapping	tlsf.c	/^void tlsfMapping(u64int size, u64int *fl, u64int *sl)$/;"	f
 tlsfPrintBlock	tlsf.c	/^void tlsfPrintBlock(struct TLSFBlock *blk)$/;"	f
 totalHighMemory	kmm.c	/^u64int totalHighMemory;                     $/;"	v
 totalMemory	kmm.c	/^u64int totalMemory() $/;"	f
+true	x86emu/validate.c	53;"	d	file:
 tss0	dtable.c	/^struct TSS tss0;$/;"	v	typeref:struct:TSS
 type	fs/devfs.c	/^    u8int type;$/;"	m	struct:DevFSNode	file:
 type	handle.h	/^    u64int type;$/;"	m	struct:Handle
 type	ide.c	/^    u8int type;        \/\/ 0: ATA, 1:ATAPI.$/;"	m	struct:ide_device	file:
 type	message.h	/^    s64int type;$/;"	m	struct:Message
-type0	pci.h	/^        } type0;$/;"	m	union:__anon12::__anon13	typeref:struct:__anon12::__anon13::__anon14
+type0	pci.h	/^        } type0;$/;"	m	union:__anon23::__anon24	typeref:struct:__anon23::__anon24::__anon25
 typeAttr	dtable.h	/^    u8int typeAttr;$/;"	m	struct:IDTEntry
 typeAttr	dtable.h	/^    u8int typeAttr;$/;"	m	struct:TSSEntry
+u16	x86emu/x86emu/types.h	/^typedef unsigned short 		u16;$/;"	t
+u16	x86emu/x86emu/types.h	52;"	d
 u16int	common.h	/^typedef unsigned short u16int;$/;"	t
 u16int	sysdef.h	/^typedef unsigned short  u16int;$/;"	t
+u32	x86emu/x86emu/types.h	/^typedef unsigned NUM32 		u32;$/;"	t
+u32	x86emu/x86emu/types.h	53;"	d
 u32int	common.h	/^typedef unsigned int   u32int;$/;"	t
 u32int	sysdef.h	/^typedef unsigned int    u32int;$/;"	t
+u64	x86emu/x86emu/types.h	/^typedef unsigned long long 	u64;$/;"	t
+u64	x86emu/x86emu/types.h	54;"	d
 u64int	sysdef.h	/^typedef unsigned long   u64int;$/;"	t
+u8	x86emu/x86emu/types.h	/^typedef unsigned char 		u8;$/;"	t
+u8	x86emu/x86emu/types.h	51;"	d
 u8int	common.h	/^typedef unsigned char  u8int;$/;"	t
 u8int	sysdef.h	/^typedef unsigned char   u8int;$/;"	t
 udma	ide.c	/^    u16int udma;        \/\/ Active udma mode.$/;"	m	struct:ide_device	file:
 uid	fs/bootfs.c	/^    char uid[8];$/;"	m	struct:TarHeader	file:
 uid	vfs2.h	/^    u64int uid;     $/;"	m	struct:Vnode
+uint	x86emu/x86emu/types.h	/^typedef unsigned int			uint;$/;"	t
+uint	x86emu/x86emu/types.h	59;"	d
+uldl	x86emu/sys.c	/^uldl (const unsigned int * r11)$/;"	f	file:
+uldw	x86emu/sys.c	/^uldw (const unsigned short * r11)$/;"	f	file:
 unload_module	module.c	/^void unload_module(module_t *m)$/;"	f
 unmapPages	paging.c	/^void unmapPages(u64int vaddr, u64int n, struct PML4E *pml4e)$/;"	f
 unmount	vfs.h	/^    s64int (*unmount)(struct FileSystemDriver *driver, struct FileSystem *fs);$/;"	m	struct:FileSystemDriverOperation
@@ -3805,6 +4637,9 @@ unregister_pci_driver	pci.c	/^MEXPORT(unregister_pci_driver);$/;"	v
 unregister_pci_driver	pci.c	/^void unregister_pci_driver(pci_driver_t *drv)$/;"	f
 used	handle.h	/^    u64int used;$/;"	m	struct:HandleTable
 usedSize	tlsf.h	/^    u64int usedSize;$/;"	m	struct:TLSFHeader
+ustl	x86emu/sys.c	/^ustl (unsigned long r5, unsigned int * r11)$/;"	f	file:
+ustq	x86emu/sys.c	/^ustq (unsigned long r5, unsigned long * r11)$/;"	f	file:
+ustw	x86emu/sys.c	/^ustw (unsigned long r5, unsigned short * r11)$/;"	f	file:
 v_ops	vfs2.h	/^    struct vnode_operations *v_ops;$/;"	m	struct:Vnode	typeref:struct:Vnode::vnode_operations
 va_arg	common.h	20;"	d
 va_arg	util.h	15;"	d
@@ -3814,32 +4649,32 @@ va_list	common.h	18;"	d
 va_list	util.h	13;"	d
 va_start	common.h	19;"	d
 va_start	util.h	14;"	d
-value	module.h	/^    u32int value;$/;"	m	struct:__anon9
+value	module.h	/^    u32int value;$/;"	m	struct:__anon20
 vbe_control_info	multiboot.h	/^    u32int vbe_control_info;$/;"	m	struct:multiboot
 vbe_interface_len	multiboot.h	/^    u32int vbe_interface_len;    $/;"	m	struct:multiboot
 vbe_interface_off	multiboot.h	/^    u32int vbe_interface_off;$/;"	m	struct:multiboot
 vbe_interface_seg	multiboot.h	/^    u32int vbe_interface_seg;$/;"	m	struct:multiboot
 vbe_mode	multiboot.h	/^    u32int vbe_mode;$/;"	m	struct:multiboot
 vbe_mode_info	multiboot.h	/^    u32int vbe_mode_info;$/;"	m	struct:multiboot
-vd_aux	elf.h	/^  Elf32_Word	vd_aux;			\/* Offset in bytes to verdaux array *\/$/;"	m	struct:__anon34
-vd_aux	elf.h	/^  Elf64_Word	vd_aux;			\/* Offset in bytes to verdaux array *\/$/;"	m	struct:__anon35
-vd_cnt	elf.h	/^  Elf32_Half	vd_cnt;			\/* Number of associated aux entries *\/$/;"	m	struct:__anon34
-vd_cnt	elf.h	/^  Elf64_Half	vd_cnt;			\/* Number of associated aux entries *\/$/;"	m	struct:__anon35
-vd_flags	elf.h	/^  Elf32_Half	vd_flags;		\/* Version information *\/$/;"	m	struct:__anon34
-vd_flags	elf.h	/^  Elf64_Half	vd_flags;		\/* Version information *\/$/;"	m	struct:__anon35
-vd_hash	elf.h	/^  Elf32_Word	vd_hash;		\/* Version name hash value *\/$/;"	m	struct:__anon34
-vd_hash	elf.h	/^  Elf64_Word	vd_hash;		\/* Version name hash value *\/$/;"	m	struct:__anon35
-vd_ndx	elf.h	/^  Elf32_Half	vd_ndx;			\/* Version Index *\/$/;"	m	struct:__anon34
-vd_ndx	elf.h	/^  Elf64_Half	vd_ndx;			\/* Version Index *\/$/;"	m	struct:__anon35
-vd_next	elf.h	/^  Elf32_Word	vd_next;		\/* Offset in bytes to next verdef$/;"	m	struct:__anon34
-vd_next	elf.h	/^  Elf64_Word	vd_next;		\/* Offset in bytes to next verdef$/;"	m	struct:__anon35
-vd_version	elf.h	/^  Elf32_Half	vd_version;		\/* Version revision *\/$/;"	m	struct:__anon34
-vd_version	elf.h	/^  Elf64_Half	vd_version;		\/* Version revision *\/$/;"	m	struct:__anon35
-vda_name	elf.h	/^  Elf32_Word	vda_name;		\/* Version or dependency names *\/$/;"	m	struct:__anon36
-vda_name	elf.h	/^  Elf64_Word	vda_name;		\/* Version or dependency names *\/$/;"	m	struct:__anon37
-vda_next	elf.h	/^  Elf32_Word	vda_next;		\/* Offset in bytes to next verdaux$/;"	m	struct:__anon36
-vda_next	elf.h	/^  Elf64_Word	vda_next;		\/* Offset in bytes to next verdaux$/;"	m	struct:__anon37
-vendor	pci.h	/^    u16int vendor, device;$/;"	m	struct:__anon12
+vd_aux	elf.h	/^  Elf32_Word	vd_aux;			\/* Offset in bytes to verdaux array *\/$/;"	m	struct:__anon45
+vd_aux	elf.h	/^  Elf64_Word	vd_aux;			\/* Offset in bytes to verdaux array *\/$/;"	m	struct:__anon46
+vd_cnt	elf.h	/^  Elf32_Half	vd_cnt;			\/* Number of associated aux entries *\/$/;"	m	struct:__anon45
+vd_cnt	elf.h	/^  Elf64_Half	vd_cnt;			\/* Number of associated aux entries *\/$/;"	m	struct:__anon46
+vd_flags	elf.h	/^  Elf32_Half	vd_flags;		\/* Version information *\/$/;"	m	struct:__anon45
+vd_flags	elf.h	/^  Elf64_Half	vd_flags;		\/* Version information *\/$/;"	m	struct:__anon46
+vd_hash	elf.h	/^  Elf32_Word	vd_hash;		\/* Version name hash value *\/$/;"	m	struct:__anon45
+vd_hash	elf.h	/^  Elf64_Word	vd_hash;		\/* Version name hash value *\/$/;"	m	struct:__anon46
+vd_ndx	elf.h	/^  Elf32_Half	vd_ndx;			\/* Version Index *\/$/;"	m	struct:__anon45
+vd_ndx	elf.h	/^  Elf64_Half	vd_ndx;			\/* Version Index *\/$/;"	m	struct:__anon46
+vd_next	elf.h	/^  Elf32_Word	vd_next;		\/* Offset in bytes to next verdef$/;"	m	struct:__anon45
+vd_next	elf.h	/^  Elf64_Word	vd_next;		\/* Offset in bytes to next verdef$/;"	m	struct:__anon46
+vd_version	elf.h	/^  Elf32_Half	vd_version;		\/* Version revision *\/$/;"	m	struct:__anon45
+vd_version	elf.h	/^  Elf64_Half	vd_version;		\/* Version revision *\/$/;"	m	struct:__anon46
+vda_name	elf.h	/^  Elf32_Word	vda_name;		\/* Version or dependency names *\/$/;"	m	struct:__anon47
+vda_name	elf.h	/^  Elf64_Word	vda_name;		\/* Version or dependency names *\/$/;"	m	struct:__anon48
+vda_next	elf.h	/^  Elf32_Word	vda_next;		\/* Offset in bytes to next verdaux$/;"	m	struct:__anon47
+vda_next	elf.h	/^  Elf64_Word	vda_next;		\/* Offset in bytes to next verdaux$/;"	m	struct:__anon48
+vendor	pci.h	/^    u16int vendor, device;$/;"	m	struct:__anon23
 verify_module_header	module.c	/^u32int verify_module_header(Elf32_Ehdr *header) $/;"	f
 verify_program_header	task2.c	/^u32int verify_program_header(Elf32_Ehdr *header) $/;"	f
 vfsClose	vfs.c	/^s64int vfsClose(struct VNode *node)$/;"	f
@@ -3898,33 +4733,33 @@ vma_t	vm.h	/^} vma_t;$/;"	t	typeref:struct:vma_struct
 vma_write	vm.c	/^void vma_write(vma_t *vma, u32int vaddr, u32int size)$/;"	f
 vmas	vm.h	/^    vma_t *vmas;$/;"	m	struct:vm_struct
 vmemcpy	vmm.c	/^u64int vmemcpy(struct VM *destVM, void *dest, struct VM *srcVM, void *src, u64int size)$/;"	f
-vn_aux	elf.h	/^  Elf32_Word	vn_aux;			\/* Offset in bytes to vernaux array *\/$/;"	m	struct:__anon38
-vn_aux	elf.h	/^  Elf64_Word	vn_aux;			\/* Offset in bytes to vernaux array *\/$/;"	m	struct:__anon39
-vn_cnt	elf.h	/^  Elf32_Half	vn_cnt;			\/* Number of associated aux entries *\/$/;"	m	struct:__anon38
-vn_cnt	elf.h	/^  Elf64_Half	vn_cnt;			\/* Number of associated aux entries *\/$/;"	m	struct:__anon39
-vn_file	elf.h	/^  Elf32_Word	vn_file;		\/* Offset of filename for this$/;"	m	struct:__anon38
-vn_file	elf.h	/^  Elf64_Word	vn_file;		\/* Offset of filename for this$/;"	m	struct:__anon39
-vn_next	elf.h	/^  Elf32_Word	vn_next;		\/* Offset in bytes to next verneed$/;"	m	struct:__anon38
-vn_next	elf.h	/^  Elf64_Word	vn_next;		\/* Offset in bytes to next verneed$/;"	m	struct:__anon39
-vn_version	elf.h	/^  Elf32_Half	vn_version;		\/* Version of structure *\/$/;"	m	struct:__anon38
-vn_version	elf.h	/^  Elf64_Half	vn_version;		\/* Version of structure *\/$/;"	m	struct:__anon39
-vna_flags	elf.h	/^  Elf32_Half	vna_flags;		\/* Dependency specific information *\/$/;"	m	struct:__anon40
-vna_flags	elf.h	/^  Elf64_Half	vna_flags;		\/* Dependency specific information *\/$/;"	m	struct:__anon41
-vna_hash	elf.h	/^  Elf32_Word	vna_hash;		\/* Hash value of dependency name *\/$/;"	m	struct:__anon40
-vna_hash	elf.h	/^  Elf64_Word	vna_hash;		\/* Hash value of dependency name *\/$/;"	m	struct:__anon41
-vna_name	elf.h	/^  Elf32_Word	vna_name;		\/* Dependency name string offset *\/$/;"	m	struct:__anon40
-vna_name	elf.h	/^  Elf64_Word	vna_name;		\/* Dependency name string offset *\/$/;"	m	struct:__anon41
-vna_next	elf.h	/^  Elf32_Word	vna_next;		\/* Offset in bytes to next vernaux$/;"	m	struct:__anon40
-vna_next	elf.h	/^  Elf64_Word	vna_next;		\/* Offset in bytes to next vernaux$/;"	m	struct:__anon41
-vna_other	elf.h	/^  Elf32_Half	vna_other;		\/* Unused *\/$/;"	m	struct:__anon40
-vna_other	elf.h	/^  Elf64_Half	vna_other;		\/* Unused *\/$/;"	m	struct:__anon41
+vn_aux	elf.h	/^  Elf32_Word	vn_aux;			\/* Offset in bytes to vernaux array *\/$/;"	m	struct:__anon49
+vn_aux	elf.h	/^  Elf64_Word	vn_aux;			\/* Offset in bytes to vernaux array *\/$/;"	m	struct:__anon50
+vn_cnt	elf.h	/^  Elf32_Half	vn_cnt;			\/* Number of associated aux entries *\/$/;"	m	struct:__anon49
+vn_cnt	elf.h	/^  Elf64_Half	vn_cnt;			\/* Number of associated aux entries *\/$/;"	m	struct:__anon50
+vn_file	elf.h	/^  Elf32_Word	vn_file;		\/* Offset of filename for this$/;"	m	struct:__anon49
+vn_file	elf.h	/^  Elf64_Word	vn_file;		\/* Offset of filename for this$/;"	m	struct:__anon50
+vn_next	elf.h	/^  Elf32_Word	vn_next;		\/* Offset in bytes to next verneed$/;"	m	struct:__anon49
+vn_next	elf.h	/^  Elf64_Word	vn_next;		\/* Offset in bytes to next verneed$/;"	m	struct:__anon50
+vn_version	elf.h	/^  Elf32_Half	vn_version;		\/* Version of structure *\/$/;"	m	struct:__anon49
+vn_version	elf.h	/^  Elf64_Half	vn_version;		\/* Version of structure *\/$/;"	m	struct:__anon50
+vna_flags	elf.h	/^  Elf32_Half	vna_flags;		\/* Dependency specific information *\/$/;"	m	struct:__anon51
+vna_flags	elf.h	/^  Elf64_Half	vna_flags;		\/* Dependency specific information *\/$/;"	m	struct:__anon52
+vna_hash	elf.h	/^  Elf32_Word	vna_hash;		\/* Hash value of dependency name *\/$/;"	m	struct:__anon51
+vna_hash	elf.h	/^  Elf64_Word	vna_hash;		\/* Hash value of dependency name *\/$/;"	m	struct:__anon52
+vna_name	elf.h	/^  Elf32_Word	vna_name;		\/* Dependency name string offset *\/$/;"	m	struct:__anon51
+vna_name	elf.h	/^  Elf64_Word	vna_name;		\/* Dependency name string offset *\/$/;"	m	struct:__anon52
+vna_next	elf.h	/^  Elf32_Word	vna_next;		\/* Offset in bytes to next vernaux$/;"	m	struct:__anon51
+vna_next	elf.h	/^  Elf64_Word	vna_next;		\/* Offset in bytes to next vernaux$/;"	m	struct:__anon52
+vna_other	elf.h	/^  Elf32_Half	vna_other;		\/* Unused *\/$/;"	m	struct:__anon51
+vna_other	elf.h	/^  Elf64_Half	vna_other;		\/* Unused *\/$/;"	m	struct:__anon52
 vnode	file.h	/^    struct vnode_struct *vnode;$/;"	m	struct:file_struct	typeref:struct:file_struct::vnode_struct
 vnode_list_struct	vfs2.h	/^typedef struct vnode_list_struct {$/;"	s
 vnode_list_t	vfs2.h	/^} vnode_list_t;$/;"	t	typeref:struct:vnode_list_struct
 vsprintf	util.c	/^u64int vsprintf(char *buf, char *fmt, va_list ap)$/;"	f
 wait_queue_node_struct	task2.h	/^typedef struct wait_queue_node_struct {$/;"	s
 wait_queue_node_t	task2.h	/^} wait_queue_node_t;$/;"	t	typeref:struct:wait_queue_node_struct
-wait_queue_t	task2.h	/^} wait_queue_t;$/;"	t	typeref:struct:__anon11
+wait_queue_t	task2.h	/^} wait_queue_t;$/;"	t	typeref:struct:__anon22
 wakeCode	task.h	/^    s64int wakeCode;$/;"	m	struct:Task
 wakeUp	waitqueue.c	/^void wakeUp(struct WaitQueue *wq, struct Task *task)$/;"	f
 wakeUpAll	waitqueue.c	/^void wakeUpAll(struct WaitQueue *wq)$/;"	f
@@ -3939,6 +4774,7 @@ wq	semaphore.h	/^    struct WaitQueue *wq;$/;"	m	struct:Semaphore	typeref:struct
 wqAppend	waitqueue.c	/^void wqAppend(struct WaitQueue *wq, struct Task *t)$/;"	f
 wqCreate	waitqueue.c	/^struct WaitQueue *wqCreate()$/;"	f
 wqTakeFirst	waitqueue.c	/^struct Task *wqTakeFirst(struct WaitQueue *wq)$/;"	f
+wrb	x86emu/sys.c	/^void X86API wrb($/;"	f
 write	device.h	/^    s64int (*write)(struct Device *dev, u64int offset, u64int size, char *buffer);$/;"	m	struct:DeviceOperation
 write	vfs.h	/^    s64int (*write)(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer);$/;"	m	struct:FileSystemOperation
 write	vfs2.h	/^    s64int   (*write)   (file_t *f, u64int offset, u64int sz, u8int *buffer);$/;"	m	struct:VnodeOperations
@@ -3955,7 +4791,58 @@ write_pci_dev_config_dword	pci.c	/^MEXPORT(write_pci_dev_config_dword);$/;"	v
 write_pci_dev_config_dword	pci.c	/^void write_pci_dev_config_dword(pci_dev_t *dev, u32int off, u32int data)$/;"	f
 write_pci_dev_config_word	pci.c	/^MEXPORT(write_pci_dev_config_word);$/;"	v
 write_pci_dev_config_word	pci.c	/^void write_pci_dev_config_word(pci_dev_t *dev, u32int off, u16int data)$/;"	f
+wrl	x86emu/sys.c	/^void X86API wrl($/;"	f
 wrmsr	loader32.s	/^wrmsr                        ; Write to the model-specific register.$/;"	l
+wrw	x86emu/sys.c	/^void X86API wrw($/;"	f
+x	x86emu/sys.c	/^struct __una_u16 { unsigned short x __attribute__((packed)); };$/;"	m	struct:__una_u16	file:
+x	x86emu/sys.c	/^struct __una_u32 { unsigned int   x __attribute__((packed)); };$/;"	m	struct:__una_u32	file:
+x	x86emu/sys.c	/^struct __una_u64 { unsigned long  x __attribute__((packed)); };$/;"	m	struct:__una_u64	file:
+x86	x86emu/x86emu/regs.h	/^	X86EMU_regs		x86;$/;"	m	struct:__anon17
+x86_fpu_bos	x86emu/x86emu/fpu_regs.h	/^    short               x86_fpu_tos, x86_fpu_bos;$/;"	m	struct:x86_fpu_registers
+x86_fpu_config	x86emu/x86emu/fpu_regs.h	/^    int                 x86_fpu_config;         \/* rounding modes, etc. *\/$/;"	m	struct:x86_fpu_registers
+x86_fpu_flags	x86emu/x86emu/fpu_regs.h	/^    int                 x86_fpu_flags;$/;"	m	struct:x86_fpu_registers
+x86_fpu_reg	x86emu/x86emu/fpu_regs.h	/^struct x86_fpu_reg {$/;"	s
+x86_fpu_reg_u	x86emu/x86emu/fpu_regs.h	/^union x86_fpu_reg_u {$/;"	u
+x86_fpu_registers	x86emu/x86emu/fpu_regs.h	/^struct x86_fpu_registers {$/;"	s
+x86_fpu_stack	x86emu/x86emu/fpu_regs.h	/^    struct x86_fpu_reg  x86_fpu_stack[8];$/;"	m	struct:x86_fpu_registers	typeref:struct:x86_fpu_registers::x86_fpu_reg
+x86_fpu_tos	x86emu/x86emu/fpu_regs.h	/^    short               x86_fpu_tos, x86_fpu_bos;$/;"	m	struct:x86_fpu_registers
+x86emuOp2_illegal_op	x86emu/ops2.c	/^static void x86emuOp2_illegal_op($/;"	f	file:
+x86emuOp2_long_jump	x86emu/ops2.c	/^static void x86emuOp2_long_jump(u8 op2)$/;"	f	file:
+x86emuOp2_set_byte	x86emu/ops2.c	/^static void x86emuOp2_set_byte(u8 op2)$/;"	f	file:
+x86emuOp_illegal_op	x86emu/ops.c	/^static void x86emuOp_illegal_op($/;"	f	file:
+x86emu_check_data_access	x86emu/debug.c	/^void x86emu_check_data_access (uint dummy1, uint dummy2)$/;"	f
+x86emu_check_ip_access	x86emu/debug.c	/^void x86emu_check_ip_access (void)$/;"	f
+x86emu_check_mem_access	x86emu/debug.c	/^void x86emu_check_mem_access (u32 dummy)$/;"	f
+x86emu_check_sp_access	x86emu/debug.c	/^void x86emu_check_sp_access (void)$/;"	f
+x86emu_decode_printf	x86emu/debug.c	/^void x86emu_decode_printf (char *x)$/;"	f
+x86emu_decode_printf2	x86emu/debug.c	/^void x86emu_decode_printf2 (char *x, int y)$/;"	f
+x86emu_dump_regs	x86emu/debug.c	/^void x86emu_dump_regs (void)$/;"	f
+x86emu_dump_xregs	x86emu/debug.c	/^void x86emu_dump_xregs (void)$/;"	f
+x86emu_end_instr	x86emu/debug.c	/^void x86emu_end_instr (void)$/;"	f
+x86emu_fpu_op_d9_tab	x86emu/fpu.c	/^static char *x86emu_fpu_op_d9_tab[] = {$/;"	v	file:
+x86emu_fpu_op_d9_tab1	x86emu/fpu.c	/^static char *x86emu_fpu_op_d9_tab1[] = {$/;"	v	file:
+x86emu_fpu_op_da_tab	x86emu/fpu.c	/^char *x86emu_fpu_op_da_tab[] = {$/;"	v
+x86emu_fpu_op_db_tab	x86emu/fpu.c	/^char *x86emu_fpu_op_db_tab[] = {$/;"	v
+x86emu_fpu_op_dc_tab	x86emu/fpu.c	/^char *x86emu_fpu_op_dc_tab[] = {$/;"	v
+x86emu_fpu_op_dd_tab	x86emu/fpu.c	/^static char *x86emu_fpu_op_dd_tab[] = {$/;"	v	file:
+x86emu_fpu_op_de_tab	x86emu/fpu.c	/^static char *x86emu_fpu_op_de_tab[] =$/;"	v	file:
+x86emu_fpu_op_df_tab	x86emu/fpu.c	/^static char *x86emu_fpu_op_df_tab[] = {$/;"	v	file:
+x86emu_inc_decoded_inst_len	x86emu/debug.c	/^void x86emu_inc_decoded_inst_len (int x)$/;"	f
+x86emu_intr_handle	x86emu/decode.c	/^static void x86emu_intr_handle(void)$/;"	f	file:
+x86emu_intr_raise	x86emu/decode.c	/^void x86emu_intr_raise($/;"	f
+x86emu_just_disassemble	x86emu/debug.c	/^void x86emu_just_disassemble (void)$/;"	f
+x86emu_optab	x86emu/ops.c	/^void (*x86emu_optab[256])(u8) =$/;"	v
+x86emu_optab2	x86emu/ops2.c	/^void (*x86emu_optab2[256])(u8) =$/;"	v
+x86emu_parity_tab	x86emu/prim_ops.c	/^static u32 x86emu_parity_tab[8] =$/;"	v	file:
+x86emu_print_int_vect	x86emu/debug.c	/^void x86emu_print_int_vect (u16 iv)$/;"	f
+x86emu_single_step	x86emu/debug.c	/^void x86emu_single_step (void)$/;"	f
+x_reg	x86emu/x86emu/regs.h	/^	u16 filler0, x_reg;$/;"	m	struct:__anon10
+x_reg	x86emu/x86emu/regs.h	/^	u16 x_reg;$/;"	m	struct:__anon13
+xchg	loader32.s	/^xchg bx,bx$/;"	l
 xor	loader32.s	/^xor eax, eax       ; Nullify the A-register.$/;"	l
 xor	loader32.s	/^xor rsi, rsi$/;"	l
+xor_byte	x86emu/prim_ops.c	/^u8 xor_byte(u8 d, u8 s)$/;"	f
+xor_long	x86emu/prim_ops.c	/^u32 xor_long(u32 d, u32 s)$/;"	f
+xor_word	x86emu/prim_ops.c	/^u16 xor_word(u16 d, u16 s)$/;"	f
+xorl	x86emu/ops2.c	72;"	d	file:
 zero	dtable.h	/^    u8int zero;$/;"	m	struct:IDTEntry

@@ -5,9 +5,10 @@
 
 MBOOT_PAGE_ALIGN    equ 1<<0    ; Load kernel and modules on a page boundary
 MBOOT_MEM_INFO      equ 1<<1    ; Provide your kernel with memory info
+MBOOT_VIDEO_INFO    equ 1<<2    ; Provide your kernel with vbe info
 MBOOT_HEADER_MAGIC  equ 0x1BADB002 ; Multiboot Magic value
 MBOOT_AOUT_KLUDGE   equ 1<<16
-MBOOT_HEADER_FLAGS  equ (MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO | MBOOT_AOUT_KLUDGE)
+MBOOT_HEADER_FLAGS  equ (MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO |  MBOOT_AOUT_KLUDGE | MBOOT_VIDEO_INFO)
 MBOOT_CHECKSUM      equ -(MBOOT_HEADER_MAGIC + MBOOT_HEADER_FLAGS)
 LOADBASE            equ 0x100000
 VIRTUALBASE         equ 0xffffffffc0000000
@@ -24,12 +25,17 @@ dd  MBOOT_CHECKSUM            ; To ensure that the above values are correct
 
 dd  mboot                     ; Location of this descriptor
 dd  mboot                   ; Start of kernel '.text' (code) section.
-dd  00                       ; End of kernel '.data' section.
-dd  00                       ; End of kernel.
+dd  0                       ; End of kernel '.data' section.
+dd  0                       ; End of kernel.
 dd  start                     ; Kernel entry point (initial EIP).
+dd  0                       ; Grub graphical mode_type: linear mode
+dd  800                       ; width
+dd  600                       ; height
+dd  16                       ; color depth
 
 [GLOBAL start]                ; Kernel entry point.
 start:
+cli                           ; Clear the interrupt flag.
 push    0
 mov     eax,esp
 add     eax,4
@@ -40,7 +46,7 @@ push    ebx                   ; Load multiboot header location
 mov edi, 0x1000    ; Set the destination index to 0x1000.
 mov cr3, edi       ; Set control register 3 to the destination index.
 xor eax, eax       ; Nullify the A-register.
-mov ecx, 1024*7    ; Set the C-register to 4096.
+mov ecx, 1024*9    ; Set the C-register to 4096.
 rep stosd          ; Clear the memory.
 mov edi, cr3       ; Set the destination index to control register 3.
 
@@ -59,16 +65,17 @@ add edi, 0x1000
 
 ; 4)PDE-first
 mov DWORD [edi], 0x6003      ; Set the double word at the destination index to 0x4003.
+mov DWORD [edi+8], 0x9003      ; Set the double word at the destination index to 0x4003.
 add edi, 0x1000              ; Add 0x1000 to the destination index.
 
 ; 5)PDE-last
 mov DWORD [edi], 0x7003      ; Set the double word at the destination index to 0x4003.
+mov DWORD [edi+8], 0x8003      ; Set the double word at the destination index to 0x4003.
 add edi, 0x1000
 
 ; 6)PTE-first
 mov ebx, 0x00000003          ; Set the B-register to 0x00000003.
 mov ecx, 512                 ; Set the C-register to 512.
-
 .SetEntry1:
 mov DWORD [edi], ebx         ; Set the double word at the destination index to the B-register.
 add ebx, 0x1000              ; Add 0x1000 to the B-register.
@@ -78,12 +85,28 @@ loop .SetEntry1               ; Set the next entry.
 ; 7)PTE-last
 mov ebx, 0x00000003          ; Set the B-register to 0x00000003.
 mov ecx, 512                 ; Set the C-register to 512.
-
 .SetEntry2:
 mov DWORD [edi], ebx         ; Set the double word at the destination index to the B-register.
 add ebx, 0x1000              ; Add 0x1000 to the B-register.
 add edi, 8                   ; Add eight to the destination index.
 loop .SetEntry2               ; Set the next entry.
+
+; 8)PTE-secondLast
+mov ecx, 512                 ; Set the C-register to 512.
+.SetEntry3:
+mov DWORD [edi], ebx         ; Set the double word at the destination index to the B-register.
+add ebx, 0x1000              ; Add 0x1000 to the B-register.
+add edi, 8                   ; Add eight to the destination index.
+loop .SetEntry3               ; Set the next entry.
+
+; 9)PTE-sencondFirst
+mov ebx, 0x00200003          ; Set the B-register to 0x00000003.
+mov ecx, 512                 ; Set the C-register to 512.
+.SetEntry4:
+mov DWORD [edi], ebx         ; Set the double word at the destination index to the B-register.
+add ebx, 0x1000              ; Add 0x1000 to the B-register.
+add edi, 8                   ; Add eight to the destination index.
+loop .SetEntry4               ; Set the next entry.
 
 mov eax, cr4                 ; Set the A-register to control register 4.
 or eax, 1 << 5               ; Set the PAE-bit, which is the 6th bit (bit 5).
@@ -94,6 +117,7 @@ rdmsr                        ; Read from the model-specific register.
 or eax, 1 << 8               ; Set the LM-bit which is the 9th bit (bit 8).
 wrmsr                        ; Write to the model-specific register.
 
+xchg bx,bx
 mov eax, cr0                 ; Set the A-register to control register 0.
 or eax, 1 << 31              ; Set the PG-bit, which is the 32nd bit (bit 31).
 mov cr0, eax                 ; Set control register 0 to the A-register.
@@ -105,7 +129,6 @@ jmp gdt64.code:start64       ; Set the code segment and enter 64-bit long mode.
 [BITS 64]
 
 start64:
-cli                           ; Clear the interrupt flag.
 mov ax, gdt64.data            ; Set the A-register to the data descriptor.
 mov ds, ax                    ; Set the data segment to the A-register.
 mov es, ax                    ; Set the extra segment to the A-register.

@@ -12,5 +12,10 @@ DEFN_SYSCALL_3(Receive, 8, s64int, char *, u64int);
 DEFN_SYSCALL_3(Reply, 9, s64int, char *, u64int);
 DEFN_SYSCALL_2(NewTask, 10, char *, u64int);
 DEFN_SYSCALL_1(ExitTask, 11, s64int);
+DEFN_SYSCALL_2(Open, 12, char *, s64int);
+DEFN_SYSCALL_1(Close, 13, s64int);
+DEFN_SYSCALL_4(Read, 14, s64int, u64int, u64int, char *);
+DEFN_SYSCALL_4(Write, 15, s64int, u64int, u64int, char *);
+DEFN_SYSCALL_3(ReadDirectory, 16, s64int, u64int, char *);
 
 

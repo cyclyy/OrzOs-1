@@ -6,10 +6,11 @@
 #include "screen.h"
 #include "syscall/ozipc.h"
 #include "syscall/oztask.h"
+#include "syscall/ozfs.h"
 
 void syscallTest();
 
-#define N_SYSCALLS 12
+#define N_SYSCALLS 17
 
 void *syscalls[N_SYSCALLS] = {
     &syscallTest,
@@ -24,6 +25,11 @@ void *syscalls[N_SYSCALLS] = {
     OzReply,
     OzNewTask,
     OzExitTask,
+    OzOpen,
+    OzClose,
+    OzRead,
+    OzWrite,
+    OzReadDirectory,
 };
 
 u64int nsyscalls = N_SYSCALLS;

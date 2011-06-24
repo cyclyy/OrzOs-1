@@ -33,6 +33,8 @@ void initMemoryManagement(u64int totalHighMem, u64int freePMemStartAddr)
 
     // convert KB to bytes
     totalHighMemory = totalHighMem*1024;
+    if (totalHighMemory > 16*1024*1024)
+        totalHighMemory = 16*1024*1024;
     freeMemoryStart = CODE_LOAD_ADDR + ((freePMemStartAddr + PAGE_SIZE - 1) & (~0 << 12));
 
     n = (totalHighMemory+HIGHMEM_START_ADDR) >> 12;

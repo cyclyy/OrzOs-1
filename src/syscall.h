@@ -74,5 +74,10 @@ DECL_SYSCALL_3(Receive, s64int, char *, u64int);
 DECL_SYSCALL_3(Reply, s64int, char *, u64int);
 DECL_SYSCALL_2(NewTask, char *, u64int);
 DECL_SYSCALL_1(ExitTask, s64int);
+DECL_SYSCALL_2(Open, char *, s64int);
+DECL_SYSCALL_1(Close, s64int);
+DECL_SYSCALL_4(Read, s64int, u64int, u64int, char *);
+DECL_SYSCALL_4(Write, s64int, u64int, u64int, char *);
+DECL_SYSCALL_3(ReadDirectory, s64int, u64int, char *);
 
 #endif /* SYSCALL_H */
