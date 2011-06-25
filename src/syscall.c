@@ -17,5 +17,5 @@ DEFN_SYSCALL_1(Close, 13, s64int);
 DEFN_SYSCALL_4(Read, 14, s64int, u64int, u64int, char *);
 DEFN_SYSCALL_4(Write, 15, s64int, u64int, u64int, char *);
 DEFN_SYSCALL_3(ReadDirectory, 16, s64int, u64int, char *);
-
+DEFN_SYSCALL_1(AddHeapSize, 17, s64int);
 

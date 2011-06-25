@@ -238,9 +238,8 @@ s64int kNewTask(const char *path, u64int flags)
     newTask->rsp = KERNEL_STACK_TOP;
     newTask->rsp0 = KERNEL_STACK_TOP;
     newTask->vm = vmCreate();
-    newTask->prog = (struct Program*)kMalloc(sizeof(struct Program));
     newTask->handleTable = htCreate();
-    memset(newTask->prog, 0, sizeof(struct Program));
+    newTask->prog = progCreate();
     ret = loadElfProgram(path, newTask->prog, newTask->vm);
     newTask->rsp3 = USER_STACK_TOP;
     newTask->rip3 = newTask->prog->entry;

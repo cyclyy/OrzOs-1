@@ -91,7 +91,7 @@ s64int devfsRoot(struct FileSystem *fs)
     struct DevFSData *fsData;
 
     fsData = (struct DevFSData *)fs->data;
-    return (u64int)fsData->root - HEAP_START_ADDR;
+    return (u64int)fsData->root - KERNEL_HEAP_START_ADDR;
 }
 
 s64int devfsOpen(struct FileSystem *fs, s64int id, s64int *openId)
@@ -111,7 +111,7 @@ s64int devfsRead(struct FileSystem *fs, s64int id, u64int offset, u64int size, c
     struct Device *dev;
     s64int ret;
 
-    node = (struct DevFSNode *)(id + HEAP_START_ADDR);
+    node = (struct DevFSNode *)(id + KERNEL_HEAP_START_ADDR);
     if (node->type == DEVFS_TYPE_OBJ) {
         dev = findDevice(node->objid);
         if (dev && dev->op->read) {
@@ -130,7 +130,7 @@ s64int devfsReaddir(struct FileSystem *fs, s64int id, u64int bufSize, char *buf)
     struct DirectoryRecord *drec;
     s64int ret, pos, n, dsize;
 
-    node = (struct DevFSNode *)(id + HEAP_START_ADDR);
+    node = (struct DevFSNode *)(id + KERNEL_HEAP_START_ADDR);
     if (node->type == DEVFS_TYPE_DIR) {
         node = node->children;
         pos = 0;
@@ -159,7 +159,7 @@ s64int devfsFinddir(struct FileSystem *fs, s64int id, const char *name)
     struct DevFSNode *node, *fnode;
     s64int ret;
 
-    node = (struct DevFSNode *)(id + HEAP_START_ADDR);
+    node = (struct DevFSNode *)(id + KERNEL_HEAP_START_ADDR);
     if (node->type == DEVFS_TYPE_DIR) {
         node = node->children;
         fnode = 0;
@@ -171,7 +171,7 @@ s64int devfsFinddir(struct FileSystem *fs, s64int id, const char *name)
             node = node->next;
         }
         if (fnode)
-            ret = (u64int)(node) - HEAP_START_ADDR;
+            ret = (u64int)(node) - KERNEL_HEAP_START_ADDR;
         else
             ret = -1;
     } else 
@@ -189,7 +189,7 @@ s64int devfsCreateObject(struct FileSystem *fs, s64int id, const char *name, s64
     struct DevFSNode *node, *fnode;
     s64int ret;
 
-    node = (struct DevFSNode *)(id + HEAP_START_ADDR);
+    node = (struct DevFSNode *)(id + KERNEL_HEAP_START_ADDR);
     if (node->type == DEVFS_TYPE_DIR) {
         fnode = (struct DevFSNode *)kMalloc(sizeof(struct DevFSNode));
         memset(fnode, 0, sizeof(struct DevFSNode));

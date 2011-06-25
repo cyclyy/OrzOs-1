@@ -6,6 +6,8 @@
 struct Program {
     s64int ref;
     u64int entry;
+    u64int brk;
+    u64int allocBefore;
 };
 
 struct Program *progCreate();

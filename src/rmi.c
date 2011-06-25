@@ -15,7 +15,7 @@ void initRealModeInterface()
 {
     X86EMU_setupPioFuncs(&pioFuncs);
     memset(&M, 0, sizeof M);
-    M.mem_base = HEAP_START_ADDR;
+    M.mem_base = KERNEL_HEAP_START_ADDR;
     M.mem_size = 0x100000;
 }
 

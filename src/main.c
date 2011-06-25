@@ -18,7 +18,6 @@
 #include "x86emu.h"
 #include "rmi.h"
 #include "video/vbe.h"
-#include "rme.h"
 
 void testVBE()
 {

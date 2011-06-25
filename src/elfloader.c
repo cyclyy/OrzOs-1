@@ -27,7 +27,7 @@ s64int isValidElfHeader(Elf64_Ehdr *ehdr)
 
     ret &= (ehdr->e_type == ET_EXEC);
     ret &= (ehdr->e_machine == EM_X86_64);
-    ret &= ((ehdr->e_entry >= USER_START_ADDR) && (ehdr->e_entry < USER_END_ADDR));
+    ret &= ((ehdr->e_entry >= USER_CODE_START_ADDR) && (ehdr->e_entry < USER_CODE_END_ADDR));
     ret &= (ehdr->e_phnum > 0);
 
     return ret;

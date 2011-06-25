@@ -7,6 +7,8 @@ struct Program *progCreate()
     struct Program *prog;
     prog = (struct Program *)kMalloc(sizeof(struct Program));
     memset(prog,0,sizeof(struct Program));
+    prog->brk = USER_HEAP_START_ADDR;
+    prog->allocBefore = prog->brk;
     return prog;
 }
 

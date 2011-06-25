@@ -79,5 +79,6 @@ DECL_SYSCALL_1(Close, s64int);
 DECL_SYSCALL_4(Read, s64int, u64int, u64int, char *);
 DECL_SYSCALL_4(Write, s64int, u64int, u64int, char *);
 DECL_SYSCALL_3(ReadDirectory, s64int, u64int, char *);
+DECL_SYSCALL_1(AddHeapSize, s64int);
 
 #endif /* SYSCALL_H */
