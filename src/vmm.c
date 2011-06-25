@@ -164,13 +164,13 @@ struct VM *vmInit()
     tmp = vma;
 
     // 1MB-Kernel Heap Free
-    vma = vmaCreate(HIGHMEM_START_ADDR, HEAP_START_ADDR - HIGHMEM_START_ADDR, VMA_STATUS_FREE);
+    vma = vmaCreate(HIGHMEM_START_ADDR, KERNEL_HEAP_START_ADDR - HIGHMEM_START_ADDR, VMA_STATUS_FREE);
     vma->prev = tmp;
     tmp->next = vma;
     tmp = vma;
 
     // physical memory mapped
-    vma = vmaCreate(HEAP_START_ADDR, totalMemory(), VMA_STATUS_USED | VMA_OWNER_KERNEL | VMA_TYPE_HEAP);
+    vma = vmaCreate(KERNEL_HEAP_START_ADDR, totalMemory(), VMA_STATUS_USED | VMA_OWNER_KERNEL | VMA_TYPE_HEAP);
     vma->prev = tmp;
     tmp->next = vma;
     tmp = vma;

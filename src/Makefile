@@ -13,7 +13,8 @@ CORE_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o dtable.o flushdtable.o isr.o
 			elfloader.o waitqueue.o schedule.o semaphore.o mutex.o message.o \
 			ksyscall.o device.o i8042.o program.o except.o usermemcopy.o \
 			handle.o fs/bootfs.o fs/devfs.o \
-			syscall/ozipc.o syscall/oztask.o syscall/ozfs.o 
+			syscall/ozipc.o syscall/oztask.o syscall/ozfs.o \
+			rmi.o video/vbe.o
 
 MOD_SOURCES = testmod.o            \
               i8042.o              \
@@ -32,7 +33,7 @@ ASFLAGS=-felf64
 all: $(CORE_SOURCES) $(PROG_SOURCES) $(X86EMU_SOURCES) libx86emu.a core_link prog_link loader32 ctags
 
 clean:
-	$(QUIET)-rm *.o ../util/*.o prog/*.o prog/init fs/*.o syscall/*.o x86emu/*.o kernel allsymbol.map global.map
+	$(QUIET)-rm *.o ../util/*.o prog/*.o prog/init video/*.o fs/*.o syscall/*.o x86emu/*.o kernel allsymbol.map global.map
 
 loader32: loader32.s
 	@echo "AS	$@"

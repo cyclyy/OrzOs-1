@@ -5,15 +5,15 @@
 extern struct TLSFHeader *heap;
 
 #define INVLPG(x) {asm volatile("invlpg %0"::"m"(*(char*)x)); }
-#define MAP_ADDR_P_TO_V(x) ((x) ? (heap ? ((u64int)(x) + HEAP_START_ADDR):((u64int)(x) + CODE_LOAD_ADDR)) : 0)
-#define MAP_ADDR_V_TO_P(x) ((x) ? (heap ? ((u64int)(x) - HEAP_START_ADDR):((u64int)(x) + CODE_LOAD_ADDR)) : 0)
+#define MAP_ADDR_P_TO_V(x) ((x) ? (heap ? ((u64int)(x) + KERNEL_HEAP_START_ADDR):((u64int)(x) + CODE_LOAD_ADDR)) : 0)
+#define MAP_ADDR_V_TO_P(x) ((x) ? (heap ? ((u64int)(x) - KERNEL_HEAP_START_ADDR):((u64int)(x) + CODE_LOAD_ADDR)) : 0)
 
 struct PML4E *getPML4E()
 {
     u64int x;
     asm volatile("mov %%cr3,%0":"=r"(x)::);
     if (heap)
-        x += HEAP_START_ADDR;
+        x += KERNEL_HEAP_START_ADDR;
     return (struct PML4E *)(x & 0xfffffffffffff000);
 }
 
@@ -99,7 +99,7 @@ void unmapPages(u64int vaddr, u64int n, struct PML4E *pml4e)
     struct PageDirectory *pd;
     struct PageDirectoryPointer *pdp;
 
-    DBG("%x,%x",vaddr,n);
+    //DBG("%x,%x",vaddr,n);
 
     if (pml4e == getPML4E())
         doInvlPG = 1;

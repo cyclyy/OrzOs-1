@@ -38,20 +38,18 @@ void initMemoryManagement(u64int totalHighMem, u64int freePMemStartAddr)
     freeMemoryStart = CODE_LOAD_ADDR + ((freePMemStartAddr + PAGE_SIZE - 1) & (~0 << 12));
 
     n = (totalHighMemory+HIGHMEM_START_ADDR) >> 12;
-    printk("start mapPages:%x\n",n);
+    //printk("start mapPages:%x\n",n);
     mapPagesVtoP(CODE_LOAD_ADDR,0,MIN(MAX_CODE_SIZE>>12,n),getPML4E(), 0);
-    DBG("1");
-    mapPagesVtoP(HEAP_START_ADDR,0,n,getPML4E(), 0);
-    DBG("2");
+    mapPagesVtoP(KERNEL_HEAP_START_ADDR,0,n,getPML4E(), 0);
 
     availableMemory = totalHighMemory - (freeMemoryStart - CODE_LOAD_ADDR);
-    freeMemoryStart = freeMemoryStart - CODE_LOAD_ADDR + HEAP_START_ADDR;
+    freeMemoryStart = freeMemoryStart - CODE_LOAD_ADDR + KERNEL_HEAP_START_ADDR;
     availableMemory &= ~0 << 3;
 
-    printk("start createHeap\n");
+    //printk("start createHeap\n");
     heap = tlsfInitHeap(freeMemoryStart, availableMemory);
 
-    printk("heap created\n");
+    //printk("heap created\n");
 
     unmapPages(0, 1, getPML4E());
 }
@@ -98,7 +96,7 @@ u64int kMallocEx(u64int size, u64int pageAligned, u64int *physicalAddr)
         }
         if (physicalAddr) {
             if (ret)
-                *physicalAddr = ret - HEAP_START_ADDR;
+                *physicalAddr = ret - KERNEL_HEAP_START_ADDR;
             else
                 *physicalAddr = 0;
         }

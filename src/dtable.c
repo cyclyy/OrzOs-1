@@ -195,7 +195,6 @@ void initTSS()
 {
     gdtPtr.limit = sizeof(struct GDTEntry) * 7 - 1;
     gdtPtr.base = (u64int)&gdtTable;
-    printk("%x,%d\n", gdtPtr.base,gdtPtr.limit);
 
     setGDT(&gdtTable[0],0,0,0,0);
     setGDT(&gdtTable[1],0,0xffffffff,0x9a,0xcf);
@@ -210,7 +209,6 @@ void initTSS()
     //tssPtr.limit = sizeof(struct TSSEntry) - 1;
     //tssPtr.base = (u64int)&tss0;
 
-    printk("%x,%d\n", gdtPtr.base,gdtPtr.limit);
     flushGDT(&gdtPtr);
     flushTSS();
 }
