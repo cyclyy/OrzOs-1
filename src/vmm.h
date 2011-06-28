@@ -64,6 +64,8 @@ s64int vmDeref(struct VM *vm);
 
 void vmDump(struct VM *vm);
 
+struct VMA *vmaCreate(u64int start, u64int size, u64int flags);
+
 extern u64int copyUnsafe(void *dest, void *src, u64int size);
 
 u64int copyFromUser(void *dest, void *src, u64int size);

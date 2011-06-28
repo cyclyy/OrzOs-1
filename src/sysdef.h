@@ -10,6 +10,9 @@
 #define PAGE_MASK 0xfffffffffffff000
 #define PTR_SIZE 8
 
+#define MMAP_DEV_START_ADDR 0xc0000000
+#define MMAP_DEV_SIZE       0x40000000
+
 #define KERNEL_STACK_TOP    0xffffffffe0000000
 #define KERNEL_STACK_BOTTOM 0xffffffffd0000000
 #define KERNEL_STACK_SIZE   0x2000

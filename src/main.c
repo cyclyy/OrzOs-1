@@ -27,28 +27,31 @@ void testVBE()
 
     /* detect presence of vbe2+ */
     printk("Detecting presence of VBE2...\n");
-    ib = (struct VBEInfoBlock *)0xB000;
+    ib = (struct VBEInfoBlock *)realModeAlloc(sizeof(struct VBEInfoBlock));
     ret = getVBEInfo(ib);
-
     printk("Result: %x\n", ret);
-
     if ((M.x86.R_EAX & 0x00ff) != 0x4f) {
         printk("VBE not supported\n");
     }
-
     if ((M.x86.R_EAX & 0xff00) != 0) {
         printk("VBE call failed: %x\n", M.x86.R_EAX & 0xffff);
     }
-
-    u16int mode = 0x115;
-    mib = (struct VBEModeInfoBlock *)0x10000;
-    getVBEModeInfo(mode, mib);
-
+    mib = (struct VBEModeInfoBlock *)realModeAlloc(sizeof(struct VBEModeInfoBlock));
+    getVBEModeInfo(0x115, mib);
     printk("Framebuffer at %x, width: %d, height: %d\n", mib->PhysBasePtr, mib->XResolution, mib->YResolution);
-
-    setVBEMode(mode);
+    setVBEMode(0x115);
+    char *vram = (char*)mib->PhysBasePtr;
+    int i,j,k;
+    for (i=0; i< mib->YResolution; i++) {
+        for (j=0; j< mib->XResolution; j++) {
+            k = 3 * (i * mib->XResolution + j); 
+            vram[k] = i * 255 / mib->YResolution;
+            vram[k+1] = i * 255 / mib->YResolution;
+            vram[k+2] = i * 255 / mib->YResolution;
+        }
+    }
+    setVBEMode(0x3);
     printk("Switch: %x\n", M.x86.R_EAX);
-    getVBECurrentMode(&mode);
 }
 
 u64int kmain(struct BootInfo *si)
@@ -69,7 +72,7 @@ u64int kmain(struct BootInfo *si)
     vfsMount("Device",0,"devfs",0,0);
     i8042_Init();
     initRealModeInterface();
-    //testVBE();
+    testVBE();
 
     printk("InitAddr:%x\n", getBootInfo()->initrdAddr);
     printk("AvailMem:%dKB\n",availMemory()/1024);

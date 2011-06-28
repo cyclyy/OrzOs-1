@@ -5,16 +5,16 @@ int main()
     char c = 'x', d;
     s64int client;
 
-    client = Connect(100);
+    client = OzConnect(100);
 
-    Post(client, "a", 1);
-    Post(client, "b", 1);
-    Post(client, "c", 1);
+    OzPost(client, "a", 1);
+    OzPost(client, "b", 1);
+    OzPost(client, "c", 1);
 
-    Send(client, &c, 1, &d, 1);
+    OzSend(client, &c, 1, &d, 1);
 
-    PutChar(d);
-    PutChar('\n');
+    OzPutChar(d);
+    OzPutChar('\n');
 
     for (;;);
 }

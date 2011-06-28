@@ -40,6 +40,7 @@ void initMemoryManagement(u64int totalHighMem, u64int freePMemStartAddr)
     n = (totalHighMemory+HIGHMEM_START_ADDR) >> 12;
     //printk("start mapPages:%x\n",n);
     mapPagesVtoP(CODE_LOAD_ADDR,0,MIN(MAX_CODE_SIZE>>12,n),getPML4E(), 0);
+    mapPagesVtoP(MMAP_DEV_START_ADDR,MMAP_DEV_START_ADDR,MMAP_DEV_SIZE >> 12,getPML4E(), 0);
     mapPagesVtoP(KERNEL_HEAP_START_ADDR,0,n,getPML4E(), 0);
 
     availableMemory = totalHighMemory - (freeMemoryStart - CODE_LOAD_ADDR);

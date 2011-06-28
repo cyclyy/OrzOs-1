@@ -11,12 +11,13 @@ rm  initrd/init
 cp src/prog/init initrd/
 rm initrd.tar
 tar cvf initrd.tar initrd/
+mv initrd.tar initrd.img
 ls c.img 2>/dev/null || bximage -hd -mode=flat -size=10 -q c.img
 sudo losetup /dev/loop2 floppy.img
 ls /tmp/floppy 1>/dev/null || mkdir /tmp/floppy
 sudo mount /dev/loop2 /tmp/floppy
 sudo cp src/loader32 /tmp/floppy/loader32
 sudo cp src/kernel /tmp/floppy/kernel
-sudo cp initrd.tar /tmp/floppy/initrd.img
+sudo cp initrd.img /tmp/floppy/initrd.img
 sudo umount /dev/loop2
 sudo losetup -d /dev/loop2 

@@ -62,23 +62,24 @@
         return ret;         \
     }                       
 
-DECL_SYSCALL_0(TestSyscall);
-DECL_SYSCALL_1(PutChar, char);
-DECL_SYSCALL_1(CreateServer, s64int);
-DECL_SYSCALL_1(DestroyServer, s64int);
-DECL_SYSCALL_1(Connect, s64int);
-DECL_SYSCALL_1(Disconnect, s64int);
-DECL_SYSCALL_5(Send, s64int, char *, u64int, char *, u64int);
-DECL_SYSCALL_3(Post, s64int, char *, u64int);
-DECL_SYSCALL_3(Receive, s64int, char *, u64int);
-DECL_SYSCALL_3(Reply, s64int, char *, u64int);
-DECL_SYSCALL_2(NewTask, char *, u64int);
-DECL_SYSCALL_1(ExitTask, s64int);
-DECL_SYSCALL_2(Open, char *, s64int);
-DECL_SYSCALL_1(Close, s64int);
-DECL_SYSCALL_4(Read, s64int, u64int, u64int, char *);
-DECL_SYSCALL_4(Write, s64int, u64int, u64int, char *);
-DECL_SYSCALL_3(ReadDirectory, s64int, u64int, char *);
-DECL_SYSCALL_1(AddHeapSize, s64int);
+DECL_SYSCALL_0(OzTestSyscall);
+DECL_SYSCALL_1(OzPutChar, char);
+DECL_SYSCALL_1(OzCreateServer, s64int);
+DECL_SYSCALL_1(OzDestroyServer, s64int);
+DECL_SYSCALL_1(OzConnect, s64int);
+DECL_SYSCALL_1(OzDisconnect, s64int);
+DECL_SYSCALL_5(OzSend, s64int, char *, u64int, char *, u64int);
+DECL_SYSCALL_3(OzPost, s64int, char *, u64int);
+DECL_SYSCALL_3(OzReceive, s64int, char *, u64int);
+DECL_SYSCALL_3(OzReply, s64int, char *, u64int);
+DECL_SYSCALL_2(OzNewTask, char *, u64int);
+DECL_SYSCALL_1(OzExitTask, s64int);
+DECL_SYSCALL_2(OzOpen, char *, s64int);
+DECL_SYSCALL_1(OzClose, s64int);
+DECL_SYSCALL_4(OzRead, s64int, u64int, u64int, char *);
+DECL_SYSCALL_4(OzWrite, s64int, u64int, u64int, char *);
+DECL_SYSCALL_3(OzReadDirectory, s64int, u64int, char *);
+DECL_SYSCALL_1(OzAddHeapSize, s64int);
+DECL_SYSCALL_4(OzIoControl, u64int, s64int, char *, u64int);
 
 #endif /* SYSCALL_H */

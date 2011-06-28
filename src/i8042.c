@@ -13,7 +13,7 @@ s64int i8042_Read(struct Device *dev, u64int offset, u64int size, char *buffer);
 s64int i8042_Probe();
 void i8042_ISR(struct RegisterState *regs);
 
-u64int kbdus[128] =
+static u64int kbdus[128] =
 {
     0,  Key_Escape, Key_1, Key_2, Key_3, Key_4, Key_5, Key_6, Key_7, Key_8, /* 9 */
     Key_9, Key_0, Key_Minus, Key_Equal, Key_Backspace, /* Backspace */
@@ -53,14 +53,14 @@ u64int kbdus[128] =
     0,    /* All other keys are undefined */
 };      
 
-struct Device *dev;
+static struct Device *dev;
 
-struct WaitQueue *wq = 0;
+static struct WaitQueue *wq = 0;
 
-u8int inEscape = 0;
-u64int key;
+static u8int inEscape = 0;
+static u64int key;
 
-struct DeviceOperation i8042_Ops = {
+static struct DeviceOperation i8042_Ops = {
     .open  = &i8042_Open,
     .close = &i8042_Close,
     .read  = &i8042_Read,

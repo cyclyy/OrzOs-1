@@ -15,6 +15,7 @@ s64int devfsRead(struct FileSystem *fs, s64int id, u64int offset, u64int size, c
 s64int devfsReaddir(struct FileSystem *fs, s64int id, u64int bufSize, char *buf);
 s64int devfsFinddir(struct FileSystem *fs, s64int id, const char *name);
 s64int devfsCreateObject(struct FileSystem *fs, s64int id, const char *name, s64int objid);
+s64int devfsIoControl(struct FileSystem *fs, s64int id, s64int request, void *data, u64int size);
 
 #define DEVFS_TYPE_DIR 1
 #define DEVFS_TYPE_OBJ 2
@@ -206,3 +207,21 @@ s64int devfsCreateObject(struct FileSystem *fs, s64int id, const char *name, s64
     return ret;
 }
 
+s64int devfsIoControl(struct FileSystem *fs, s64int id, s64int request, void *data, u64int size)
+{
+    struct DevFSNode *node;
+    struct Device *dev;
+    s64int ret;
+
+    node = (struct DevFSNode *)(id + KERNEL_HEAP_START_ADDR);
+    if (node->type == DEVFS_TYPE_OBJ) {
+        dev = findDevice(node->objid);
+        if (dev && dev->op->ioctl) {
+            ret = dev->op->ioctl(dev,request,data,size);
+        } else
+            ret = -1;
+    } else 
+        ret = -1;
+
+    return ret;
+}

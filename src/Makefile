@@ -14,7 +14,7 @@ CORE_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o dtable.o flushdtable.o isr.o
 			ksyscall.o device.o i8042.o program.o except.o usermemcopy.o \
 			handle.o fs/bootfs.o fs/devfs.o \
 			syscall/ozipc.o syscall/oztask.o syscall/ozfs.o \
-			rmi.o video/vbe.o
+			rmi.o video/display.o video/vbe.o
 
 MOD_SOURCES = testmod.o            \
               i8042.o              \

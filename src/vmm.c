@@ -210,6 +210,7 @@ struct VM *vmInit()
     tmp = vma;
 
 //    vmDump(vm);
+    vmAddArea(vm,MMAP_DEV_START_ADDR,MMAP_DEV_SIZE,VMA_STATUS_USED | VMA_OWNER_KERNEL | VMA_TYPE_HEAP);
     kernelVM = vm;
 
     vmRef(vm);

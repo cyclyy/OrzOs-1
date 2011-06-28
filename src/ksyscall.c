@@ -10,7 +10,7 @@
 
 void syscallTest();
 
-#define N_SYSCALLS 18
+#define N_SYSCALLS 19
 
 void *syscalls[N_SYSCALLS] = {
     &syscallTest,
@@ -31,6 +31,7 @@ void *syscalls[N_SYSCALLS] = {
     OzWrite,
     OzReadDirectory,
     OzAddHeapSize,
+    OzIoControl,
 };
 
 u64int nsyscalls = N_SYSCALLS;

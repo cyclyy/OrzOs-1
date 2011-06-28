@@ -7,11 +7,11 @@ int main()
 
     p = s;
     while (*p) {
-        PutChar(*p);
+        OzPutChar(*p);
         p++;
     }
 
-    NewTask("Boot:/server",0);
+    OzNewTask("Boot:/server",0);
 
     while(1);
 }

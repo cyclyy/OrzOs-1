@@ -267,6 +267,14 @@ s64int vfsState(const char *path, struct VNodeInfo *ni)
     return ret;
 }
 
+s64int vfsIoControl(struct VNode *node, s64int request, void *data, u64int size)
+{
+    if (node->fs && node->fs->op->ioctl)
+        return node->fs->op->ioctl(node->fs, node->id, request, data, size);
+    else
+        return -1;
+}
+
 s64int vfsLookup(const char *path, struct VNode *node)
 {
     struct MountPoint *mt;

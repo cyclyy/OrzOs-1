@@ -2,7 +2,6 @@
 #define KSYSCALL_H
 
 #include "sysdef.h"
-#include "syscall.h"
 
 void initSyscalls();
 

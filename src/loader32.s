@@ -5,13 +5,14 @@
 
 MBOOT_PAGE_ALIGN    equ 1<<0    ; Load kernel and modules on a page boundary
 MBOOT_MEM_INFO      equ 1<<1    ; Provide your kernel with memory info
-MBOOT_VIDEO_INFO    equ 1<<2    ; Provide your kernel with vbe info
+; MBOOT_VIDEO_INFO    equ 1<<2    ; Provide your kernel with vbe info
 MBOOT_HEADER_MAGIC  equ 0x1BADB002 ; Multiboot Magic value
 MBOOT_AOUT_KLUDGE   equ 1<<16
-MBOOT_HEADER_FLAGS  equ (MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO |  MBOOT_AOUT_KLUDGE | MBOOT_VIDEO_INFO)
+MBOOT_HEADER_FLAGS  equ (MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO |  MBOOT_AOUT_KLUDGE)
 MBOOT_CHECKSUM      equ -(MBOOT_HEADER_MAGIC + MBOOT_HEADER_FLAGS)
 LOADBASE            equ 0x100000
 VIRTUALBASE         equ 0xffffffffc0000000
+LOWMEM_BASE         equ 0x8000
 
 
 [BITS 32]                       ; All instructions should be 32-bit.
@@ -43,34 +44,42 @@ push    eax                   ; Initial esp
 push    0
 push    ebx                   ; Load multiboot header location
 
-mov edi, 0x1000    ; Set the destination index to 0x1000.
+mov edi, LOWMEM_BASE + 0x1000    ; Set the destination index to 0x1000.
 mov cr3, edi       ; Set control register 3 to the destination index.
 xor eax, eax       ; Nullify the A-register.
-mov ecx, 1024*9    ; Set the C-register to 4096.
+mov ecx, 1024*10   ; Set the C-register to 4096.
 rep stosd          ; Clear the memory.
 mov edi, cr3       ; Set the destination index to control register 3.
 
 ; 1)PML4E
-mov DWORD [edi], 0x2003      ; Set the double word at the destination index to 0x2003.
-mov DWORD [edi+0xff8], 0x3003      ; Set the double word at the destination index to 0x2003.
+mov DWORD [edi], LOWMEM_BASE + 0x2003      ; Set the double word at the destination index to 0x2003.
+mov DWORD [edi+4], 0x0000     ; 
+mov DWORD [edi+0xff8], LOWMEM_BASE + 0x3003      ; Set the double word at the destination index to 0x2003.
+mov DWORD [edi+0xffC], 0x0000      ; 
 add edi, 0x1000
 
 ; 2)PDPE-first       
-mov DWORD [edi], 0x4003      ; Set the double word at the destination index to 0x3003.
+mov DWORD [edi], LOWMEM_BASE + 0x4003      ; Set the double word at the destination index to 0x3003.
+mov DWORD [edi+4], 0x0000      ;
 add edi, 0x1000
 
 ; 3)PDPE-last
-mov DWORD [edi+0xff8], 0x5003      ; Set the double word at the destination index to 0x2003.
+mov DWORD [edi+0xff8], LOWMEM_BASE + 0x5003      ; Set the double word at the destination index to 0x2003.
+mov DWORD [edi+0xffc], 0x0000      ;
 add edi, 0x1000
 
 ; 4)PDE-first
-mov DWORD [edi], 0x6003      ; Set the double word at the destination index to 0x4003.
-mov DWORD [edi+8], 0x9003      ; Set the double word at the destination index to 0x4003.
+mov DWORD [edi], LOWMEM_BASE + 0x6003      ; Set the double word at the destination index to 0x4003.
+mov DWORD [edi+4], 0x0000      ;
+mov DWORD [edi+8], LOWMEM_BASE + 0x9003      ; Set the double word at the destination index to 0x4003.
+mov DWORD [edi+0xc], 0x0000      ;
 add edi, 0x1000              ; Add 0x1000 to the destination index.
 
 ; 5)PDE-last
-mov DWORD [edi], 0x7003      ; Set the double word at the destination index to 0x4003.
-mov DWORD [edi+8], 0x8003      ; Set the double word at the destination index to 0x4003.
+mov DWORD [edi], LOWMEM_BASE + 0x7003      ; Set the double word at the destination index to 0x4003.
+mov DWORD [edi+4], 0x0000      ;
+mov DWORD [edi+8], LOWMEM_BASE + 0x8003      ; Set the double word at the destination index to 0x4003.
+mov DWORD [edi+0xc], 0x0000      ;
 add edi, 0x1000
 
 ; 6)PTE-first
@@ -117,7 +126,6 @@ rdmsr                        ; Read from the model-specific register.
 or eax, 1 << 8               ; Set the LM-bit which is the 9th bit (bit 8).
 wrmsr                        ; Write to the model-specific register.
 
-xchg bx,bx
 mov eax, cr0                 ; Set the A-register to control register 0.
 or eax, 1 << 31              ; Set the PG-bit, which is the 32nd bit (bit 31).
 mov cr0, eax                 ; Set control register 0 to the A-register.
@@ -136,6 +144,7 @@ mov fs, ax                    ; Set the F-segment to the A-register.
 mov gs, ax                    ; Set the G-segment to the A-register.
 mov ss, ax                    ; Set the G-segment to the A-register.
 
+xchg bx,bx
 pop rbx
 ; High memory size
 mov rdi, startupinfo.mem
