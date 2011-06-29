@@ -18,7 +18,7 @@ struct DeviceOperation {
     s64int (*close)(struct Device *dev);
     s64int (*read)(struct Device *dev, u64int offset, u64int size, char *buffer);
     s64int (*write)(struct Device *dev, u64int offset, u64int size, char *buffer);
-    s64int (*ioctl)(struct Device *dev, s64int request, void *data, u64int size);
+    s64int (*ioctl)(struct Device *dev, s64int request, u64int size, void *data);
 };
 
 void addDevice(struct Device *dev);

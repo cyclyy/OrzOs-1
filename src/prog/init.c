@@ -1,10 +1,16 @@
+#include <stdlib.h>
 #include "syscall.h"
 
 int main()
 {
     char *s = "Init process running.\n";
     char *p;
+    u64int fd;
+    u16int ch = 0x0F00 + 'A';
 
+    ch = 0x0F00 + toupper('o');
+    fd = OzOpen("Device:/Display",0);
+    OzWrite(fd,0,2,&ch);
     p = s;
     while (*p) {
         OzPutChar(*p);

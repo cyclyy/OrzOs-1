@@ -17,6 +17,7 @@
 #include "i8042.h"
 #include "x86emu.h"
 #include "rmi.h"
+#include "video/display.h"
 #include "video/vbe.h"
 
 void testVBE()
@@ -40,7 +41,7 @@ void testVBE()
     getVBEModeInfo(0x115, mib);
     printk("Framebuffer at %x, width: %d, height: %d\n", mib->PhysBasePtr, mib->XResolution, mib->YResolution);
     setVBEMode(0x115);
-    char *vram = (char*)mib->PhysBasePtr;
+    char *vram = (char*)(mib->PhysBasePtr);
     int i,j,k;
     for (i=0; i< mib->YResolution; i++) {
         for (j=0; j< mib->XResolution; j++) {
@@ -63,20 +64,21 @@ u64int kmain(struct BootInfo *si)
     initInterrupt();
     initMemoryManagement(si->memory, si->freeMemStartAddr);
     initTSS();
-    initMultitasking();
     initVFS();
     initSyscalls();
     initCpuExceptions();
     initIPC();
     vfsMount("Boot",0,"bootfs",0,(void*)PADDR_TO_VADDR(getBootInfo()->initrdAddr));
     vfsMount("Device",0,"devfs",0,0);
-    i8042_Init();
     initRealModeInterface();
-    testVBE();
+    i8042_Init();
+    display_Init();
+    //testVBE();
 
     printk("InitAddr:%x\n", getBootInfo()->initrdAddr);
     printk("AvailMem:%dKB\n",availMemory()/1024);
 
+    initMultitasking();
     kNewTask("Boot:/init", 0);
 
     rootTask();

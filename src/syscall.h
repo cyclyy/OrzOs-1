@@ -80,6 +80,6 @@ DECL_SYSCALL_4(OzRead, s64int, u64int, u64int, char *);
 DECL_SYSCALL_4(OzWrite, s64int, u64int, u64int, char *);
 DECL_SYSCALL_3(OzReadDirectory, s64int, u64int, char *);
 DECL_SYSCALL_1(OzAddHeapSize, s64int);
-DECL_SYSCALL_4(OzIoControl, u64int, s64int, char *, u64int);
+DECL_SYSCALL_4(OzIoControl, u64int, s64int, u64int, void *);
 
 #endif /* SYSCALL_H */

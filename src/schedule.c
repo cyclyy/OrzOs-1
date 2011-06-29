@@ -79,7 +79,7 @@ void schedule()
             movq $0x123, %%rax;\
             sti;               \
             jmp *%%rbx"
-            ::"r"(rsp), "r"(rbp), "r"(rip), "r"(currentTask->vm->cr3));
+            ::"a"(rsp), "c"(rbp), "b"(rip), "d"(currentTask->vm->cr3));
 
 }
 

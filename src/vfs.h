@@ -76,7 +76,7 @@ s64int vfsClose(struct VNode *node);
 s64int vfsRead(struct VNode *node, u64int offset, u64int size, void *buffer);
 s64int vfsWrite(struct VNode *node, u64int offset, u64int size, char *buffer);
 s64int vfsState(const char *path, struct VNodeInfo *ni);
-s64int vfsIoControl(struct VNode *node, s64int request, void *data, u64int size);
+s64int vfsIoControl(struct VNode *node, s64int request, u64int size, void *data);
 
 s64int vfsCreateObject(const char *name, s64int id);
 s64int vfsCreateDirectory(const char *name);

@@ -91,7 +91,7 @@ s64int OzOpen(char *path, s64int flags)
         handle->type = HANDLE_VNODE;
         handle->pointer = vnode;
     }
-    return 0;
+    return i;
 error:
     kFree(vnode);
     return -1;
@@ -126,7 +126,7 @@ s64int OzRead(s64int fd, u64int offset, u64int size, char *buffer)
     }
     
     handle = &currentTask->handleTable->handle[fd];
-    if (handle->type == HANDLE_VNODE) {
+    if (handle->type == HANDLE_VNODE)  {
         return doRead((struct VNode*)handle->pointer, offset, size, buffer);
     } else {
         return -1;
@@ -165,7 +165,7 @@ s64int OzReadDirectory(s64int fd, u64int bufSize, char *buffer)
     }
 }
 
-s64int OzIoControl(s64int fd, s64int request, char *buffer, u64int size)
+s64int OzIoControl(s64int fd, s64int request, u64int size, char *buffer)
 {
     struct Handle *handle;
 
@@ -175,7 +175,7 @@ s64int OzIoControl(s64int fd, s64int request, char *buffer, u64int size)
     
     handle = &currentTask->handleTable->handle[fd];
     if (handle->type == HANDLE_VNODE) {
-        return vfsIoControl((struct VNode*)handle->pointer, request,  buffer, size);
+        return vfsIoControl((struct VNode*)handle->pointer, request,  size, buffer);
     } else {
         return -1;
     }

@@ -267,7 +267,7 @@ s64int vfsState(const char *path, struct VNodeInfo *ni)
     return ret;
 }
 
-s64int vfsIoControl(struct VNode *node, s64int request, void *data, u64int size)
+s64int vfsIoControl(struct VNode *node, s64int request, u64int size, void *data)
 {
     if (node->fs && node->fs->op->ioctl)
         return node->fs->op->ioctl(node->fs, node->id, request, data, size);

@@ -12,7 +12,7 @@ s64int display_Open(struct Device *dev);
 s64int display_Close(struct Device *dev);
 s64int display_Read(struct Device *dev, u64int offset, u64int size, char *buffer);
 s64int display_Write(struct Device *dev, u64int offset, u64int size, char *buffer);
-s64int display_IoControl(struct Device *dev, s64int request, void *data, u64int size);
+s64int display_IoControl(struct Device *dev, s64int request, u64int size, void *data);
 s64int display_Probe();
 
 static struct Device *dev = 0;
@@ -174,7 +174,7 @@ s64int display_Close(struct Device *dev)
     return 0;
 }
 
-s64int display_IoControl(struct Device *dev, s64int request,  void *data, u64int size)
+s64int display_IoControl(struct Device *dev, s64int request, u64int size, void *data)
 {
     u64int n;
     struct DisplayModeInfo mi;

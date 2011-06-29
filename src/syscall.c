@@ -18,4 +18,4 @@ DEFN_SYSCALL_4(OzRead, 14, s64int, u64int, u64int, char *);
 DEFN_SYSCALL_4(OzWrite, 15, s64int, u64int, u64int, char *);
 DEFN_SYSCALL_3(OzReadDirectory, 16, s64int, u64int, char *);
 DEFN_SYSCALL_1(OzAddHeapSize, 17, s64int);
-DEFN_SYSCALL_4(OzIoControl, 18, u64int, s64int, char *, u64int);
+DEFN_SYSCALL_4(OzIoControl, 18, u64int, s64int, u64int, void *);

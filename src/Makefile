@@ -1,20 +1,24 @@
 QUIET = @
 LD32 = ld
 # CC = x86_64-pc-elf-gcc
-CC = x86_64-pc-elf-gcc
-AR = x86_64-pc-elf-ar
-LD = x86_64-pc-elf-ld
-NM = x86_64-pc-elf-nm
-
+CC = x86_64-pc-orzos-gcc
+AR = x86_64-pc-orzos-ar
+LD = x86_64-pc-orzos-ld
+NM = x86_64-pc-orzos-nm
+AS = nasm
 X86EMU_SOURCES = x86emu/decode.o x86emu/fpu.o x86emu/ops.o x86emu/ops2.o x86emu/prim_ops.o x86emu/sys.o
 
-CORE_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o dtable.o flushdtable.o isr.o \
-			interrupt.o tlsf.o vfs.o screen.o task.o taskasm.o paging.o \
+CORE_C_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o dtable.o \
+			interrupt.o tlsf.o vfs.o screen.o task.o paging.o \
 			elfloader.o waitqueue.o schedule.o semaphore.o mutex.o message.o \
-			ksyscall.o device.o i8042.o program.o except.o usermemcopy.o \
+			ksyscall.o device.o i8042.o program.o except.o \
 			handle.o fs/bootfs.o fs/devfs.o \
 			syscall/ozipc.o syscall/oztask.o syscall/ozfs.o \
 			rmi.o video/display.o video/vbe.o
+
+CORE_ASM_SOURCES = flushdtable.o isr.o taskasm.o usermemcopy.o
+
+CORE_SOURCES = $(CORE_C_SOURCES) $(CORE_ASM_SOURCES)
 
 MOD_SOURCES = testmod.o            \
               i8042.o              \
@@ -24,13 +28,14 @@ MOD_SOURCES = testmod.o            \
 
 PROG_SOURCES = prog/init.o  prog/server.o prog/client.o syscall.o 
 
-CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g
-CORE_LDFLAGS=-Tcore.ld -M=allsymbol.map -z max-page-size=0x1000
-PROG_LDFLAGS=-Tprog.ld -z max-page-size=0x1000
+CORE_CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -mcmodel=kernel -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g
+PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g
+CORE_LDFLAGS=-Tcore.ld -m orzos_x86_64 -M=allsymbol.map -z max-page-size=0x1000
+PROG_LDFLAGS=-Tprog.ld -m orzos_x86_64 -z max-page-size=0x1000 -lc
 ASFLAGS=-felf64
 
 # all: $(CORE_SOURCES) $(MOD_SOURCES) $(PROG_SOURCES) libx86emu.a core_link prog_link
-all: $(CORE_SOURCES) $(PROG_SOURCES) $(X86EMU_SOURCES) libx86emu.a core_link prog_link loader32 ctags
+all: $(CORE_C_SOURCES) $(CORE_ASM_SOURCES) $(PROG_SOURCES) $(X86EMU_SOURCES) libx86emu.a core_link prog_link loader32 ctags
 
 clean:
 	$(QUIET)-rm *.o ../util/*.o prog/*.o prog/init video/*.o fs/*.o syscall/*.o x86emu/*.o kernel allsymbol.map global.map
@@ -45,24 +50,28 @@ libx86emu.a: $(X86EMU_SOURCES)
 
 core_link:libx86emu.a
 	@echo "LD	kernel"
-	$(QUIET)$(LD) $(CORE_LDFLAGS) -melf_x86_64 -o kernel $(CORE_SOURCES) libx86emu.a
+	$(QUIET)$(LD) $(CORE_LDFLAGS) -o kernel $(CORE_SOURCES) libx86emu.a
 	$(QUIET)$(NM) ./kernel > global.map
 
-prog_link: $(PROG_SOURCES)
+prog_link: 
 	@echo "LD	init"
-	$(QUIET)$(LD) $(PROG_LDFLAGS) -o prog/init prog/init.o syscall.o
+	$(QUIET)$(LD) -o prog/init prog/init.o syscall.o $(PROG_LDFLAGS)
 	@echo "LD	server"
-	$(QUIET)$(LD) $(PROG_LDFLAGS) -o prog/server prog/server.o syscall.o
+	$(QUIET)$(LD) -o prog/server prog/server.o syscall.o $(PROG_LDFLAGS)
 	@echo "LD	client"
-	$(QUIET)$(LD) $(PROG_LDFLAGS) -o prog/client prog/client.o syscall.o
+	$(QUIET)$(LD) -o prog/client prog/client.o syscall.o $(PROG_LDFLAGS)
 
-%.o:%.s
+$(CORE_ASM_SOURCES):%.o:%.s
 	@echo "AS	$@"
 	$(QUIET)nasm $(ASFLAGS) $< 
 
-%.o:%.c
+$(CORE_C_SOURCES) $(X86EMU_SOURCES):%.o:%.c
 	@echo "CC	$@"
-	$(QUIET)$(CC) $(CFLAGS) -c $< -o $@
+	$(QUIET)$(CC) $(CORE_CFLAGS) -c $< -o $@
+
+$(PROG_SOURCES):%.o:%.c
+	@echo "CC	$@"
+	$(QUIET)$(CC) $(PROG_CFLAGS) -c $< -o $@
 
 ctags:
 	$(QUIET)ctags -R .

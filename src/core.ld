@@ -10,29 +10,29 @@ SECTIONS
   . = 0xffffffffC0100000;
   .text :
   {
-    code = .;
+    code = .; _code = .; __code = .;
     *(.text)
-    . = ALIGN(4096);
+     . = ALIGN(0x1000);
   }
 
   .data :
   {
-     data = .;
+     data = .; _data = .; __data = .;
      *(.data)
      *(.rodata)
      . = ALIGN(8);
      exceptTable = .;
      *(.exTable)
      exceptTableEnd = .;
-     . = ALIGN(4096);
+     . = ALIGN(0x1000);
   }
 
   .bss :
   {
-    bss = .; 
+    bss = .; _bss = .; __bss = .;
     *(.bss)
-    . = ALIGN(4096);
+     . = ALIGN(0x1000);
   }
 
-  end = .;
+  end = .; _end = .; __end = .;
 } 
