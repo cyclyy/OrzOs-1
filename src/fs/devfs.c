@@ -7,16 +7,18 @@
 s64int devfsMount(struct FileSystemDriver *driver, struct FileSystem **fs, const char *source, u64int flags, void *data);
 s64int devfsUnmount(struct FileSystemDriver *driver, struct FileSystem *fs);
 
+s64int devfsOpen(struct FileSystem *fs, s64int id, struct VNode *node);
+s64int devfsClose(struct VNode *node);
+s64int devfsRead(struct VNode *node, u64int size, char *buffer);
+s64int devfsWrite(struct VNode *node, u64int size, char *buffer);
+s64int devfsSeek(struct VNode *node, s64int offset, s64int pos);
+s64int devfsIoControl(struct VNode *node, s64int request, u64int size, void *data);
+
 s64int devfsRoot(struct FileSystem *fs);
-s64int devfsOpen(struct FileSystem *fs, s64int id, s64int *openId);
-s64int devfsClose(struct FileSystem *fs, s64int id);
 s64int devfsStat(struct FileSystem *fs, s64int id, struct VNodeInfo *info);
-s64int devfsRead(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer);
-s64int devfsWrite(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer);
 s64int devfsReaddir(struct FileSystem *fs, s64int id, u64int bufSize, char *buf);
 s64int devfsFinddir(struct FileSystem *fs, s64int id, const char *name);
 s64int devfsCreateObject(struct FileSystem *fs, s64int id, const char *name, s64int objid);
-s64int devfsIoControl(struct FileSystem *fs, s64int id, s64int request, u64int size, void *data);
 
 #define DEVFS_TYPE_DIR 1
 #define DEVFS_TYPE_OBJ 2
@@ -96,28 +98,20 @@ s64int devfsRoot(struct FileSystem *fs)
     return (u64int)fsData->root - KERNEL_HEAP_START_ADDR;
 }
 
-s64int devfsOpen(struct FileSystem *fs, s64int id, s64int *openId)
+s64int devfsOpen(struct FileSystem *fs, s64int id, struct VNode *node)
 {
-    *openId = id;
-    return 0;
-}
-
-s64int devfsClose(struct FileSystem *fs, s64int id)
-{
-    return 0;
-}
-
-s64int devfsRead(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer)
-{
-    struct DevFSNode *node;
+    struct DevFSNode *dnode;
     struct Device *dev;
     s64int ret;
 
-    node = (struct DevFSNode *)(id + KERNEL_HEAP_START_ADDR);
-    if (node->type == DEVFS_TYPE_OBJ) {
-        dev = findDevice(node->objid);
-        if (dev && dev->op->read) {
-            ret = dev->op->read(dev,offset,size,buffer);
+    node->fs = fs;
+    node->id = id;
+    node->offset = 0;
+    dnode = (struct DevFSNode *)(node->id + KERNEL_HEAP_START_ADDR);
+    if (dnode->type == DEVFS_TYPE_OBJ) {
+        dev = findDevice(dnode->objid);
+        if (dev && dev->op->open) {
+            ret = dev->op->open(node);
         } else
             ret = -1;
     } else 
@@ -126,17 +120,55 @@ s64int devfsRead(struct FileSystem *fs, s64int id, u64int offset, u64int size, c
     return ret;
 }
 
-s64int devfsWrite(struct FileSystem *fs, s64int id, u64int offset, u64int size, char *buffer)
+s64int devfsClose(struct VNode *node)
 {
-    struct DevFSNode *node;
+    struct DevFSNode *dnode;
     struct Device *dev;
     s64int ret;
 
-    node = (struct DevFSNode *)(id + KERNEL_HEAP_START_ADDR);
-    if (node->type == DEVFS_TYPE_OBJ) {
-        dev = findDevice(node->objid);
+    dnode = (struct DevFSNode *)(node->id + KERNEL_HEAP_START_ADDR);
+    if (dnode->type == DEVFS_TYPE_OBJ) {
+        dev = findDevice(dnode->objid);
+        if (dev && dev->op->close) {
+            ret = dev->op->close(node);
+        } else
+            ret = -1;
+    } else 
+        ret = -1;
+
+    return ret;
+}
+
+s64int devfsRead(struct VNode *node, u64int size, char *buffer)
+{
+    struct DevFSNode *dnode;
+    struct Device *dev;
+    s64int ret;
+
+    dnode = (struct DevFSNode *)(node->id + KERNEL_HEAP_START_ADDR);
+    if (dnode->type == DEVFS_TYPE_OBJ) {
+        dev = findDevice(dnode->objid);
+        if (dev && dev->op->read) {
+            ret = dev->op->read(node,size,buffer);
+        } else
+            ret = -1;
+    } else 
+        ret = -1;
+
+    return ret;
+}
+
+s64int devfsWrite(struct VNode *node, u64int size, char *buffer)
+{
+    struct DevFSNode *dnode;
+    struct Device *dev;
+    s64int ret;
+
+    dnode = (struct DevFSNode *)(node->id + KERNEL_HEAP_START_ADDR);
+    if (dnode->type == DEVFS_TYPE_OBJ) {
+        dev = findDevice(dnode->objid);
         if (dev && dev->op->write) {
-            ret = dev->op->write(dev,offset,size,buffer);
+            ret = dev->op->write(node,size,buffer);
         } else
             ret = -1;
     } else 
@@ -227,17 +259,17 @@ s64int devfsCreateObject(struct FileSystem *fs, s64int id, const char *name, s64
     return ret;
 }
 
-s64int devfsIoControl(struct FileSystem *fs, s64int id, s64int request, u64int size, void *data)
+s64int devfsSeek(struct VNode *node, s64int offset, s64int pos)
 {
-    struct DevFSNode *node;
+    struct DevFSNode *dnode;
     struct Device *dev;
     s64int ret;
 
-    node = (struct DevFSNode *)(id + KERNEL_HEAP_START_ADDR);
-    if (node->type == DEVFS_TYPE_OBJ) {
-        dev = findDevice(node->objid);
-        if (dev && dev->op->ioctl) {
-            ret = dev->op->ioctl(dev,request,size,data);
+    dnode = (struct DevFSNode *)(node->id + KERNEL_HEAP_START_ADDR);
+    if (dnode->type == DEVFS_TYPE_OBJ) {
+        dev = findDevice(dnode->objid);
+        if (dev && dev->op->seek) {
+            ret = dev->op->seek(node,offset,pos);
         } else
             ret = -1;
     } else 
@@ -245,3 +277,23 @@ s64int devfsIoControl(struct FileSystem *fs, s64int id, s64int request, u64int s
 
     return ret;
 }
+
+s64int devfsIoControl(struct VNode *node, s64int request, u64int size, void *data)
+{
+    struct DevFSNode *dnode;
+    struct Device *dev;
+    s64int ret;
+
+    dnode = (struct DevFSNode *)(node->id + KERNEL_HEAP_START_ADDR);
+    if (dnode->type == DEVFS_TYPE_OBJ) {
+        dev = findDevice(dnode->objid);
+        if (dev && dev->op->ioctl) {
+            ret = dev->op->ioctl(node,request,size,data);
+        } else
+            ret = -1;
+    } else 
+        ret = -1;
+
+    return ret;
+}
+

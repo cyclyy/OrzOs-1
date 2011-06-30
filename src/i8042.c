@@ -7,9 +7,9 @@
 #include "key.h"
 #include "waitqueue.h"
 
-s64int i8042_Open(struct Device *dev);
-s64int i8042_Close(struct Device *dev);
-s64int i8042_Read(struct Device *dev, u64int offset, u64int size, char *buffer);
+s64int i8042_Open(struct VNode *node);
+s64int i8042_Close(struct VNode *node);
+s64int i8042_Read(struct VNode *node, u64int size, char *buffer);
 s64int i8042_Probe();
 void i8042_ISR(struct RegisterState *regs);
 
@@ -137,7 +137,7 @@ s64int i8042_Probe()
     return 0;
 }
 
-s64int i8042_Read(struct Device *dev, u64int offset, u64int size, char *buffer)
+s64int i8042_Read(struct VNode *node, u64int size, char *buffer)
 {
     /*printk("%s\n", __FUNCTION__);*/
     if ((size<4) || !buffer)
@@ -150,12 +150,13 @@ s64int i8042_Read(struct Device *dev, u64int offset, u64int size, char *buffer)
     return 4;
 }
 
-s64int i8042_Open(struct Device *dev)
+s64int i8042_Open(struct VNode *node)
 {
+    node->priv = dev;
     return 0;
 }
 
-s64int i8042_Close(struct Device *dev)
+s64int i8042_Close(struct VNode *node)
 {
     return 0;
 }

@@ -52,13 +52,14 @@ s64int loadElfProgram(const char *path, struct Program *prog, struct VM *vm)
         return -1;
     //buffer = (char*)kMallocEx(PAGE_SIZE, 1, 0);
     buffer = (char*)kMalloc(PAGE_SIZE);
-    n = vfsRead(&node, 0, sizeof(Elf64_Ehdr), ehdr);
+    n = vfsRead(&node, sizeof(Elf64_Ehdr), ehdr);
 
     if ((n == sizeof(Elf64_Ehdr)) && isValidElfHeader(ehdr)) {
         prog->entry = ehdr->e_entry;
         len = ehdr->e_phentsize * ehdr->e_phnum;
         phdr = (Elf64_Phdr*)kMalloc(len);
-        n = vfsRead(&node, ehdr->e_phoff, len, phdr);
+        vfsSeek(&node, ehdr->e_phoff, SEEK_SET);
+        n = vfsRead(&node, len, phdr);
         if (n==len) {
             for (i=0; i<ehdr->e_phnum; i++) {
                 if (phdr[i].p_type == PT_LOAD) {
@@ -71,8 +72,9 @@ s64int loadElfProgram(const char *path, struct Program *prog, struct VM *vm)
                     size = phdr[i].p_filesz;
                     remain = size & 0xfff;
                     size -= remain;
+                    vfsSeek(&node, phdr[i].p_offset, SEEK_SET);
                     for (j=0; j<size; j+=PAGE_SIZE) {
-                        len = vfsRead(&node, phdr[i].p_offset+j, PAGE_SIZE, buffer);
+                        len = vfsRead(&node, PAGE_SIZE, buffer);
                         if (len!=PAGE_SIZE) {
                             ret = -1;
                             break;
@@ -81,7 +83,7 @@ s64int loadElfProgram(const char *path, struct Program *prog, struct VM *vm)
                         vmemcpy(vm, (void*)(phdr[i].p_vaddr+j), currentTask->vm, buffer, PAGE_SIZE);
                     }
                     if (remain) {
-                        len = vfsRead(&node, phdr[i].p_offset+size, remain, buffer);
+                        len = vfsRead(&node, remain, buffer);
                         if (len == remain)
                             vmemcpy(vm, (void*)(phdr[i].p_vaddr+size), currentTask->vm, buffer, remain);
                         else 

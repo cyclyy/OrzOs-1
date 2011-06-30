@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <ctype.h>
 #include "syscall.h"
 
 int main()
@@ -10,7 +11,7 @@ int main()
 
     ch = 0x0F00 + toupper('o');
     fd = OzOpen("Device:/Display",0);
-    OzWrite(fd,0,2,&ch);
+    OzWrite(fd,2,&ch);
     p = s;
     while (*p) {
         OzPutChar(*p);

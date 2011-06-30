@@ -43,7 +43,7 @@ struct TLSFBlock;
 struct TLSFFreePtr {
     struct TLSFBlock *prev;
     struct TLSFBlock *next;
-};
+}__attribute__((packed));
 
 struct TLSFBlock {
     u64int signature;
@@ -53,7 +53,7 @@ struct TLSFBlock {
         struct TLSFFreePtr free;
         u8int *buffer;
     } ptr;
-};
+}__attribute__((packed));
 
 struct TLSFHeader {
     u64int usedSize;
@@ -63,7 +63,7 @@ struct TLSFHeader {
     u64int flBitmap;
     u64int slBitmap[REAL_FLI];                  /* i -> 2^(FLI_OFFSET+i) */
     struct TLSFBlock *matrix[REAL_FLI][MAX_SLI];
-};
+}__attribute__((packed));
 
 struct TLSFHeader *tlsfInitHeap(u64int startAddr, u64int size);
 

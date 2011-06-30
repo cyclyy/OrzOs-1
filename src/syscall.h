@@ -76,10 +76,11 @@ DECL_SYSCALL_2(OzNewTask, char *, u64int);
 DECL_SYSCALL_1(OzExitTask, s64int);
 DECL_SYSCALL_2(OzOpen, char *, s64int);
 DECL_SYSCALL_1(OzClose, s64int);
-DECL_SYSCALL_4(OzRead, s64int, u64int, u64int, char *);
-DECL_SYSCALL_4(OzWrite, s64int, u64int, u64int, char *);
-DECL_SYSCALL_3(OzReadDirectory, s64int, u64int, char *);
+DECL_SYSCALL_3(OzRead, s64int, u64int, void *);
+DECL_SYSCALL_3(OzWrite, s64int, u64int, void *);
+DECL_SYSCALL_3(OzReadDirectory, s64int, u64int, void *);
 DECL_SYSCALL_1(OzAddHeapSize, s64int);
 DECL_SYSCALL_4(OzIoControl, u64int, s64int, u64int, void *);
+DECL_SYSCALL_3(OzSeek, s64int, s64int, s64int);
 
 #endif /* SYSCALL_H */

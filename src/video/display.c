@@ -8,11 +8,12 @@
 #include "rmi.h"
 #include "vbe.h"
 
-s64int display_Open(struct Device *dev);
-s64int display_Close(struct Device *dev);
-s64int display_Read(struct Device *dev, u64int offset, u64int size, char *buffer);
-s64int display_Write(struct Device *dev, u64int offset, u64int size, char *buffer);
-s64int display_IoControl(struct Device *dev, s64int request, u64int size, void *data);
+s64int display_Open(struct VNode *node);
+s64int display_Close(struct VNode *node);
+s64int display_Read(struct VNode *node, u64int size, char *buffer);
+s64int display_Write(struct VNode *node, u64int size, char *buffer);
+s64int display_IoControl(struct VNode *node, s64int request, u64int size, void *data);
+s64int display_Seek(struct VNode *node, s64int offset, s64int pos);
 s64int display_Probe();
 
 static struct Device *dev = 0;
@@ -115,8 +116,6 @@ s64int getCurrentDMI()
 
 void display_Init()
 {
-    struct Device *dev;
-
     memset(&currentDMI, 0, sizeof(struct DisplayModeInfo));
     vbeInfo = realModeAlloc(sizeof(struct VBEInfoBlock));
     vbeModeInfo = realModeAlloc(sizeof(struct VBEModeInfoBlock));
@@ -140,41 +139,46 @@ void display_Cleanup()
     //vfsRemove("Device:/Display");
 }
 
-s64int display_Read(struct Device *dev, u64int offset, u64int size, char *buffer)
+s64int display_Read(struct VNode *node, u64int size, char *buffer)
 {
-    u64int n;
+    u64int n, ret;
 
     n = currentDMI.width * currentDMI.height * (currentDMI.cellBits/8);
-    if (offset >= n) {
+    if (node->offset >= n) {
         return 0;
     }
-    size = MIN(size, n - offset);
-    return copyToUser(buffer, (void*)(currentDMI.addr + offset), size);
+    size = MIN(size, n - node->offset);
+    ret = copyToUser(buffer, (void*)(currentDMI.addr + node->offset), size);
+    node->offset += ret;
+    return ret;
 }
 
-s64int display_Write(struct Device *dev, u64int offset, u64int size, char *buffer)
+s64int display_Write(struct VNode *node, u64int size, char *buffer)
 {
-    u64int n;
+    u64int n, ret;
 
     n = currentDMI.width * currentDMI.height * (currentDMI.cellBits/8);
-    if (offset >= n) {
+    if (node->offset >= n) {
         return 0;
     }
-    size = MIN(size, n - offset);
-    return copyFromUser((void*)(currentDMI.addr + offset), buffer, size);
+    size = MIN(size, n - node->offset);
+    ret = copyFromUser((void*)(currentDMI.addr + node->offset), buffer, size);
+    node->offset += ret;
+    return ret;
 }
 
-s64int display_Open(struct Device *dev)
+s64int display_Open(struct VNode *node)
+{
+    node->priv = dev;
+    return 0;
+}
+
+s64int display_Close(struct VNode *node)
 {
     return 0;
 }
 
-s64int display_Close(struct Device *dev)
-{
-    return 0;
-}
-
-s64int display_IoControl(struct Device *dev, s64int request, u64int size, void *data)
+s64int display_IoControl(struct VNode *node, s64int request, u64int size, void *data)
 {
     u64int n;
     struct DisplayModeInfo mi;
@@ -203,5 +207,33 @@ s64int display_IoControl(struct Device *dev, s64int request, u64int size, void *
     default:
         return -1;
     }
+}
+
+s64int display_Seek(struct VNode *node, s64int offset, s64int pos)
+{
+    u64int n;
+    s64int newOffset;
+
+    n = currentDMI.width * currentDMI.height * (currentDMI.cellBits/8);
+    switch (pos) {
+    case SEEK_SET:
+        newOffset = offset;
+        break;
+    case SEEK_CUR:
+        newOffset = node->offset + offset;
+        break;
+    case SEEK_END:
+        newOffset = n + offset;
+        break;
+    default:
+        return -1;
+    }
+    if ((newOffset>=0) && (newOffset<=n)) {
+        node->offset = newOffset;
+        return 0;
+    } else {
+        return -1;
+    }
+    return 0;
 }
 

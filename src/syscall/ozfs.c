@@ -7,7 +7,7 @@
 #include "handle.h"
 #include "vfs.h"
 
-s64int doRead(struct VNode *node, u64int offset, u64int size, char *buffer)
+s64int doRead(struct VNode *node, u64int size, char *buffer)
 {
     char *kbuf;
     s64int ret, len, n;
@@ -15,7 +15,7 @@ s64int doRead(struct VNode *node, u64int offset, u64int size, char *buffer)
     ret = 0;
     while (size) {
         len = MIN(size, PAGE_SIZE);
-        n = vfsRead(node,offset,len,kbuf);
+        n = vfsRead(node,len,kbuf);
         if (n<=0) {
             ret = n;
             break;
@@ -26,14 +26,13 @@ s64int doRead(struct VNode *node, u64int offset, u64int size, char *buffer)
             break;
         }
         ret += n;
-        offset += n;
         size -= n;
     }
     kFree(kbuf);
     return ret;
 }
 
-s64int doWrite(struct VNode *node, u64int offset, u64int size, char *buffer)
+s64int doWrite(struct VNode *node, u64int size, char *buffer)
 {
     char *kbuf;
     s64int ret, len, n;
@@ -42,7 +41,7 @@ s64int doWrite(struct VNode *node, u64int offset, u64int size, char *buffer)
     while (size) {
         len = MIN(size, PAGE_SIZE);
         n = copyFromUser(kbuf,buffer,len);
-        n = vfsWrite(node,offset,n,kbuf);
+        n = vfsWrite(node,n,kbuf);
         if (n<0) {
             ret = n;
             break;
@@ -51,7 +50,6 @@ s64int doWrite(struct VNode *node, u64int offset, u64int size, char *buffer)
             break;
         }
         ret += n;
-        offset += n;
         size -= n;
     }
     kFree(kbuf);
@@ -117,7 +115,7 @@ s64int OzClose(s64int fd)
     }
 }
 
-s64int OzRead(s64int fd, u64int offset, u64int size, char *buffer)
+s64int OzRead(s64int fd, u64int size, char *buffer)
 {
     struct Handle *handle;
 
@@ -127,13 +125,13 @@ s64int OzRead(s64int fd, u64int offset, u64int size, char *buffer)
     
     handle = &currentTask->handleTable->handle[fd];
     if (handle->type == HANDLE_VNODE)  {
-        return doRead((struct VNode*)handle->pointer, offset, size, buffer);
+        return doRead((struct VNode*)handle->pointer, size, buffer);
     } else {
         return -1;
     }
 }
 
-s64int OzWrite(s64int fd, u64int offset, u64int size, char *buffer)
+s64int OzWrite(s64int fd, u64int size, char *buffer)
 {
     struct Handle *handle;
 
@@ -143,7 +141,7 @@ s64int OzWrite(s64int fd, u64int offset, u64int size, char *buffer)
     
     handle = &currentTask->handleTable->handle[fd];
     if (handle->type == HANDLE_VNODE) {
-        return doWrite((struct VNode*)handle->pointer, offset, size, buffer);
+        return doWrite((struct VNode*)handle->pointer, size, buffer);
     } else {
         return -1;
     }
@@ -176,6 +174,22 @@ s64int OzIoControl(s64int fd, s64int request, u64int size, char *buffer)
     handle = &currentTask->handleTable->handle[fd];
     if (handle->type == HANDLE_VNODE) {
         return vfsIoControl((struct VNode*)handle->pointer, request,  size, buffer);
+    } else {
+        return -1;
+    }
+}
+
+s64int OzSeek(s64int fd, s64int offset, s64int pos)
+{
+    struct Handle *handle;
+
+    if (!IS_VALID_HANDLE_INDEX(fd)) {
+        return -1;
+    }
+    
+    handle = &currentTask->handleTable->handle[fd];
+    if (handle->type == HANDLE_VNODE) {
+        return vfsSeek((struct VNode*)handle->pointer, offset, pos);
     } else {
         return -1;
     }

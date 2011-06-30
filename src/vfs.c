@@ -217,11 +217,13 @@ s64int vfsOpen(const char *path, u64int flags, struct VNode *node)
             }
         }
         if (ret==0) {
-            ret = mt->fs->op->open(mt->fs, id, &node->id);
+            node->fs = mt->fs;
+            node->id = id;
+            ret = mt->fs->op->open(node->fs, node->id, node);
         }
     } else
         ret = -1;
-            
+
     kFree(remainPath);
 
     return ret;
@@ -230,23 +232,32 @@ s64int vfsOpen(const char *path, u64int flags, struct VNode *node)
 s64int vfsClose(struct VNode *node)
 {
     if (node->fs && node->fs->op->close)
-        return node->fs->op->close(node->fs, node->id);
+        return node->fs->op->close(node);
     else
         return -1;
 }
 
-s64int vfsRead(struct VNode *node, u64int offset, u64int size, void *buffer)
+s64int vfsRead(struct VNode *node, u64int size, void *buffer)
 {
     if (node->fs && node->fs->op->read)
-        return node->fs->op->read(node->fs, node->id, offset, size, buffer);
+        return node->fs->op->read(node, size, buffer);
     else
         return -1;
 }
 
-s64int vfsWrite(struct VNode *node, u64int offset, u64int size, char *buffer)
+s64int vfsWrite(struct VNode *node, u64int size, char *buffer)
 {
     if (node->fs && node->fs->op->write)
-        return node->fs->op->write(node->fs, node->id, offset, size, buffer);
+        return node->fs->op->write(node, size, buffer);
+    else
+        return -1;
+}
+
+s64int vfsSeek(struct VNode *node, s64int offset, s64int pos)
+{
+
+    if (node->fs && node->fs->op->seek)
+        return node->fs->op->seek(node, offset, pos);
     else
         return -1;
 }
@@ -270,7 +281,7 @@ s64int vfsState(const char *path, struct VNodeInfo *ni)
 s64int vfsIoControl(struct VNode *node, s64int request, u64int size, void *data)
 {
     if (node->fs && node->fs->op->ioctl)
-        return node->fs->op->ioctl(node->fs, node->id, request, data, size);
+        return node->fs->op->ioctl(node, request, data, size);
     else
         return -1;
 }
@@ -304,7 +315,7 @@ s64int vfsLookup(const char *path, struct VNode *node)
         }
     } else
         ret = -1;
-            
+
     kFree(remainPath);
 
     return ret;
