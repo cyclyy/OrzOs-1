@@ -10,6 +10,7 @@ struct Device {
     u64int id;
     struct DeviceOperation *op;
     struct Device *next, *prev;
+    void *priv;
 };
 
 struct DeviceOperation {

@@ -15,7 +15,7 @@ CORE_C_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o dtable.o \
 			handle.o fs/bootfs.o fs/devfs.o \
 			syscall/ozipc.o syscall/oztask.o syscall/ozfs.o \
 			rmi.o video/display.o video/vbe.o \
-			pci.o
+			pci.o ide.o disk.o
 
 CORE_ASM_SOURCES = flushdtable.o isr.o taskasm.o usermemcopy.o
 

@@ -1,5 +1,6 @@
 #include "util.h"
 #include "screen.h"
+#include "kmm.h"
 
 void outb(u16int port, u8int value)
 {
@@ -37,51 +38,47 @@ u32int inl(u16int port)
     return ret;
 }
 
-/*
-void insl(u16int port, u32int buffer, u32int quads) {
+void insl(u16int port, void *buffer, u32int quads) {
     u32int i;
-    for (i=0; i<quads*4; i+=4) {
-        *(u32int*)(buffer+i) = inl(port);
+    for (i=0; i<quads; i++) {
+        ((u32int*)buffer)[i] = inl(port);
     }
 }
 
-void insw(u16int port, u32int buffer, u32int words) {
+void insw(u16int port, void *buffer, u32int words) {
     u32int i;
-    for (i=0; i<words*2; i+=2) {
-        *(u16int*)(buffer+i) = inw(port);
+    for (i=0; i<words; i++) {
+        ((u16int*)buffer)[i] = inw(port);
     }
 }
 
-void insb(u16int port, u32int buffer, u32int bytes) {
+void insb(u16int port, void *buffer, u32int bytes) {
     u32int i;
     for (i=0; i<bytes; i++) {
-        *(u8int*)(buffer+i) = inb(port);
+        ((u8int*)buffer)[i] = inb(port);
     }
 }
 
-*/
-/*
-void outsl(u16int port, u32int buffer, u32int quads) {
+void outsl(u16int port, void *buffer, u32int quads) {
     u32int i;
     for (i=0; i<quads*4; i+=4) {
-        outl(port, *(u32int*)(buffer+i));
+        outl(port, ((u32int*)buffer)[i]);
     }
 }
 
-void outsw(u16int port, u32int buffer, u32int words) {
+void outsw(u16int port, void *buffer, u32int words) {
     u32int i;
     for (i=0; i<words*2; i+=2) {
-        outw(port, *(u16int*)(buffer+i));
+        outw(port, ((u16int*)buffer)[i]);
     }
 }
 
-void outsb(u16int port, u32int buffer, u32int bytes) {
+void outsb(u16int port, void *buffer, u32int bytes) {
     u32int i;
     for (i=0; i<bytes; i++) {
-        outb(port, *(u8int*)(buffer+i));
+        outb(port, ((u8int*)buffer)[i]);
     }
 }
-*/
 
 void memset(void *addr, u8int c, u64int n)
 {
@@ -537,5 +534,13 @@ void clearBit(u64int *x, u64int i)
 void setBit(u64int *x, u64int i)
 {
     x[i>>6] |= 1 << (i & 0x3f);
+}
+
+char *strdup(const char *s)
+{
+    char *ret = (char*)kMalloc(strlen(s) + 1);
+    strcpy(ret, s);
+
+    return ret;
 }
 

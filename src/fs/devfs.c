@@ -111,6 +111,7 @@ s64int devfsOpen(struct FileSystem *fs, s64int id, struct VNode *node)
     if (dnode->type == DEVFS_TYPE_OBJ) {
         dev = findDevice(dnode->objid);
         if (dev && dev->op->open) {
+            node->priv = dev;
             ret = dev->op->open(node);
         } else
             ret = -1;

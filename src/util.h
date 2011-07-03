@@ -49,9 +49,11 @@ char *strchr(const char *s1, char c);
 // the last apperance of c in s1
 char *strrchr(const char *s1, char c);
 
-//char *strdup(const char *s);
+char *strdup(const char *s);
 
 void printk(const char *fmt, ...);
+
+u64int sprintf(char *buf, char *fmt, ...);
 
 char *dirname(char *dest, const char *s);
 char *basename(char *dest, const char *s);
@@ -70,18 +72,16 @@ void setBit(u64int *x, u64int i);
 
 #define abs __builtin_abs
 
-/*
-void insl(u16int port, u32int buffer, u32int quads);
+void insl(u16int port, void *buffer, u32int quads);
 
-void insw(u16int port, u32int buffer, u32int words);
+void insw(u16int port, void *buffer, u32int words);
 
-void insb(u16int port, u32int buffer, u32int bytes);
+void insb(u16int port, void *buffer, u32int bytes);
 
-void outsl(u16int port, u32int buffer, u32int quads);
+void outsl(u16int port, void *buffer, u32int quads);
 
-void outsw(u16int port, u32int buffer, u32int words);
+void outsw(u16int port, void *buffer, u32int words);
 
-void outsb(u16int port, u32int buffer, u32int bytes);
-*/
+void outsb(u16int port, void *buffer, u32int bytes);
 
 #endif /* UTIL_H */
