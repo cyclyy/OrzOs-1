@@ -19,6 +19,7 @@
 #include "rmi.h"
 #include "video/display.h"
 #include "video/vbe.h"
+#include "pci.h"
 
 void testVBE()
 {
@@ -73,6 +74,7 @@ u64int kmain(struct BootInfo *si)
     initRealModeInterface();
     i8042_Init();
     display_Init();
+    pci_Init();
     //testVBE();
 
     printk("InitAddr:%x\n", getBootInfo()->initrdAddr);

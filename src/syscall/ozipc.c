@@ -3,6 +3,7 @@
 #include "task.h"
 #include "handle.h"
 #include "kmm.h"
+#include "vmm.h"
 
 s64int OzCreateServer(s64int port)
 {
@@ -89,7 +90,7 @@ s64int OzDisconnect(s64int clientId)
     }
 }
 
-s64int OzSend(s64int clientId, char *src, u64int srcSize, char *dest, u64int destSize)
+s64int OzSend(s64int clientId, u64int srcSize, void *src, u64int destSize, void *dest)
 {
     struct Handle *handle;
 
@@ -105,7 +106,7 @@ s64int OzSend(s64int clientId, char *src, u64int srcSize, char *dest, u64int des
     }
 }
 
-s64int OzPost(s64int clientId, char *src, u64int srcSize)
+s64int OzPost(s64int clientId, u64int srcSize, void *src)
 {
     struct Handle *handle;
 
@@ -121,45 +122,55 @@ s64int OzPost(s64int clientId, char *src, u64int srcSize)
     }
 }
 
-s64int OzReceive(s64int clientId, char *buf, u64int bufSize)
+s64int OzReceive(s64int serverId, u64int bufSize, void *buf, struct MessageInfo *msgInfo)
 {
     struct Handle *handle;
     struct Message *msg;
+    struct MessageInfo mi;
     s64int i;
 
-    if (!IS_VALID_HANDLE_INDEX(clientId)) {
+    if (!IS_VALID_HANDLE_INDEX(serverId)) {
         return -1;
     }
     
-    handle = &currentTask->handleTable->handle[clientId];
+    handle = &currentTask->handleTable->handle[serverId];
     if (handle->type == HANDLE_SERVER) {
         msg = (struct Message *)kReceive((struct Server*)handle->pointer, buf, bufSize);
         if (!msg) {
-            return 0;
-        }
-        i = htFindFreeIndex(currentTask->handleTable);
-        if (i<0) {
             return -1;
         }
-        currentTask->handleTable->used++;
-        handle = &currentTask->handleTable->handle[i];
-        handle->type = HANDLE_MESSAGE;
-        handle->pointer = msg;
-        return i;
+        if (msgInfo) {
+            mi.srcSize = msg->srcSize;
+            copyToUser(msgInfo, &mi, sizeof(struct MessageInfo));
+        }
+        if (msg->type == MESSAGE_TYPE_SEND) {
+            i = htFindFreeIndex(currentTask->handleTable);
+            if (i<0) {
+                return -1;
+            }
+            currentTask->handleTable->used++;
+            handle = &currentTask->handleTable->handle[i];
+            handle->type = HANDLE_MESSAGE;
+            handle->pointer = msg;
+            return i;
+        } else if (msg->type == MESSAGE_TYPE_POST) {
+            return 0;
+        } else {
+            return -1;
+        }
     } else {
         return -1;
     }
 }
 
-s64int OzReply(s64int msgId, char *buf, u64int bufSize)
+s64int OzReply(s64int msgId, u64int bufSize, void *buf)
 {
     struct Handle *handle;
     s64int ret;
 
     if ((!IS_VALID_HANDLE_INDEX(msgId)) || (msgId==0)) {
         return -1;
-    }
-    
+    } 
     handle = &currentTask->handleTable->handle[msgId];
     if (handle->type == HANDLE_MESSAGE) {
         ret = kReply((struct Message*)handle->pointer, buf, bufSize);

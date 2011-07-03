@@ -251,7 +251,7 @@ struct Message *kReceive(struct Server *server, char *buf, u64int bufSize)
         vmemcpy(currentTask->vm, buf, kernelVM, msg->src, MIN(bufSize,msg->srcSize));
         kFree(msg->src);
         kFree(msg);
-        return 0;
+        return msg;
     }
     return 0;
 }

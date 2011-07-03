@@ -6,6 +6,8 @@ rm  initrd/server
 cp src/prog/server initrd/
 rm  initrd/client
 cp src/prog/client initrd/
+rm  initrd/uiserver
+cp src/prog/uiserver initrd/
 
 rm  initrd/init
 cp src/prog/init initrd/

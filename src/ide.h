@@ -1,7 +1,7 @@
 #ifndef IDE_H
 #define IDE_H 
 
-#include "common.h"
+#include "sysdef.h"
 
 #define ATA_SR_BSY     0x80
 #define ATA_SR_DRDY    0x40
@@ -86,7 +86,12 @@
 #define      ATA_PRIMARY_IRQ    IRQ14
 #define      ATA_SECONDARY_IRQ  IRQ15
 
-s32int ide_read_sectors(u8int drive, u8int numsects, u32int lba, u8int *buf);
-s32int ide_write_sectors(u8int drive, u8int numsects, u32int lba, u8int *buf);
+s32int ideReadSectors(u8int drive, u8int numsects, u32int lba, u8int *buf);
+s32int ideWriteSectors(u8int drive, u8int numsects, u32int lba, u8int *buf);
+
+void ide_Init();
+
+void ide_Cleanup();
+
 
 #endif /* IDE_H */

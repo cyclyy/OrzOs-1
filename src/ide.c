@@ -1,26 +1,27 @@
 #include "ide.h"
-#include "module.h"
 #include "pci.h"
-#include "screen.h"
+#include "util.h"
 #include "isr.h"
 #include "task.h"
-#include "kheap.h"
+#include "kmm.h"
+#include "vmm.h"
+#include "waitqueue.h"
 #include "disk.h"
 
-u8int ide_buf[2048] = {0};
-u8int ide_irq_invoked = 0;
-u8int atapi_packet[12] = {0xA8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+u8int ideBuf[2048] = {0};
+//u8int ideirq_invoked = 0;
+u8int atapiPacket[12] = {0xA8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-wait_queue_t wq = {0};
+struct WaitQueue wq = {0};
 
-struct ide_channel_regs {
+struct ideChannelRegisters {
     u16int base;  // I/O Base.
     u16int ctrl;  // Control Base
     u16int bmide; // Bus Master IDE
     u8int  nIEN;  // No Interrupt;
 } channels[2];
 
-struct ide_device {
+struct ideDevice {
     u8int exists;    // 0 (Empty) or 1 (This Drive really exists).
     u8int channel;     // 0 (Primary Channel) or 1 (Secondary Channel).
     u8int drive;       // 0 (Master Drive) or 1 (Slave Drive).
@@ -31,15 +32,15 @@ struct ide_device {
     u16int udma;        // Active udma mode.
     u32int size;        // size in Sectors.
     u8int model[41];   // model in string.
-} ide_devices[4];
+} ideDevices[4];
 
-void ide_write(u8int channel, u8int reg, u8int data);
+void ideWrite(u8int channel, u8int reg, u8int data);
 
-s32int ide_read_sectors(u8int drive, u8int numsects, u32int lba, u8int *buf);
+s64int ideReadSectors(u8int drive, u8int numsects, u32int lba, u8int *buf);
 
-s32int ide_write_sectors(u8int drive, u8int numsects, u32int lba, u8int *buf);
+s64int ideWriteSectors(u8int drive, u8int numsects, u32int lba, u8int *buf);
 
-u32int ide_read_blks(disk_t *disk, u32int start_blk, u32int nr_blks, u8int *buf)
+u64int ideReadBlocks(disk_t *disk, u32int start_blk, u32int nr_blks, u8int *buf)
 {
     u8int drive = (u32int)disk->priv;
 
@@ -522,15 +523,15 @@ pci_driver_t drv = {
     .deattach = &ide_deattach,
 };
 
-void module_ide_init()
+void ide_Init()
 {
     printk("module_ide_init %p\n", &drv);
-    register_pci_driver(&drv);
+    registerPCIDriver(&drv);
 }
 
-void module_ide_cleanup()
+void ide_Cleanup()
 {
-    unregister_pci_driver(&drv);
+    unregisterPCIDriver(&drv);
 }
 
 

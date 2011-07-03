@@ -46,6 +46,7 @@ u64int OzAddHeapSize(s64int incr)
             ret = vmAddArea(currentTask->vm, prog->allocBefore, 
                     newAllocBefore - prog->allocBefore,
                     VMA_STATUS_USED | VMA_OWNER_USER | VMA_TYPE_HEAP);
+            prog->allocBefore = newAllocBefore;
         }
         if (ret == 0)
             return oldbrk;

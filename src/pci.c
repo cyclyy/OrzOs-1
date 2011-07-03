@@ -1,102 +1,102 @@
 #include "pci.h"
-#include "screen.h"
-#include "kheap.h"
-#include "module.h"
+#include "util.h"
+#include "kmm.h"
 
-#define PCI_CONFIG_ADDRESS 0xcf8
-#define PCI_CONFIG_DATA 0xcfc
+static struct PCIDevice *pci_devs = 0;
 
-static pci_dev_t *pci_devs = 0;
-
-static void dump_pci_dev(pci_dev_t *dev)
+static void pciDumpDevice(struct PCIDevice *dev)
 {
-    printk("bus %p slot %p func %p\n", dev->bus, dev->slot, dev->func);
-    printk("device %p, vendor %p, class %p, subclass %p prog_if %p\n", 
-            dev->config->device,dev->config->vendor,dev->config->class_code,dev->config->subclass,dev->config->prog_if);
+    printk("%d:%d:%d, device %p, vendor %p, class %p, subclass %p\n", 
+            dev->bus, dev->slot, dev->func,
+            dev->config->device,dev->config->vendor,dev->config->classCode,dev->config->subclass);
 }
 
-u32int read_pci_config_dword(u32int bus, u32int slot, u32int func, u32int off)
+u32int pciReadConfigDWord(u64int bus, u64int slot, u64int func, u64int off)
 {
     u32int addr = 0x80000000 | (bus<<16) | (slot<<11) | (func<<8) | (off&0xfc);
     outl(PCI_CONFIG_ADDRESS, addr);
     return inl(PCI_CONFIG_DATA);
 }
 
-void write_pci_config_dword(u32int bus, u32int slot, u32int func, u32int off, u32int data)
+void pciWriteConfigDWord(u64int bus, u64int slot, u64int func, u64int off, u32int data)
 {
     u32int addr = 0x80000000 | (bus<<16) | (slot<<11) | (func<<8) | (off&0xfc);
     outl(PCI_CONFIG_ADDRESS, addr);
     outl(PCI_CONFIG_DATA, data);
 }
 
-void write_pci_config_word(u32int bus, u32int slot, u32int func, u32int off, u16int data)
+void pciWriteConfigWord(u64int bus, u64int slot, u64int func, u64int off, u16int data)
 {
     u32int addr = 0x80000000 | (bus<<16) | (slot<<11) | (func<<8) | (off&0xfe);
     outl(PCI_CONFIG_ADDRESS, addr);
     outw(PCI_CONFIG_DATA, data);
 }
 
-void write_pci_config_byte(u32int bus, u32int slot, u32int func, u32int off, u8int data)
+void pciWriteConfigByte(u64int bus, u64int slot, u64int func, u64int off, u8int data)
 {
     u32int addr = 0x80000000 | (bus<<16) | (slot<<11) | (func<<8) | (off&0xff);
     outl(PCI_CONFIG_ADDRESS, addr);
     outb(PCI_CONFIG_DATA, data);
 }
 
-u32int read_pci_dev_config_dword(pci_dev_t *dev, u32int off)
+u32int pciReadDeviceConfigDWord(struct PCIDevice *dev, u64int off)
 {
-    return read_pci_config_dword(dev->bus,dev->slot,dev->func,off);
+    return pciReadConfigDWord(dev->bus,dev->slot,dev->func,off);
 }
 
-void write_pci_dev_config_dword(pci_dev_t *dev, u32int off, u32int data)
+void pciWriteDeviceConfigDWord(struct PCIDevice *dev, u64int off, u32int data)
 {
-    return write_pci_config_dword(dev->bus,dev->slot,dev->func,off,data);
+    return pciWriteConfigDWord(dev->bus,dev->slot,dev->func,off,data);
 }
 
-void write_pci_dev_config_word(pci_dev_t *dev, u32int off, u16int data)
+void pciWriteDeviceConfigWord(struct PCIDevice *dev, u64int off, u16int data)
 {
-    return write_pci_config_word(dev->bus,dev->slot,dev->func,off,data);
+    return pciWriteConfigWord(dev->bus,dev->slot,dev->func,off,data);
 }
 
-void write_pci_dev_config_byte(pci_dev_t *dev, u32int off, u8int data)
+void pciWriteDeviceConfigByte(struct PCIDevice *dev, u64int off, u8int data)
 {
-    return write_pci_config_byte(dev->bus,dev->slot,dev->func,off,data);
+    return pciWriteConfigByte(dev->bus,dev->slot,dev->func,off,data);
 }
 
+/*
 s32int pci_present()
 {
     return 1;
 }
+*/
 
-static void init_pci()
+
+static void initPCI()
 {
-    u32int bus, slot, func;
-    u32int dw, vendor;
-    pci_config_t *config = 0;
+    u64int bus, slot, func;
+    u64int dw;
+    u16int vendor;
+    struct PCIConfig *config = 0;
 
     for (bus=0; bus<255; bus++) 
         for (slot=0; slot<31; slot++)
             for (func=0; func<7; func++) {
-                vendor = read_pci_config_dword(bus,slot,func,0) & 0xffff;
+                vendor = pciReadConfigDWord(bus,slot,func,0) & 0xffff;
                 if (vendor != 0xffff) {
-                    config = (pci_config_t*)kmalloc(sizeof(pci_config_t));
-                    memset(config,0,sizeof(pci_config_t));
-                    dw = read_pci_config_dword(bus,slot,func,0x0);
+                    config = (struct PCIConfig*)kMalloc(sizeof(struct PCIConfig));
+                    memset(config,0,sizeof(struct PCIConfig));
+                    dw = pciReadConfigDWord(bus,slot,func,0x0);
                     config->vendor = dw & 0xffff;
                     config->device = dw >> 16;
-                    dw = read_pci_config_dword(bus,slot,func,0x8);
+                    dw = pciReadConfigDWord(bus,slot,func,0x8);
                     config->revision = dw & 0xff;
-                    config->prog_if = (dw & 0xffff) >> 8;
+                    config->progIF = (dw & 0xffff) >> 8;
                     config->subclass = (dw & 0xffffff) >> 16;
-                    config->class_code = dw >> 24;
-                    dw = read_pci_config_dword(bus,slot,func,0xc);
-                    config->header_type = (dw & 0xffffff) >> 16;
-                    dw = read_pci_config_dword(bus,slot,func,0x3c);
+                    config->classCode = dw >> 24;
+                    dw = pciReadConfigDWord(bus,slot,func,0xc);
+                    config->headerType = (dw & 0xffffff) >> 16;
+                    dw = pciReadConfigDWord(bus,slot,func,0x3c);
                     config->irq = dw & 0xff;
-                    config->interrupt_pin = (dw & 0xffff) >> 8;
+                    config->interruptPin = (dw & 0xffff) >> 8;
 
-                    pci_dev_t *pci_dev = (pci_dev_t*)kmalloc(sizeof(pci_dev_t));
-                    memset(pci_dev, 0, sizeof(pci_dev_t));
+                    struct PCIDevice *pci_dev = (struct PCIDevice*)kMalloc(sizeof(struct PCIDevice));
+                    memset(pci_dev, 0, sizeof(struct PCIDevice));
                     pci_dev->bus = bus;
                     pci_dev->slot = slot;
                     pci_dev->func = func;
@@ -104,7 +104,7 @@ static void init_pci()
                     pci_dev->next = 0;
 
                     if (pci_devs) {
-                        pci_dev_t *p = pci_devs; 
+                        struct PCIDevice *p = pci_devs; 
                         while (p->next)
                             p = p->next;
                         p->next = pci_dev;
@@ -112,26 +112,24 @@ static void init_pci()
                         pci_devs = pci_dev;
                     }
 
-                    if ((config->header_type & 0x80) == 0)
+                    if ((config->headerType & 0x80) == 0)
                         break;
 
                 }
             }
 
-    pci_dev_t *p = pci_devs;
-    /*
+    struct PCIDevice *p = pci_devs;
     printk("=====Dump discovered pci device======\n");
     while(p) {
-        dump_pci_dev(p);
+        pciDumpDevice(p);
         p = p->next;
     }
     printk("=====End Dump======\n");
-    */
 }
 
-void register_pci_driver(pci_driver_t *drv)
+void registerPCIDriver(struct PCIDriver *drv)
 {
-    pci_dev_t *p = pci_devs;
+    struct PCIDevice *p = pci_devs;
     while (p) {
         if ((!p->driver) && (drv->probe(p) == 0)) {
             p->driver = drv;
@@ -142,9 +140,9 @@ void register_pci_driver(pci_driver_t *drv)
     }
 }
 
-void unregister_pci_driver(pci_driver_t *drv)
+void unregisterPCIDriver(struct PCIDriver *drv)
 {
-    pci_dev_t *p = pci_devs;
+    struct PCIDevice *p = pci_devs;
     while (p) {
         if (p->driver == drv) {
             drv->deattach(p);
@@ -155,26 +153,11 @@ void unregister_pci_driver(pci_driver_t *drv)
     }
 }
 
-void module_pci_init()
+void pci_Init()
 {
-    init_pci();
+    initPCI();
 }
 
-void module_pci_cleanup()
+void pci_Cleanup()
 {
 }
-
-MODULE_INIT(module_pci_init);
-MODULE_CLEANUP(module_pci_cleanup);
-
-MEXPORT(read_pci_config_dword);
-MEXPORT(write_pci_config_dword);
-MEXPORT(write_pci_config_word);
-MEXPORT(write_pci_config_byte);
-MEXPORT(read_pci_dev_config_dword);
-MEXPORT(write_pci_dev_config_dword);
-MEXPORT(write_pci_dev_config_word);
-MEXPORT(write_pci_dev_config_byte);
-MEXPORT(pci_present);
-MEXPORT(register_pci_driver);
-MEXPORT(unregister_pci_driver);

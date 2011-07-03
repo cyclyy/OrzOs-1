@@ -7,11 +7,11 @@ int main()
 
     client = OzConnect(100);
 
-    OzPost(client, "a", 1);
-    OzPost(client, "b", 1);
-    OzPost(client, "c", 1);
+    OzPost(client, 1, "a");
+    OzPost(client, 1, "b");
+    OzPost(client, 1, "c");
 
-    OzSend(client, &c, 1, &d, 1);
+    OzSend(client, 1, &c, 1,  &d);
 
     OzPutChar(d);
     OzPutChar('\n');

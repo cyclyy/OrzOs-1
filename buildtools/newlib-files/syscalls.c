@@ -15,7 +15,6 @@
 
 int
 _exit(int val){
-    exit(val);
     OzExitTask(val);
     return (-1);
 }
@@ -94,19 +93,18 @@ link(char *old, char *new) {
 
 int
 lseek(int file, int ptr, int dir) {
-    return 0;
+    return OzSeek(file,ptr,dir);
 }
 
 int
 open(const char *name, int flags, ...) {
-    return OzOpen(name,flags);
+    return OzOpen((char*)name,flags);
 }
 
 int
 read(int file, char *ptr, int len) {
     // XXX: keyboard support
-
-    return 0;
+    return OzRead(file, len, ptr);
 }
 
 int 
@@ -130,13 +128,13 @@ unlink(char *name) {
 
 int
 write(int file, char *ptr, int len) {
-    return -1;
+    return OzWrite(file,len,ptr);
 }
 
 // --- Memory ---
 
 /* _end is set in the linker command file */
-extern caddr_t _end;
+//extern caddr_t _end;
 
 /*
  * sbrk -- changes heap size size. Get nbytes more
@@ -145,43 +143,7 @@ extern caddr_t _end;
  */
 caddr_t
 sbrk(int nbytes){
-    static caddr_t heap_ptr = NULL;
-    caddr_t base;
-
-    int temp;
-
-    if(heap_ptr == NULL){
-        heap_ptr = (caddr_t)USER_HEAP_START_ADDR;
-    }
-
-    base = heap_ptr;
-
-    if(((unsigned long long)heap_ptr & ~PAGE_MASK) != 0ULL){
-        temp = (PAGE_SIZE - ((unsigned long long)heap_ptr & ~PAGE_MASK));
-
-        if( nbytes < temp ){
-            heap_ptr += nbytes;
-            nbytes = 0;
-        }else{
-            heap_ptr += temp;
-            nbytes -= temp;
-        }
-    }
-
-    while(nbytes > PAGE_SIZE){
-        //allocPage(heap_ptr);
-
-        nbytes -= (int) PAGE_SIZE;
-        heap_ptr = heap_ptr + PAGE_SIZE;
-    }
-
-    if( nbytes > 0){
-        //allocPage(heap_ptr);
-
-        heap_ptr += nbytes;
-    }
-
-    return base;
+    return (caddr_t)OzAddHeapSize(nbytes);
 }
 
 

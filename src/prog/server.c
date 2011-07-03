@@ -13,10 +13,10 @@ int main()
     OzNewTask("Boot:/client",0);
 
     while (1) {
-        client = OzReceive(server, buf, 10);
+        client = OzReceive(server, 10, buf, 0);
         buf[0] -= 32;
         if (client) {
-            OzReply(client, buf, 1);
+            OzReply(client, 1, buf);
         } else {
             OzPutChar(buf[0]);
             OzPutChar('\n');

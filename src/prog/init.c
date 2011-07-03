@@ -1,5 +1,7 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 #include "syscall.h"
 
 int main()
@@ -18,7 +20,7 @@ int main()
         p++;
     }
 
-    OzNewTask("Boot:/server",0);
+    OzNewTask("Boot:/uiserver",0);
 
     while(1);
 }

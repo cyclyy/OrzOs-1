@@ -1,7 +1,10 @@
 #ifndef PCI_H
 #define PCI_H 
 
-#include "common.h"
+#include "sysdef.h"
+
+#define PCI_CONFIG_ADDRESS 0xcf8
+#define PCI_CONFIG_DATA 0xcfc
 
 #define PCI_BAR0_OFFSET 0x10
 #define PCI_BAR1_OFFSET 0x14
@@ -10,52 +13,55 @@
 #define PCI_BAR4_OFFSET 0x20
 #define PCI_BAR5_OFFSET 0x24
 
-typedef struct {
+struct PCIConfig {
     u16int vendor, device;
-    u8int revision, prog_if, subclass, class_code;
-    u8int header_type;
-    u8int irq, interrupt_pin;
+    u8int revision, progIF, subclass, classCode;
+    u8int headerType;
+    u8int irq, interruptPin;
     union { 
         struct {
             u32int CIS;
             u16int subvendor;
             u16int subsystem;
-            u16int rom_bar;
+            u16int romBar;
         } type0;
     };
+} __attribute__((packed));
 
-} pci_config_t;
+struct PCIDevice;
 
-typedef struct pci_dev_struct pci_dev_t;
-
-typedef struct {
+struct PCIDriver {
     char name[MAX_NAME_LEN];
-    s32int (*probe)(pci_dev_t *pci_dev);
-    s32int (*attach)(pci_dev_t *pci_dev);
-    s32int (*deattach)(pci_dev_t *pci_dev);
-} pci_driver_t;
-
-struct pci_dev_struct {
-    u32int bus, slot, func;
-    pci_config_t *config;
-    pci_driver_t *driver;
-    pci_dev_t *next;
+    s64int (*probe)(struct PCIDevice *dev);
+    s64int (*attach)(struct PCIDevice *dev);
+    s64int (*deattach)(struct PCIDevice *dev);
 };
 
-u32int read_pci_config_dword(u32int bus, u32int slot, u32int func, u32int off);
-void write_pci_config_dword(u32int bus, u32int slot, u32int func, u32int off, u32int data);
-void write_pci_config_word(u32int bus, u32int slot, u32int func, u32int off, u16int data);
-void write_pci_config_byte(u32int bus, u32int slot, u32int func, u32int off, u8int data);
+struct PCIDevice {
+    u32int bus, slot, func;
+    struct PCIConfig *config;
+    struct PCIDriver *driver;
+    struct PCIDevice *next;
+};
 
-u32int read_pci_dev_config_dword(pci_dev_t *dev, u32int off);
-void write_pci_dev_config_dword(pci_dev_t *dev, u32int off, u32int data);
-void write_pci_dev_config_word(pci_dev_t *dev, u32int off, u16int data);
-void write_pci_dev_config_byte(pci_dev_t *dev, u32int off, u8int data);
+u32int pciReadConfigDWord(u64int bus, u64int slot, u64int func, u64int off);
+void pciWriteConfigDWord(u64int bus, u64int slot, u64int func, u64int off, u32int data);
+void pciWriteConfigWord(u64int bus, u64int slot, u64int func, u64int off, u16int data);
+void pciWriteConfigByte(u64int bus, u64int slot, u64int func, u64int off, u8int data);
 
-s32int pci_present();
+u32int pciReadDeviceConfigDWord(struct PCIDevice *dev, u64int off);
+void pciWriteDeviceConfigDWord(struct PCIDevice *dev, u64int off, u32int data);
+void pciWriteDeviceConfigWord(struct PCIDevice *dev, u64int off, u16int data);
+void pciWriteDeviceConfigByte(struct PCIDevice *dev, u64int off, u8int data);
 
-void register_pci_driver(pci_driver_t *drv);
+// s32int pci_present();
 
-void unregister_pci_driver(pci_driver_t *drv);
+void registerPCIDriver(struct PCIDriver *drv);
+
+void unregisterPCIDriver(struct PCIDriver *drv);
+
+void pci_Init();
+
+void pci_Cleanup();
 
 #endif /* PCI_H */

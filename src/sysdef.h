@@ -3,7 +3,9 @@
 
 #define always_inline __attribute__((always_inline)) inline
 
+#ifndef NULL
 #define NULL 0
+#endif
 
 #define PAGE_SIZE 4096
 #define PAGE_LOG2_SIZE 12

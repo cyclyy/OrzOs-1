@@ -14,7 +14,8 @@ CORE_C_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o dtable.o \
 			ksyscall.o device.o i8042.o program.o except.o \
 			handle.o fs/bootfs.o fs/devfs.o \
 			syscall/ozipc.o syscall/oztask.o syscall/ozfs.o \
-			rmi.o video/display.o video/vbe.o
+			rmi.o video/display.o video/vbe.o \
+			pci.o
 
 CORE_ASM_SOURCES = flushdtable.o isr.o taskasm.o usermemcopy.o
 
@@ -26,7 +27,7 @@ MOD_SOURCES = testmod.o            \
               ide.o                \
               ext2fs.o          \
 
-PROG_SOURCES = prog/init.o  prog/server.o prog/client.o syscall.o 
+PROG_SOURCES = prog/uiproto.o prog/uiserver.o prog/init.o prog/server.o prog/client.o syscall.o 
 
 CORE_CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -mcmodel=kernel -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g
 PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g
@@ -56,10 +57,8 @@ core_link:libx86emu.a
 prog_link: 
 	@echo "LD	init"
 	$(QUIET)$(LD) -o prog/init prog/init.o syscall.o $(PROG_LDFLAGS)
-	@echo "LD	server"
-	$(QUIET)$(LD) -o prog/server prog/server.o syscall.o $(PROG_LDFLAGS)
-	@echo "LD	client"
-	$(QUIET)$(LD) -o prog/client prog/client.o syscall.o $(PROG_LDFLAGS)
+	@echo "LD	uiserver"
+	$(QUIET)$(LD) -o prog/uiserver prog/uiserver.o prog/uiproto.o syscall.o $(PROG_LDFLAGS)
 
 $(CORE_ASM_SOURCES):%.o:%.s
 	@echo "AS	$@"
