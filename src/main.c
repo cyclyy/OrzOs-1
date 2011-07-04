@@ -20,6 +20,7 @@
 #include "video/display.h"
 #include "video/vbe.h"
 #include "pci.h"
+#include "ide.h"
 
 void testVBE()
 {
@@ -75,6 +76,7 @@ u64int kmain(struct BootInfo *si)
     i8042_Init();
     display_Init();
     pci_Init();
+    ide_Init();
     //testVBE();
 
     printk("InitAddr:%x\n", getBootInfo()->initrdAddr);

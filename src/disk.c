@@ -6,7 +6,7 @@
 
 struct Disk *disks = 0;
 
-static u64int doDiskRead(struct Disk *d, u64int offset, u64int size, char *buf)
+static s64int doDiskRead(struct Disk *d, u64int offset, u64int size, char *buf)
 {
     if (!d || !size)
         return 0;
@@ -183,23 +183,22 @@ static struct DeviceOperation partOps = {
     .write = &partWrite,
 };
 
-void addPartition(struct Disk *disk, u8int type, u64int startBlock, u64int nBlocks, u64int *start_part_no)
+static void addPartition(struct Disk *disk, u8int type, u32int startBlock, u32int nBlocks, u64int *start_part_no)
 {
     char deviceName[MAX_NAME_LEN];
+    char *ebr;
+    s64int n = 0, i = 0;
 
     // prevent stack overflow
     if (*start_part_no > 10)
         return;
     if (type==0x5 || type==0xf) {
         // extended partition
-        char *ebr = (char*)kMalloc(512);
-        u64int n, i = 0;
+        ebr = (char*)kMalloc(512);
         //   read EBR
         n = doDiskRead(disk,0,512,ebr);
-        if (n != 512)
-            goto err;
         //   check EBR signature
-        if ((ebr[510] != 0x55) || (ebr[511] != 0xaa))
+        if (((ebr[510] & 0xff) != 0x55) || ((ebr[511] & 0xff) != 0xaa))
             goto err;
         //   get the offset of four 16-byte entries(primary partition)
         ebr += 446;
@@ -207,7 +206,7 @@ void addPartition(struct Disk *disk, u8int type, u64int startBlock, u64int nBloc
             // ebr[4]:type byte, ebr[8-0xb]:startBlock dword, ebr[0xc-0xf]:nBlocks dword;
             // *(u64int*)(ebr+8) is relative offset 
             // type, startBlock, nBlocks, first partition number;
-            addPartition(disk, ebr[4], startBlock+*(u64int*)(ebr+8), *(u64int*)(ebr+0xc), start_part_no);
+            addPartition(disk, ebr[4], startBlock+*(u32int*)(ebr+8), *(u32int*)(ebr+0xc), start_part_no);
             ebr += 16;
         }
 err:
@@ -229,6 +228,7 @@ err:
             d->priv = part;
             sprintf(deviceName, "Device:/Disk%dPart%d", (disk->id & 0xff00) >> 8, *start_part_no);
             vfsCreateObject(deviceName,d->id);
+            printk("%s\n",deviceName);
             addDevice(d);
         }
     }
@@ -238,6 +238,9 @@ err:
 void addDisk(struct Disk *disk)
 {
     char deviceName[MAX_NAME_LEN];
+    char mbr[512];
+    char *p;
+    u64int n, i, nr_parts = 0;
 
     // add disk to disk list.
     if (!disks) {
@@ -259,28 +262,27 @@ void addDisk(struct Disk *disk)
     addDevice(d);
     sprintf(deviceName, "Device:/Disk%d", (disk->id & 0xff00) >> 8);
     vfsCreateObject(deviceName,d->id);
+    printk("%s\n", deviceName);
 
     // search  partitions and call add_dev;
-    char *mbr = (char*)kMalloc(512);
-    char *p = mbr;
-    u64int n, i, nr_parts = 0;
     //   read MBR
-    n = doDiskRead(disk,0,512,p);
-    if (n != 512)
-        goto err;
+    n = doDiskRead(disk,0,512,mbr);
+    if (n < 512) {
+        return;
+    }
     //   check MBR signature
-    if ((p[510] != 0x55) || (p[511] != 0xaa))
-        goto err;
+    if (((mbr[510] & 0xff) != 0x55) || ((mbr[511] & 0xff) != 0xaa)) {
+        return;
+    }
     //   get the offset of four 16-byte entries(primary partition)
+    p = mbr;
     p += 446;
     for (i=0; i<4; i++) {
         // p[4]:type byte, p[8-0xb]:startBlock dword, p[0xc-0xf]:nBlocks dword;
         // type, startBlock, nBlocks, first partition number;
-        addPartition(disk, p[4], *(u64int*)(p+8), *(u64int*)(p+0xc), &nr_parts);
+        addPartition(disk, p[4], *(u32int*)(p+8), *(u32int*)(p+0xc), &nr_parts);
         p += 16;
     }
-err:
-    kFree(mbr);
 }
 
 void removeDisk(struct Disk *disk)
