@@ -35,6 +35,8 @@ char *strcpy(char *dst, const char *src);
 
 s64int strcmp(const char *s1, const char *s2);
 
+s64int strncmp(const char *s1, const char *s2, u64int n);
+
 u64int strlen(const char *s);
 
 // the first apperance of s2 in s1
@@ -65,6 +67,10 @@ s64int strtol(const char *cp,char **endp,u32int base);
 s32int atoi(const char *nptr);
 
 #define atol(x) atoi(x)
+
+char *ltoa(s64int i, char *buf, int base);
+
+char *ultoa(u64int i, char *buf, int base);
 
 void clearBit(u64int *x, u64int i);
 

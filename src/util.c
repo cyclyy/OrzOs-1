@@ -105,6 +105,7 @@ u64int vsprintf(char *buf, char *fmt, va_list ap)
     u64int idx = 0;
     int ch, i;
     char *s;
+    char tmpBuf[MAX_NAME_LEN];
 
     while (*fmt) {
         switch (*fmt) {
@@ -129,12 +130,18 @@ u64int vsprintf(char *buf, char *fmt, va_list ap)
                     case 'd':
                         i = va_arg(ap, u64int);
                         //scr_putn(i);
+                        strcpy(buf+idx, ltoa(i,tmpBuf,10));
+                        idx += strlen(tmpBuf);
                         fmt++;
                         break;
                     case 'p':
                     case 'x':
                         //scr_puts("0x");
+                        buf[idx++] = '0';
+                        buf[idx++] = 'x';
                         i = va_arg(ap, u64int);
+                        strcpy(buf+idx, ltoa(i,tmpBuf,16));
+                        idx += strlen(tmpBuf);
                         //scr_puthex(i);
                         fmt++;
                         break;
@@ -229,6 +236,18 @@ s64int strcmp(const char *s1, const char *s2)
         return 1;
     else
         return 0;
+}
+
+s64int strncmp(const char *s1, const char *s2, u64int n)
+{
+    u64int i;
+    for (i=0; i<n; i++) {
+        if (s1[i]<s2[i])
+            return -1;
+        if (s1[i]>s2[i])
+            return 1;
+    }
+    return 0;
 }
 
 u64int strlen(const char *s)
@@ -524,6 +543,41 @@ s64int strtol(const char *cp,char **endp,u32int base)
 s32int atoi(const char *nptr)
 {
     return strtol(nptr, (char **)0, 10);
+}
+
+char *ltoa(s64int num, char *buf, int base)
+{
+    if (num < 0) {
+        buf[0] = '-';
+        ultoa(-num, buf+1, base);
+    } else {
+        ultoa(num, buf, base);
+    }
+    return buf;
+}
+
+char *ultoa(u64int num, char *buf, int base)
+{
+    u64int n = num, p = 1;
+    s64int len = 0, i, x;
+    do {
+        len++;
+        n /= base;
+        p *= base;
+    } while (n!=0);
+    for (i=0; i<len; i++) {
+        p /= base;
+        x = num / p;
+        if ((x>=0) && (x<10)) {
+            buf[i] = '0' + x;
+        } else if ((x>=10) && (x<16)) {
+            buf[i] = 'A' + x - 10;
+        } else {
+            buf[i] = '0';
+        }
+    }
+    buf[len] = 0;
+    return buf;
 }
 
 void clearBit(u64int *x, u64int i)

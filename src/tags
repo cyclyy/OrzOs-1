@@ -3706,76 +3706,76 @@ EXPECT	build-newlib/Makefile	/^EXPECT = expect$/;"	m
 EXPECT	build-newlib/x86_64-pc-elf/newlib/Makefile	/^EXPECT = `if test -f $(top_builddir)\/..\/expect\/expect; then \\$/;"	m
 EXPECT	build-newlib/x86_64-pc-orzos/newlib/Makefile	/^EXPECT = `if test -f $(top_builddir)\/..\/expect\/expect; then \\$/;"	m
 EXT2FS_H	fs/ext2fs.h	2;"	d
-EXT2_BAD_INO	fs/ext2fs.h	81;"	d
-EXT2_BOOT_LOADER_INO	fs/ext2fs.h	83;"	d
-EXT2_DENTRY_BASE_LEN	fs/ext2fs.h	260;"	d
-EXT2_DIND_BLOCK	fs/ext2fs.h	91;"	d
-EXT2_DYNAMIC_REV	fs/ext2fs.h	35;"	d
-EXT2_ERRORS_CONTINUE	fs/ext2fs.h	17;"	d
-EXT2_ERRORS_DEFAULT	fs/ext2fs.h	20;"	d
-EXT2_ERRORS_PANIC	fs/ext2fs.h	19;"	d
-EXT2_ERRORS_RO	fs/ext2fs.h	18;"	d
-EXT2_ERROR_FS	fs/ext2fs.h	12;"	d
-EXT2_FEATURE_COMPAT_ANY	fs/ext2fs.h	44;"	d
-EXT2_FEATURE_COMPAT_DIR_INDEX	fs/ext2fs.h	43;"	d
-EXT2_FEATURE_COMPAT_DIR_PREALLOC	fs/ext2fs.h	38;"	d
-EXT2_FEATURE_COMPAT_EXT_ATTR	fs/ext2fs.h	41;"	d
-EXT2_FEATURE_COMPAT_IMAGIC_INODES	fs/ext2fs.h	39;"	d
-EXT2_FEATURE_COMPAT_RESIZE_INO	fs/ext2fs.h	42;"	d
-EXT2_FEATURE_INCOMPAT_ANY	fs/ext2fs.h	56;"	d
-EXT2_FEATURE_INCOMPAT_COMPRESSION	fs/ext2fs.h	51;"	d
-EXT2_FEATURE_INCOMPAT_FILETYPE	fs/ext2fs.h	52;"	d
-EXT2_FEATURE_INCOMPAT_META_BG	fs/ext2fs.h	55;"	d
-EXT2_FEATURE_RO_COMPAT_ANY	fs/ext2fs.h	49;"	d
-EXT2_FEATURE_RO_COMPAT_BTREE_DIR	fs/ext2fs.h	48;"	d
-EXT2_FEATURE_RO_COMPAT_LARGE_FILE	fs/ext2fs.h	47;"	d
-EXT2_FEATURE_RO_COMPAT_SPARSE_SUPER	fs/ext2fs.h	46;"	d
-EXT2_FT_BLKDEV	fs/ext2fs.h	/^    EXT2_FT_BLKDEV      = 4,$/;"	e	enum:__anon79
-EXT2_FT_CHRDEV	fs/ext2fs.h	/^    EXT2_FT_CHRDEV      = 3,$/;"	e	enum:__anon79
-EXT2_FT_DIR	fs/ext2fs.h	/^    EXT2_FT_DIR     = 2,$/;"	e	enum:__anon79
-EXT2_FT_FIFO	fs/ext2fs.h	/^    EXT2_FT_FIFO        = 5,$/;"	e	enum:__anon79
-EXT2_FT_MAX	fs/ext2fs.h	/^    EXT2_FT_MAX$/;"	e	enum:__anon79
-EXT2_FT_REG_FILE	fs/ext2fs.h	/^    EXT2_FT_REG_FILE    = 1,$/;"	e	enum:__anon79
-EXT2_FT_SOCK	fs/ext2fs.h	/^    EXT2_FT_SOCK        = 6,$/;"	e	enum:__anon79
-EXT2_FT_SYMLINK	fs/ext2fs.h	/^    EXT2_FT_SYMLINK     = 7,$/;"	e	enum:__anon79
-EXT2_FT_UNKNOWN	fs/ext2fs.h	/^    EXT2_FT_UNKNOWN     = 0,$/;"	e	enum:__anon79
-EXT2_GOOD_OLD_REV	fs/ext2fs.h	34;"	d
-EXT2_IND_BLOCK	fs/ext2fs.h	90;"	d
-EXT2_MAGIC	fs/ext2fs.h	6;"	d
-EXT2_NAME_LEN	fs/ext2fs.h	259;"	d
-EXT2_NDIR_BLOCKS	fs/ext2fs.h	89;"	d
-EXT2_N_BLOCKS	fs/ext2fs.h	93;"	d
-EXT2_OS_FREEBSD	fs/ext2fs.h	28;"	d
-EXT2_OS_HURD	fs/ext2fs.h	26;"	d
-EXT2_OS_LINUX	fs/ext2fs.h	25;"	d
-EXT2_OS_LITES	fs/ext2fs.h	29;"	d
-EXT2_OS_MASIX	fs/ext2fs.h	27;"	d
-EXT2_ROOT_INO	fs/ext2fs.h	82;"	d
-EXT2_S_IFBLK	fs/ext2fs.h	61;"	d
-EXT2_S_IFCHR	fs/ext2fs.h	63;"	d
-EXT2_S_IFDIR	fs/ext2fs.h	62;"	d
-EXT2_S_IFIFO	fs/ext2fs.h	64;"	d
-EXT2_S_IFLNK	fs/ext2fs.h	59;"	d
-EXT2_S_IFREG	fs/ext2fs.h	60;"	d
-EXT2_S_IFSOCK	fs/ext2fs.h	58;"	d
-EXT2_S_IRGRP	fs/ext2fs.h	71;"	d
-EXT2_S_IROTH	fs/ext2fs.h	74;"	d
-EXT2_S_IRUSR	fs/ext2fs.h	68;"	d
-EXT2_S_ISGID	fs/ext2fs.h	66;"	d
-EXT2_S_ISUID	fs/ext2fs.h	65;"	d
-EXT2_S_ISVTX	fs/ext2fs.h	67;"	d
-EXT2_S_IWGRP	fs/ext2fs.h	72;"	d
-EXT2_S_IWOTH	fs/ext2fs.h	75;"	d
-EXT2_S_IWUSR	fs/ext2fs.h	69;"	d
-EXT2_S_IXGRP	fs/ext2fs.h	73;"	d
-EXT2_S_IXOTH	fs/ext2fs.h	76;"	d
-EXT2_S_IXUSR	fs/ext2fs.h	70;"	d
-EXT2_TIND_BLOCK	fs/ext2fs.h	92;"	d
-EXT2_UNDEL_DIR_INO	fs/ext2fs.h	84;"	d
-EXT2_VALID_FS	fs/ext2fs.h	11;"	d
-EXT3_FEATURE_COMPAT_HAS_JOURNAL	fs/ext2fs.h	40;"	d
-EXT3_FEATURE_INCOMPAT_JOURNAL_DEV	fs/ext2fs.h	54;"	d
-EXT3_FEATURE_INCOMPAT_RECOVER	fs/ext2fs.h	53;"	d
+EXT2_BAD_INO	fs/ext2fs.h	82;"	d
+EXT2_BOOT_LOADER_INO	fs/ext2fs.h	84;"	d
+EXT2_DENTRY_BASE_LEN	fs/ext2fs.h	261;"	d
+EXT2_DIND_BLOCK	fs/ext2fs.h	92;"	d
+EXT2_DYNAMIC_REV	fs/ext2fs.h	36;"	d
+EXT2_ERRORS_CONTINUE	fs/ext2fs.h	18;"	d
+EXT2_ERRORS_DEFAULT	fs/ext2fs.h	21;"	d
+EXT2_ERRORS_PANIC	fs/ext2fs.h	20;"	d
+EXT2_ERRORS_RO	fs/ext2fs.h	19;"	d
+EXT2_ERROR_FS	fs/ext2fs.h	13;"	d
+EXT2_FEATURE_COMPAT_ANY	fs/ext2fs.h	45;"	d
+EXT2_FEATURE_COMPAT_DIR_INDEX	fs/ext2fs.h	44;"	d
+EXT2_FEATURE_COMPAT_DIR_PREALLOC	fs/ext2fs.h	39;"	d
+EXT2_FEATURE_COMPAT_EXT_ATTR	fs/ext2fs.h	42;"	d
+EXT2_FEATURE_COMPAT_IMAGIC_INODES	fs/ext2fs.h	40;"	d
+EXT2_FEATURE_COMPAT_RESIZE_INO	fs/ext2fs.h	43;"	d
+EXT2_FEATURE_INCOMPAT_ANY	fs/ext2fs.h	57;"	d
+EXT2_FEATURE_INCOMPAT_COMPRESSION	fs/ext2fs.h	52;"	d
+EXT2_FEATURE_INCOMPAT_FILETYPE	fs/ext2fs.h	53;"	d
+EXT2_FEATURE_INCOMPAT_META_BG	fs/ext2fs.h	56;"	d
+EXT2_FEATURE_RO_COMPAT_ANY	fs/ext2fs.h	50;"	d
+EXT2_FEATURE_RO_COMPAT_BTREE_DIR	fs/ext2fs.h	49;"	d
+EXT2_FEATURE_RO_COMPAT_LARGE_FILE	fs/ext2fs.h	48;"	d
+EXT2_FEATURE_RO_COMPAT_SPARSE_SUPER	fs/ext2fs.h	47;"	d
+EXT2_FT_BLKDEV	fs/ext2fs.h	/^    EXT2_FT_BLKDEV      = 4,$/;"	e	enum:__anon77
+EXT2_FT_CHRDEV	fs/ext2fs.h	/^    EXT2_FT_CHRDEV      = 3,$/;"	e	enum:__anon77
+EXT2_FT_DIR	fs/ext2fs.h	/^    EXT2_FT_DIR     = 2,$/;"	e	enum:__anon77
+EXT2_FT_FIFO	fs/ext2fs.h	/^    EXT2_FT_FIFO        = 5,$/;"	e	enum:__anon77
+EXT2_FT_MAX	fs/ext2fs.h	/^    EXT2_FT_MAX$/;"	e	enum:__anon77
+EXT2_FT_REG_FILE	fs/ext2fs.h	/^    EXT2_FT_REG_FILE    = 1,$/;"	e	enum:__anon77
+EXT2_FT_SOCK	fs/ext2fs.h	/^    EXT2_FT_SOCK        = 6,$/;"	e	enum:__anon77
+EXT2_FT_SYMLINK	fs/ext2fs.h	/^    EXT2_FT_SYMLINK     = 7,$/;"	e	enum:__anon77
+EXT2_FT_UNKNOWN	fs/ext2fs.h	/^    EXT2_FT_UNKNOWN     = 0,$/;"	e	enum:__anon77
+EXT2_GOOD_OLD_REV	fs/ext2fs.h	35;"	d
+EXT2_IND_BLOCK	fs/ext2fs.h	91;"	d
+EXT2_MAGIC	fs/ext2fs.h	7;"	d
+EXT2_NAME_LEN	fs/ext2fs.h	260;"	d
+EXT2_NDIR_BLOCKS	fs/ext2fs.h	90;"	d
+EXT2_N_BLOCKS	fs/ext2fs.h	94;"	d
+EXT2_OS_FREEBSD	fs/ext2fs.h	29;"	d
+EXT2_OS_HURD	fs/ext2fs.h	27;"	d
+EXT2_OS_LINUX	fs/ext2fs.h	26;"	d
+EXT2_OS_LITES	fs/ext2fs.h	30;"	d
+EXT2_OS_MASIX	fs/ext2fs.h	28;"	d
+EXT2_ROOT_INO	fs/ext2fs.h	83;"	d
+EXT2_S_IFBLK	fs/ext2fs.h	62;"	d
+EXT2_S_IFCHR	fs/ext2fs.h	64;"	d
+EXT2_S_IFDIR	fs/ext2fs.h	63;"	d
+EXT2_S_IFIFO	fs/ext2fs.h	65;"	d
+EXT2_S_IFLNK	fs/ext2fs.h	60;"	d
+EXT2_S_IFREG	fs/ext2fs.h	61;"	d
+EXT2_S_IFSOCK	fs/ext2fs.h	59;"	d
+EXT2_S_IRGRP	fs/ext2fs.h	72;"	d
+EXT2_S_IROTH	fs/ext2fs.h	75;"	d
+EXT2_S_IRUSR	fs/ext2fs.h	69;"	d
+EXT2_S_ISGID	fs/ext2fs.h	67;"	d
+EXT2_S_ISUID	fs/ext2fs.h	66;"	d
+EXT2_S_ISVTX	fs/ext2fs.h	68;"	d
+EXT2_S_IWGRP	fs/ext2fs.h	73;"	d
+EXT2_S_IWOTH	fs/ext2fs.h	76;"	d
+EXT2_S_IWUSR	fs/ext2fs.h	70;"	d
+EXT2_S_IXGRP	fs/ext2fs.h	74;"	d
+EXT2_S_IXOTH	fs/ext2fs.h	77;"	d
+EXT2_S_IXUSR	fs/ext2fs.h	71;"	d
+EXT2_TIND_BLOCK	fs/ext2fs.h	93;"	d
+EXT2_UNDEL_DIR_INO	fs/ext2fs.h	85;"	d
+EXT2_VALID_FS	fs/ext2fs.h	12;"	d
+EXT3_FEATURE_COMPAT_HAS_JOURNAL	fs/ext2fs.h	41;"	d
+EXT3_FEATURE_INCOMPAT_JOURNAL_DEV	fs/ext2fs.h	55;"	d
+EXT3_FEATURE_INCOMPAT_RECOVER	fs/ext2fs.h	54;"	d
 EXTENDED_SOURCES	build-newlib/x86_64-pc-elf/newlib/libc/stdlib/Makefile	/^EXTENDED_SOURCES = \\$/;"	m
 EXTENDED_SOURCES	build-newlib/x86_64-pc-orzos/newlib/libc/stdlib/Makefile	/^EXTENDED_SOURCES = \\$/;"	m
 EXTRA_BUILD_FLAGS	build-newlib/Makefile	/^EXTRA_BUILD_FLAGS = \\$/;"	m
@@ -3851,6 +3851,7 @@ Elf64_auxv_t	elf.h	/^} Elf64_auxv_t;$/;"	t	typeref:struct:__anon60
 Elf_Options	elf.h	/^} Elf_Options;$/;"	t	typeref:struct:__anon70
 Elf_Options_Hw	elf.h	/^} Elf_Options_Hw;$/;"	t	typeref:struct:__anon71
 ExceptTable	except.h	/^struct ExceptTable$/;"	s
+Ext2FSData	fs/ext2fs.c	/^struct Ext2FSData$/;"	s	file:
 FB_AF	x86emu/x86emu/regs.h	176;"	d
 FB_CF	x86emu/x86emu/regs.h	174;"	d
 FB_DF	x86emu/x86emu/regs.h	181;"	d
@@ -10311,7 +10312,7 @@ TLSFHeader	tlsf.h	/^struct TLSFHeader {$/;"	s
 TLSF_H	tlsf.h	20;"	d
 TLSF_SIGNATURE	tlsf.h	39;"	d
 TOGGLE_FLAG	x86emu/x86emu/regs.h	205;"	d
-TOLOWER	util.c	482;"	d	file:
+TOLOWER	util.c	501;"	d	file:
 TOP	build-newlib/x86_64-pc-elf/libgloss/Makefile	/^TOP = .$/;"	m
 TOPLEVEL_CONFIGURE_ARGUMENTS	build-newlib/Makefile	/^TOPLEVEL_CONFIGURE_ARGUMENTS=..\/newlib-1.19.0\/configure --target=x86_64-pc-elf --prefix=\/home\/ora\/OrzOs\/src\/newlib$/;"	m
 TRACE_AND_STEP	x86emu/x86emu/debug.h	149;"	d
@@ -10992,7 +10993,7 @@ aaa_word	x86emu/prim_ops.c	/^u16 aaa_word(u16 d)$/;"	f
 aad_word	x86emu/prim_ops.c	/^u16 aad_word(u16 d)$/;"	f
 aam_word	x86emu/prim_ops.c	/^u16 aam_word(u8 d)$/;"	f
 aas_word	x86emu/prim_ops.c	/^u16 aas_word(u16 d)$/;"	f
-abs	util.h	73;"	d
+abs	util.h	79;"	d
 abs_builddir	build-newlib/x86_64-pc-elf/newlib/Makefile	/^abs_builddir = \/home\/ora\/OrzOs\/src\/build-newlib\/x86_64-pc-elf\/newlib$/;"	m
 abs_builddir	build-newlib/x86_64-pc-elf/newlib/doc/Makefile	/^abs_builddir = \/home\/ora\/OrzOs\/src\/build-newlib\/x86_64-pc-elf\/newlib\/doc$/;"	m
 abs_builddir	build-newlib/x86_64-pc-elf/newlib/libc/Makefile	/^abs_builddir = \/home\/ora\/OrzOs\/src\/build-newlib\/x86_64-pc-elf\/newlib\/libc$/;"	m
@@ -11491,7 +11492,6 @@ aext	build-newlib/x86_64-pc-orzos/newlib/libm/machine/Makefile	/^aext = a$/;"	m
 aext	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^aext = a$/;"	m
 aext	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^aext = a$/;"	m
 allocBefore	program.h	/^    u64int allocBefore;$/;"	m	struct:Program
-alloc_vnode	fs/ext2fs.c	/^static vnode_t *alloc_vnode(fs_t *fs,struct ext2_inode *inode)$/;"	f	file:
 always_inline	sysdef.h	4;"	d
 am__CONFIG_DISTCLEAN_FILES	build-newlib/x86_64-pc-elf/newlib/Makefile	/^am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \\$/;"	m
 am__CONFIG_DISTCLEAN_FILES	build-newlib/x86_64-pc-elf/newlib/doc/Makefile	/^am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \\$/;"	m
@@ -12635,7 +12635,7 @@ as_fn_unset	build-newlib/x86_64-pc-orzos/newlib/libm/config.status	/^as_fn_unset
 as_fn_unset	build-newlib/x86_64-pc-orzos/newlib/libm/machine/config.status	/^as_fn_unset ()$/;"	f
 atapiPacket	ide.c	/^u8int atapiPacket[12] = {0xA8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};$/;"	v
 atoi	util.c	/^s32int atoi(const char *nptr)$/;"	f
-atol	util.h	67;"	d
+atol	util.h	69;"	d
 attach	pci.h	/^    s64int (*attach)(struct PCIDevice *dev);$/;"	m	struct:PCIDriver
 availMemory	kmm.c	/^u64int availMemory() $/;"	f
 base	dtable.h	/^    u64int base;$/;"	m	struct:GDTPtr
@@ -12659,7 +12659,6 @@ bg_inode_table	fs/ext2fs.h	/^    u32int  bg_inode_table;     \/* Inodes table bl
 bg_pad	fs/ext2fs.h	/^    u16int  bg_pad;$/;"	m	struct:ext2_group_desc
 bg_reserved	fs/ext2fs.h	/^    u32int  bg_reserved[3];$/;"	m	struct:ext2_group_desc
 bg_used_dirs_count	fs/ext2fs.h	/^    u16int  bg_used_dirs_count; \/* Directories count *\/$/;"	m	struct:ext2_group_desc
-bgs	fs/ext2fs.c	/^    struct ext2_group_desc *bgs;$/;"	m	struct:__anon75	typeref:struct:__anon75::ext2_group_desc	file:
 bindir	build-newlib/Makefile	/^bindir = ${exec_prefix}\/bin$/;"	m
 bindir	build-newlib/etc/Makefile	/^bindir  = ${exec_prefix}\/bin$/;"	m
 bindir	build-newlib/x86_64-pc-elf/libgloss/Makefile	/^bindir = ${exec_prefix}\/bin$/;"	m
@@ -12732,11 +12731,11 @@ bindir	build-newlib/x86_64-pc-orzos/newlib/libm/complex/Makefile	/^bindir = ${ex
 bindir	build-newlib/x86_64-pc-orzos/newlib/libm/machine/Makefile	/^bindir = ${exec_prefix}\/bin$/;"	m
 bindir	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^bindir = ${exec_prefix}\/bin$/;"	m
 bindir	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^bindir = ${exec_prefix}\/bin$/;"	m
-blk_size	fs/ext2fs.c	/^    u32int blk_size;$/;"	m	struct:__anon75	file:
 blockEnd	tlsf.h	/^    struct TLSFBlock *blockEnd;$/;"	m	struct:TLSFHeader	typeref:struct:TLSFHeader::TLSFBlock
+blockGroupDesc	fs/ext2fs.c	/^    struct ext2_group_desc *blockGroupDesc;$/;"	m	struct:Ext2FSData	typeref:struct:Ext2FSData::ext2_group_desc	file:
 blockHead	tlsf.h	/^    struct TLSFBlock *blockHead;$/;"	m	struct:TLSFHeader	typeref:struct:TLSFHeader::TLSFBlock
 blockSize	disk.h	/^    u64int blockSize;$/;"	m	struct:Disk
-block_no	fs/ext2fs.c	/^static u32int block_no(fs_t *fs,struct ext2_inode *inode, u32int off)$/;"	f	file:
+blockSize	fs/ext2fs.c	/^    int blockSize;$/;"	m	struct:Ext2FSData	file:
 bmide	ide.c	/^    u16int bmide; \/\/ Bus Master IDE$/;"	m	struct:ideChannelRegisters	file:
 boot_device	multiboot.h	/^    u32int boot_device;$/;"	m	struct:multiboot
 boot_loader_name	multiboot.h	/^    u32int boot_loader_name;$/;"	m	struct:multiboot
@@ -12746,7 +12745,7 @@ bootfsFinddir	fs/bootfs.c	/^s64int bootfsFinddir(struct FileSystem *fs, s64int i
 bootfsMount	fs/bootfs.c	/^s64int bootfsMount(struct FileSystemDriver *driver, struct FileSystem **fs, const char *source, u64int flags, void *data)$/;"	f
 bootfsOpen	fs/bootfs.c	/^s64int bootfsOpen(struct FileSystem *fs, s64int id, struct VNode *node)$/;"	f
 bootfsRead	fs/bootfs.c	/^s64int bootfsRead(struct VNode *node, u64int size, char *buffer)$/;"	f
-bootfsReaddir	fs/bootfs.c	/^s64int bootfsReaddir(struct FileSystem *fs, s64int id, u64int bufSize, char *buf)$/;"	f
+bootfsReaddir	fs/bootfs.c	/^s64int bootfsReaddir(struct VNode *node, u64int bufSize, char *buf)$/;"	f
 bootfsRoot	fs/bootfs.c	/^s64int bootfsRoot(struct FileSystem *fs)$/;"	f
 bootfsSeek	fs/bootfs.c	/^s64int bootfsSeek(struct VNode *node, s64int offset, s64int pos)$/;"	f
 bootfsStat	fs/bootfs.c	/^s64int bootfsStat(struct FileSystem *fs, s64int id, struct VNodeInfo *info)$/;"	f
@@ -12759,7 +12758,7 @@ buf	fs/bootfs.c	/^    char *buf;$/;"	m	struct:BootFSData	file:
 buf	kobject.c	/^            char *buf;$/;"	m	struct:KDirectoryProcessData::__anon1::__anon2	file:
 buf	prog/uidef.h	/^    char buf[MAX_UI_CONSOLE_WRITE_LEN];$/;"	m	struct:UIConsoleWriteRequest
 bufSize	kobject.c	/^            u64int bufSize;$/;"	m	struct:KDirectoryProcessData::__anon1::__anon2	file:
-buffer	fs/ramfs.c	/^    u8int *buffer;$/;"	m	struct:__anon78	file:
+buffer	fs/ramfs.c	/^    u8int *buffer;$/;"	m	struct:__anon76	file:
 buffer	tlsf.h	/^        u8int *buffer;$/;"	m	union:TLSFBlock::__anon15
 buffer	vfs.h	/^    char buffer[1];$/;"	m	struct:DirectoryRecord
 build	build-newlib/Makefile	/^build=i686-pc-linux-gnu$/;"	m
@@ -13274,7 +13273,7 @@ channels	ide.c	/^} channels[2];$/;"	v	typeref:struct:ideChannelRegisters
 check	x86emu/x86emu/regs.h	/^	int                         check;$/;"	m	struct:__anon23
 checkSum	fs/bootfs.c	/^    char checkSum[8];$/;"	m	struct:TarHeader	file:
 children	fs/devfs.c	/^    struct DevFSNode *children;$/;"	m	struct:DevFSNode	typeref:struct:DevFSNode::DevFSNode	file:
-children	fs/ramfs.c	/^    vnode_list_t *children;$/;"	m	struct:__anon78	file:
+children	fs/ramfs.c	/^    vnode_list_t *children;$/;"	m	struct:__anon76	file:
 children	kobject.c	/^    struct KObjectListNode *children;$/;"	m	struct:KDirectoryObjectData	typeref:struct:KDirectoryObjectData::KObjectListNode	file:
 chobj	build-newlib/x86_64-pc-elf/newlib/libm/common/Makefile	/^chobj = s_cbrt.def s_copysign.def s_exp10.def s_expm1.def s_ilogb.def \\$/;"	m
 chobj	build-newlib/x86_64-pc-elf/newlib/libm/complex/Makefile	/^chobj = cabs.def cacos.def cacosh.def carg.def \\$/;"	m
@@ -13288,7 +13287,6 @@ classCode	pci.h	/^    u8int revision, progIF, subclass, classCode;$/;"	m	struct:
 cleanup	module.h	/^    module_cleanup_func cleanup;$/;"	m	struct:module_struct
 cleanupBuffers	i8042.c	/^void cleanupBuffers()$/;"	f
 clearBit	util.c	/^void clearBit(u64int *x, u64int i)$/;"	f
-clear_bit	fs/ext2fs.c	/^static s32int clear_bit(u8int *buf, u32int off)$/;"	f	file:
 cli	loader32.s	/^cli                           ; Clear the interrupt flag.$/;"	l
 client	message.h	/^    struct Client *client;$/;"	m	struct:Message	typeref:struct:Message::Client
 clientId	prog/uidef.h	/^    s64int clientId;$/;"	m	struct:UIConsoleWriteRequest
@@ -13353,7 +13351,6 @@ data	kobject.h	/^    void *data;$/;"	m	struct:KOD
 data	kobject.h	/^    void *data;$/;"	m	struct:KObject
 data	kobject.h	/^    void *data;$/;"	m	struct:Klass
 data	loader32.s	/^data:$/;"	l
-data	vfs.h	/^    void *data;$/;"	m	struct:FileSystem
 datadir	build-newlib/Makefile	/^datadir = ${datarootdir}$/;"	m
 datadir	build-newlib/etc/Makefile	/^datadir = ${datarootdir}$/;"	m
 datadir	build-newlib/x86_64-pc-elf/newlib/Makefile	/^datadir = ${datarootdir}$/;"	m
@@ -13608,7 +13605,6 @@ destructKDirectory	kobject.c	/^void destructKDirectory(struct Klass *self, struc
 dev	i8042.c	/^static struct Device *dev;$/;"	v	typeref:struct:Device	file:
 dev	video/display.c	/^static struct Device *dev = 0;$/;"	v	typeref:struct:Device	file:
 dev_id	vfs2.h	/^    u64int dev_id;   \/\/ set by fs driver to identify the vnode, or (major, minor) if it's a device$/;"	m	struct:Vnode
-devf	fs/ext2fs.c	/^    file_t *devf;$/;"	m	struct:__anon75	file:
 devfsClose	fs/devfs.c	/^s64int devfsClose(struct VNode *node)$/;"	f
 devfsCreateObject	fs/devfs.c	/^s64int devfsCreateObject(struct FileSystem *fs, s64int id, const char *name, s64int objid)$/;"	f
 devfsDriver	fs/devfs.c	/^struct FileSystemDriver devfsDriver = {$/;"	v	typeref:struct:FileSystemDriver
@@ -13617,7 +13613,7 @@ devfsIoControl	fs/devfs.c	/^s64int devfsIoControl(struct VNode *node, s64int req
 devfsMount	fs/devfs.c	/^s64int devfsMount(struct FileSystemDriver *driver, struct FileSystem **fs, const char *source, u64int flags, void *data)$/;"	f
 devfsOpen	fs/devfs.c	/^s64int devfsOpen(struct FileSystem *fs, s64int id, struct VNode *node)$/;"	f
 devfsRead	fs/devfs.c	/^s64int devfsRead(struct VNode *node, u64int size, char *buffer)$/;"	f
-devfsReaddir	fs/devfs.c	/^s64int devfsReaddir(struct FileSystem *fs, s64int id, u64int bufSize, char *buf)$/;"	f
+devfsReaddir	fs/devfs.c	/^s64int devfsReaddir(struct VNode *node, u64int bufSize, char *buf)$/;"	f
 devfsRoot	fs/devfs.c	/^s64int devfsRoot(struct FileSystem *fs)$/;"	f
 devfsSeek	fs/devfs.c	/^s64int devfsSeek(struct VNode *node, s64int offset, s64int pos)$/;"	f
 devfsStat	fs/devfs.c	/^s64int devfsStat(struct FileSystem *fs, s64int id, struct VNodeInfo *info)$/;"	f
@@ -13730,8 +13726,6 @@ docdir	build-newlib/x86_64-pc-orzos/newlib/libm/complex/Makefile	/^docdir = ${da
 docdir	build-newlib/x86_64-pc-orzos/newlib/libm/machine/Makefile	/^docdir = ${datarootdir}\/doc\/${PACKAGE_TARNAME}$/;"	m
 docdir	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^docdir = ${datarootdir}\/doc\/${PACKAGE_TARNAME}$/;"	m
 docdir	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^docdir = ${datarootdir}\/doc\/${PACKAGE_TARNAME}$/;"	m
-dot_dentry	fs/ext2fs.c	/^struct ext2_dir_entry dot_dentry = {$/;"	v	typeref:struct:ext2_dir_entry
-dotdot_dentry	fs/ext2fs.c	/^struct ext2_dir_entry dotdot_dentry = {$/;"	v	typeref:struct:ext2_dir_entry
 dq	loader32.s	/^dq 0                        ; Initrd address$/;"	l
 dq	loader32.s	/^dq 0                        ; Initrd end$/;"	l
 dq	loader32.s	/^dq 0                        ; Memory info.$/;"	l
@@ -13741,8 +13735,9 @@ drive	ide.c	/^    u8int drive;       \/\/ 0 (Master Drive) or 1 (Slave Drive).$/
 driver	pci.h	/^    struct PCIDriver *driver;$/;"	m	struct:PCIDevice	typeref:struct:PCIDevice::PCIDriver
 driver	vfs.h	/^    struct FileSystemDriver *driver;$/;"	m	struct:FileSystem	typeref:struct:FileSystem::FileSystemDriver
 driver	vfs2.h	/^    struct fs_driver *driver;$/;"	m	struct:fs_struct	typeref:struct:fs_struct::fs_driver
-driverOps	fs/bootfs.c	/^struct FileSystemDriverOperation driverOps = {$/;"	v	typeref:struct:FileSystemDriverOperation
+driverOps	fs/bootfs.c	/^static struct FileSystemDriverOperation driverOps = {$/;"	v	typeref:struct:FileSystemDriverOperation	file:
 driverOps	fs/devfs.c	/^static struct FileSystemDriverOperation driverOps = {$/;"	v	typeref:struct:FileSystemDriverOperation	file:
+driverOps	fs/ext2fs.c	/^static struct FileSystemDriverOperation driverOps = {$/;"	v	typeref:struct:FileSystemDriverOperation	file:
 drives_addr	multiboot.h	/^    u32int drives_addr;$/;"	m	struct:multiboot
 drives_length	multiboot.h	/^    u32int drives_length;$/;"	m	struct:multiboot
 drop_node	vfs2.h	/^    void (*drop_node) (fs_t *fs, vnode_t*node);$/;"	m	struct:VFSOperation
@@ -13853,7 +13848,6 @@ e_version	elf.h	/^  Elf32_Word	e_version;		\/* Object file version *\/$/;"	m	str
 e_version	elf.h	/^  Elf64_Word	e_version;		\/* Object file version *\/$/;"	m	struct:__anon33
 ebp	task2.h	/^    u32int ebp;$/;"	m	struct:task
 eip	task2.h	/^    u32int eip;$/;"	m	struct:task
-empty_dentry	fs/ext2fs.c	/^struct ext2_dir_entry empty_dentry = {$/;"	v	typeref:struct:ext2_dir_entry
 enc_pos	x86emu/x86emu/regs.h	/^    int                         enc_pos;$/;"	m	struct:__anon23
 enc_str_pos	x86emu/x86emu/regs.h	/^    int                         enc_str_pos;$/;"	m	struct:__anon23
 end	vm.h	/^    u32int end;$/;"	m	struct:vma_struct
@@ -13944,37 +13938,22 @@ execve	task2.c	/^s32int execve(char *path, char **argv, char **envp)$/;"	f
 exists	ide.c	/^    u8int exists;    \/\/ 0 (Empty) or 1 (This Drive really exists).$/;"	m	struct:ideDevice	file:
 exit	task2.c	/^void exit(s32int ret)$/;"	f
 exitCode	task.h	/^    s64int exitCode;$/;"	m	struct:Task
-expand_blocks	fs/ext2fs.c	/^static void expand_blocks(fs_t *fs,struct ext2_inode *inode,u32int new_blocks,u32int bg_hint)$/;"	f	file:
 expires	task2.h	/^    u32int expires;$/;"	m	struct:timer_queue_struct
 ext2_dir_entry	fs/ext2fs.h	/^struct ext2_dir_entry {$/;"	s
 ext2_group_desc	fs/ext2fs.h	/^struct ext2_group_desc$/;"	s
 ext2_inode	fs/ext2fs.h	/^struct ext2_inode {$/;"	s
 ext2_super_block	fs/ext2fs.h	/^struct ext2_super_block {$/;"	s
-ext2fs_cleanup	fs/ext2fs.c	/^void    ext2fs_cleanup(struct fs_driver *fs_drv)$/;"	f
-ext2fs_close	fs/ext2fs.c	/^s32int   ext2fs_close   (file_t *f)$/;"	f
-ext2fs_create	fs/ext2fs.c	/^s32int ext2fs_create  (vnode_t *dir, char *name, u32int flags)$/;"	f
-ext2fs_createfs	fs/ext2fs.c	/^fs_t*   ext2fs_createfs(struct fs_driver *drv, char *path, u32int flags, void *data)$/;"	f
-ext2fs_drop_node	fs/ext2fs.c	/^void ext2fs_drop_node(fs_t *fs, vnode_t *node)$/;"	f
-ext2fs_drv	fs/ext2fs.c	/^struct fs_driver ext2fs_drv = {$/;"	v	typeref:struct:fs_driver
-ext2fs_drv_ops	fs/ext2fs.c	/^struct fs_driver_operations ext2fs_drv_ops = {$/;"	v	typeref:struct:fs_driver_operations
-ext2fs_fops	fs/ext2fs.c	/^struct file_operations ext2fs_fops = {$/;"	v	typeref:struct:file_operations
-ext2fs_get_root	fs/ext2fs.c	/^vnode_t* ext2fs_get_root(fs_t *fs)$/;"	f
-ext2fs_init	fs/ext2fs.c	/^void    ext2fs_init(struct fs_driver *fs_drv)$/;"	f
-ext2fs_lookup	fs/ext2fs.c	/^vnode_t* ext2fs_lookup(fs_t *fs, char *path)$/;"	f
-ext2fs_mkdir	fs/ext2fs.c	/^s32int ext2fs_mkdir   (vnode_t *dir, char *name, u32int flags)$/;"	f
-ext2fs_mknod	fs/ext2fs.c	/^s32int ext2fs_mknod   (vnode_t *dir, char *name, u32int dev_id, u32int flags)$/;"	f
-ext2fs_open	fs/ext2fs.c	/^s32int   ext2fs_open    (file_t *f)$/;"	f
-ext2fs_ops	fs/ext2fs.c	/^struct fs_operations ext2fs_ops = {$/;"	v	typeref:struct:fs_operations
-ext2fs_priv_t	fs/ext2fs.c	/^} ext2fs_priv_t;$/;"	t	typeref:struct:__anon75	file:
-ext2fs_read	fs/ext2fs.c	/^s32int   ext2fs_read    (file_t *f, u32int offset, u32int sz, u8int *buf)$/;"	f
-ext2fs_removefs	fs/ext2fs.c	/^void    ext2fs_removefs(struct fs_driver *fs_drv, fs_t *fs)$/;"	f
-ext2fs_rename	fs/ext2fs.c	/^s32int ext2fs_rename (vnode_t *dir, char *old_name, char *name)$/;"	f
-ext2fs_rm	fs/ext2fs.c	/^s32int   ext2fs_rm      (vnode_t *dir, char *name)$/;"	f
-ext2fs_rmdir	fs/ext2fs.c	/^s32int   ext2fs_rmdir   (vnode_t *dir, char *name)$/;"	f
-ext2fs_subnodes	fs/ext2fs.c	/^s32int   ext2fs_subnodes(vnode_t *dir, vnode_t ***nodes)$/;"	f
-ext2fs_vnode_priv_t	fs/ext2fs.c	/^} ext2fs_vnode_priv_t;$/;"	t	typeref:struct:__anon76	file:
-ext2fs_vops	fs/ext2fs.c	/^struct vnode_operations ext2fs_vops = {$/;"	v	typeref:struct:vnode_operations
-ext2fs_write	fs/ext2fs.c	/^s32int   ext2fs_write   (file_t *f, u32int offset, u32int sz, u8int *buf)$/;"	f
+ext2fsClose	fs/ext2fs.c	/^s64int ext2fsClose(struct VNode *node)$/;"	f
+ext2fsDriver	fs/ext2fs.c	/^struct FileSystemDriver ext2fsDriver = {$/;"	v	typeref:struct:FileSystemDriver
+ext2fsFinddir	fs/ext2fs.c	/^s64int ext2fsFinddir(struct FileSystem *fs, s64int id, const char *name)$/;"	f
+ext2fsMount	fs/ext2fs.c	/^s64int ext2fsMount(struct FileSystemDriver *driver, struct FileSystem **fs, const char *source, u64int flags, void *data)$/;"	f
+ext2fsOpen	fs/ext2fs.c	/^s64int ext2fsOpen(struct FileSystem *fs, s64int id, struct VNode *node)$/;"	f
+ext2fsRead	fs/ext2fs.c	/^s64int ext2fsRead(struct VNode *node, u64int bufSize, char *buffer)$/;"	f
+ext2fsReaddir	fs/ext2fs.c	/^s64int ext2fsReaddir(struct VNode *node, u64int bufSize, char *buf)$/;"	f
+ext2fsRoot	fs/ext2fs.c	/^s64int ext2fsRoot(struct FileSystem *fs)$/;"	f
+ext2fsStat	fs/ext2fs.c	/^s64int ext2fsStat(struct FileSystem *fs, s64int id, struct VNodeInfo *info)$/;"	f
+ext2fsUnmount	fs/ext2fs.c	/^s64int ext2fsUnmount(struct FileSystemDriver *driver, struct FileSystem *fs)$/;"	f
+ext2fs_Init	fs/ext2fs.c	/^void ext2fs_Init()$/;"	f
 extra_dir	build-newlib/x86_64-pc-elf/newlib/libc/Makefile	/^extra_dir = $/;"	m
 extra_dir	build-newlib/x86_64-pc-elf/newlib/libc/argz/Makefile	/^extra_dir = $/;"	m
 extra_dir	build-newlib/x86_64-pc-elf/newlib/libc/ctype/Makefile	/^extra_dir = $/;"	m
@@ -14087,8 +14066,9 @@ fs	vfs.h	/^    struct FileSystem *fs;$/;"	m	struct:VNode	typeref:struct:VNode::F
 fs	vfs2.h	/^        fs_t *fs;$/;"	m	struct:__anon6::__anon7
 fs	vfs2.h	/^    fs_t    *fs;    \/\/ the file system instance is resides in.$/;"	m	struct:Vnode
 fsDrivers	vfs.c	/^struct FileSystemDriver *fsDrivers = 0;$/;"	v	typeref:struct:FileSystemDriver
-fsOps	fs/bootfs.c	/^struct FileSystemOperation fsOps = {$/;"	v	typeref:struct:FileSystemOperation
+fsOps	fs/bootfs.c	/^static struct FileSystemOperation fsOps = {$/;"	v	typeref:struct:FileSystemOperation	file:
 fsOps	fs/devfs.c	/^static struct FileSystemOperation fsOps = {$/;"	v	typeref:struct:FileSystemOperation	file:
+fsOps	fs/ext2fs.c	/^static struct FileSystemOperation fsOps = {$/;"	v	typeref:struct:FileSystemOperation	file:
 fs_driver	vfs2.h	/^typedef struct fs_driver {$/;"	s
 fs_driver_t	vfs2.h	/^} fs_driver_t;$/;"	t	typeref:struct:fs_driver
 fs_drivers	vfs2.c	/^fs_driver_t *fs_drivers = 0;$/;"	v
@@ -14271,15 +14251,8 @@ getVBEDACFormat	video/vbe.c	/^int getVBEDACFormat(unsigned char *format)$/;"	f
 getVBEInfo	video/vbe.c	/^int getVBEInfo( struct VBEInfoBlock * infoBlock )$/;"	f
 getVBEModeInfo	video/vbe.c	/^int getVBEModeInfo( int mode, struct VBEModeInfoBlock * minfo_p )$/;"	f
 getVBEPalette	video/vbe.c	/^int getVBEPalette(void *palette)$/;"	f
-get_block	fs/ext2fs.c	/^static s32int get_block(fs_t *fs, u8int *buf, u32int blk_no)$/;"	f	file:
 get_data_segment	x86emu/decode.c	/^_INLINE u32 get_data_segment(void)$/;"	f
-get_dentry_len	fs/ext2fs.c	/^static u32int get_dentry_len(u32int name_len)$/;"	f	file:
-get_free_bit	fs/ext2fs.c	/^static u32int get_free_bit(u8int *buf, u32int sz)$/;"	f	file:
-get_free_block	fs/ext2fs.c	/^static u32int get_free_block(fs_t *fs, u32int bg_hint)$/;"	f	file:
-get_free_ino	fs/ext2fs.c	/^static u32int get_free_ino(fs_t *fs, u32int bg_hint)$/;"	f	file:
 get_fs_driver_byname	vfs2.c	/^fs_driver_t* get_fs_driver_byname(char *name)$/;"	f
-get_inode	fs/ext2fs.c	/^static struct ext2_inode *get_inode(fs_t *fs, u32int ino)$/;"	f	file:
-get_inode_blocks	fs/ext2fs.c	/^static s32int get_inode_blocks(fs_t *fs,u8int *buf,struct ext2_inode *inode,u32int start_blk,u32int n_blks)$/;"	f	file:
 get_module_name	module.c	/^char *get_module_name(char *path, char *name)$/;"	f
 get_vm_free_start	vm.c	/^u32int get_vm_free_start(vm_t *vm, u32int start, u32int size)$/;"	f
 get_vma_cover	vm.c	/^vma_t* get_vma_cover(vm_t *vm, u32int start)$/;"	f
@@ -14296,13 +14269,13 @@ gt_g_value	elf.h	/^      Elf32_Word gt_g_value;		\/* If this value were used for
 gt_header	elf.h	/^    } gt_header;			\/* First entry in section *\/$/;"	m	union:__anon66	typeref:struct:__anon66::__anon67
 gt_unused	elf.h	/^      Elf32_Word gt_unused;		\/* Not used *\/$/;"	m	struct:__anon66::__anon67
 hClose	handle.c	/^void hClose(struct Handle *handle)$/;"	f
-h_i_author	fs/ext2fs.h	/^            u32int  h_i_author;$/;"	m	struct:ext2_inode::__anon84::__anon86
-h_i_frag	fs/ext2fs.h	/^            u8int    h_i_frag;   \/* Fragment number *\/$/;"	m	struct:ext2_inode::__anon84::__anon86
-h_i_fsize	fs/ext2fs.h	/^            u8int    h_i_fsize;  \/* Fragment size *\/$/;"	m	struct:ext2_inode::__anon84::__anon86
-h_i_gid_high	fs/ext2fs.h	/^            u16int  h_i_gid_high;$/;"	m	struct:ext2_inode::__anon84::__anon86
-h_i_mode_high	fs/ext2fs.h	/^            u16int  h_i_mode_high;$/;"	m	struct:ext2_inode::__anon84::__anon86
-h_i_translator	fs/ext2fs.h	/^            u32int  h_i_translator;$/;"	m	struct:ext2_inode::__anon80::__anon82
-h_i_uid_high	fs/ext2fs.h	/^            u16int  h_i_uid_high;$/;"	m	struct:ext2_inode::__anon84::__anon86
+h_i_author	fs/ext2fs.h	/^            u32int  h_i_author;$/;"	m	struct:ext2_inode::__anon82::__anon84
+h_i_frag	fs/ext2fs.h	/^            u8int    h_i_frag;   \/* Fragment number *\/$/;"	m	struct:ext2_inode::__anon82::__anon84
+h_i_fsize	fs/ext2fs.h	/^            u8int    h_i_fsize;  \/* Fragment size *\/$/;"	m	struct:ext2_inode::__anon82::__anon84
+h_i_gid_high	fs/ext2fs.h	/^            u16int  h_i_gid_high;$/;"	m	struct:ext2_inode::__anon82::__anon84
+h_i_mode_high	fs/ext2fs.h	/^            u16int  h_i_mode_high;$/;"	m	struct:ext2_inode::__anon82::__anon84
+h_i_translator	fs/ext2fs.h	/^            u32int  h_i_translator;$/;"	m	struct:ext2_inode::__anon78::__anon80
+h_i_uid_high	fs/ext2fs.h	/^            u16int  h_i_uid_high;$/;"	m	struct:ext2_inode::__anon82::__anon84
 h_reg	x86emu/x86emu/regs.h	/^	u8 filler0, filler1, h_reg, l_reg;$/;"	m	struct:__anon18
 h_reg	x86emu/x86emu/regs.h	/^	u8 l_reg, h_reg;$/;"	m	struct:__anon21
 handle	handle.h	/^    struct Handle handle[MAX_HANDLE_NUMBER];$/;"	m	struct:HandleTable	typeref:struct:HandleTable::Handle
@@ -14807,8 +14780,8 @@ htmldir	build-newlib/x86_64-pc-orzos/newlib/libm/complex/Makefile	/^htmldir = ${
 htmldir	build-newlib/x86_64-pc-orzos/newlib/libm/machine/Makefile	/^htmldir = ${docdir}$/;"	m
 htmldir	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^htmldir = ${docdir}$/;"	m
 htmldir	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^htmldir = ${docdir}$/;"	m
-hurd1	fs/ext2fs.h	/^        } hurd1;$/;"	m	union:ext2_inode::__anon80	typeref:struct:ext2_inode::__anon80::__anon82
-hurd2	fs/ext2fs.h	/^        } hurd2;$/;"	m	union:ext2_inode::__anon84	typeref:struct:ext2_inode::__anon84::__anon86
+hurd1	fs/ext2fs.h	/^        } hurd1;$/;"	m	union:ext2_inode::__anon78	typeref:struct:ext2_inode::__anon78::__anon80
+hurd2	fs/ext2fs.h	/^        } hurd2;$/;"	m	union:ext2_inode::__anon82	typeref:struct:ext2_inode::__anon82::__anon84
 hwp_flags1	elf.h	/^  Elf32_Word hwp_flags1;	\/* Extra flags.  *\/$/;"	m	struct:__anon71
 hwp_flags2	elf.h	/^  Elf32_Word hwp_flags2;	\/* Extra flags.  *\/$/;"	m	struct:__anon71
 i386_general_register	x86emu/x86emu/regs.h	/^	} i386_general_register;$/;"	t	typeref:union:__anon22
@@ -14837,7 +14810,7 @@ i_gid	fs/ext2fs.h	/^    u16int  i_gid;      \/* Low 16 bits of Group Id *\/$/;"	
 i_links_count	fs/ext2fs.h	/^    u16int  i_links_count;  \/* Links count *\/$/;"	m	struct:ext2_inode
 i_mode	fs/ext2fs.h	/^    u16int  i_mode;     \/* File mode *\/$/;"	m	struct:ext2_inode
 i_mtime	fs/ext2fs.h	/^    u32int  i_mtime;    \/* Modification time *\/$/;"	m	struct:ext2_inode
-i_pad1	fs/ext2fs.h	/^            u16int   i_pad1;$/;"	m	struct:ext2_inode::__anon84::__anon85
+i_pad1	fs/ext2fs.h	/^            u16int   i_pad1;$/;"	m	struct:ext2_inode::__anon82::__anon83
 i_size	fs/ext2fs.h	/^    u32int  i_size;     \/* Size in bytes *\/$/;"	m	struct:ext2_inode
 i_uid	fs/ext2fs.h	/^    u16int  i_uid;      \/* Low 16 bits of Owner Uid *\/$/;"	m	struct:ext2_inode
 id	device.h	/^    u64int id;$/;"	m	struct:Device
@@ -15049,7 +15022,6 @@ initrdEnd	bootinfo.h	/^    u64int initrdEnd;$/;"	m	struct:BootInfo
 inl	common.c	/^u32int inl(u16int port)$/;"	f
 inl	util.c	/^u32int inl(u16int port)$/;"	f
 ino	vfs2.h	/^    u64int ino; $/;"	m	struct:Vnode
-inode	fs/ext2fs.c	/^    struct ext2_inode *inode;$/;"	m	struct:__anon76	typeref:struct:__anon76::ext2_inode	file:
 inode	fs/ext2fs.h	/^	u32int	inode;			\/* Inode number *\/$/;"	m	struct:ext2_dir_entry
 ins	x86emu/prim_ops.c	/^void ins(int size)$/;"	f
 insb	common.c	/^void insb(u16int port, u32int buffer, u32int bytes) {$/;"	f
@@ -15348,11 +15320,11 @@ irqDispatcher	interrupt.c	/^void irqDispatcher(struct RegisterState *rs)$/;"	f
 irq_common_stub	isr.s	/^irq_common_stub:$/;"	l
 isEmptyEntry	fs/bootfs.c	/^s64int isEmptyEntry(char *buf)$/;"	f
 isValidElfHeader	elfloader.c	/^s64int isValidElfHeader(Elf64_Ehdr *ehdr)$/;"	f
-isdigit	util.c	487;"	d	file:
+isdigit	util.c	506;"	d	file:
 isrDispatcher	interrupt.c	/^void isrDispatcher(struct RegisterState *rs)$/;"	f
 isr_common_stub	isr.s	/^isr_common_stub:$/;"	l
 ist	dtable.h	/^        u64int ist[7];$/;"	m	struct:TSS
-isxdigit	util.c	483;"	d	file:
+isxdigit	util.c	502;"	d	file:
 ja	loader32.s	/^ja  .L1$/;"	l
 jb	loader32.s	/^jb noinitrd$/;"	l
 jb	loader32.s	/^jb nokernel$/;"	l
@@ -15404,12 +15376,12 @@ l_checksum	elf.h	/^  Elf32_Word l_checksum;	\/* Checksum *\/$/;"	m	struct:__anon
 l_checksum	elf.h	/^  Elf64_Word l_checksum;	\/* Checksum *\/$/;"	m	struct:__anon73
 l_flags	elf.h	/^  Elf32_Word l_flags;		\/* Flags *\/$/;"	m	struct:__anon72
 l_flags	elf.h	/^  Elf64_Word l_flags;		\/* Flags *\/$/;"	m	struct:__anon73
-l_i_frag	fs/ext2fs.h	/^            u8int    l_i_frag;   \/* Fragment number *\/$/;"	m	struct:ext2_inode::__anon84::__anon85
-l_i_fsize	fs/ext2fs.h	/^            u8int    l_i_fsize;  \/* Fragment size *\/$/;"	m	struct:ext2_inode::__anon84::__anon85
-l_i_gid_high	fs/ext2fs.h	/^            u16int  l_i_gid_high;   \/* were reserved2[0] *\/$/;"	m	struct:ext2_inode::__anon84::__anon85
-l_i_reserved1	fs/ext2fs.h	/^            u32int  l_i_reserved1;$/;"	m	struct:ext2_inode::__anon80::__anon81
-l_i_reserved2	fs/ext2fs.h	/^            u32int   l_i_reserved2;$/;"	m	struct:ext2_inode::__anon84::__anon85
-l_i_uid_high	fs/ext2fs.h	/^            u16int  l_i_uid_high;   \/* these 2 fields    *\/$/;"	m	struct:ext2_inode::__anon84::__anon85
+l_i_frag	fs/ext2fs.h	/^            u8int    l_i_frag;   \/* Fragment number *\/$/;"	m	struct:ext2_inode::__anon82::__anon83
+l_i_fsize	fs/ext2fs.h	/^            u8int    l_i_fsize;  \/* Fragment size *\/$/;"	m	struct:ext2_inode::__anon82::__anon83
+l_i_gid_high	fs/ext2fs.h	/^            u16int  l_i_gid_high;   \/* were reserved2[0] *\/$/;"	m	struct:ext2_inode::__anon82::__anon83
+l_i_reserved1	fs/ext2fs.h	/^            u32int  l_i_reserved1;$/;"	m	struct:ext2_inode::__anon78::__anon79
+l_i_reserved2	fs/ext2fs.h	/^            u32int   l_i_reserved2;$/;"	m	struct:ext2_inode::__anon82::__anon83
+l_i_uid_high	fs/ext2fs.h	/^            u16int  l_i_uid_high;   \/* these 2 fields    *\/$/;"	m	struct:ext2_inode::__anon82::__anon83
 l_name	elf.h	/^  Elf32_Word l_name;		\/* Name (string table index) *\/$/;"	m	struct:__anon72
 l_name	elf.h	/^  Elf64_Word l_name;		\/* Name (string table index) *\/$/;"	m	struct:__anon73
 l_reg	x86emu/x86emu/regs.h	/^	u8 filler0, filler1, h_reg, l_reg;$/;"	m	struct:__anon18
@@ -16154,8 +16126,8 @@ limitLow	dtable.h	/^    u16int limitLow;$/;"	m	struct:TSSEntry
 limitMiddle	dtable.h	/^    u8int limitMiddle;$/;"	m	struct:TSSEntry
 link	fs/bootfs.c	/^    char link;$/;"	m	struct:TarHeader	file:
 linkName	fs/bootfs.c	/^    char linkName[100];$/;"	m	struct:TarHeader	file:
-linux1	fs/ext2fs.h	/^        } linux1;$/;"	m	union:ext2_inode::__anon80	typeref:struct:ext2_inode::__anon80::__anon81
-linux2	fs/ext2fs.h	/^        } linux2;$/;"	m	union:ext2_inode::__anon84	typeref:struct:ext2_inode::__anon84::__anon85
+linux1	fs/ext2fs.h	/^        } linux1;$/;"	m	union:ext2_inode::__anon78	typeref:struct:ext2_inode::__anon78::__anon79
+linux2	fs/ext2fs.h	/^        } linux2;$/;"	m	union:ext2_inode::__anon82	typeref:struct:ext2_inode::__anon82::__anon83
 loadElfProgram	elfloader.c	/^s64int loadElfProgram(const char *path, struct Program *prog, struct VM *vm)$/;"	f
 load_module	module.c	/^module_t* load_module(char *path)$/;"	f
 load_program	task2.c	/^u32int load_program(file_t *f, vm_t *vm)$/;"	f
@@ -16379,14 +16351,15 @@ lpfx	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^lpfx = lib_a-$/;
 lsBit	tlsf.c	/^u64int lsBit(u64int x)$/;"	f
 lsrc	build-newlib/x86_64-pc-elf/newlib/libm/common/Makefile	/^lsrc = atanl.c cosl.c sinl.c tanl.c tanhl.c frexpl.c modfl.c ceill.c fabsl.c \\$/;"	m
 lsrc	build-newlib/x86_64-pc-orzos/newlib/libm/common/Makefile	/^lsrc = atanl.c cosl.c sinl.c tanl.c tanhl.c frexpl.c modfl.c ceill.c fabsl.c \\$/;"	m
+ltoa	util.c	/^char *ltoa(s64int num, char *buf, int base)$/;"	f
 lval	x86emu/x86emu/fpu_regs.h	/^    s32                 lval;$/;"	m	union:x86_fpu_reg_u
-m_i_frag	fs/ext2fs.h	/^            u8int    m_i_frag;   \/* Fragment number *\/$/;"	m	struct:ext2_inode::__anon84::__anon87
-m_i_fsize	fs/ext2fs.h	/^            u8int    m_i_fsize;  \/* Fragment size *\/$/;"	m	struct:ext2_inode::__anon84::__anon87
-m_i_reserved1	fs/ext2fs.h	/^            u32int  m_i_reserved1;$/;"	m	struct:ext2_inode::__anon80::__anon83
-m_i_reserved2	fs/ext2fs.h	/^            u32int   m_i_reserved2[2];$/;"	m	struct:ext2_inode::__anon84::__anon87
+m_i_frag	fs/ext2fs.h	/^            u8int    m_i_frag;   \/* Fragment number *\/$/;"	m	struct:ext2_inode::__anon82::__anon85
+m_i_fsize	fs/ext2fs.h	/^            u8int    m_i_fsize;  \/* Fragment size *\/$/;"	m	struct:ext2_inode::__anon82::__anon85
+m_i_reserved1	fs/ext2fs.h	/^            u32int  m_i_reserved1;$/;"	m	struct:ext2_inode::__anon78::__anon81
+m_i_reserved2	fs/ext2fs.h	/^            u32int   m_i_reserved2[2];$/;"	m	struct:ext2_inode::__anon82::__anon85
 m_info	elf.h	/^  Elf32_Word m_info;		\/* Size and index.  *\/$/;"	m	struct:__anon64
 m_info	elf.h	/^  Elf64_Xword m_info;		\/* Size and index.  *\/$/;"	m	struct:__anon65
-m_pad1	fs/ext2fs.h	/^            u16int   m_pad1;$/;"	m	struct:ext2_inode::__anon84::__anon87
+m_pad1	fs/ext2fs.h	/^            u16int   m_pad1;$/;"	m	struct:ext2_inode::__anon82::__anon85
 m_poffset	elf.h	/^  Elf32_Word m_poffset;		\/* Symbol offset.  *\/$/;"	m	struct:__anon64
 m_poffset	elf.h	/^  Elf64_Xword m_poffset;	\/* Symbol offset.  *\/$/;"	m	struct:__anon65
 m_repeat	elf.h	/^  Elf32_Half m_repeat;		\/* Repeat count.  *\/$/;"	m	struct:__anon64
@@ -16569,8 +16542,8 @@ mandir	build-newlib/x86_64-pc-orzos/newlib/libm/machine/Makefile	/^mandir = ${da
 mandir	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^mandir = ${datarootdir}\/man$/;"	m
 mandir	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^mandir = ${datarootdir}\/man$/;"	m
 mapPagesVtoP	paging.c	/^void mapPagesVtoP(u64int vaddr, u64int paddr, u64int n, struct PML4E *pml4e, u64int user)$/;"	f
-masix1	fs/ext2fs.h	/^        } masix1;$/;"	m	union:ext2_inode::__anon80	typeref:struct:ext2_inode::__anon80::__anon83
-masix2	fs/ext2fs.h	/^        } masix2;$/;"	m	union:ext2_inode::__anon84	typeref:struct:ext2_inode::__anon84::__anon87
+masix1	fs/ext2fs.h	/^        } masix1;$/;"	m	union:ext2_inode::__anon78	typeref:struct:ext2_inode::__anon78::__anon81
+masix2	fs/ext2fs.h	/^        } masix2;$/;"	m	union:ext2_inode::__anon82	typeref:struct:ext2_inode::__anon82::__anon85
 mask	vfs2.h	/^    u64int mask;    \/\/permission$/;"	m	struct:Vnode
 matrix	tlsf.h	/^    struct TLSFBlock *matrix[REAL_FLI][MAX_SLI];$/;"	m	struct:TLSFHeader	typeref:struct:TLSFHeader::TLSFBlock
 maxSize	tlsf.h	/^    u64int maxSize;$/;"	m	struct:TLSFHeader
@@ -16767,10 +16740,6 @@ model	ide.c	/^    u8int model[41];   \/\/ model in string.$/;"	m	struct:ideDevic
 mods_addr	multiboot.h	/^    u32int mods_addr;$/;"	m	struct:multiboot
 mods_count	multiboot.h	/^    u32int mods_count;$/;"	m	struct:multiboot
 module_cleanup_func	module.h	/^typedef void (*module_cleanup_func)();$/;"	t
-module_ext2fs_cleanup	fs/ext2fs.c	/^MODULE_CLEANUP(module_ext2fs_cleanup);$/;"	v
-module_ext2fs_cleanup	fs/ext2fs.c	/^void module_ext2fs_cleanup()$/;"	f
-module_ext2fs_init	fs/ext2fs.c	/^MODULE_INIT(module_ext2fs_init);$/;"	v
-module_ext2fs_init	fs/ext2fs.c	/^void module_ext2fs_init()$/;"	f
 module_init_func	module.h	/^typedef void (*module_init_func)();$/;"	t
 module_ramfs_cleanup	fs/ramfs.c	/^MODULE_CLEANUP(module_ramfs_cleanup);$/;"	v
 module_ramfs_cleanup	fs/ramfs.c	/^void module_ramfs_cleanup()$/;"	f
@@ -16867,6 +16836,7 @@ multiboot_mod_list	multiboot.h	/^struct multiboot_mod_list$/;"	s
 multiboot_module_t	multiboot.h	/^typedef struct multiboot_mod_list multiboot_module_t;$/;"	t	typeref:struct:multiboot_mod_list
 multiboot_t	multiboot.h	/^} multiboot_t;$/;"	t	typeref:struct:multiboot
 n	vfs2.h	/^    u64int n;$/;"	m	struct:__anon6
+nBlockGroups	fs/ext2fs.c	/^    int nBlockGroups;$/;"	m	struct:Ext2FSData	file:
 nBlocks	disk.h	/^    u64int nBlocks;$/;"	m	struct:Disk
 nBlocks	disk.h	/^    u64int nBlocks;$/;"	m	struct:Partition
 nIEN	ide.c	/^    u8int  nIEN;  \/\/ No Interrupt;$/;"	m	struct:ideChannelRegisters	file:
@@ -16894,7 +16864,7 @@ name	vfs.h	/^    char name[MAX_NAME_LEN];$/;"	m	struct:FileSystemDriver
 name	vfs2.h	/^    char name[MAX_NAME_LEN]; \/\/filename$/;"	m	struct:Vnode
 name	vfs2.h	/^    char name[MAX_NAME_LEN];$/;"	m	struct:fs_driver
 name_len	fs/ext2fs.h	/^	u8int	name_len;		\/* Name length *\/$/;"	m	struct:ext2_dir_entry
-nchildren	fs/ramfs.c	/^    u32int nchildren;$/;"	m	struct:__anon78	file:
+nchildren	fs/ramfs.c	/^    u32int nchildren;$/;"	m	struct:__anon76	file:
 neg_byte	x86emu/prim_ops.c	/^u8 neg_byte(u8 s)$/;"	f
 neg_long	x86emu/prim_ops.c	/^u32 neg_long(u32 s)$/;"	f
 neg_word	x86emu/prim_ops.c	/^u16 neg_word(u16 s)$/;"	f
@@ -16988,6 +16958,7 @@ next	vfs2.h	/^    struct fs_driver *next;$/;"	m	struct:fs_driver	typeref:struct:
 next	vfs2.h	/^    struct vnode_list_struct *next;$/;"	m	struct:vnode_list_struct	typeref:struct:vnode_list_struct::vnode_list_struct
 next	vm.h	/^    struct vma_struct *next;$/;"	m	struct:vma_struct	typeref:struct:vma_struct::vma_struct
 next	vmm.h	/^    struct VMA *next;$/;"	m	struct:VMA	typeref:struct:VMA::VMA
+node	fs/ext2fs.c	/^    struct VNode *node;$/;"	m	struct:Ext2FSData	typeref:struct:Ext2FSData::VNode	file:
 node	vfs2.h	/^    vnode_t *node;$/;"	m	struct:vnode_list_struct
 noinitrd	loader32.s	/^noinitrd:$/;"	l
 noinst_DATA	build-newlib/x86_64-pc-elf/newlib/Makefile	/^noinst_DATA = stmp-targ-include$/;"	m
@@ -17110,7 +17081,6 @@ nokernel	loader32.s	/^nokernel:$/;"	l
 not_byte	x86emu/prim_ops.c	/^u8 not_byte(u8 s)$/;"	f
 not_long	x86emu/prim_ops.c	/^u32 not_long(u32 s)$/;"	f
 not_word	x86emu/prim_ops.c	/^u16 not_word(u16 s)$/;"	f
-nr_bgs	fs/ext2fs.c	/^    u32int nr_bgs;$/;"	m	struct:__anon75	file:
 nsubs	file.h	/^    u32int nsubs;$/;"	m	struct:dir_struct
 nsyscalls	ksyscall.c	/^u64int nsyscalls = N_SYSCALLS;$/;"	v
 num	fs/bootfs.c	/^    u64int num;$/;"	m	struct:BootFSData	file:
@@ -17293,8 +17263,8 @@ or	loader32.s	/^or eax, 1 << 8               ; Set the LM-bit which is the 9th b
 or_byte	x86emu/prim_ops.c	/^u8 or_byte(u8 d, u8 s)$/;"	f
 or_long	x86emu/prim_ops.c	/^u32 or_long(u32 d, u32 s)$/;"	f
 or_word	x86emu/prim_ops.c	/^u16 or_word(u16 d, u16 s)$/;"	f
-osd1	fs/ext2fs.h	/^    } osd1;             \/* OS dependent 1 *\/$/;"	m	struct:ext2_inode	typeref:union:ext2_inode::__anon80
-osd2	fs/ext2fs.h	/^    } osd2;             \/* OS dependent 2 *\/$/;"	m	struct:ext2_inode	typeref:union:ext2_inode::__anon84
+osd1	fs/ext2fs.h	/^    } osd1;             \/* OS dependent 1 *\/$/;"	m	struct:ext2_inode	typeref:union:ext2_inode::__anon78
+osd2	fs/ext2fs.h	/^    } osd2;             \/* OS dependent 2 *\/$/;"	m	struct:ext2_inode	typeref:union:ext2_inode::__anon82
 outb	common.c	/^void outb(u16int port, u8int value)$/;"	f
 outb	util.c	/^void outb(u16int port, u8int value)$/;"	f
 outl	common.c	/^void outl(u16int port, u32int value)$/;"	f
@@ -17318,7 +17288,6 @@ p_flags	elf.h	/^  Elf32_Word	p_flags;		\/* Segment flags *\/$/;"	m	struct:__anon
 p_flags	elf.h	/^  Elf64_Word	p_flags;		\/* Segment flags *\/$/;"	m	struct:__anon45
 p_inb	x86emu/sys.c	/^static u8 X86API p_inb($/;"	f	file:
 p_inl	x86emu/sys.c	/^static u32 X86API p_inl($/;"	f	file:
-p_ino	fs/ext2fs.c	/^    u32int p_ino;$/;"	m	struct:__anon76	file:
 p_inw	x86emu/sys.c	/^static u16 X86API p_inw($/;"	f	file:
 p_memsz	elf.h	/^  Elf32_Word	p_memsz;		\/* Segment size in memory *\/$/;"	m	struct:__anon44
 p_memsz	elf.h	/^  Elf64_Xword	p_memsz;		\/* Segment size in memory *\/$/;"	m	struct:__anon45
@@ -17815,6 +17784,7 @@ priority	task.h	/^    u64int priority;$/;"	m	struct:Task
 priv	device.h	/^    void *priv;$/;"	m	struct:Device
 priv	disk.h	/^    void *priv;$/;"	m	struct:Disk
 priv	file.h	/^    void *priv;$/;"	m	struct:file_struct
+priv	vfs.h	/^    void *priv;$/;"	m	struct:FileSystem
 priv	vfs.h	/^    void *priv;$/;"	m	struct:VNode
 priv	vfs2.h	/^    void *priv;$/;"	m	struct:Vnode
 priv	vfs2.h	/^    void *priv;$/;"	m	struct:fs_driver
@@ -17974,9 +17944,6 @@ push	loader32.s	/^push    eax                   ; Initial esp  $/;"	l
 push	loader32.s	/^push    ebx                   ; Load multiboot header location$/;"	l
 push_long	x86emu/prim_ops.c	/^void push_long(u32 w)$/;"	f
 push_word	x86emu/prim_ops.c	/^void push_word(u16 w)$/;"	f
-put_block	fs/ext2fs.c	/^static s32int put_block(fs_t *fs, u8int *buf, u32int blk_no)$/;"	f	file:
-put_inode	fs/ext2fs.c	/^static s32int put_inode(fs_t *fs, struct ext2_inode *inode, u32int ino)$/;"	f	file:
-put_inode_blocks	fs/ext2fs.c	/^static s32int put_inode_blocks(fs_t *fs,u8int *buf,struct ext2_inode *inode,u32int start_blk,u32int n_blks)$/;"	f	file:
 r10	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 r11	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 r8	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
@@ -18006,14 +17973,14 @@ ramfs_mkdir	fs/ramfs.c	/^s32int ramfs_mkdir   (vnode_t *dir, char *name, u32int 
 ramfs_mknod	fs/ramfs.c	/^s32int ramfs_mknod   (vnode_t *dir, char *name, u32int dev_id, u32int flags)$/;"	f
 ramfs_open	fs/ramfs.c	/^s32int   ramfs_open    (file_t *f)$/;"	f
 ramfs_ops	fs/ramfs.c	/^struct fs_operations ramfs_ops = {$/;"	v	typeref:struct:fs_operations
-ramfs_priv_t	fs/ramfs.c	/^} ramfs_priv_t;$/;"	t	typeref:struct:__anon77	file:
+ramfs_priv_t	fs/ramfs.c	/^} ramfs_priv_t;$/;"	t	typeref:struct:__anon75	file:
 ramfs_read	fs/ramfs.c	/^s32int   ramfs_read    (file_t *f, u32int offset, u32int sz, u8int *buf)$/;"	f
 ramfs_removefs	fs/ramfs.c	/^void    ramfs_removefs(struct fs_driver *fs_drv, fs_t *fs)$/;"	f
 ramfs_rename	fs/ramfs.c	/^s32int ramfs_rename (vnode_t *dir, char *old_name, char *name)$/;"	f
 ramfs_rm	fs/ramfs.c	/^s32int   ramfs_rm      (vnode_t *dir, char *name)$/;"	f
 ramfs_rmdir	fs/ramfs.c	/^s32int   ramfs_rmdir   (vnode_t *dir, char *name)$/;"	f
 ramfs_subnodes	fs/ramfs.c	/^s32int   ramfs_subnodes(vnode_t *dir, vnode_t ***nodes)$/;"	f
-ramfs_vnode_priv_t	fs/ramfs.c	/^} ramfs_vnode_priv_t;$/;"	t	typeref:struct:__anon78	file:
+ramfs_vnode_priv_t	fs/ramfs.c	/^} ramfs_vnode_priv_t;$/;"	t	typeref:struct:__anon76	file:
 ramfs_write	fs/ramfs.c	/^s32int   ramfs_write   (file_t *f, u32int offset, u32int sz, u8int *buf)$/;"	f
 rax	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 rbp	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
@@ -18035,14 +18002,16 @@ rdx	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx
 read	device.h	/^    s64int (*read)(struct VNode *node, u64int size, char *buffer);$/;"	m	struct:DeviceOperation
 read	vfs.h	/^    s64int (*read)(struct VNode *node, u64int size, char *buffer);$/;"	m	struct:FileSystemOperation
 read	vfs2.h	/^    s64int   (*read)    (file_t *f, u64int offset, u64int sz, u8int *buffer);$/;"	m	struct:VnodeOperations
+readBlock	fs/ext2fs.c	/^static int readBlock(struct FileSystem *fs, u32int index, void *buffer)$/;"	f	file:
 readBlocks	disk.h	/^    u64int (*readBlocks)(struct Disk *disk, u64int startBlock, u64int nBlocks, void *buf);$/;"	m	struct:Disk
 readDir	kobject.c	/^        } readDir;$/;"	m	union:KDirectoryProcessData::__anon1	typeref:struct:KDirectoryProcessData::__anon1::__anon2	file:
+readExt2Block	fs/ext2fs.c	/^static int readExt2Block(struct FileSystem *fs, struct ext2_inode *inode, u32int index, void *buffer)$/;"	f	file:
+readINode	fs/ext2fs.c	/^static int readINode(struct FileSystem *fs, int id, struct ext2_inode *inode)$/;"	f	file:
 readRIP	taskasm.s	/^readRIP:$/;"	l
-readdir	vfs.h	/^    s64int (*readdir)(struct FileSystem *fs, s64int id, u64int bufSize, char *buf);$/;"	m	struct:FileSystemOperation
+readdir	vfs.h	/^    s64int (*readdir)(struct VNode *node, u64int size, char *buf);$/;"	m	struct:FileSystemOperation
 realModeAlloc	rmi.c	/^void *realModeAlloc(u64int size)$/;"	f
 realModeFree	rmi.c	/^void realModeFree(void *ptr)$/;"	f
 realModeInterrupt	rmi.c	/^void realModeInterrupt(u8int num)$/;"	f
-real_dentry_len	fs/ext2fs.c	/^static u32int real_dentry_len(struct ext2_dir_entry *d)$/;"	f	file:
 rec_len	fs/ext2fs.h	/^	u16int	rec_len;		\/* Directory entry length *\/$/;"	m	struct:ext2_dir_entry
 receiveMQ	message.h	/^    struct MessageQueue *receiveMQ, *replyMQ;$/;"	m	struct:Server	typeref:struct:Server::MessageQueue
 receiveWQ	message.h	/^    struct WaitQueue *receiveWQ, *sendWQ;$/;"	m	struct:Server	typeref:struct:Server::WaitQueue
@@ -18093,7 +18062,7 @@ rol_long	x86emu/prim_ops.c	/^u32 rol_long(u32 d, u8 s)$/;"	f
 rol_word	x86emu/prim_ops.c	/^u16 rol_word(u16 d, u8 s)$/;"	f
 romBar	pci.h	/^            u16int romBar;$/;"	m	struct:PCIConfig::__anon30::__anon31
 root	fs/devfs.c	/^    struct DevFSNode *root;$/;"	m	struct:DevFSData	typeref:struct:DevFSData::DevFSNode	file:
-root	fs/ramfs.c	/^    vnode_t *root;$/;"	m	struct:__anon77	file:
+root	fs/ramfs.c	/^    vnode_t *root;$/;"	m	struct:__anon75	file:
 root	vfs.h	/^    s64int (*root)(struct FileSystem *fs);$/;"	m	struct:FileSystemOperation
 rootDirName	fs/bootfs.c	/^    char rootDirName[100];$/;"	m	struct:BootFSData	file:
 rootNode	vfs.c	/^struct VNode *rootNode = 0;$/;"	v	typeref:struct:VNode
@@ -18186,7 +18155,6 @@ sar_long	x86emu/prim_ops.c	/^u32 sar_long(u32 d, u8 s)$/;"	f
 sar_word	x86emu/prim_ops.c	/^u16 sar_word(u16 d, u8 s)$/;"	f
 saved_cs	x86emu/x86emu/regs.h	/^    u16                         saved_cs;$/;"	m	struct:__anon23
 saved_ip	x86emu/x86emu/regs.h	/^    u16                         saved_ip;$/;"	m	struct:__anon23
-sb	fs/ext2fs.c	/^    struct ext2_super_block sb;$/;"	m	struct:__anon75	typeref:struct:__anon75::ext2_super_block	file:
 sbb_byte	x86emu/prim_ops.c	/^u8 sbb_byte(u8 d, u8 s)$/;"	f
 sbb_long	x86emu/prim_ops.c	/^u32 sbb_long(u32 d, u32 s)$/;"	f
 sbb_word	x86emu/prim_ops.c	/^u16 sbb_word(u16 d, u16 s)$/;"	f
@@ -18267,7 +18235,7 @@ scr_putn	screen.c	/^void scr_putn(u64int i)$/;"	f
 scr_puts	screen.c	/^void scr_puts(const char *s)$/;"	f
 scroll	screen.c	/^void scroll()$/;"	f
 section	elf.h	/^  Elf32_Section section;	\/* Section header index of section affected,$/;"	m	struct:__anon70
-seek	device.h	/^    u64int (*seek)(struct VNode *node, s64int offset, s64int pos);$/;"	m	struct:DeviceOperation
+seek	device.h	/^    s64int (*seek)(struct VNode *node, s64int offset, s64int pos);$/;"	m	struct:DeviceOperation
 seek	vfs.h	/^    s64int (*seek)(struct VNode *node, s64int offset, s64int pos);$/;"	m	struct:FileSystemOperation
 seg	x86emu/x86emu/regs.h	/^    struct i386_segment_regs    seg;$/;"	m	struct:__anon23	typeref:struct:__anon23::i386_segment_regs
 selector	dtable.h	/^    u16int selector;$/;"	m	struct:IDTEntry
@@ -18290,7 +18258,6 @@ setTSS	dtable.c	/^void setTSS(struct GDTEntry *entry, u64int base, u64int limit)
 setVBEDACFormat	video/vbe.c	/^int setVBEDACFormat(unsigned char format)$/;"	f
 setVBEMode	video/vbe.c	/^int setVBEMode(u16int mode)$/;"	f
 setVBEPalette	video/vbe.c	/^int setVBEPalette(void *palette)$/;"	f
-set_bit	fs/ext2fs.c	/^static s32int set_bit(u8int *buf, u32int off)$/;"	f	file:
 sh_addr	elf.h	/^  Elf32_Addr	sh_addr;		\/* Section virtual addr at execution *\/$/;"	m	struct:__anon34
 sh_addr	elf.h	/^  Elf64_Addr	sh_addr;		\/* Section virtual addr at execution *\/$/;"	m	struct:__anon35
 sh_addralign	elf.h	/^  Elf32_Word	sh_addralign;		\/* Section alignment *\/$/;"	m	struct:__anon34
@@ -18558,6 +18525,7 @@ strdup	common.c	/^char *strdup(const char *s)$/;"	f
 strdup	util.c	/^char *strdup(const char *s)$/;"	f
 strlen	common.c	/^u32int strlen(const char *s)$/;"	f
 strlen	util.c	/^u64int strlen(const char *s)$/;"	f
+strncmp	util.c	/^s64int strncmp(const char *s1, const char *s2, u64int n)$/;"	f
 strrchr	common.c	/^char *strrchr(char *s1, char c)$/;"	f
 strrchr	util.c	/^char *strrchr(const char *s1, char c)$/;"	f
 strrstr	common.c	/^char *strrstr(char *s1, char *s2)$/;"	f
@@ -18710,6 +18678,7 @@ subfuncSetSecondary	video/vbe.h	/^    subfuncSetSecondary = 0x02,$/;"	e	enum:__a
 subnodes	file.h	/^    struct vnode_struct **subnodes;$/;"	m	struct:dir_struct	typeref:struct:dir_struct::vnode_struct
 subsystem	pci.h	/^            u16int subsystem;$/;"	m	struct:PCIConfig::__anon30::__anon31
 subvendor	pci.h	/^            u16int subvendor;$/;"	m	struct:PCIConfig::__anon30::__anon31
+superBlock	fs/ext2fs.c	/^    struct ext2_super_block superBlock;$/;"	m	struct:Ext2FSData	typeref:struct:Ext2FSData::ext2_super_block	file:
 sval	x86emu/x86emu/fpu_regs.h	/^    s16                 sval;$/;"	m	union:x86_fpu_reg_u
 switch_task	task2.c	/^void switch_task()$/;"	f
 switch_to_user_mode	task2.c	/^void switch_to_user_mode()$/;"	f
@@ -19313,6 +19282,7 @@ uint	x86emu/x86emu/types.h	/^typedef unsigned int			uint;$/;"	t
 uint	x86emu/x86emu/types.h	59;"	d
 uldl	x86emu/sys.c	/^uldl (const unsigned int * r11)$/;"	f	file:
 uldw	x86emu/sys.c	/^uldw (const unsigned short * r11)$/;"	f	file:
+ultoa	util.c	/^char *ultoa(u64int num, char *buf, int base)$/;"	f
 unload_module	module.c	/^void unload_module(module_t *m)$/;"	f
 unmapPages	paging.c	/^void unmapPages(u64int vaddr, u64int n, struct PML4E *pml4e)$/;"	f
 unmount	vfs.h	/^    s64int (*unmount)(struct FileSystemDriver *driver, struct FileSystem *fs);$/;"	m	struct:FileSystemDriverOperation
@@ -19370,9 +19340,12 @@ vfsCreateObject	vfs.c	/^s64int vfsCreateObject(const char *path, s64int objid)$/
 vfsIoControl	vfs.c	/^s64int vfsIoControl(struct VNode *node, s64int request, u64int size, void *data)$/;"	f
 vfsLookup	vfs.c	/^s64int vfsLookup(const char *path, struct VNode *node)$/;"	f
 vfsMount	vfs.c	/^s64int vfsMount(const char *dest, const char *source, const char *fsType, u64int flags, void *data)$/;"	f
+vfsNopClose	vfs.c	/^s64int vfsNopClose(struct VNode *node)$/;"	f
+vfsNopOpen	vfs.c	/^s64int vfsNopOpen(struct VNode *node)$/;"	f
+vfsNopSeek	vfs.c	/^s64int vfsNopSeek(struct VNode *node, s64int offset, s64int pos)$/;"	f
 vfsOpen	vfs.c	/^s64int vfsOpen(const char *path, u64int flags, struct VNode *node)$/;"	f
 vfsRead	vfs.c	/^s64int vfsRead(struct VNode *node, u64int size, void *buffer)$/;"	f
-vfsReadDirectory	vfs.c	/^s64int vfsReadDirectory(struct VNode *node, u64int bufSize, char *buffer)$/;"	f
+vfsReadDirectory	vfs.c	/^s64int vfsReadDirectory(struct VNode *node, u64int size, char *buffer)$/;"	f
 vfsRemoveDirectory	vfs.c	/^s64int vfsRemoveDirectory(const char *path)$/;"	f
 vfsSeek	vfs.c	/^s64int vfsSeek(struct VNode *node, s64int offset, s64int pos)$/;"	f
 vfsState	vfs.c	/^s64int vfsState(const char *path, struct VNodeInfo *ni)$/;"	f

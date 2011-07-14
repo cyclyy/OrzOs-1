@@ -12,7 +12,7 @@ CORE_C_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o dtable.o \
 			interrupt.o tlsf.o vfs.o screen.o task.o paging.o \
 			elfloader.o waitqueue.o schedule.o semaphore.o mutex.o message.o \
 			ksyscall.o device.o i8042.o program.o except.o \
-			handle.o fs/bootfs.o fs/devfs.o \
+			handle.o fs/bootfs.o fs/devfs.o fs/ext2fs.o \
 			syscall/ozipc.o syscall/oztask.o syscall/ozfs.o \
 			rmi.o video/display.o video/vbe.o \
 			pci.o ide.o disk.o

@@ -21,6 +21,7 @@
 #include "video/vbe.h"
 #include "pci.h"
 #include "ide.h"
+#include "fs/ext2fs.h"
 
 void testVBE()
 {
@@ -77,7 +78,11 @@ u64int kmain(struct BootInfo *si)
     display_Init();
     pci_Init();
     ide_Init();
+    ext2fs_Init();
     //testVBE();
+    vfsMount("C","Device:/Disk0Part0","ext2fs",0,0);
+    struct VNode node;
+    vfsOpen("C:/t1.txt",0,&node);
 
     printk("InitAddr:%x\n", getBootInfo()->initrdAddr);
     printk("AvailMem:%dKB\n",availMemory()/1024);

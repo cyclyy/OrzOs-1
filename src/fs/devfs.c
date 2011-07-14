@@ -16,7 +16,7 @@ s64int devfsIoControl(struct VNode *node, s64int request, u64int size, void *dat
 
 s64int devfsRoot(struct FileSystem *fs);
 s64int devfsStat(struct FileSystem *fs, s64int id, struct VNodeInfo *info);
-s64int devfsReaddir(struct FileSystem *fs, s64int id, u64int bufSize, char *buf);
+s64int devfsReaddir(struct VNode *node, u64int bufSize, char *buf);
 s64int devfsFinddir(struct FileSystem *fs, s64int id, const char *name);
 s64int devfsCreateObject(struct FileSystem *fs, s64int id, const char *name, s64int objid);
 
@@ -50,6 +50,7 @@ static struct FileSystemOperation fsOps = {
     .finddir = devfsFinddir,
     .stat = devfsStat,
     .mkobj = devfsCreateObject,
+    .seek = devfsSeek,
 } ;
 
 struct FileSystemDriver devfsDriver = {
@@ -77,7 +78,7 @@ s64int devfsMount(struct FileSystemDriver *driver, struct FileSystem **fs, const
     strcpy(node->name, "Root");
     node->type = DEVFS_TYPE_DIR;
     fsData->root = node;
-    (*fs)->data = fsData;
+    (*fs)->priv = fsData;
     return 0;
 }
 
@@ -85,7 +86,7 @@ s64int devfsUnmount(struct FileSystemDriver *driver, struct FileSystem *fs)
 {
     struct DevFSData *fsData;
 
-    fsData = (struct DevFSData*)fs->data;
+    fsData = (struct DevFSData*)fs->priv;
     kFree(fsData);
     return 0;
 }
@@ -94,7 +95,7 @@ s64int devfsRoot(struct FileSystem *fs)
 {
     struct DevFSData *fsData;
 
-    fsData = (struct DevFSData *)fs->data;
+    fsData = (struct DevFSData *)fs->priv;
     return (u64int)fsData->root - KERNEL_HEAP_START_ADDR;
 }
 
@@ -178,28 +179,36 @@ s64int devfsWrite(struct VNode *node, u64int size, char *buffer)
     return ret;
 }
 
-s64int devfsReaddir(struct FileSystem *fs, s64int id, u64int bufSize, char *buf)
+s64int devfsReaddir(struct VNode *node, u64int bufSize, char *buf)
 {
-    struct DevFSNode *node;
     struct DirectoryRecord *drec;
-    s64int ret, pos, n, dsize;
+    struct DevFSNode *dnode;
+    s64int ret, id, pos, off, n, dsize;
 
-    node = (struct DevFSNode *)(id + KERNEL_HEAP_START_ADDR);
-    if (node->type == DEVFS_TYPE_DIR) {
-        node = node->children;
+    id = node->id;
+    dnode = (struct DevFSNode *)(id + KERNEL_HEAP_START_ADDR);
+    if (dnode->type == DEVFS_TYPE_DIR) {
+        dnode = dnode->children;
         pos = 0;
         n = 0;
-        while (node) {
+        off = 0;
+        while (dnode && (off<node->offset)) {
+            off++;
+            dnode = dnode->next;
+        }
+        while (dnode) {
             drec = (struct DirectoryRecord *)(buf + pos);
-            dsize = sizeof(struct DirectoryRecord) + strlen(node->name);
+            dsize = sizeof(struct DirectoryRecord) + strlen(dnode->name);
             if (pos + dsize <= bufSize) {
                 drec->size = dsize;
-                strcpy(drec->buffer, node->name);
+                strcpy(drec->buffer, dnode->name);
                 pos += dsize;
                 n++;
+                off++;
+                node->offset++;
             } else 
                 break;
-            node = node->next;
+            dnode = dnode->next;
         }
         ret = n;
     } else

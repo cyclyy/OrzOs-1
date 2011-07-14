@@ -387,12 +387,37 @@ s64int vfsRemoveDirectory(const char *path)
     return ret;
 }
 
-s64int vfsReadDirectory(struct VNode *node, u64int bufSize, char *buffer)
+s64int vfsReadDirectory(struct VNode *node, u64int size, char *buffer)
 {
     if (node->fs && node->fs->op->readdir)
-        return node->fs->op->readdir(node->fs, node->id, bufSize, buffer);
+        return node->fs->op->readdir(node, size, buffer);
     else
         return -1;
+}
+
+s64int vfsNopOpen(struct VNode *node)
+{
+    return 0;
+}
+
+s64int vfsNopClose(struct VNode *node)
+{
+    return 0;
+}
+
+s64int vfsNopSeek(struct VNode *node, s64int offset, s64int pos)
+{
+    switch (pos) {
+    case SEEK_SET:
+        node->offset = offset;
+        break;
+    case SEEK_CUR:
+        node->offset += offset;
+    case SEEK_END:
+        break;
+    }
+
+    return 0;
 }
 
 void initVFS()

@@ -11,7 +11,7 @@ s64int bootfsOpen(struct FileSystem *fs, s64int id, struct VNode *node);
 s64int bootfsClose(struct VNode *node);
 s64int bootfsRead(struct VNode *node, u64int size, char *buffer);
 s64int bootfsSeek(struct VNode *node, s64int offset, s64int pos);
-s64int bootfsReaddir(struct FileSystem *fs, s64int id, u64int bufSize, char *buf);
+s64int bootfsReaddir(struct VNode *node, u64int size, char *buf);
 s64int bootfsFinddir(struct FileSystem *fs, s64int id, const char *name);
 s64int bootfsStat(struct FileSystem *fs, s64int id, struct VNodeInfo *info);
 
@@ -37,12 +37,12 @@ struct BootFSData {
     char *buf;
 };
 
-struct FileSystemDriverOperation driverOps = {
+static struct FileSystemDriverOperation driverOps = {
     .mount = bootfsMount,
     .unmount = bootfsUnmount,
 };
 
-struct FileSystemOperation fsOps = {
+static struct FileSystemOperation fsOps = {
     .root = bootfsRoot,
     .open = bootfsOpen,
     .close = bootfsClose,
@@ -111,7 +111,7 @@ s64int bootfsMount(struct FileSystemDriver *driver, struct FileSystem **fs, cons
         }
     }
     
-    (*fs)->data = fsData;
+    (*fs)->priv = fsData;
     return 0;
 }
 
@@ -119,7 +119,7 @@ s64int bootfsUnmount(struct FileSystemDriver *driver, struct FileSystem *fs)
 {
     struct BootFSData *fsData;
 
-    fsData = (struct BootFSData*)fs->data;
+    fsData = (struct BootFSData*)fs->priv;
     kFree(fsData->headerList);
     kFree(fsData);
     return 0;
@@ -149,7 +149,7 @@ s64int bootfsRead(struct VNode *node, u64int size, char *buffer)
     struct BootFSData *fsData;
     s64int ret, fileSize;
 
-    fsData = (struct BootFSData*)node->fs->data;
+    fsData = (struct BootFSData*)node->fs->priv;
     hd = fsData->headerList[node->id-1];
     if (hd->link != TAR_LINK_FILE)
         return -1;
@@ -164,17 +164,18 @@ s64int bootfsRead(struct VNode *node, u64int size, char *buffer)
     return ret;
 }
 
-s64int bootfsReaddir(struct FileSystem *fs, s64int id, u64int bufSize, char *buf)
+s64int bootfsReaddir(struct VNode *node, u64int bufSize, char *buf)
 {
     struct BootFSData *fsData;
     struct TarHeader *hd, *hd1;
     struct DirectoryRecord *drec;
-    s64int ret, i, len;
+    s64int id, ret, i, off, len;
     u64int pos, j, n, ok, dsize;
     char *s, s1[MAX_NAME_LEN];
 
-    fsData = (struct BootFSData*)fs->data;
+    fsData = (struct BootFSData*)node->fs->priv;
 
+    id = node->id;
     if ((id <= 0) || (id > fsData->num))
         return -1;
 
@@ -183,7 +184,7 @@ s64int bootfsReaddir(struct FileSystem *fs, s64int id, u64int bufSize, char *buf
     if (hd->link != TAR_LINK_DIR)
         return -1;
 
-    pos = j = 0;
+    pos = j = off = 0;
     s = strrchr(hd->name, '/');
     if (s && (strlen(s)==1)) {
         ret = 0;
@@ -210,10 +211,14 @@ s64int bootfsReaddir(struct FileSystem *fs, s64int id, u64int bufSize, char *buf
                     drec = (struct DirectoryRecord *)(buf + pos);
                     dsize = sizeof(struct DirectoryRecord) + strlen(s1);
                     if (pos + dsize <= bufSize) {
-                        drec->size = dsize;
-                        strcpy(drec->buffer, s1);
-                        pos += dsize;
-                        ret++;
+                        if (off == node->offset) {
+                            drec->size = dsize;
+                            strcpy(drec->buffer, s1);
+                            pos += dsize;
+                            ret++;
+                            node->offset++;
+                        }
+                        off++;
                     } else 
                         break;
                 }
@@ -233,7 +238,7 @@ s64int bootfsFinddir(struct FileSystem *fs, s64int id, const char *name)
     s64int ret, i;
     char *s;
 
-    fsData = (struct BootFSData*)fs->data;
+    fsData = (struct BootFSData*)fs->priv;
     id--;
     hd = fsData->headerList[id];
     if (hd->link != TAR_LINK_DIR)
@@ -265,7 +270,7 @@ s64int bootfsSeek(struct VNode *node, s64int offset, s64int pos)
     struct BootFSData *fsData;
     s64int fileSize, newOffset;
 
-    fsData = (struct BootFSData*)node->fs->data;
+    fsData = (struct BootFSData*)node->fs->priv;
     hd = fsData->headerList[node->id-1];
     if (hd->link != TAR_LINK_FILE) {
         return -1;

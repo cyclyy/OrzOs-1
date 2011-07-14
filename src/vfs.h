@@ -45,7 +45,7 @@ struct FileSystemOperation
 
     s64int (*root)(struct FileSystem *fs);
     s64int (*stat)(struct FileSystem *fs, s64int id, struct VNodeInfo *ni);
-    s64int (*readdir)(struct FileSystem *fs, s64int id, u64int bufSize, char *buf);
+    s64int (*readdir)(struct VNode *node, u64int size, char *buf);
     s64int (*finddir)(struct FileSystem *fs, s64int id, const char *name);
     s64int (*mkobj)(struct FileSystem *fs, s64int id, const char *name, s64int objid);
     s64int (*mkdir)(struct FileSystem *fs, s64int id, const char *name);
@@ -57,7 +57,7 @@ struct FileSystem
 {
     struct FileSystemDriver *driver;
     struct FileSystemOperation *op;
-    void *data;
+    void *priv;
 };
 
 struct FileSystemDriverOperation
@@ -90,8 +90,11 @@ s64int vfsIoControl(struct VNode *node, s64int request, u64int size, void *data)
 s64int vfsCreateObject(const char *name, s64int id);
 s64int vfsCreateDirectory(const char *name);
 s64int vfsRemoveDirectory(const char *name);
-s64int vfsReadDirectory(struct VNode *node, u64int bufSize, char *buf);
+s64int vfsReadDirectory(struct VNode *node, u64int size, char *buf);
 
+s64int vfsNopOpen(struct VNode *node);
+s64int vfsNopClose(struct VNode *node);
+s64int vfsNopSeek(struct VNode *node, s64int offset, s64int pos);
 
 void initVFS();
 
