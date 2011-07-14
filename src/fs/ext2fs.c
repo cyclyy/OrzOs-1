@@ -182,42 +182,48 @@ s64int ext2fsRead(struct VNode *node, u64int bufSize, char *buffer)
 {
     struct Ext2FSData *fsData = (struct Ext2FSData*)node->fs->priv;
     struct ext2_inode inode;
-    struct ext2_dir_entry *dentry;
     char *blockBuffer;
-    struct DirectoryRecord *drec;
-    s64int ret, dsize, pos;
-    u64int i, offset, off;
+    s64int ret;
+    u64int i, pre, n, startBlock;
 
     readINode(node->fs, node->id, &inode);
-    if (!(inode.i_mode & EXT2_S_IFDIR)) {
+    if (!(inode.i_mode & EXT2_S_IFREG)) {
         return -1;
     }
-    blockBuffer = (char*)kMalloc(fsData->blockSize);
+    if (node->offset >= inode.i_size) {
+        return 0;
+    }
+    if (node->offset + bufSize >= inode.i_size) {
+        bufSize = inode.i_size - node->offset;
+    }
     ret = 0;
-    for (i=0; i<inode.i_blocks; i++) {
+    blockBuffer = (char*)kMalloc(fsData->blockSize);
+    startBlock = node->offset / fsData->blockSize;
+    pre = node->offset % fsData->blockSize;
+    if (pre) {
+        readExt2Block(node->fs, &inode, startBlock, blockBuffer);
+        n = MIN(fsData->blockSize - pre, bufSize);
+        memcpy(buffer, blockBuffer+pre, n);
+        ret += n;
+        bufSize -= n;
+        startBlock++;
+    }
+    for (i=startBlock; i<inode.i_blocks/(2<<fsData->superBlock.s_log_block_size); i++) {
+        if (bufSize==0) {
+            break;
+        }
         readExt2Block(node->fs, &inode, i, blockBuffer);
-        offset = off = pos = 0;
-        dentry = (struct ext2_dir_entry*)(blockBuffer + offset);
-        while ((offset < fsData->blockSize) && dentry->rec_len) {
-            if (off == node->offset) {
-                drec = (struct DirectoryRecord *)(buffer + pos);
-                dsize = sizeof(struct DirectoryRecord) + dentry->name_len;
-                if (pos + dsize <= bufSize) {
-                    drec->size = dsize;
-                    memcpy(drec->buffer, dentry->name, dentry->name_len);
-                    drec->buffer[dentry->name_len] = 0;
-                    pos += dsize;
-                    node->offset++;
-                    ret ++;
-                } else {
-                    break;
-                }
-            }
-            off++;
-            offset += dentry->rec_len;
-            dentry = (struct ext2_dir_entry*)(blockBuffer + offset);
+        if (bufSize >= fsData->blockSize) {
+            memcpy(buffer+ret, blockBuffer, fsData->blockSize);
+            ret += fsData->blockSize;
+            bufSize -= fsData->blockSize;
+        } else {
+            memcpy(buffer+ret, blockBuffer, bufSize);
+            ret += bufSize;
+            bufSize = 0;
         }
     }
+    node->offset += ret;
     kFree(blockBuffer);
     return ret;
 }
@@ -238,7 +244,7 @@ s64int ext2fsReaddir(struct VNode *node, u64int bufSize, char *buf)
     }
     blockBuffer = (char*)kMalloc(fsData->blockSize);
     ret = 0;
-    for (i=0; i<inode.i_blocks; i++) {
+    for (i=0; i<inode.i_blocks/(2<<fsData->superBlock.s_log_block_size); i++) {
         readExt2Block(node->fs, &inode, i, blockBuffer);
         offset = off = pos = 0;
         dentry = (struct ext2_dir_entry*)(blockBuffer + offset);
@@ -281,7 +287,7 @@ s64int ext2fsFinddir(struct FileSystem *fs, s64int id, const char *name)
     }
     blockBuffer = (char*)kMalloc(fsData->blockSize);
     ret = 0;
-    for (i=0; i<inode.i_blocks; i++) {
+    for (i=0; i<inode.i_blocks/(2<<fsData->superBlock.s_log_block_size); i++) {
         readExt2Block(fs, &inode, i, blockBuffer);
         offset = 0;
         dentry = (struct ext2_dir_entry*)(blockBuffer + offset);

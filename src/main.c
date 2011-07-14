@@ -44,7 +44,7 @@ void testVBE()
     getVBEModeInfo(0x115, mib);
     printk("Framebuffer at %x, width: %d, height: %d\n", mib->PhysBasePtr, mib->XResolution, mib->YResolution);
     setVBEMode(0x115);
-    char *vram = (char*)(mib->PhysBasePtr);
+    char *vram = (char*)((u64int)mib->PhysBasePtr);
     int i,j,k;
     for (i=0; i< mib->YResolution; i++) {
         for (j=0; j< mib->XResolution; j++) {
@@ -82,7 +82,11 @@ u64int kmain(struct BootInfo *si)
     //testVBE();
     vfsMount("C","Device:/Disk0Part0","ext2fs",0,0);
     struct VNode node;
+    char buf[100];
     vfsOpen("C:/t1.txt",0,&node);
+    vfsRead(&node, 100, buf);
+    buf[99] = 0;
+    printk("%s",buf);
 
     printk("InitAddr:%x\n", getBootInfo()->initrdAddr);
     printk("AvailMem:%dKB\n",availMemory()/1024);
