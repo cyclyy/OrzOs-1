@@ -3,6 +3,17 @@
 #include "uiproto.h"
 #include "syscall.h"
 #include <stdlib.h>
+#include <string.h>
+
+#define WIDTH 800
+#define HEIGHT 600
+
+struct Pixel
+{
+    char r,g,b;
+} __attribute__((packed));
+
+struct Pixel *frameBuffer;
 
 s64int parseMessage(char *buf, u64int size)
 {
@@ -11,9 +22,32 @@ s64int parseMessage(char *buf, u64int size)
     return header->type;
 }
 
+s64int openDisplay()
+{
+    s64int fd;
+    struct DisplayModeInfo mi;
+    fd = OzOpen("Device:/Display", 0);
+    mi.mode = DISPLAY_MODE_VESA;
+    mi.width = WIDTH;
+    mi.height = HEIGHT;
+    mi.cellBits = 24;
+    OzIoControl(fd, DISPLAY_IOCTL_SET_MODE, sizeof(struct DisplayModeInfo), &mi);
+    frameBuffer = (struct Pixel*)OzMap(fd, 0, 0, 0);
+    int i,j,idx;
+    for (i=0; i<HEIGHT; i++) {
+        for (j=0; j<WIDTH; j++) {
+            idx = i*WIDTH + j;
+            frameBuffer[idx].r = 0;
+            frameBuffer[idx].g = 255;
+            frameBuffer[idx].b = 0;
+        }
+    }
+    return fd;
+}
+
 int main()
 {
-    s64int serverId, msgId;
+    s64int serverId, msgId, display;
     char *recvBuf, *replyBuf;
     u64int n;
     struct MessageInfo mi;
@@ -29,7 +63,7 @@ int main()
     conWriteReq = (struct UIConsoleWriteRequest*)recvBuf;
     initReply = (struct UIInitReply*)replyBuf;
     conWriteReply = (struct UIConsoleWriteReply*)replyBuf;
-
+    display = openDisplay();
     serverId = OzCreateServer(UI_PORT);
     while ((msgId = OzReceive(serverId, n, recvBuf, &mi)) >= 0) {
         switch (parseMessage(recvBuf, mi.srcSize)) {

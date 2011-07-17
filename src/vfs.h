@@ -25,12 +25,20 @@ struct VNodeInfo
     u64int size;
 };
 
+struct MemoryMap
+{
+    u64int base;
+    u64int size;
+    struct MemoryMap *next, *prev;
+};
+
 struct VNode
 {
     u64int flags;
     s64int id;
     s64int offset;
     struct FileSystem *fs;
+    struct MemoryMap *mappings;
     void *priv;
 };
 
@@ -41,7 +49,9 @@ struct FileSystemOperation
     s64int (*read)(struct VNode *node, u64int size, char *buffer);
     s64int (*write)(struct VNode *node, u64int size, char *buffer);
     s64int (*seek)(struct VNode *node, s64int offset, s64int pos);
-    s64int (*ioctl)(struct VNode *node, s64int request, void *data, u64int size);
+    s64int (*ioctl)(struct VNode *node, s64int request, u64int size, void *data);
+    s64int (*mmap)(struct VNode *node, u64int addr, u64int size, s64int flags);
+    s64int (*munmap)(struct VNode *node, u64int addr);
 
     s64int (*root)(struct FileSystem *fs);
     s64int (*stat)(struct FileSystem *fs, s64int id, struct VNodeInfo *ni);
@@ -92,9 +102,15 @@ s64int vfsCreateDirectory(const char *name);
 s64int vfsRemoveDirectory(const char *name);
 s64int vfsReadDirectory(struct VNode *node, u64int size, char *buf);
 
+s64int vfsMap(struct VNode *node, u64int addr, u64int size, s64int flags);
+s64int vfsUnmap(struct VNode *node, u64int addr);
+
 s64int vfsNopOpen(struct VNode *node);
 s64int vfsNopClose(struct VNode *node);
 s64int vfsNopSeek(struct VNode *node, s64int offset, s64int pos);
+
+s64int vnodeAddMemoryMap(struct VNode *node, u64int base, u64int size);
+s64int vnodeRemoveMemoryMap(struct VNode *node, u64int base);
 
 void initVFS();
 

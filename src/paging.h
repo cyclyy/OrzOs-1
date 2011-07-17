@@ -3,16 +3,16 @@
 
 #include "sysdef.h"
 
-#define ROUND_PAGE_ALIGN(x) ((x+PAGE_SIZE-1) & (~0 - PAGE_SIZE + 1))
-#define FLOOR_PAGE_ALIGN(x) (x & (~0 & PAGE_SIZE))
-#define ROUND_MEM_ALIGN(x) ((x+PTR_SIZE-1) & (~0 - PTR_SIZE + 1))
+#define ROUND_PAGE_ALIGN(x) (((x)+PAGE_SIZE-1) & (~0 - PAGE_SIZE + 1))
+#define FLOOR_PAGE_ALIGN(x) ((x) & (~0 & PAGE_SIZE))
+#define ROUND_MEM_ALIGN(x) (((x)+PTR_SIZE-1) & (~0 - PTR_SIZE + 1))
 
 /*
 #define VADDR_TO_PADDR(x) ((((u64int)x)>=CODE_LOAD_ADDR)?(((u64int)x)-CODE_LOAD_ADDR):(((u64int)x)-KERNEL_HEAP_START_ADDR))
 #define PADDR_TO_VADDR(x) (((u64int)x)+KERNEL_HEAP_START_ADDR)
 */
 #define PADDR_TO_VADDR(x) ((x) ? ((u64int)(x) + KERNEL_HEAP_START_ADDR) : 0)
-#define VADDR_TO_PADDR(x) ((x) ? ((((u64int)x)>=CODE_LOAD_ADDR)?(((u64int)x)-CODE_LOAD_ADDR):(((u64int)x)-KERNEL_HEAP_START_ADDR)) : 0)
+#define VADDR_TO_PADDR(x) ((x) ? ((((u64int)(x))>=CODE_LOAD_ADDR)?(((u64int)(x))-CODE_LOAD_ADDR):(((u64int)(x))-KERNEL_HEAP_START_ADDR)) : 0)
 
 
 struct PageTable {

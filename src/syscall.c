@@ -20,3 +20,5 @@ DEFN_SYSCALL_3(OzReadDirectory, 16, s64int, u64int, void *);
 DEFN_SYSCALL_1(OzAddHeapSize, 17, s64int);
 DEFN_SYSCALL_4(OzIoControl, 18, u64int, s64int, u64int, void *);
 DEFN_SYSCALL_3(OzSeek, 19, s64int, s64int, s64int);
+DEFN_SYSCALL_4(OzMap, 20, s64int, u64int, u64int, s64int);
+

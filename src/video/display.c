@@ -14,6 +14,8 @@ s64int display_Read(struct VNode *node, u64int size, char *buffer);
 s64int display_Write(struct VNode *node, u64int size, char *buffer);
 s64int display_IoControl(struct VNode *node, s64int request, u64int size, void *data);
 s64int display_Seek(struct VNode *node, s64int offset, s64int pos);
+s64int display_MemoryMap(struct VNode *node, u64int addr, u64int size, s64int flags);
+s64int display_MemoryUnmap(struct VNode *node, u64int addr);
 s64int display_Probe();
 
 static struct Device *dev = 0;
@@ -24,6 +26,7 @@ static struct DeviceOperation display_Ops = {
     .read  = &display_Read,
     .write  = &display_Write,
     .ioctl = &display_IoControl,
+    .mmap = &display_MemoryMap,
 };
 
 static struct DisplayModeInfo currentDMI;
@@ -44,7 +47,7 @@ s64int setDMI(struct DisplayModeInfo *mi)
         getCurrentDMI();
         return 0;
     } else if (mi->mode == DISPLAY_MODE_VESA) {
-        if ((mi->width = 640) && (mi->height = 480)) {
+        if ((mi->width == 640) && (mi->height == 480)) {
             switch (mi->cellBits) {
             case 8:
                 break;
@@ -55,7 +58,7 @@ s64int setDMI(struct DisplayModeInfo *mi)
             }
             getCurrentDMI();
             return 0;
-        } else if ((mi->width = 800) && (mi->height = 600)) {
+        } else if ((mi->width == 800) && (mi->height == 600)) {
             switch (mi->cellBits) {
             case 8:
                 setVBEMode(0x103);
@@ -72,14 +75,13 @@ s64int setDMI(struct DisplayModeInfo *mi)
             getCurrentDMI();
             return 0;
 
-        } else if ((mi->width = 1024) && (mi->height = 768)) {
-        } else if ((mi->width = 1280) && (mi->height = 1024)) {
+        } else if ((mi->width == 1024) && (mi->height == 768)) {
+        } else if ((mi->width == 1280) && (mi->height == 1024)) {
         } else {
             return -1;
         }
-    } else {
-        return -1;
     }
+    return -1;
 }
 
 
@@ -231,6 +233,43 @@ s64int display_Seek(struct VNode *node, s64int offset, s64int pos)
     if ((newOffset>=0) && (newOffset<=n)) {
         node->offset = newOffset;
         return 0;
+    } else {
+        return -1;
+    }
+    return 0;
+}
+
+s64int display_MemoryMap(struct VNode *node, u64int addr, u64int size, s64int flags)
+{
+    s64int ret;
+    if (currentDMI.mode == DISPLAY_MODE_TEXT) {
+        ret = vmMapArea(currentTask->vm, addr, PAGE_SIZE, VMA_TYPE_MMAP | VMA_STATUS_USED | VMA_OWNER_USER, 0xb8000);
+        vnodeAddMemoryMap(node, addr, PAGE_SIZE);
+    } else if (currentDMI.mode == DISPLAY_MODE_VESA) {
+        size = ROUND_PAGE_ALIGN(currentDMI.width*currentDMI.height*(currentDMI.cellBits/8));
+        ret = vmMapArea(currentTask->vm, addr, size, VMA_TYPE_MMAP | VMA_STATUS_USED | VMA_OWNER_USER, currentDMI.addr);
+        vnodeAddMemoryMap(node, addr, size);
+    } else {
+        ret = 0;
+    }
+    return ret;
+}
+
+s64int display_MemoryUnmap(struct VNode *node, u64int addr)
+{
+    s64int ret;
+    u64int size;
+
+    ret = vnodeRemoveMemoryMap(node, addr);
+    if (ret != 0) {
+        return ret;
+    }
+
+    if (currentDMI.mode == DISPLAY_MODE_TEXT) {
+        ret = vmUnmapArea(currentTask->vm, addr, PAGE_SIZE);
+    } else if (currentDMI.mode == DISPLAY_MODE_VESA) {
+        size = ROUND_PAGE_ALIGN(currentDMI.width*currentDMI.height*(currentDMI.cellBits/8));
+        ret = vmUnmapArea(currentTask->vm, addr, size);
     } else {
         return -1;
     }

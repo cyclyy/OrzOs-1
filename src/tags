@@ -2493,8 +2493,8 @@ DESTDIR	build-newlib/x86_64-pc-elf/libgloss/Makefile	/^DESTDIR =$/;"	m
 DESTDIR	build-newlib/x86_64-pc-elf/libgloss/doc/Makefile	/^DESTDIR =$/;"	m
 DESTDIR	build-newlib/x86_64-pc-elf/libgloss/libnosys/Makefile	/^DESTDIR =$/;"	m
 DEVFS_H	fs/devfs.h	2;"	d
-DEVFS_TYPE_DIR	fs/devfs.c	23;"	d	file:
-DEVFS_TYPE_OBJ	fs/devfs.c	24;"	d	file:
+DEVFS_TYPE_DIR	fs/devfs.c	25;"	d	file:
+DEVFS_TYPE_OBJ	fs/devfs.c	26;"	d	file:
 DEVICE_H	device.h	2;"	d
 DF_1_CONFALT	elf.h	751;"	d
 DF_1_DIRECT	elf.h	746;"	d
@@ -2523,9 +2523,13 @@ DF_TEXTREL	elf.h	732;"	d
 DI	x86emu/x86emu/regs.h	/^	i386_general_register SP, BP, SI, DI, IP;$/;"	m	struct:i386_special_regs
 DISK_H	disk.h	2;"	d
 DISPLAY_H	video/display.h	2;"	d
+DISPLAY_IOCTL_GET_CURRENT_MODE_INFO	prog/uidef.h	28;"	d
 DISPLAY_IOCTL_GET_CURRENT_MODE_INFO	video/display.h	9;"	d
+DISPLAY_IOCTL_SET_MODE	prog/uidef.h	29;"	d
 DISPLAY_IOCTL_SET_MODE	video/display.h	10;"	d
+DISPLAY_MODE_TEXT	prog/uidef.h	25;"	d
 DISPLAY_MODE_TEXT	video/display.h	6;"	d
+DISPLAY_MODE_VESA	prog/uidef.h	26;"	d
 DISPLAY_MODE_VESA	video/display.h	7;"	d
 DIST_COMMON	build-newlib/x86_64-pc-elf/newlib/Makefile	/^DIST_COMMON = NEWS README ChangeLog $(srcdir)\/Makefile.in \\$/;"	m
 DIST_COMMON	build-newlib/x86_64-pc-elf/newlib/doc/Makefile	/^DIST_COMMON = $(srcdir)\/Makefile.in $(srcdir)\/Makefile.am \\$/;"	m
@@ -2975,6 +2979,7 @@ DeviceOperation	device.h	/^struct DeviceOperation {$/;"	s
 DirectColorModeInfo	video/vbe.h	/^    unsigned char   DirectColorModeInfo;$/;"	m	struct:VBEModeInfoBlock
 DirectoryRecord	vfs.h	/^struct DirectoryRecord$/;"	s
 Disk	disk.h	/^struct Disk {$/;"	s
+DisplayModeInfo	prog/uidef.h	/^struct DisplayModeInfo$/;"	s
 DisplayModeInfo	video/display.h	/^struct DisplayModeInfo$/;"	s
 E2BIG	errno.h	10;"	d
 EACCES	errno.h	16;"	d
@@ -4091,6 +4096,7 @@ HAVE_GNU_LD	build-newlib/x86_64-pc-elf/libgloss/libnosys/config.h	11;"	d
 HAVE_INITFINI_ARRAY	build-newlib/x86_64-pc-elf/newlib/newlib.h	50;"	d
 HAVE_INITFINI_ARRAY	build-newlib/x86_64-pc-elf/newlib/targ-include/newlib.h	50;"	d
 HAVE_SECTION_ATTRIBUTES	build-newlib/x86_64-pc-elf/libgloss/libnosys/config.h	20;"	d
+HEIGHT	prog/uiserver.c	9;"	d	file:
 HIGHMEM_START_ADDR	sysdef.h	21;"	d
 HOST_CLOOGINC	build-newlib/Makefile	/^HOST_CLOOGINC = $/;"	m
 HOST_CLOOGLIBS	build-newlib/Makefile	/^HOST_CLOOGLIBS = $/;"	m
@@ -6689,6 +6695,7 @@ MULTISUBDIR	build-newlib/x86_64-pc-elf/libgloss/libnosys/Makefile	/^MULTISUBDIR 
 MULTISUBDIR	build-newlib/x86_64-pc-elf/newlib/Makefile	/^MULTISUBDIR = $/;"	m
 MULTISUBDIR	build-newlib/x86_64-pc-orzos/newlib/Makefile	/^MULTISUBDIR = $/;"	m
 MUTEX_H	mutex.h	2;"	d
+MemoryMap	vfs.h	/^struct MemoryMap$/;"	s
 MemoryModel	video/vbe.h	/^    unsigned char   MemoryModel;$/;"	m	struct:VBEModeInfoBlock
 Message	message.h	/^struct Message$/;"	s
 MessageInfo	syscall.h	/^struct MessageInfo $/;"	s
@@ -7396,6 +7403,7 @@ OzDestroyServer	syscall/ozipc.c	/^s64int OzDestroyServer(s64int serverId)$/;"	f
 OzDisconnect	syscall/ozipc.c	/^s64int OzDisconnect(s64int clientId)$/;"	f
 OzExitTask	syscall/oztask.c	/^s64int OzExitTask(s64int status)$/;"	f
 OzIoControl	syscall/ozfs.c	/^s64int OzIoControl(s64int fd, s64int request, u64int size, char *buffer)$/;"	f
+OzMap	syscall/ozfs.c	/^s64int OzMap(s64int fd, u64int addr, u64int size, s64int flags)$/;"	f
 OzNewTask	syscall/oztask.c	/^s64int OzNewTask(char *path, u64int flags)$/;"	f
 OzOpen	syscall/ozfs.c	/^s64int OzOpen(char *path, s64int flags)$/;"	f
 OzPost	syscall/ozipc.c	/^s64int OzPost(s64int clientId, u64int srcSize, void *src)$/;"	f
@@ -8340,6 +8348,7 @@ PageDirectoryPointer	paging.h	/^struct PageDirectoryPointer {$/;"	s
 PageTable	paging.h	/^struct PageTable {$/;"	s
 Partition	disk.h	/^struct Partition {$/;"	s
 PhysBasePtr	video/vbe.h	/^    u32int          PhysBasePtr;$/;"	m	struct:VBEModeInfoBlock
+Pixel	prog/uiserver.c	/^struct Pixel$/;"	s	file:
 Program	program.h	/^struct Program {$/;"	s
 QUIET	Makefile	/^QUIET = @$/;"	m
 RAMFS_H	fs/ramfs.h	2;"	d
@@ -10492,8 +10501,8 @@ VIRTUALBASE	loader32.s	/^VIRTUALBASE         equ 0xffffffffc0000000$/;"	d
 VM	vmm.h	/^struct VM {$/;"	s
 VMA	vmm.h	/^struct VMA {$/;"	s
 VMA_ANON	vm.h	8;"	d
-VMA_DIR_DOWN	vmm.h	22;"	d
-VMA_DIR_UP	vmm.h	21;"	d
+VMA_DIR_DOWN	vmm.h	23;"	d
+VMA_DIR_UP	vmm.h	22;"	d
 VMA_EXEC	vm.h	11;"	d
 VMA_FILE	vm.h	14;"	d
 VMA_OWNER_KERNEL	vmm.h	12;"	d
@@ -10509,7 +10518,8 @@ VMA_STATUS_INVALID	vmm.h	6;"	d
 VMA_STATUS_MASK	vmm.h	9;"	d
 VMA_STATUS_USED	vmm.h	7;"	d
 VMA_TYPE_HEAP	vmm.h	18;"	d
-VMA_TYPE_MASK	vmm.h	19;"	d
+VMA_TYPE_MASK	vmm.h	20;"	d
+VMA_TYPE_MMAP	vmm.h	19;"	d
 VMA_TYPE_STACK	vmm.h	17;"	d
 VMA_TYPE_UNKNOWN	vmm.h	16;"	d
 VMA_WRITE	vm.h	10;"	d
@@ -10604,6 +10614,7 @@ VideoModePtr_low	video/vbe.h	/^    unsigned char   VideoModePtr_low;$/;"	m	struc
 Vnode	vfs2.h	/^struct Vnode {$/;"	s
 VnodeOperations	vfs2.h	/^struct VnodeOperations {$/;"	s
 WAITQUEUE_H	waitqueue.h	2;"	d
+WIDTH	prog/uiserver.c	8;"	d	file:
 WINDMC	build-newlib/Makefile	/^WINDMC = windmc$/;"	m
 WINDMC_FOR_BUILD	build-newlib/Makefile	/^WINDMC_FOR_BUILD = $(WINDMC)$/;"	m
 WINDMC_FOR_TARGET	build-newlib/Makefile	/^WINDMC_FOR_TARGET=x86_64-pc-elf-windmc$/;"	m
@@ -11422,6 +11433,7 @@ add_long	x86emu/prim_ops.c	/^u32 add_long(u32 d, u32 s)$/;"	f
 add_word	x86emu/prim_ops.c	/^u16 add_word(u16 d, u16 s)$/;"	f
 addr	module.h	/^    u32int addr;$/;"	m	struct:module_struct
 addr	multiboot.h	/^    u32int addr;$/;"	m	struct:multiboot
+addr	prog/uidef.h	/^    u64int addr;$/;"	m	struct:DisplayModeInfo
 addr	video/display.h	/^    u64int addr;$/;"	m	struct:DisplayModeInfo
 aext	build-newlib/x86_64-pc-elf/newlib/Makefile	/^aext = a$/;"	m
 aext	build-newlib/x86_64-pc-elf/newlib/doc/Makefile	/^aext = a$/;"	m
@@ -12638,10 +12650,12 @@ atoi	util.c	/^s32int atoi(const char *nptr)$/;"	f
 atol	util.h	69;"	d
 attach	pci.h	/^    s64int (*attach)(struct PCIDevice *dev);$/;"	m	struct:PCIDriver
 availMemory	kmm.c	/^u64int availMemory() $/;"	f
+b	prog/uiserver.c	/^    char r,g,b;$/;"	m	struct:Pixel	file:
 base	dtable.h	/^    u64int base;$/;"	m	struct:GDTPtr
 base	dtable.h	/^    u64int base;$/;"	m	struct:IDTPtr
 base	dtable.h	/^    u64int base;$/;"	m	struct:TSSPtr
 base	ide.c	/^    u16int base;  \/\/ I\/O Base.$/;"	m	struct:ideChannelRegisters	file:
+base	vfs.h	/^    u64int base;$/;"	m	struct:MemoryMap
 baseHigh	dtable.h	/^    u32int baseHigh;$/;"	m	struct:TSSEntry
 baseHigh	dtable.h	/^    u8int baseHigh;$/;"	m	struct:GDTEntry
 baseLow	dtable.h	/^    u16int baseLow;$/;"	m	struct:GDTEntry
@@ -13267,6 +13281,7 @@ cctdir	build-newlib/x86_64-pc-elf/newlib/libc/iconv/Makefile	/^cctdir = $(datadi
 cctdir	build-newlib/x86_64-pc-elf/newlib/libc/iconv/ccs/binary/Makefile	/^cctdir = $(datadir)\/iconv_data$/;"	m
 cctdir	build-newlib/x86_64-pc-orzos/newlib/libc/iconv/Makefile	/^cctdir = $(datadir)\/iconv_data$/;"	m
 cctdir	build-newlib/x86_64-pc-orzos/newlib/libc/iconv/ccs/binary/Makefile	/^cctdir = $(datadir)\/iconv_data$/;"	m
+cellBits	prog/uidef.h	/^    u16int cellBits;$/;"	m	struct:DisplayModeInfo
 cellBits	video/display.h	/^    u16int cellBits;$/;"	m	struct:DisplayModeInfo
 channel	ide.c	/^    u8int channel;     \/\/ 0 (Primary Channel) or 1 (Secondary Channel).$/;"	m	struct:ideDevice	file:
 channels	ide.c	/^} channels[2];$/;"	v	typeref:struct:ideChannelRegisters
@@ -13309,6 +13324,7 @@ cmp_byte	x86emu/prim_ops.c	/^u8 cmp_byte(u8 d, u8 s)$/;"	f
 cmp_long	x86emu/prim_ops.c	/^u32 cmp_long(u32 d, u32 s)$/;"	f
 cmp_word	x86emu/prim_ops.c	/^u16 cmp_word(u16 d, u16 s)$/;"	f
 coid	prog/uiproto.c	/^static s64int coid = 0;$/;"	v	file:
+color	prog/uidef.h	/^    u8int color;$/;"	m	struct:DisplayModeInfo
 color	video/display.h	/^    u8int color;$/;"	m	struct:DisplayModeInfo
 commandSets	ide.c	/^    u32int commandSets; \/\/ Command Sets Supported.$/;"	m	struct:ideDevice	file:
 commonFaultHandler	except.c	/^void commonFaultHandler(struct RegisterState *regs)$/;"	f
@@ -13610,6 +13626,7 @@ devfsCreateObject	fs/devfs.c	/^s64int devfsCreateObject(struct FileSystem *fs, s
 devfsDriver	fs/devfs.c	/^struct FileSystemDriver devfsDriver = {$/;"	v	typeref:struct:FileSystemDriver
 devfsFinddir	fs/devfs.c	/^s64int devfsFinddir(struct FileSystem *fs, s64int id, const char *name)$/;"	f
 devfsIoControl	fs/devfs.c	/^s64int devfsIoControl(struct VNode *node, s64int request, u64int size, void *data)$/;"	f
+devfsMap	fs/devfs.c	/^s64int devfsMap(struct VNode *node, u64int addr, u64int size, s64int flags)$/;"	f
 devfsMount	fs/devfs.c	/^s64int devfsMount(struct FileSystemDriver *driver, struct FileSystem **fs, const char *source, u64int flags, void *data)$/;"	f
 devfsOpen	fs/devfs.c	/^s64int devfsOpen(struct FileSystem *fs, s64int id, struct VNode *node)$/;"	f
 devfsRead	fs/devfs.c	/^s64int devfsRead(struct VNode *node, u64int size, char *buffer)$/;"	f
@@ -13617,6 +13634,7 @@ devfsReaddir	fs/devfs.c	/^s64int devfsReaddir(struct VNode *node, u64int bufSize
 devfsRoot	fs/devfs.c	/^s64int devfsRoot(struct FileSystem *fs)$/;"	f
 devfsSeek	fs/devfs.c	/^s64int devfsSeek(struct VNode *node, s64int offset, s64int pos)$/;"	f
 devfsStat	fs/devfs.c	/^s64int devfsStat(struct FileSystem *fs, s64int id, struct VNodeInfo *info)$/;"	f
+devfsUnmap	fs/devfs.c	/^s64int devfsUnmap(struct VNode *node, u64int addr)$/;"	f
 devfsUnmount	fs/devfs.c	/^s64int devfsUnmount(struct FileSystemDriver *driver, struct FileSystem *fs)$/;"	f
 devfsWrite	fs/devfs.c	/^s64int devfsWrite(struct VNode *node, u64int size, char *buffer)$/;"	f
 device	pci.h	/^    u16int vendor, device;$/;"	m	struct:PCIConfig
@@ -13641,6 +13659,8 @@ display_Cleanup	video/display.c	/^void display_Cleanup()$/;"	f
 display_Close	video/display.c	/^s64int display_Close(struct VNode *node)$/;"	f
 display_Init	video/display.c	/^void display_Init()$/;"	f
 display_IoControl	video/display.c	/^s64int display_IoControl(struct VNode *node, s64int request, u64int size, void *data)$/;"	f
+display_MemoryMap	video/display.c	/^s64int display_MemoryMap(struct VNode *node, u64int addr, u64int size, s64int flags)$/;"	f
+display_MemoryUnmap	video/display.c	/^s64int display_MemoryUnmap(struct VNode *node, u64int addr)$/;"	f
 display_Open	video/display.c	/^s64int display_Open(struct VNode *node)$/;"	f
 display_Ops	video/display.c	/^static struct DeviceOperation display_Ops = {$/;"	v	typeref:struct:DeviceOperation	file:
 display_Read	video/display.c	/^s64int display_Read(struct VNode *node, u64int size, char *buffer)$/;"	f
@@ -14057,6 +14077,7 @@ flushGDT	flushdtable.s	/^flushGDT:$/;"	l
 flushIDT	flushdtable.s	/^flushIDT:$/;"	l
 flushTSS	flushdtable.s	/^flushTSS:$/;"	l
 fork	task2.c	/^u32int fork()$/;"	f
+frameBuffer	prog/uiserver.c	/^struct Pixel *frameBuffer;$/;"	v	typeref:struct:Pixel
 free	tlsf.h	/^        struct TLSFFreePtr free;$/;"	m	union:TLSFBlock::__anon15	typeref:struct:TLSFBlock::__anon15::TLSFFreePtr
 freeMemStartAddr	bootinfo.h	/^    u64int freeMemStartAddr;$/;"	m	struct:BootInfo
 freeMemoryStart	kmm.c	/^u64int freeMemoryStart;                     $/;"	v
@@ -14228,6 +14249,7 @@ func_xform	build-newlib/x86_64-pc-orzos/newlib/libc/sys/config.status	/^func_xfo
 func_xform	build-newlib/x86_64-pc-orzos/newlib/libm/config.status	/^func_xform ()$/;"	f
 func_xform	build-newlib/x86_64-pc-orzos/newlib/libm/machine/config.status	/^func_xform ()$/;"	f
 fval	x86emu/x86emu/fpu_regs.h	/^    float               fval;$/;"	m	union:x86_fpu_reg_u
+g	prog/uiserver.c	/^    char r,g,b;$/;"	m	struct:Pixel	file:
 gdt64	loader32.s	/^gdt64:                           ; Global Descriptor Table (64-bit).$/;"	l
 gdtPtr	dtable.c	/^struct GDTPtr   gdtPtr;$/;"	v	typeref:struct:GDTPtr
 gdtTable	dtable.c	/^struct GDTEntry gdtTable[8];$/;"	v	typeref:struct:GDTEntry
@@ -14290,6 +14312,7 @@ headerType	pci.h	/^    u8int headerType;$/;"	m	struct:PCIConfig
 header_cpio_struct	cpio.h	/^typedef struct header_cpio_struct {$/;"	s
 header_cpio_t	cpio.h	/^} header_cpio_t;$/;"	t	typeref:struct:header_cpio_struct
 heap	kmm.c	/^struct TLSFHeader *heap = 0;$/;"	v	typeref:struct:TLSFHeader
+height	prog/uidef.h	/^    u16int height;$/;"	m	struct:DisplayModeInfo
 height	video/display.h	/^    u16int height;$/;"	m	struct:DisplayModeInfo
 host	build-newlib/Makefile	/^host=i686-pc-linux-gnu$/;"	m
 host	build-newlib/x86_64-pc-elf/newlib/Makefile	/^host = x86_64-pc-elf$/;"	m
@@ -15313,7 +15336,7 @@ inw	util.c	/^u16int inw(u16int port)$/;"	f
 ioBitmapBase	dtable.h	/^        u16int ioBitmapBase;$/;"	m	struct:TSS
 io_bitmap	dtable.h	/^        u64int io_bitmap[IO_BITMAP_LONGS + 1];$/;"	m	struct:TSS
 ioctl	device.h	/^    s64int (*ioctl)(struct VNode *node, s64int request, u64int size, void *data);$/;"	m	struct:DeviceOperation
-ioctl	vfs.h	/^    s64int (*ioctl)(struct VNode *node, s64int request, void *data, u64int size);$/;"	m	struct:FileSystemOperation
+ioctl	vfs.h	/^    s64int (*ioctl)(struct VNode *node, s64int request, u64int size, void *data);$/;"	m	struct:FileSystemOperation
 ipcManager	message.c	/^struct IPCManager *ipcManager = 0;$/;"	v	typeref:struct:IPCManager
 irq	pci.h	/^    u8int irq, interruptPin;$/;"	m	struct:PCIConfig
 irqDispatcher	interrupt.c	/^void irqDispatcher(struct RegisterState *rs)$/;"	f
@@ -16542,6 +16565,7 @@ mandir	build-newlib/x86_64-pc-orzos/newlib/libm/machine/Makefile	/^mandir = ${da
 mandir	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^mandir = ${datarootdir}\/man$/;"	m
 mandir	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^mandir = ${datarootdir}\/man$/;"	m
 mapPagesVtoP	paging.c	/^void mapPagesVtoP(u64int vaddr, u64int paddr, u64int n, struct PML4E *pml4e, u64int user)$/;"	f
+mappings	vfs.h	/^    struct MemoryMap *mappings;$/;"	m	struct:VNode	typeref:struct:VNode::MemoryMap
 masix1	fs/ext2fs.h	/^        } masix1;$/;"	m	union:ext2_inode::__anon78	typeref:struct:ext2_inode::__anon78::__anon81
 masix2	fs/ext2fs.h	/^        } masix2;$/;"	m	union:ext2_inode::__anon82	typeref:struct:ext2_inode::__anon82::__anon85
 mask	vfs2.h	/^    u64int mask;    \/\/permission$/;"	m	struct:Vnode
@@ -16699,11 +16723,14 @@ mkinstalldirs	build-newlib/x86_64-pc-orzos/newlib/libm/machine/Makefile	/^mkinst
 mkinstalldirs	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^mkinstalldirs = $(SHELL) $(top_srcdir)\/..\/..\/mkinstalldirs$/;"	m
 mkinstalldirs	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^mkinstalldirs = $(SHELL) $(top_srcdir)\/..\/..\/mkinstalldirs$/;"	m
 mkobj	vfs.h	/^    s64int (*mkobj)(struct FileSystem *fs, s64int id, const char *name, s64int objid);$/;"	m	struct:FileSystemOperation
+mmap	device.h	/^    s64int (*mmap)(struct VNode *node, u64int addr, u64int size, s64int flags);$/;"	m	struct:DeviceOperation
+mmap	vfs.h	/^    s64int (*mmap)(struct VNode *node, u64int addr, u64int size, s64int flags);$/;"	m	struct:FileSystemOperation
 mmap_addr	multiboot.h	/^    u32int mmap_addr;$/;"	m	struct:multiboot
 mmap_length	multiboot.h	/^    u32int mmap_length;$/;"	m	struct:multiboot
 mod_end	multiboot.h	/^    u32int mod_end;$/;"	m	struct:multiboot_mod_list
 mod_start	multiboot.h	/^    u32int mod_start;$/;"	m	struct:multiboot_mod_list
 mode	fs/bootfs.c	/^    char mode[8];$/;"	m	struct:TarHeader	file:
+mode	prog/uidef.h	/^    u8int mode;$/;"	m	struct:DisplayModeInfo
 mode	video/display.h	/^    u8int mode;$/;"	m	struct:DisplayModeInfo
 mode	x86emu/x86emu/regs.h	/^    u32                         mode;$/;"	m	struct:__anon23
 mode1024x768x16	video/vbe.h	/^    mode1024x768x16   = 0x104,$/;"	e	enum:__anon13
@@ -16835,6 +16862,8 @@ multiboot	multiboot.h	/^typedef struct multiboot {$/;"	s
 multiboot_mod_list	multiboot.h	/^struct multiboot_mod_list$/;"	s
 multiboot_module_t	multiboot.h	/^typedef struct multiboot_mod_list multiboot_module_t;$/;"	t	typeref:struct:multiboot_mod_list
 multiboot_t	multiboot.h	/^} multiboot_t;$/;"	t	typeref:struct:multiboot
+munmap	device.h	/^    s64int (*munmap)(struct VNode *node, u64int addr);$/;"	m	struct:DeviceOperation
+munmap	vfs.h	/^    s64int (*munmap)(struct VNode *node, u64int addr);$/;"	m	struct:FileSystemOperation
 n	vfs2.h	/^    u64int n;$/;"	m	struct:__anon6
 nBlockGroups	fs/ext2fs.c	/^    int nBlockGroups;$/;"	m	struct:Ext2FSData	file:
 nBlocks	disk.h	/^    u64int nBlocks;$/;"	m	struct:Disk
@@ -16954,6 +16983,7 @@ next	task2.h	/^    struct wait_queue_node_struct *next;$/;"	m	struct:wait_queue_
 next	tlsf.h	/^    struct TLSFBlock *next;$/;"	m	struct:TLSFFreePtr	typeref:struct:TLSFFreePtr::TLSFBlock
 next	vfs.c	/^    struct MountPoint *next, *prev;$/;"	m	struct:MountPoint	typeref:struct:MountPoint::MountPoint	file:
 next	vfs.h	/^    struct FileSystemDriver *next, *prev;$/;"	m	struct:FileSystemDriver	typeref:struct:FileSystemDriver::FileSystemDriver
+next	vfs.h	/^    struct MemoryMap *next, *prev;$/;"	m	struct:MemoryMap	typeref:struct:MemoryMap::MemoryMap
 next	vfs2.h	/^    struct fs_driver *next;$/;"	m	struct:fs_driver	typeref:struct:fs_driver::fs_driver
 next	vfs2.h	/^    struct vnode_list_struct *next;$/;"	m	struct:vnode_list_struct	typeref:struct:vnode_list_struct::vnode_list_struct
 next	vm.h	/^    struct vma_struct *next;$/;"	m	struct:vma_struct	typeref:struct:vma_struct::vma_struct
@@ -17257,6 +17287,7 @@ opcD1_word_operation	x86emu/ops.c	/^static u16(*opcD1_word_operation[])(u16 s, u
 open	device.h	/^    s64int (*open)(struct VNode *node);$/;"	m	struct:DeviceOperation
 open	vfs.h	/^    s64int (*open)(struct FileSystem *fs, s64int id, struct VNode *node);$/;"	m	struct:FileSystemOperation
 open	vfs2.h	/^    s64int   (*open)    (const char *);$/;"	m	struct:VnodeOperations
+openDisplay	prog/uiserver.c	/^s64int openDisplay()$/;"	f
 or	loader32.s	/^or eax, 1 << 31              ; Set the PG-bit, which is the 32nd bit (bit 31).$/;"	l
 or	loader32.s	/^or eax, 1 << 5               ; Set the PAE-bit, which is the 6th bit (bit 5).$/;"	l
 or	loader32.s	/^or eax, 1 << 8               ; Set the LM-bit which is the 9th bit (bit 8).$/;"	l
@@ -17772,6 +17803,7 @@ prev	tlsf.h	/^    struct TLSFBlock *prev;$/;"	m	struct:TLSFBlock	typeref:struct:
 prev	tlsf.h	/^    struct TLSFBlock *prev;$/;"	m	struct:TLSFFreePtr	typeref:struct:TLSFFreePtr::TLSFBlock
 prev	vfs.c	/^    struct MountPoint *next, *prev;$/;"	m	struct:MountPoint	typeref:struct:MountPoint::	file:
 prev	vfs.h	/^    struct FileSystemDriver *next, *prev;$/;"	m	struct:FileSystemDriver	typeref:struct:FileSystemDriver::
+prev	vfs.h	/^    struct MemoryMap *next, *prev;$/;"	m	struct:MemoryMap	typeref:struct:MemoryMap::
 prev	vfs2.h	/^    struct vnode_list_struct *prev;$/;"	m	struct:vnode_list_struct	typeref:struct:vnode_list_struct::vnode_list_struct
 prev	vm.h	/^    struct vma_struct *prev;$/;"	m	struct:vma_struct	typeref:struct:vma_struct::vma_struct
 prev	vmm.h	/^    struct VMA *prev;$/;"	m	struct:VMA	typeref:struct:VMA::VMA
@@ -17944,6 +17976,7 @@ push	loader32.s	/^push    eax                   ; Initial esp  $/;"	l
 push	loader32.s	/^push    ebx                   ; Load multiboot header location$/;"	l
 push_long	x86emu/prim_ops.c	/^void push_long(u32 w)$/;"	f
 push_word	x86emu/prim_ops.c	/^void push_word(u16 w)$/;"	f
+r	prog/uiserver.c	/^    char r,g,b;$/;"	m	struct:Pixel	file:
 r10	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 r11	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 r8	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
@@ -18375,6 +18408,7 @@ size	module.h	/^    u32int size;$/;"	m	struct:module_struct
 size	multiboot.h	/^    u32int size;$/;"	m	struct:multiboot
 size	tlsf.h	/^    u64int size;$/;"	m	struct:TLSFBlock
 size	vfs.h	/^    u64int size;$/;"	m	struct:DirectoryRecord
+size	vfs.h	/^    u64int size;$/;"	m	struct:MemoryMap
 size	vfs.h	/^    u64int size;$/;"	m	struct:VNodeInfo
 size	vmm.h	/^    u64int size;$/;"	m	struct:VMA
 slBitmap	tlsf.h	/^    u64int slBitmap[REAL_FLI];                  \/* i -> 2^(FLI_OFFSET+i) *\/$/;"	m	struct:TLSFHeader
@@ -19339,6 +19373,7 @@ vfsCreateDirectory	vfs.c	/^s64int vfsCreateDirectory(const char *path)$/;"	f
 vfsCreateObject	vfs.c	/^s64int vfsCreateObject(const char *path, s64int objid)$/;"	f
 vfsIoControl	vfs.c	/^s64int vfsIoControl(struct VNode *node, s64int request, u64int size, void *data)$/;"	f
 vfsLookup	vfs.c	/^s64int vfsLookup(const char *path, struct VNode *node)$/;"	f
+vfsMap	vfs.c	/^s64int vfsMap(struct VNode *node, u64int addr, u64int size, s64int flags)$/;"	f
 vfsMount	vfs.c	/^s64int vfsMount(const char *dest, const char *source, const char *fsType, u64int flags, void *data)$/;"	f
 vfsNopClose	vfs.c	/^s64int vfsNopClose(struct VNode *node)$/;"	f
 vfsNopOpen	vfs.c	/^s64int vfsNopOpen(struct VNode *node)$/;"	f
@@ -19349,6 +19384,7 @@ vfsReadDirectory	vfs.c	/^s64int vfsReadDirectory(struct VNode *node, u64int size
 vfsRemoveDirectory	vfs.c	/^s64int vfsRemoveDirectory(const char *path)$/;"	f
 vfsSeek	vfs.c	/^s64int vfsSeek(struct VNode *node, s64int offset, s64int pos)$/;"	f
 vfsState	vfs.c	/^s64int vfsState(const char *path, struct VNodeInfo *ni)$/;"	f
+vfsUnmap	vfs.c	/^s64int vfsUnmap(struct VNode *node, u64int addr)$/;"	f
 vfsUnmount	vfs.c	/^s64int vfsUnmount(const char *path)$/;"	f
 vfsWrite	vfs.c	/^s64int vfsWrite(struct VNode *node, u64int size, char *buffer)$/;"	f
 vfs_abs_path	vfs2.c	/^char* vfs_abs_path(char *p)$/;"	f
@@ -19378,10 +19414,12 @@ vmDeref	vmm.c	/^s64int vmDeref(struct VM *vm)$/;"	f
 vmDestroy	vmm.c	/^s64int vmDestroy(struct VM *vm)$/;"	f
 vmDump	vmm.c	/^void vmDump(struct VM *vm)$/;"	f
 vmInit	vmm.c	/^struct VM *vmInit()$/;"	f
+vmMapArea	vmm.c	/^s64int vmMapArea(struct VM *vm, u64int start, u64int size, u64int flags, u64int paddr)$/;"	f
 vmQueryAreaByAddr	vmm.c	/^struct VMA *vmQueryAreaByAddr(struct VM *vm, u64int addr)$/;"	f
 vmRef	vmm.c	/^struct VM *vmRef(struct VM *vm)$/;"	f
 vmRemoveArea	vmm.c	/^s64int vmRemoveArea(struct VM *vm,struct VMA *vma)$/;"	f
 vmTruncate	vmm.c	/^s64int vmTruncate(struct VM *vm)$/;"	f
+vmUnmapArea	vmm.c	/^s64int vmUnmapArea(struct VM *vm, u64int start, u64int size)$/;"	f
 vm_struct	vm.h	/^typedef struct vm_struct {$/;"	s
 vm_t	vm.h	/^} vm_t;$/;"	t	typeref:struct:vm_struct
 vmaCopy	vmm.c	/^struct VMA *vmaCopy(struct VMA *oldVMA, struct PML4E *pml4e, u64int flags)$/;"	f
@@ -19417,6 +19455,8 @@ vna_next	elf.h	/^  Elf64_Word	vna_next;		\/* Offset in bytes to next vernaux$/;"
 vna_other	elf.h	/^  Elf32_Half	vna_other;		\/* Unused *\/$/;"	m	struct:__anon56
 vna_other	elf.h	/^  Elf64_Half	vna_other;		\/* Unused *\/$/;"	m	struct:__anon57
 vnode	file.h	/^    struct vnode_struct *vnode;$/;"	m	struct:file_struct	typeref:struct:file_struct::vnode_struct
+vnodeAddMemoryMap	vfs.c	/^s64int vnodeAddMemoryMap(struct VNode *node, u64int base, u64int size)$/;"	f
+vnodeRemoveMemoryMap	vfs.c	/^s64int vnodeRemoveMemoryMap(struct VNode *node, u64int base)$/;"	f
 vnode_list_struct	vfs2.h	/^typedef struct vnode_list_struct {$/;"	s
 vnode_list_t	vfs2.h	/^} vnode_list_t;$/;"	t	typeref:struct:vnode_list_struct
 vsprintf	util.c	/^u64int vsprintf(char *buf, char *fmt, va_list ap)$/;"	f
@@ -19430,6 +19470,7 @@ wakeUpEx	waitqueue.c	/^void wakeUpEx(struct WaitQueue *wq, struct Task *task, s6
 wakeUpOne	waitqueue.c	/^void wakeUpOne(struct WaitQueue *wq)$/;"	f
 wake_up_all	task2.c	/^void wake_up_all(wait_queue_t *wq)$/;"	f
 wake_up_one	task2.c	/^void wake_up_one(wait_queue_t *wq)$/;"	f
+width	prog/uidef.h	/^    u16int width;$/;"	m	struct:DisplayModeInfo
 width	video/display.h	/^    u16int width;$/;"	m	struct:DisplayModeInfo
 work_path	task2.h	/^    char *work_path;$/;"	m	struct:task
 wq	i8042.c	/^static struct WaitQueue *wq = 0;$/;"	v	typeref:struct:WaitQueue	file:

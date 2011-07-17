@@ -195,4 +195,19 @@ s64int OzSeek(s64int fd, s64int offset, s64int pos)
     }
 }
 
+s64int OzMap(s64int fd, u64int addr, u64int size, s64int flags)
+{
+    struct Handle *handle;
+
+    if (!IS_VALID_HANDLE_INDEX(fd)) {
+        return -1;
+    }
+    
+    handle = &currentTask->handleTable->handle[fd];
+    if (handle->type == HANDLE_VNODE) {
+        return vfsMap((struct VNode*)handle->pointer, addr, size, flags);
+    } else {
+        return -1;
+    }
+}
 // vim: sw=4 sts=4 et tw=100

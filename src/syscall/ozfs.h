@@ -17,4 +17,6 @@ s64int OzReadDirectory(s64int fd, u64int bufSize, char *buffer);
 
 s64int OzSeek(s64int fd, s64int offset, s64int pos);
 
+s64int OzMap(s64int fd, u64int addr, u64int size, s64int flags);
+
 #endif // OZFS_H

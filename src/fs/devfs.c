@@ -13,6 +13,8 @@ s64int devfsRead(struct VNode *node, u64int size, char *buffer);
 s64int devfsWrite(struct VNode *node, u64int size, char *buffer);
 s64int devfsSeek(struct VNode *node, s64int offset, s64int pos);
 s64int devfsIoControl(struct VNode *node, s64int request, u64int size, void *data);
+s64int devfsMap(struct VNode *node, u64int addr, u64int size, s64int flags);
+s64int devfsUnmap(struct VNode *node, u64int addr);
 
 s64int devfsRoot(struct FileSystem *fs);
 s64int devfsStat(struct FileSystem *fs, s64int id, struct VNodeInfo *info);
@@ -51,6 +53,9 @@ static struct FileSystemOperation fsOps = {
     .stat = devfsStat,
     .mkobj = devfsCreateObject,
     .seek = devfsSeek,
+    .mmap = devfsMap,
+    .munmap = devfsUnmap,
+    .ioctl = devfsIoControl,
 } ;
 
 struct FileSystemDriver devfsDriver = {
@@ -307,3 +312,40 @@ s64int devfsIoControl(struct VNode *node, s64int request, u64int size, void *dat
     return ret;
 }
 
+s64int devfsMap(struct VNode *node, u64int addr, u64int size, s64int flags)
+{
+    struct DevFSNode *dnode;
+    struct Device *dev;
+    s64int ret;
+
+    dnode = (struct DevFSNode *)(node->id + KERNEL_HEAP_START_ADDR);
+    if (dnode->type == DEVFS_TYPE_OBJ) {
+        dev = findDevice(dnode->objid);
+        if (dev && dev->op->mmap) {
+            ret = dev->op->mmap(node,addr,size,flags);
+        } else
+            ret = -1;
+    } else 
+        ret = -1;
+
+    return ret;
+}
+
+s64int devfsUnmap(struct VNode *node, u64int addr)
+{
+    struct DevFSNode *dnode;
+    struct Device *dev;
+    s64int ret;
+
+    dnode = (struct DevFSNode *)(node->id + KERNEL_HEAP_START_ADDR);
+    if (dnode->type == DEVFS_TYPE_OBJ) {
+        dev = findDevice(dnode->objid);
+        if (dev && dev->op->munmap) {
+            ret = dev->op->munmap(node,addr);
+        } else
+            ret = -1;
+    } else 
+        ret = -1;
+
+    return ret;
+}

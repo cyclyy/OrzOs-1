@@ -231,9 +231,12 @@ s64int vfsOpen(const char *path, u64int flags, struct VNode *node)
 
 s64int vfsClose(struct VNode *node)
 {
-    if (node->fs && node->fs->op->close)
+    if (node->fs && node->fs->op->close) {
+        while (node->mappings) {
+            vfsUnmap(node, node->mappings->base);
+        }
         return node->fs->op->close(node);
-    else
+    } else
         return -1;
 }
 
@@ -281,7 +284,7 @@ s64int vfsState(const char *path, struct VNodeInfo *ni)
 s64int vfsIoControl(struct VNode *node, s64int request, u64int size, void *data)
 {
     if (node->fs && node->fs->op->ioctl)
-        return node->fs->op->ioctl(node, request, data, size);
+        return node->fs->op->ioctl(node, request, size, data);
     else
         return -1;
 }
@@ -395,6 +398,28 @@ s64int vfsReadDirectory(struct VNode *node, u64int size, char *buffer)
         return -1;
 }
 
+s64int vfsMap(struct VNode *node, u64int addr, u64int size, s64int flags)
+{
+    s64int ret;
+
+    if (node->fs && node->fs->op->mmap)
+        ret = node->fs->op->mmap(node, addr, size, flags);
+    else
+        ret = -1;
+    return ret;
+}
+
+s64int vfsUnmap(struct VNode *node, u64int addr)
+{
+    s64int ret;
+
+    if (node->fs && node->fs->op->munmap)
+        ret = node->fs->op->munmap(node, addr);
+    else
+        ret = -1;
+    return ret;
+}
+
 s64int vfsNopOpen(struct VNode *node)
 {
     return 0;
@@ -418,6 +443,43 @@ s64int vfsNopSeek(struct VNode *node, s64int offset, s64int pos)
     }
 
     return 0;
+}
+
+s64int vnodeAddMemoryMap(struct VNode *node, u64int base, u64int size)
+{
+    struct MemoryMap *map;
+    map = (struct MemoryMap*)kMalloc(sizeof(struct MemoryMap));
+    map->base = base;
+    map->size = size;
+    map->next = node->mappings;
+    map->prev = 0;
+    if (node->mappings) {
+        node->mappings->prev = map;
+    }
+    node->mappings = map;
+    return 0;
+}
+
+s64int vnodeRemoveMemoryMap(struct VNode *node, u64int base)
+{
+    struct MemoryMap *map;
+    map = node->mappings;
+    while (map) {
+        if (map->base == base) {
+            if (map->prev) {
+                map->prev->next = map->next;
+            }
+            if (map->next) {
+                map->next->prev = map->prev;
+            }
+            if (node->mappings == map) {
+                node->mappings = map->next;
+            }
+            return 0;
+        }
+        map = map->next;
+    }
+    return -1;
 }
 
 void initVFS()

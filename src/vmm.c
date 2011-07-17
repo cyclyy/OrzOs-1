@@ -369,24 +369,54 @@ s64int vmAddArea(struct VM *vm, u64int start, u64int size, u64int flags)
     }
 }
 
+s64int vmMapArea(struct VM *vm, u64int start, u64int size, u64int flags, u64int paddr)
+{
+    struct PML4E *pml4e;
+    pml4e = (struct PML4E *)PADDR_TO_VADDR(vm->cr3);
+    if ((flags & VMA_STATUS_USED) && (flags & VMA_TYPE_MMAP)) {
+        if (start == 0) {
+            start = vmAllocArea(vm, 0, size, USER_HEAP_START_ADDR, USER_HEAP_END_ADDR, VMA_DIR_DOWN, flags);
+        } else {
+            vmAddArea(vm, start, size, flags);
+        }
+        mapPagesVtoP(start, paddr, size / PAGE_SIZE, pml4e, flags & VMA_OWNER_USER);
+    }
+    return start;
+}
+
+s64int vmUnmapArea(struct VM *vm, u64int start, u64int size)
+{
+    struct VMA *v;
+
+    v = vmQueryAreaByAddr(vm, start);
+
+    if (v && (v->start == start) && (v->size == size)) {
+        vmRemoveArea(vm, v);
+        return 0;
+    }
+    return -1;
+}
+
 u64int vmAllocArea(struct VM *vm, u64int startHint, u64int size, 
         u64int startBound, u64int endBound, u64int direct, u64int flags)
 {
     struct VMA *v;
+    u64int retAddr;
 
     if ((direct != VMA_DIR_UP) && (direct != VMA_DIR_DOWN))
         return 0;
 
     flags |= VMA_STATUS_USED;
     if (startHint) {
-        if ((startHint >= startBound) && (startHint + size <= endBound))
+        if ((startHint >= startBound) && (startHint + size <= endBound)) {
             if (vmAddArea(vm, startHint, size, flags)==0) {
                 v = vmQueryAreaByAddr(vm, startHint);
                 return v->start;
             } else 
                 return 0;
-        else 
+        } else {
             return 0;
+        }
     }
     v = findFreeArea(vm, size, startBound, endBound, direct);
     if (!v)
@@ -395,11 +425,13 @@ u64int vmAllocArea(struct VM *vm, u64int startHint, u64int size,
         v->flags = flags;
         return v->start;
     } else if (direct==VMA_DIR_UP) {
-        vmAddArea(vm,v->start,size,flags);
-        return v->start;
+        retAddr = MAX(startBound,v->start);
+        vmAddArea(vm,retAddr,size,flags);
+        return retAddr;
     } else {
-        vmAddArea(vm,v->start+(v->size-size),size,flags);
-        return v->start + (v->size-size);
+        retAddr = MIN(endBound-size,v->start+(v->size-size));
+        vmAddArea(vm,retAddr,size,flags);
+        return retAddr;
     }
 }
 
@@ -428,7 +460,9 @@ s64int vmRemoveArea(struct VM *vm,struct VMA *vma)
         for (i=vma->start; i<vma->start+vma->size; i+=PAGE_SIZE) {
             if ((vma->flags & VMA_OWNER_USER) || 
                     ((vma->flags & VMA_OWNER_KERNEL) && (vma->flags & VMA_TYPE_STACK))) {
-                kFree((void*)PADDR_TO_VADDR(getPAddr(i,pml4e)));
+                if (!(vma->flags & VMA_TYPE_MMAP)) {
+                    kFree((void*)PADDR_TO_VADDR(getPAddr(i,pml4e)));
+                }
                 unmapPages(i, 1, pml4e);
             }
         }
@@ -478,30 +512,30 @@ void vmDump(struct VM *vm)
 }
 
 /*
-s64int vmemcpy(struct VM *destVM, void *dest, struct VM *srcVM, void *src, u64int size)
-{
-    u64int daddr, saddr;
-    u64int i, remain;
-    struct PML4E *destPML4E, *srcPML4E;
+   s64int vmemcpy(struct VM *destVM, void *dest, struct VM *srcVM, void *src, u64int size)
+   {
+   u64int daddr, saddr;
+   u64int i, remain;
+   struct PML4E *destPML4E, *srcPML4E;
 
-    destPML4E = (struct PML4E*)PADDR_TO_VADDR(destVM->cr3);
-    srcPML4E = (struct PML4E*)PADDR_TO_VADDR(srcVM->cr3);
+   destPML4E = (struct PML4E*)PADDR_TO_VADDR(destVM->cr3);
+   srcPML4E = (struct PML4E*)PADDR_TO_VADDR(srcVM->cr3);
 
-    remain = size & 0xfff;
-    size -= remain;
-    for (i=0; i<size; i+=PAGE_SIZE) {
-        daddr = PADDR_TO_VADDR(getPAddr((u64int)dest+i, destPML4E));
-        saddr = PADDR_TO_VADDR(getPAddr((u64int)src+i, srcPML4E));
-        //DBG("daddr:%x,saddr:%x",daddr,saddr);
-        memcpy((void*)daddr, (void*)saddr, PAGE_SIZE);
-    }
-    if (remain) {
-        daddr = PADDR_TO_VADDR(getPAddr((u64int)dest+size, destPML4E));
-        saddr = PADDR_TO_VADDR(getPAddr((u64int)src+size, srcPML4E));
-        //DBG("daddr:%x,saddr:%x",daddr,saddr);
-        memcpy((void*)daddr, (void*)saddr, remain);
-    }
-    return 0;
+   remain = size & 0xfff;
+   size -= remain;
+   for (i=0; i<size; i+=PAGE_SIZE) {
+   daddr = PADDR_TO_VADDR(getPAddr((u64int)dest+i, destPML4E));
+   saddr = PADDR_TO_VADDR(getPAddr((u64int)src+i, srcPML4E));
+//DBG("daddr:%x,saddr:%x",daddr,saddr);
+memcpy((void*)daddr, (void*)saddr, PAGE_SIZE);
+}
+if (remain) {
+daddr = PADDR_TO_VADDR(getPAddr((u64int)dest+size, destPML4E));
+saddr = PADDR_TO_VADDR(getPAddr((u64int)src+size, srcPML4E));
+//DBG("daddr:%x,saddr:%x",daddr,saddr);
+memcpy((void*)daddr, (void*)saddr, remain);
+}
+return 0;
 }
 */
 
