@@ -198,6 +198,7 @@ s64int vfsOpen(const char *path, u64int flags, struct VNode *node)
     char *remainPath, name[MAX_NAME_LEN];
     s64int ret, id;
 
+    memset(node,0,sizeof(struct VNode));
     ret = 0;
     remainPath = (char*)kMalloc(strlen(path)+1);
     parsePath(path, &mt, remainPath);

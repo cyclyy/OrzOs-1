@@ -2162,6 +2162,7 @@ DATA	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^DATA = $(noinst_
 DB	x86emu/x86emu/debug.h	180;"	d
 DB	x86emu/x86emu/debug.h	182;"	d
 DBG	util.h	7;"	d
+DEBUGCON_H	debugcon.h	2;"	d
 DEBUG_BREAK	x86emu/x86emu/debug.h	69;"	d
 DEBUG_BREAK	x86emu/x86emu/debug.h	88;"	d
 DEBUG_BREAK_F	x86emu/x86emu.h	173;"	d
@@ -4096,7 +4097,7 @@ HAVE_GNU_LD	build-newlib/x86_64-pc-elf/libgloss/libnosys/config.h	11;"	d
 HAVE_INITFINI_ARRAY	build-newlib/x86_64-pc-elf/newlib/newlib.h	50;"	d
 HAVE_INITFINI_ARRAY	build-newlib/x86_64-pc-elf/newlib/targ-include/newlib.h	50;"	d
 HAVE_SECTION_ATTRIBUTES	build-newlib/x86_64-pc-elf/libgloss/libnosys/config.h	20;"	d
-HEIGHT	prog/uiserver.c	9;"	d	file:
+HEIGHT	prog/uiserver.c	10;"	d	file:
 HIGHMEM_START_ADDR	sysdef.h	21;"	d
 HOST_CLOOGINC	build-newlib/Makefile	/^HOST_CLOOGINC = $/;"	m
 HOST_CLOOGLIBS	build-newlib/Makefile	/^HOST_CLOOGLIBS = $/;"	m
@@ -8285,8 +8286,8 @@ PRE_UNINSTALL	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^PRE_UNINS
 PRE_UNINSTALL	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^PRE_UNINSTALL = :$/;"	m
 PRIM_OPS_NO_REDEFINE_ASM	x86emu/prim_ops.c	103;"	d	file:
 PROGRAM_H	program.h	2;"	d
-PROG_CFLAGS	Makefile	/^PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g$/;"	m
-PROG_LDFLAGS	Makefile	/^PROG_LDFLAGS=-Tprog.ld -m orzos_x86_64 -z max-page-size=0x1000 -lc$/;"	m
+PROG_CFLAGS	Makefile	/^PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -I\/home\/ora\/cross\/include -g$/;"	m
+PROG_LDFLAGS	Makefile	/^PROG_LDFLAGS=-Tprog.ld -m orzos_x86_64 -z max-page-size=0x1000 -L\/home\/ora\/cross\/lib -L\/home\/ora\/cross\/x86_64-pc-orzos\/lib -lcairo -lc -lm$/;"	m
 PROG_SOURCES	Makefile	/^PROG_SOURCES = prog\/uiproto.o prog\/uiserver.o prog\/init.o prog\/server.o prog\/client.o syscall.o $/;"	m
 PSS	build-newlib/x86_64-pc-elf/newlib/libc/Makefile	/^PSS = libc.ps$/;"	m
 PSS	build-newlib/x86_64-pc-elf/newlib/libm/Makefile	/^PSS = libm.ps$/;"	m
@@ -9520,7 +9521,6 @@ RsvdMaskSize	video/vbe.h	/^    unsigned char   RsvdMaskSize;$/;"	m	struct:VBEMod
 SAVE_IP_CS	x86emu/x86emu/debug.h	119;"	d
 SAVE_IP_CS	x86emu/x86emu/debug.h	129;"	d
 SCHEDULE_H	schedule.h	2;"	d
-SCREEN_H	screen.h	2;"	d
 SED	build-newlib/Makefile	/^SED = \/bin\/sed$/;"	m
 SED	build-newlib/x86_64-pc-elf/newlib/Makefile	/^SED = \/bin\/sed$/;"	m
 SED	build-newlib/x86_64-pc-elf/newlib/libc/Makefile	/^SED = \/bin\/sed$/;"	m
@@ -10321,7 +10321,7 @@ TLSFHeader	tlsf.h	/^struct TLSFHeader {$/;"	s
 TLSF_H	tlsf.h	20;"	d
 TLSF_SIGNATURE	tlsf.h	39;"	d
 TOGGLE_FLAG	x86emu/x86emu/regs.h	205;"	d
-TOLOWER	util.c	501;"	d	file:
+TOLOWER	util.c	502;"	d	file:
 TOP	build-newlib/x86_64-pc-elf/libgloss/Makefile	/^TOP = .$/;"	m
 TOPLEVEL_CONFIGURE_ARGUMENTS	build-newlib/Makefile	/^TOPLEVEL_CONFIGURE_ARGUMENTS=..\/newlib-1.19.0\/configure --target=x86_64-pc-elf --prefix=\/home\/ora\/OrzOs\/src\/newlib$/;"	m
 TRACE_AND_STEP	x86emu/x86emu/debug.h	149;"	d
@@ -10614,7 +10614,7 @@ VideoModePtr_low	video/vbe.h	/^    unsigned char   VideoModePtr_low;$/;"	m	struc
 Vnode	vfs2.h	/^struct Vnode {$/;"	s
 VnodeOperations	vfs2.h	/^struct VnodeOperations {$/;"	s
 WAITQUEUE_H	waitqueue.h	2;"	d
-WIDTH	prog/uiserver.c	8;"	d	file:
+WIDTH	prog/uiserver.c	9;"	d	file:
 WINDMC	build-newlib/Makefile	/^WINDMC = windmc$/;"	m
 WINDMC_FOR_BUILD	build-newlib/Makefile	/^WINDMC_FOR_BUILD = $(WINDMC)$/;"	m
 WINDMC_FOR_TARGET	build-newlib/Makefile	/^WINDMC_FOR_TARGET=x86_64-pc-elf-windmc$/;"	m
@@ -13350,8 +13350,8 @@ currentDMI	video/display.c	/^static struct DisplayModeInfo currentDMI;$/;"	v	typ
 currentTask	task.c	/^struct Task *currentTask = 0;$/;"	v	typeref:struct:Task
 current_stage	build-newlib/Makefile	/^current_stage = ""$/;"	m
 current_task	task2.c	/^task_t *current_task = 0;$/;"	v
-cursor_x	screen.c	/^u8int cursor_x, cursor_y;$/;"	v
-cursor_y	screen.c	/^u8int cursor_x, cursor_y;$/;"	v
+cursor_x	debugcon.c	/^u8int cursor_x, cursor_y;$/;"	v
+cursor_y	debugcon.c	/^u8int cursor_x, cursor_y;$/;"	v
 d	file.h	/^    dir_t *d;$/;"	m	struct:fd_struct
 d_ptr	elf.h	/^      Elf32_Addr d_ptr;			\/* Address value *\/$/;"	m	union:__anon46::__anon47
 d_ptr	elf.h	/^      Elf64_Addr d_ptr;			\/* Address value *\/$/;"	m	union:__anon48::__anon49
@@ -13515,6 +13515,11 @@ db	loader32.s	/^db 0                         ; Granularity.$/;"	l
 db	loader32.s	/^db 00100000b                 ; Granularity.$/;"	l
 db	loader32.s	/^db 10010010b                 ; Access.$/;"	l
 db	loader32.s	/^db 10011010b                 ; Access.$/;"	l
+dbgPort	debugcon.c	/^u8int dbgPort = 0xe9;$/;"	v
+dbgPutch	debugcon.c	/^void dbgPutch(char c)$/;"	f
+dbgPuthex	debugcon.c	/^void dbgPuthex(u64int i)$/;"	f
+dbgPutn	debugcon.c	/^void dbgPutn(u64int i)$/;"	f
+dbgPuts	debugcon.c	/^void dbgPuts(const char *s)$/;"	f
 dd	loader32.s	/^dd  0                       ; End of kernel '.data' section.$/;"	l
 dd	loader32.s	/^dd  0                       ; End of kernel.$/;"	l
 dd	loader32.s	/^dd  0                       ; Grub graphical mode_type: linear mode$/;"	l
@@ -15343,11 +15348,11 @@ irqDispatcher	interrupt.c	/^void irqDispatcher(struct RegisterState *rs)$/;"	f
 irq_common_stub	isr.s	/^irq_common_stub:$/;"	l
 isEmptyEntry	fs/bootfs.c	/^s64int isEmptyEntry(char *buf)$/;"	f
 isValidElfHeader	elfloader.c	/^s64int isValidElfHeader(Elf64_Ehdr *ehdr)$/;"	f
-isdigit	util.c	506;"	d	file:
+isdigit	util.c	507;"	d	file:
 isrDispatcher	interrupt.c	/^void isrDispatcher(struct RegisterState *rs)$/;"	f
 isr_common_stub	isr.s	/^isr_common_stub:$/;"	l
 ist	dtable.h	/^        u64int ist[7];$/;"	m	struct:TSS
-isxdigit	util.c	502;"	d	file:
+isxdigit	util.c	503;"	d	file:
 ja	loader32.s	/^ja  .L1$/;"	l
 jb	loader32.s	/^jb noinitrd$/;"	l
 jb	loader32.s	/^jb nokernel$/;"	l
@@ -16843,7 +16848,6 @@ mov	loader32.s	/^mov rsi, [rbx+32]$/;"	l
 mov	loader32.s	/^mov rsp, kstack$/;"	l
 mov	loader32.s	/^mov ss, ax                    ; Set the G-segment to the A-register.$/;"	l
 moveKernelStack	task.c	/^void moveKernelStack()$/;"	f
-move_cursor	screen.c	/^void move_cursor()$/;"	f
 move_stack	task2.c	/^void move_stack(u32int new_start, u32int sz)$/;"	f
 mqAppend	message.c	/^void mqAppend(struct MessageQueue *mq,struct Message *msg)$/;"	f
 mqCreate	message.c	/^struct MessageQueue *mqCreate()$/;"	f
@@ -18016,9 +18020,11 @@ ramfs_subnodes	fs/ramfs.c	/^s32int   ramfs_subnodes(vnode_t *dir, vnode_t ***nod
 ramfs_vnode_priv_t	fs/ramfs.c	/^} ramfs_vnode_priv_t;$/;"	t	typeref:struct:__anon76	file:
 ramfs_write	fs/ramfs.c	/^s32int   ramfs_write   (file_t *f, u32int offset, u32int sz, u8int *buf)$/;"	f
 rax	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
+rax	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp, rax, rbx, rcx, rdx;$/;"	m	struct:Task
 rbp	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
-rbp	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp;$/;"	m	struct:Task
+rbp	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp, rax, rbx, rcx, rdx;$/;"	m	struct:Task
 rbx	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
+rbx	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp, rax, rbx, rcx, rdx;$/;"	m	struct:Task
 rcl_byte	x86emu/prim_ops.c	/^u8 rcl_byte(u8 d, u8 s)$/;"	f
 rcl_long	x86emu/prim_ops.c	/^u32 rcl_long(u32 d, u8 s)$/;"	f
 rcl_word	x86emu/prim_ops.c	/^u16 rcl_word(u16 d, u8 s)$/;"	f
@@ -18026,12 +18032,14 @@ rcr_byte	x86emu/prim_ops.c	/^u8 rcr_byte(u8 d, u8 s)$/;"	f
 rcr_long	x86emu/prim_ops.c	/^u32 rcr_long(u32 d, u8 s)$/;"	f
 rcr_word	x86emu/prim_ops.c	/^u16 rcr_word(u16 d, u8 s)$/;"	f
 rcx	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
+rcx	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp, rax, rbx, rcx, rdx;$/;"	m	struct:Task
 rdb	x86emu/sys.c	/^u8 X86API rdb($/;"	f
 rdi	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 rdl	x86emu/sys.c	/^u32 X86API rdl($/;"	f
 rdmsr	loader32.s	/^rdmsr                        ; Read from the model-specific register.$/;"	l
 rdw	x86emu/sys.c	/^u16 X86API rdw($/;"	f
 rdx	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
+rdx	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp, rax, rbx, rcx, rdx;$/;"	m	struct:Task
 read	device.h	/^    s64int (*read)(struct VNode *node, u64int size, char *buffer);$/;"	m	struct:DeviceOperation
 read	vfs.h	/^    s64int (*read)(struct VNode *node, u64int size, char *buffer);$/;"	m	struct:FileSystemOperation
 read	vfs2.h	/^    s64int   (*read)    (file_t *f, u64int offset, u64int sz, u8int *buffer);$/;"	m	struct:VnodeOperations
@@ -18086,8 +18094,8 @@ ri_cprmask	elf.h	/^  Elf32_Word	ri_cprmask[4];		\/* Coprocessor registers used *
 ri_gp_value	elf.h	/^  Elf32_Sword	ri_gp_value;		\/* $gp register value *\/$/;"	m	struct:__anon69
 ri_gprmask	elf.h	/^  Elf32_Word	ri_gprmask;		\/* General registers used *\/$/;"	m	struct:__anon69
 rip	interrupt.h	/^    u64int rip, cs, rflags, rsp0, ss0;$/;"	m	struct:RegisterState
-rip	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp;$/;"	m	struct:Task
-rip3	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp;$/;"	m	struct:Task
+rip	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp, rax, rbx, rcx, rdx;$/;"	m	struct:Task
+rip3	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp, rax, rbx, rcx, rdx;$/;"	m	struct:Task
 rmdir	vfs.h	/^    s64int (*rmdir)(struct FileSystem *fs, s64int id, const char *name);$/;"	m	struct:FileSystemOperation
 rmdir	vfs2.h	/^    s64int   (*rmdir)   (vnode_t *dir, char *name);$/;"	m	struct:VnodeOperations
 rol_byte	x86emu/prim_ops.c	/^u8 rol_byte(u8 d, u8 s)$/;"	f
@@ -18110,13 +18118,13 @@ rqPrev	task.h	/^    struct Task *rqNext, *rqPrev;$/;"	m	struct:Task	typeref:stru
 rqRemove	schedule.c	/^void rqRemove(struct Task *task)$/;"	f
 rsi	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 rsp	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
-rsp	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp;$/;"	m	struct:Task
+rsp	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp, rax, rbx, rcx, rdx;$/;"	m	struct:Task
 rsp0	dtable.h	/^        u64int rsp0;       $/;"	m	struct:TSS
 rsp0	interrupt.h	/^    u64int rip, cs, rflags, rsp0, ss0;$/;"	m	struct:RegisterState
-rsp0	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp;$/;"	m	struct:Task
+rsp0	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp, rax, rbx, rcx, rdx;$/;"	m	struct:Task
 rsp1	dtable.h	/^        u64int rsp1;$/;"	m	struct:TSS
 rsp2	dtable.h	/^        u64int rsp2;$/;"	m	struct:TSS
-rsp3	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp;$/;"	m	struct:Task
+rsp3	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp, rax, rbx, rcx, rdx;$/;"	m	struct:Task
 runQueue	schedule.c	/^struct Task *runQueue[MLFQ_LEVELS] = {0};$/;"	v	typeref:struct:Task
 s	build-newlib/Makefile	/^	s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \\$/;"	m
 s16	x86emu/x86emu/types.h	/^typedef short 				s16;$/;"	t
@@ -18261,12 +18269,6 @@ sbindir	build-newlib/x86_64-pc-orzos/newlib/libm/machine/Makefile	/^sbindir = ${
 sbindir	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^sbindir = ${exec_prefix}\/sbin$/;"	m
 sbindir	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^sbindir = ${exec_prefix}\/sbin$/;"	m
 schedule	schedule.c	/^void schedule()$/;"	f
-scr_clear	screen.c	/^void scr_clear()$/;"	f
-scr_putch	screen.c	/^void scr_putch(char c)$/;"	f
-scr_puthex	screen.c	/^void scr_puthex(u64int i)$/;"	f
-scr_putn	screen.c	/^void scr_putn(u64int i)$/;"	f
-scr_puts	screen.c	/^void scr_puts(const char *s)$/;"	f
-scroll	screen.c	/^void scroll()$/;"	f
 section	elf.h	/^  Elf32_Section section;	\/* Section header index of section affected,$/;"	m	struct:__anon70
 seek	device.h	/^    s64int (*seek)(struct VNode *node, s64int offset, s64int pos);$/;"	m	struct:DeviceOperation
 seek	vfs.h	/^    s64int (*seek)(struct VNode *node, s64int offset, s64int pos);$/;"	m	struct:FileSystemOperation
@@ -18969,6 +18971,7 @@ taskQueue	task.c	/^struct Task *taskQueue = 0;$/;"	v	typeref:struct:Task
 task_queue	task2.c	/^task_t *task_queue = 0;$/;"	v
 task_t	task2.h	/^} task_t;$/;"	t	typeref:struct:task
 tenbytes	x86emu/x86emu/fpu_regs.h	/^    s8                  tenbytes[10];$/;"	m	union:x86_fpu_reg_u
+testE9	main.c	/^void testE9()$/;"	f
 testThread	task.c	/^void testThread()$/;"	f
 testVBE	main.c	/^void testVBE()$/;"	f
 test_byte	x86emu/prim_ops.c	/^void test_byte(u8 d, u8 s)$/;"	f
@@ -19402,7 +19405,6 @@ vfs_rmdir	vfs2.c	/^s32int          vfs_rmdir   (char *path)$/;"	f
 vfs_root	vfs2.c	/^vnode_t     *vfs_root   = 0;$/;"	v
 vfs_subnodes	vfs2.c	/^s32int          vfs_subnodes(char *path, vnode_t ***nodes)$/;"	f
 vfsmount_t	vfs2.h	/^} vfsmount_t;$/;"	t	typeref:struct:__anon6
-video_addr	screen.c	/^u16int *video_addr = (u16int *)0xb8000;$/;"	v
 vm	task.h	/^    struct VM *vm;$/;"	m	struct:Task	typeref:struct:Task::VM
 vm	task2.h	/^    vm_t *vm;$/;"	m	struct:task
 vm	vm.h	/^    struct vm_struct *vm;$/;"	m	struct:vma_struct	typeref:struct:vma_struct::vm_struct
@@ -19531,7 +19533,6 @@ x86emu_print_int_vect	x86emu/debug.c	/^void x86emu_print_int_vect (u16 iv)$/;"	f
 x86emu_single_step	x86emu/debug.c	/^void x86emu_single_step (void)$/;"	f
 x_reg	x86emu/x86emu/regs.h	/^	u16 filler0, x_reg;$/;"	m	struct:__anon17
 x_reg	x86emu/x86emu/regs.h	/^	u16 x_reg;$/;"	m	struct:__anon20
-xchg	loader32.s	/^xchg bx,bx$/;"	l
 xor	loader32.s	/^xor eax, eax       ; Nullify the A-register.$/;"	l
 xor	loader32.s	/^xor rsi, rsi$/;"	l
 xor_byte	x86emu/prim_ops.c	/^u8 xor_byte(u8 d, u8 s)$/;"	f

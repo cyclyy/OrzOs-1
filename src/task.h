@@ -22,7 +22,7 @@ struct Task {
     struct VM *vm;
     struct Program *prog;
     struct HandleTable *handleTable;
-    u64int rsp0, rsp3, rip3, rip, rsp, rbp;
+    u64int rsp0, rsp3, rip3, rip, rsp, rbp, rax, rbx, rcx, rdx;
     struct Task *next, *prev;
     struct Task *rqNext, *rqPrev;
     struct Task *sqNext, *sqPrev;

@@ -4,6 +4,7 @@
 #include "syscall.h"
 #include <stdlib.h>
 #include <string.h>
+#include <png.h>
 
 #define WIDTH 800
 #define HEIGHT 600

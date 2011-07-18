@@ -2,7 +2,6 @@
 
 #include "except.h"
 #include "sysdef.h"
-#include "screen.h"
 #include "interrupt.h"
 #include "kmm.h"
 #include "vmm.h"
@@ -58,10 +57,13 @@ void testVBE()
     printk("Switch: %x\n", M.x86.R_EAX);
 }
 
+void testE9()
+{
+}
+
 u64int kmain(struct BootInfo *si)
 {
-    scr_clear();  
-    scr_puts("Booting...\n");
+    printk("Booting...\n");
 
     setBootInfo(si);
     initInterrupt();
@@ -79,7 +81,7 @@ u64int kmain(struct BootInfo *si)
     pci_Init();
     ide_Init();
     ext2fs_Init();
-    //testVBE();
+    testE9();
     vfsMount("C","Device:/Disk0Part0","ext2fs",0,0);
     struct VNode node;
     char buf[100];

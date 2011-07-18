@@ -16,7 +16,7 @@ void schedule()
 {
     struct Task *newTask;
     u64int cprio,nprio,i;
-    u64int rsp, rbp ,rip;
+    u64int rsp, rbp ,rip, rax, rbx, rcx, rdx;
 
     asm("cli");
     cprio = currentTask->priority;
@@ -54,15 +54,30 @@ void schedule()
 
     asm volatile("mov %%rsp, %0" : "=r"(rsp) );
     asm volatile("mov %%rbp, %0" : "=r"(rbp) );
+    asm volatile("mov %%rax, %0" : "=r"(rax) );
+    asm volatile("mov %%rbx, %0" : "=r"(rbx) );
+    asm volatile("mov %%rcx, %0" : "=r"(rcx) );
+    asm volatile("mov %%rdx, %0" : "=r"(rdx) );
     rip = readRIP();
 
     if (rip == 0x123) {
         // newTask
+        asm("cli;               \
+                mov %0, %%rax;     \
+                mov %1, %%rbx;     \
+                mov %2, %%rcx;     \
+                mov %3, %%rdx;     \
+                sti"               
+                ::"a"(currentTask->rax), "b"(currentTask->rbx), "c"(currentTask->rcx), "d"(currentTask->rdx));
         return;
     }
     currentTask->rsp = rsp;
     currentTask->rbp = rbp;
     currentTask->rip = rip;
+    currentTask->rax = rax;
+    currentTask->rbx = rbx;
+    currentTask->rcx = rcx;
+    currentTask->rdx = rdx;
 
     rsp = newTask->rsp;
     rbp = newTask->rbp;
@@ -77,7 +92,6 @@ void schedule()
             mov %2, %%rbx;     \
             mov %3, %%cr3;     \
             movq $0x123, %%rax;\
-            sti;               \
             jmp *%%rbx"
             ::"a"(rsp), "c"(rbp), "b"(rip), "d"(currentTask->vm->cr3));
 

@@ -3,7 +3,7 @@
 #include "util.h"
 #include "task.h"
 #include "vfs.h"
-#include "screen.h"
+#include "debugcon.h"
 #include "syscall/ozipc.h"
 #include "syscall/oztask.h"
 #include "syscall/ozfs.h"
@@ -14,7 +14,7 @@ void syscallTest();
 
 void *syscalls[N_SYSCALLS] = {
     &syscallTest,
-    &scr_putch,
+    &dbgPutch,
     OzCreateServer,
     OzDestroyServer,
     OzConnect,

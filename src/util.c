@@ -1,5 +1,5 @@
 #include "util.h"
-#include "screen.h"
+#include "debugcon.h"
 #include "kmm.h"
 
 void outb(u16int port, u8int value)
@@ -386,34 +386,34 @@ void printk(const char *fmt, ...)
                 fmt++;
                 switch (*fmt) {
                     case '%':
-                        scr_putch(*fmt);
+                        dbgPutch(*fmt);
                         fmt++;
                         break;
                     case 'c':
                         ch = va_arg(ap, int);
-                        scr_putch(ch);
+                        dbgPutch(ch);
                         fmt++;
                         break;
                     case 's':
                         s = va_arg(ap, char*);
-                        scr_puts(s);
+                        dbgPuts(s);
                         fmt++;
                         break;
                     case 'd':
                         i = va_arg(ap, u64int);
-                        scr_putn(i);
+                        dbgPutn(i);
                         fmt++;
                         break;
                     case 'p':
                     case 'x':
-                        scr_puts("0x");
+                        dbgPuts("0x");
                         i = va_arg(ap, u64int);
-                        scr_puthex(i);
+                        dbgPuthex(i);
                         fmt++;
                         break;
                     default:
-                        scr_putch('%');
-                        scr_putch(*fmt);
+                        dbgPutch('%');
+                        dbgPutch(*fmt);
                         fmt++;
                         break;
                 }
@@ -422,37 +422,38 @@ void printk(const char *fmt, ...)
                 fmt++;
                 switch (*fmt) {
                     case '\\':
-                        scr_putch('\\');
+                        dbgPutch('\\');
                         fmt++;
                         break;
                     case '"':
-                        scr_putch('"');
+                        dbgPutch('"');
                         fmt++;
                         break;
                     case 'b':
-                        scr_putch('\b');
+                        dbgPutch('\b');
                         fmt++;
                         break;
                     case 't':
-                        scr_putch('\t');
+                        dbgPutch('\t');
                         fmt++;
                         break;
                     case 'n':
-                        scr_putch('\n');
+                        dbgPutch('\n');
+                        dbgPutch('\r');
                         fmt++;
                         break;
                     case 'r':
-                        scr_putch('\r');
+                        dbgPutch('\r');
                         fmt++;
                         break;
                     default:
-                        scr_putch('\\');
-                        scr_putch(*fmt);
+                        dbgPutch('\\');
+                        dbgPutch(*fmt);
                         fmt++;
                         break;
                 }
             default:
-                scr_putch(*fmt++);
+                dbgPutch(*fmt++);
         }
     }
 

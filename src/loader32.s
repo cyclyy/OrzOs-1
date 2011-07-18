@@ -144,7 +144,6 @@ mov fs, ax                    ; Set the F-segment to the A-register.
 mov gs, ax                    ; Set the G-segment to the A-register.
 mov ss, ax                    ; Set the G-segment to the A-register.
 
-xchg bx,bx
 pop rbx
 ; High memory size
 mov rdi, startupinfo.mem
