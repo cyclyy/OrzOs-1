@@ -12773,8 +12773,8 @@ bootfsStat	fs/bootfs.c	/^s64int bootfsStat(struct FileSystem *fs, s64int id, str
 bootfsUnmount	fs/bootfs.c	/^s64int bootfsUnmount(struct FileSystemDriver *driver, struct FileSystem *fs)$/;"	f
 brk	program.h	/^    u64int brk;$/;"	m	struct:Program
 brk	vm.h	/^    u32int brk;$/;"	m	struct:vm_struct
-bswap_32	x86emu/ops2.c	43;"	d	file:
-bswap_32	x86emu/ops2.c	44;"	d	file:
+bswap_32	x86emu/ops2.c	45;"	d	file:
+bswap_32	x86emu/ops2.c	46;"	d	file:
 buf	fs/bootfs.c	/^    char *buf;$/;"	m	struct:BootFSData	file:
 buf	kobject.c	/^            char *buf;$/;"	m	struct:KDirectoryProcessData::__anon1::__anon2	file:
 buf	prog/uidef.h	/^    char buf[MAX_UI_CONSOLE_WRITE_LEN];$/;"	m	struct:UIConsoleWriteRequest
@@ -19564,5 +19564,5 @@ xor	loader32.s	/^xor rsi, rsi$/;"	l
 xor_byte	x86emu/prim_ops.c	/^u8 xor_byte(u8 d, u8 s)$/;"	f
 xor_long	x86emu/prim_ops.c	/^u32 xor_long(u32 d, u32 s)$/;"	f
 xor_word	x86emu/prim_ops.c	/^u16 xor_word(u16 d, u16 s)$/;"	f
-xorl	x86emu/ops2.c	72;"	d	file:
+xorl	x86emu/ops2.c	74;"	d	file:
 zero	dtable.h	/^    u8int zero;$/;"	m	struct:IDTEntry
