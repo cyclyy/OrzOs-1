@@ -39,3 +39,22 @@
    xscale-*-*)
  	sys_dir=arm
  	if [ "x${newlib_may_supply_syscalls}" = "xno" ] ; then
+--- ../../newlib-1.19.0/newlib/libc/machine/x86_64/setjmp.S	2011-06-29 15:24:24.456242253 +0800
++++ newlib/libc/machine/x86_64/setjmp.S	2011-07-22 21:43:26.637257000 +0800
+@@ -40,7 +40,7 @@
+ 
+   movq     8 (rdi), rbp
+ 
+-  __CLI
++/*  __CLI */
+   movq    48 (rdi), rsp
+   pushq   56 (rdi)
+   movq     0 (rdi), rbx
+@@ -48,6 +48,6 @@
+   movq    24 (rdi), r13
+   movq    32 (rdi), r14
+   movq    40 (rdi), r15
+-  __STI
++/*  __STI */
+ 
+   ret

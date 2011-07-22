@@ -132,9 +132,17 @@ s64int bootfsRoot(struct FileSystem *fs)
 
 s64int bootfsOpen(struct FileSystem *fs, s64int id, struct VNode *node)
 {
+    struct TarHeader *hd;
+    struct BootFSData *fsData;
     node->fs = fs;
     node->id = id;
     node->offset = 0;
+
+    fsData = (struct BootFSData*)node->fs->priv;
+    hd = fsData->headerList[node->id-1];
+    if (hd->link != TAR_LINK_FILE)
+        return -1;
+    node->size = strtoul(hd->size, 0, 8);
     return 0;
 }
 
@@ -147,15 +155,14 @@ s64int bootfsRead(struct VNode *node, u64int size, char *buffer)
 {
     struct TarHeader *hd;
     struct BootFSData *fsData;
-    s64int ret, fileSize;
+    s64int ret;
 
     fsData = (struct BootFSData*)node->fs->priv;
     hd = fsData->headerList[node->id-1];
     if (hd->link != TAR_LINK_FILE)
         return -1;
-    fileSize = strtoul(hd->size, 0, 8);
-    if ((node->offset>=0) && (node->offset<=fileSize)) {
-        ret = MIN(size, fileSize - node->offset);
+    if ((node->offset>=0) && (node->offset<=node->size)) {
+        ret = MIN(size, node->size - node->offset);
         memcpy(buffer, ((char*)hd) + 512 + node->offset, ret);
         node->offset += ret;
     } else 

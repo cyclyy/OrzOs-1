@@ -21,12 +21,24 @@
 
 #include "sysdef.h"
 
+#define PMEM_CHUNK_FREE     1
+
+struct PhysicalMemoryChunk
+{
+    u32int recLen;
+    u64int start;
+    u64int size;
+    u32int type;
+} __attribute__((packed));
+
 struct BootInfo {
     u64int memory;
     u64int initrdAddr;
     u64int initrdEnd;
     u64int freeMemStartAddr;
     u64int initialStack;
+    u64int mmapSize;
+    struct PhysicalMemoryChunk *chunks;
 };
 
 struct BootInfo *getBootInfo();

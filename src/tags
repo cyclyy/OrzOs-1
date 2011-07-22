@@ -950,6 +950,8 @@ BootFSData	fs/bootfs.c	/^struct BootFSData {$/;"	s	file:
 BootInfo	bootinfo.h	/^struct BootInfo {$/;"	s
 BytesPerScanline	video/vbe.h	/^    u16int  BytesPerScanline;$/;"	m	struct:VBEModeInfoBlock
 C	x86emu/x86emu/regs.h	/^	i386_general_register A, B, C, D;$/;"	m	struct:i386_general_regs
+CAIRO_CFLAGS	Makefile	/^CAIRO_CFLAGS = -I\/home\/ora\/cross\/include\/cairo -I\/home\/ora\/cross\/include\/pixman-1 $/;"	m
+CAIRO_LIBS	Makefile	/^CAIRO_LIBS = -L\/home\/ora\/cross\/lib\/gcc\/x86_64-pc-orzos\/4.5.0 -lcairo -lpixman-1 -lgcc$/;"	m
 CALL_TRACE	x86emu/x86emu/debug.h	164;"	d
 CALL_TRACE	x86emu/x86emu/debug.h	175;"	d
 CC	Makefile	/^CC = x86_64-pc-orzos-gcc$/;"	m
@@ -3943,6 +3945,8 @@ FLAGS_TO_PASS	build-newlib/x86_64-pc-orzos/newlib/Makefile	/^FLAGS_TO_PASS = $(A
 FLEX	build-newlib/Makefile	/^FLEX = \/home\/ora\/OrzOs\/src\/newlib-1.19.0\/missing flex$/;"	m
 FLI_OFFSET	tlsf.h	27;"	d
 FLOOR_PAGE_ALIGN	paging.h	7;"	d
+FREETYPE2_CFLAGS	Makefile	/^FREETYPE2_CFLAGS = -I\/home\/ora\/cross\/include\/freetype2$/;"	m
+FREETYPE2_LIBS	Makefile	/^FREETYPE2_LIBS = -lfreetype -lz$/;"	m
 FS	x86emu/x86emu/regs.h	/^    u16 CS, DS, SS, ES, FS, GS;$/;"	m	struct:i386_segment_regs
 F_AF	x86emu/x86emu/regs.h	197;"	d
 F_ALL_CALC	x86emu/x86emu/regs.h	218;"	d
@@ -4097,7 +4101,7 @@ HAVE_GNU_LD	build-newlib/x86_64-pc-elf/libgloss/libnosys/config.h	11;"	d
 HAVE_INITFINI_ARRAY	build-newlib/x86_64-pc-elf/newlib/newlib.h	50;"	d
 HAVE_INITFINI_ARRAY	build-newlib/x86_64-pc-elf/newlib/targ-include/newlib.h	50;"	d
 HAVE_SECTION_ATTRIBUTES	build-newlib/x86_64-pc-elf/libgloss/libnosys/config.h	20;"	d
-HEIGHT	prog/uiserver.c	10;"	d	file:
+HEIGHT	prog/uiserver.c	12;"	d	file:
 HIGHMEM_START_ADDR	sysdef.h	21;"	d
 HOST_CLOOGINC	build-newlib/Makefile	/^HOST_CLOOGINC = $/;"	m
 HOST_CLOOGLIBS	build-newlib/Makefile	/^HOST_CLOOGLIBS = $/;"	m
@@ -8004,6 +8008,7 @@ PF_PARISC_SBP	elf.h	1859;"	d
 PF_R	elf.h	564;"	d
 PF_W	elf.h	563;"	d
 PF_X	elf.h	562;"	d
+PMEM_CHUNK_FREE	bootinfo.h	24;"	d
 PML4E	paging.h	/^struct PML4E {$/;"	s
 POSIX_OBJECTLIST	build-newlib/x86_64-pc-elf/newlib/Makefile	/^POSIX_OBJECTLIST = $/;"	m
 POSIX_OBJECTLIST	build-newlib/x86_64-pc-orzos/newlib/Makefile	/^POSIX_OBJECTLIST = $/;"	m
@@ -8286,8 +8291,8 @@ PRE_UNINSTALL	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^PRE_UNINS
 PRE_UNINSTALL	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^PRE_UNINSTALL = :$/;"	m
 PRIM_OPS_NO_REDEFINE_ASM	x86emu/prim_ops.c	103;"	d	file:
 PROGRAM_H	program.h	2;"	d
-PROG_CFLAGS	Makefile	/^PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -I\/home\/ora\/cross\/include -g$/;"	m
-PROG_LDFLAGS	Makefile	/^PROG_LDFLAGS=-Tprog.ld -m orzos_x86_64 -z max-page-size=0x1000 -L\/home\/ora\/cross\/lib -L\/home\/ora\/cross\/x86_64-pc-orzos\/lib -lcairo -lc -lm$/;"	m
+PROG_CFLAGS	Makefile	/^PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -Ix86emu -Wall -I. -I\/home\/ora\/cross\/include $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g$/;"	m
+PROG_LDFLAGS	Makefile	/^PROG_LDFLAGS=-Tprog.ld -m orzos_x86_64 -z max-page-size=0x1000 -L\/home\/ora\/cross\/lib -L\/home\/ora\/cross\/x86_64-pc-orzos\/lib $(FREETYPE2_LIBS) $(CAIRO_LIBS) -lc -lm$/;"	m
 PROG_SOURCES	Makefile	/^PROG_SOURCES = prog\/uiproto.o prog\/uiserver.o prog\/init.o prog\/server.o prog\/client.o syscall.o $/;"	m
 PSS	build-newlib/x86_64-pc-elf/newlib/libc/Makefile	/^PSS = libc.ps$/;"	m
 PSS	build-newlib/x86_64-pc-elf/newlib/libm/Makefile	/^PSS = libm.ps$/;"	m
@@ -8349,6 +8354,7 @@ PageDirectoryPointer	paging.h	/^struct PageDirectoryPointer {$/;"	s
 PageTable	paging.h	/^struct PageTable {$/;"	s
 Partition	disk.h	/^struct Partition {$/;"	s
 PhysBasePtr	video/vbe.h	/^    u32int          PhysBasePtr;$/;"	m	struct:VBEModeInfoBlock
+PhysicalMemoryChunk	bootinfo.h	/^struct PhysicalMemoryChunk$/;"	s
 Pixel	prog/uiserver.c	/^struct Pixel$/;"	s	file:
 Program	program.h	/^struct Program {$/;"	s
 QUIET	Makefile	/^QUIET = @$/;"	m
@@ -10614,7 +10620,7 @@ VideoModePtr_low	video/vbe.h	/^    unsigned char   VideoModePtr_low;$/;"	m	struc
 Vnode	vfs2.h	/^struct Vnode {$/;"	s
 VnodeOperations	vfs2.h	/^struct VnodeOperations {$/;"	s
 WAITQUEUE_H	waitqueue.h	2;"	d
-WIDTH	prog/uiserver.c	9;"	d	file:
+WIDTH	prog/uiserver.c	11;"	d	file:
 WINDMC	build-newlib/Makefile	/^WINDMC = windmc$/;"	m
 WINDMC_FOR_BUILD	build-newlib/Makefile	/^WINDMC_FOR_BUILD = $(WINDMC)$/;"	m
 WINDMC_FOR_TARGET	build-newlib/Makefile	/^WINDMC_FOR_TARGET=x86_64-pc-elf-windmc$/;"	m
@@ -12512,6 +12518,7 @@ am_libm_la_OBJECTS	build-newlib/x86_64-pc-elf/newlib/Makefile	/^am_libm_la_OBJEC
 am_libm_la_OBJECTS	build-newlib/x86_64-pc-elf/newlib/libm/Makefile	/^am_libm_la_OBJECTS =$/;"	m
 am_libm_la_OBJECTS	build-newlib/x86_64-pc-orzos/newlib/Makefile	/^am_libm_la_OBJECTS =$/;"	m
 am_libm_la_OBJECTS	build-newlib/x86_64-pc-orzos/newlib/libm/Makefile	/^am_libm_la_OBJECTS =$/;"	m
+analyseTotalMemory	kmm.c	/^static u64int analyseTotalMemory()$/;"	f	file:
 and	loader32.s	/^and rax, 0xfffffffffffff000$/;"	l
 and_byte	x86emu/prim_ops.c	/^u8 and_byte(u8 d, u8 s)$/;"	f
 and_long	x86emu/prim_ops.c	/^u32 and_long(u32 d, u32 s)$/;"	f
@@ -13298,6 +13305,7 @@ chobj	build-newlib/x86_64-pc-orzos/newlib/libm/common/Makefile	/^chobj = s_cbrt.
 chobj	build-newlib/x86_64-pc-orzos/newlib/libm/complex/Makefile	/^chobj = cabs.def cacos.def cacosh.def carg.def \\$/;"	m
 chobj	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^chobj = w_acos.def w_acosh.def w_asin.def s_asinh.def \\$/;"	m
 chobj	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^chobj = eacosh.def \\$/;"	m
+chunks	bootinfo.h	/^    struct PhysicalMemoryChunk *chunks;$/;"	m	struct:BootInfo	typeref:struct:BootInfo::PhysicalMemoryChunk
 classCode	pci.h	/^    u8int revision, progIF, subclass, classCode;$/;"	m	struct:PCIConfig
 cleanup	module.h	/^    module_cleanup_func cleanup;$/;"	m	struct:module_struct
 cleanupBuffers	i8042.c	/^void cleanupBuffers()$/;"	f
@@ -13756,6 +13764,7 @@ dq	loader32.s	/^dq 0                        ; Initrd end$/;"	l
 dq	loader32.s	/^dq 0                        ; Memory info.$/;"	l
 dq	loader32.s	/^dq 0$/;"	l
 dq	loader32.s	/^dq gdt64                     ; Base.$/;"	l
+drawBitmap	prog/uiserver.c	/^void drawBitmap(FT_Bitmap *bitmap, FT_Int x, FT_Int y)$/;"	f
 drive	ide.c	/^    u8int drive;       \/\/ 0 (Master Drive) or 1 (Slave Drive).$/;"	m	struct:ideDevice	file:
 driver	pci.h	/^    struct PCIDriver *driver;$/;"	m	struct:PCIDevice	typeref:struct:PCIDevice::PCIDriver
 driver	vfs.h	/^    struct FileSystemDriver *driver;$/;"	m	struct:FileSystem	typeref:struct:FileSystem::FileSystemDriver
@@ -14871,6 +14880,7 @@ idiv_long	x86emu/prim_ops.c	/^void idiv_long(u32 s)$/;"	f
 idiv_word	x86emu/prim_ops.c	/^void idiv_word(u16 s)$/;"	f
 idtPtr	dtable.c	/^struct IDTPtr idtPtr;$/;"	v	typeref:struct:IDTPtr
 idtTable	dtable.c	/^struct IDTEntry idtTable[256];$/;"	v	typeref:struct:IDTEntry
+image	prog/uiserver.c	/^unsigned char image[HEIGHT][WIDTH];$/;"	v
 imul_byte	x86emu/prim_ops.c	/^void imul_byte(u8 s)$/;"	f
 imul_long	x86emu/prim_ops.c	/^void imul_long(u32 s)$/;"	f
 imul_long_direct	x86emu/prim_ops.c	/^void imul_long_direct(u32 *res_lo, u32* res_hi,u32 d, u32 s)$/;"	f
@@ -15027,11 +15037,13 @@ infodir	build-newlib/x86_64-pc-orzos/newlib/libm/machine/Makefile	/^infodir = ${
 infodir	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^infodir = ${datarootdir}\/info$/;"	m
 infodir	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^infodir = ${datarootdir}\/info$/;"	m
 init	module.h	/^    module_init_func init;$/;"	m	struct:module_struct
+initCairo	prog/uiserver.c	/^void initCairo()$/;"	f
 initCpuExceptions	except.c	/^void initCpuExceptions()$/;"	f
+initFontRender	prog/uiserver.c	/^void initFontRender()$/;"	f
 initIDT	dtable.c	/^void initIDT()$/;"	f
 initIPC	message.c	/^void initIPC()$/;"	f
 initInterrupt	interrupt.c	/^void initInterrupt()$/;"	f
-initMemoryManagement	kmm.c	/^void initMemoryManagement(u64int totalHighMem, u64int freePMemStartAddr)$/;"	f
+initMemoryManagement	kmm.c	/^void initMemoryManagement(u64int freePMemStartAddr)$/;"	f
 initMultitasking	task.c	/^void initMultitasking()$/;"	f
 initObjectTree	kobject.c	/^void initObjectTree()$/;"	f
 initPCI	pci.c	/^static void initPCI()$/;"	f	file:
@@ -16062,6 +16074,7 @@ libposix_la_LINK	build-newlib/x86_64-pc-elf/newlib/libc/posix/Makefile	/^libposi
 libposix_la_LINK	build-newlib/x86_64-pc-orzos/newlib/libc/posix/Makefile	/^libposix_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \\$/;"	m
 libposix_la_OBJECTS	build-newlib/x86_64-pc-elf/newlib/libc/posix/Makefile	/^libposix_la_OBJECTS = $(am_libposix_la_OBJECTS)$/;"	m
 libposix_la_OBJECTS	build-newlib/x86_64-pc-orzos/newlib/libc/posix/Makefile	/^libposix_la_OBJECTS = $(am_libposix_la_OBJECTS)$/;"	m
+library	prog/uiserver.c	/^FT_Library library;$/;"	v
 libreent_la_LDFLAGS	build-newlib/x86_64-pc-elf/newlib/libc/reent/Makefile	/^libreent_la_LDFLAGS = -Xcompiler -nostdlib$/;"	m
 libreent_la_LDFLAGS	build-newlib/x86_64-pc-orzos/newlib/libc/reent/Makefile	/^libreent_la_LDFLAGS = -Xcompiler -nostdlib$/;"	m
 libreent_la_LIBADD	build-newlib/x86_64-pc-elf/newlib/libc/reent/Makefile	/^libreent_la_LIBADD =$/;"	m
@@ -16730,6 +16743,7 @@ mkinstalldirs	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^mkinsta
 mkobj	vfs.h	/^    s64int (*mkobj)(struct FileSystem *fs, s64int id, const char *name, s64int objid);$/;"	m	struct:FileSystemOperation
 mmap	device.h	/^    s64int (*mmap)(struct VNode *node, u64int addr, u64int size, s64int flags);$/;"	m	struct:DeviceOperation
 mmap	vfs.h	/^    s64int (*mmap)(struct VNode *node, u64int addr, u64int size, s64int flags);$/;"	m	struct:FileSystemOperation
+mmapSize	bootinfo.h	/^    u64int mmapSize;$/;"	m	struct:BootInfo
 mmap_addr	multiboot.h	/^    u32int mmap_addr;$/;"	m	struct:multiboot
 mmap_length	multiboot.h	/^    u32int mmap_length;$/;"	m	struct:multiboot
 mod_end	multiboot.h	/^    u32int mod_end;$/;"	m	struct:multiboot_mod_list
@@ -16811,6 +16825,8 @@ mov	loader32.s	/^mov cr4, eax                 ; Set control register 4 to the A-
 mov	loader32.s	/^mov ds, ax                    ; Set the data segment to the A-register.$/;"	l
 mov	loader32.s	/^mov eax, 0$/;"	l
 mov	loader32.s	/^mov eax, [rbx+20]$/;"	l
+mov	loader32.s	/^mov eax, [rbx+44]$/;"	l
+mov	loader32.s	/^mov eax, [rbx+48]$/;"	l
 mov	loader32.s	/^mov eax, [rbx+8]$/;"	l
 mov	loader32.s	/^mov eax, cr0                 ; Set the A-register to control register 0.$/;"	l
 mov	loader32.s	/^mov eax, cr4                 ; Set the A-register to control register 4.$/;"	l
@@ -16842,6 +16858,8 @@ mov	loader32.s	/^mov rdi, kernel64.imageAddr$/;"	l
 mov	loader32.s	/^mov rdi, rax                ; StartupInfo struct$/;"	l
 mov	loader32.s	/^mov rdi, startupinfo.initrd$/;"	l
 mov	loader32.s	/^mov rdi, startupinfo.mem$/;"	l
+mov	loader32.s	/^mov rdi, startupinfo.mmap_addr$/;"	l
+mov	loader32.s	/^mov rdi, startupinfo.mmap_length$/;"	l
 mov	loader32.s	/^mov rsi, [kernel64.imageAddr]$/;"	l
 mov	loader32.s	/^mov rsi, [rbx+24]$/;"	l
 mov	loader32.s	/^mov rsi, [rbx+32]$/;"	l
@@ -18053,6 +18071,7 @@ readdir	vfs.h	/^    s64int (*readdir)(struct VNode *node, u64int size, char *buf
 realModeAlloc	rmi.c	/^void *realModeAlloc(u64int size)$/;"	f
 realModeFree	rmi.c	/^void realModeFree(void *ptr)$/;"	f
 realModeInterrupt	rmi.c	/^void realModeInterrupt(u8int num)$/;"	f
+recLen	bootinfo.h	/^    u32int recLen;$/;"	m	struct:PhysicalMemoryChunk
 rec_len	fs/ext2fs.h	/^	u16int	rec_len;		\/* Directory entry length *\/$/;"	m	struct:ext2_dir_entry
 receiveMQ	message.h	/^    struct MessageQueue *receiveMQ, *replyMQ;$/;"	m	struct:Server	typeref:struct:Server::MessageQueue
 receiveWQ	message.h	/^    struct WaitQueue *receiveWQ, *sendWQ;$/;"	m	struct:Server	typeref:struct:Server::WaitQueue
@@ -18388,6 +18407,7 @@ shl_word	x86emu/prim_ops.c	/^u16 shl_word(u16 d, u8 s)$/;"	f
 shld_long	x86emu/prim_ops.c	/^u32 shld_long (u32 d, u32 fill, u8 s)$/;"	f
 shld_word	x86emu/prim_ops.c	/^u16 shld_word (u16 d, u16 fill, u8 s)$/;"	f
 shndx	multiboot.h	/^    u32int shndx;$/;"	m	struct:multiboot
+show_image	prog/uiserver.c	/^void show_image( void )$/;"	f
 shr_byte	x86emu/prim_ops.c	/^u8 shr_byte(u8 d, u8 s)$/;"	f
 shr_long	x86emu/prim_ops.c	/^u32 shr_long(u32 d, u8 s)$/;"	f
 shr_word	x86emu/prim_ops.c	/^u16 shr_word(u16 d, u8 s)$/;"	f
@@ -18401,6 +18421,7 @@ signature	ide.c	/^    u16int signature;   \/\/ Drive Signature$/;"	m	struct:ideD
 signature	tlsf.h	/^    u64int signature;$/;"	m	struct:TLSFBlock
 sint	x86emu/x86emu/types.h	/^typedef int 				sint;$/;"	t
 sint	x86emu/x86emu/types.h	60;"	d
+size	bootinfo.h	/^    u64int size;$/;"	m	struct:PhysicalMemoryChunk
 size	elf.h	/^  unsigned char size;		\/* Size of descriptor, including header.  *\/$/;"	m	struct:__anon70
 size	file.h	/^    u32int size;$/;"	m	struct:__anon74
 size	fs/bootfs.c	/^    char size[12];$/;"	m	struct:TarHeader	file:
@@ -18411,6 +18432,7 @@ size	multiboot.h	/^    u32int size;$/;"	m	struct:multiboot
 size	tlsf.h	/^    u64int size;$/;"	m	struct:TLSFBlock
 size	vfs.h	/^    u64int size;$/;"	m	struct:DirectoryRecord
 size	vfs.h	/^    u64int size;$/;"	m	struct:MemoryMap
+size	vfs.h	/^    u64int size;$/;"	m	struct:VNode
 size	vfs.h	/^    u64int size;$/;"	m	struct:VNodeInfo
 size	vmm.h	/^    u64int size;$/;"	m	struct:VMA
 slBitmap	tlsf.h	/^    u64int slBitmap[REAL_FLI];                  \/* i -> 2^(FLI_OFFSET+i) *\/$/;"	m	struct:TLSFHeader
@@ -18525,6 +18547,7 @@ st_size	elf.h	/^  Elf64_Xword	st_size;		\/* Symbol size *\/$/;"	m	struct:__anon3
 st_value	elf.h	/^  Elf32_Addr	st_value;		\/* Symbol value *\/$/;"	m	struct:__anon36
 st_value	elf.h	/^  Elf64_Addr	st_value;		\/* Symbol value *\/$/;"	m	struct:__anon37
 stage	build-newlib/Makefile	/^stage = :$/;"	m
+start	bootinfo.h	/^    u64int start;$/;"	m	struct:PhysicalMemoryChunk
 start	loader32.s	/^start:$/;"	l
 start	vm.h	/^    u32int start; \/* page aligned start virtual address. *\/$/;"	m	struct:vma_struct
 start	vmm.h	/^    u64int start;$/;"	m	struct:VMA
@@ -19281,6 +19304,7 @@ transform	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^transform = $
 transform	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^transform = $(program_transform_name)$/;"	m
 true	x86emu/validate.c	53;"	d	file:
 tss0	dtable.c	/^struct TSS tss0;$/;"	v	typeref:struct:TSS
+type	bootinfo.h	/^    u32int type;$/;"	m	struct:PhysicalMemoryChunk
 type	fs/devfs.c	/^    u8int type;$/;"	m	struct:DevFSNode	file:
 type	handle.h	/^    u64int type;$/;"	m	struct:Handle
 type	ide.c	/^    u8int type;        \/\/ 0: ATA, 1:ATAPI.$/;"	m	struct:ideDevice	file:
@@ -19533,7 +19557,9 @@ x86emu_print_int_vect	x86emu/debug.c	/^void x86emu_print_int_vect (u16 iv)$/;"	f
 x86emu_single_step	x86emu/debug.c	/^void x86emu_single_step (void)$/;"	f
 x_reg	x86emu/x86emu/regs.h	/^	u16 filler0, x_reg;$/;"	m	struct:__anon17
 x_reg	x86emu/x86emu/regs.h	/^	u16 x_reg;$/;"	m	struct:__anon20
+xchg	loader32.s	/^xchg bx, bx$/;"	l
 xor	loader32.s	/^xor eax, eax       ; Nullify the A-register.$/;"	l
+xor	loader32.s	/^xor rax, rax$/;"	l
 xor	loader32.s	/^xor rsi, rsi$/;"	l
 xor_byte	x86emu/prim_ops.c	/^u8 xor_byte(u8 d, u8 s)$/;"	f
 xor_long	x86emu/prim_ops.c	/^u32 xor_long(u32 d, u32 s)$/;"	f

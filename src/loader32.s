@@ -151,6 +151,19 @@ mov eax, [rbx+8]
 stosd
 mov eax, 0
 stosd
+
+xchg bx, bx
+mov rdi, startupinfo.mmap_length
+mov eax, [rbx+44]
+stosd
+mov eax, 0
+stosd
+xor rax, rax
+mov eax, [rbx+48]
+add rax, VIRTUALBASE
+mov rdi, startupinfo.mmap_addr
+stosq
+
 mov eax, [rbx+20]
 cmp eax, 1
 jb nokernel
@@ -277,6 +290,10 @@ dq 0                        ; Initrd end
 .freepmem_start:
 dq 0
 .kstack:
+dq 0
+.mmap_length:
+dq 0
+.mmap_addr:
 dq 0
 
 kernel64:

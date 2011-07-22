@@ -28,7 +28,7 @@ struct RegisterState {
     u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;
     u64int number, errcode;
     u64int rip, cs, rflags, rsp0, ss0;
-};
+} __attribute__((packed));
 
 typedef void (*IsrHandlerFunc)(struct RegisterState *);
 

@@ -67,7 +67,7 @@ u64int kmain(struct BootInfo *si)
 
     setBootInfo(si);
     initInterrupt();
-    initMemoryManagement(si->memory, si->freeMemStartAddr);
+    initMemoryManagement();
     initTSS();
     initVFS();
     initSyscalls();

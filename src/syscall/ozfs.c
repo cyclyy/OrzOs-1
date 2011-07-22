@@ -76,8 +76,10 @@ s64int OzOpen(char *path, s64int flags)
     struct Handle *handle;
     s64int i;
 
+    i = -1;
     copyFromUser(s,path,MAX_NAME_LEN);
     s[MAX_NAME_LEN-1] = 0;
+    printk("OzOpen:%s\n",s);
     vnode = (struct VNode*)kMalloc(sizeof(struct VNode));
     memset(vnode,0,sizeof(struct VNode));
     if (vfsOpen(s,flags,vnode) == 0) {
@@ -183,6 +185,8 @@ s64int OzSeek(s64int fd, s64int offset, s64int pos)
 {
     struct Handle *handle;
 
+
+    printk("OzSeek:%d:%d\n", offset, pos);
     if (!IS_VALID_HANDLE_INDEX(fd)) {
         return -1;
     }

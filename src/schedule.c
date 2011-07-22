@@ -54,14 +54,17 @@ void schedule()
 
     asm volatile("mov %%rsp, %0" : "=r"(rsp) );
     asm volatile("mov %%rbp, %0" : "=r"(rbp) );
+    /*
     asm volatile("mov %%rax, %0" : "=r"(rax) );
     asm volatile("mov %%rbx, %0" : "=r"(rbx) );
     asm volatile("mov %%rcx, %0" : "=r"(rcx) );
     asm volatile("mov %%rdx, %0" : "=r"(rdx) );
+    */
     rip = readRIP();
 
     if (rip == 0x123) {
         // newTask
+        /*
         asm("cli;               \
                 mov %0, %%rax;     \
                 mov %1, %%rbx;     \
@@ -69,15 +72,18 @@ void schedule()
                 mov %3, %%rdx;     \
                 sti"               
                 ::"a"(currentTask->rax), "b"(currentTask->rbx), "c"(currentTask->rcx), "d"(currentTask->rdx));
+        */
         return;
     }
     currentTask->rsp = rsp;
     currentTask->rbp = rbp;
     currentTask->rip = rip;
+    /*
     currentTask->rax = rax;
     currentTask->rbx = rbx;
     currentTask->rcx = rcx;
     currentTask->rdx = rdx;
+    */
 
     rsp = newTask->rsp;
     rbp = newTask->rbp;

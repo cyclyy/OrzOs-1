@@ -32,10 +32,12 @@ u64int OzAddHeapSize(s64int incr)
         return 0;
     }
     if (incr == 0) {
+        printk("OzAddHeapSize %d, %x\n", incr, prog->brk);
         return prog->brk;
     } else if (incr < 0) {
         oldbrk = prog->brk;
         prog->brk += incr;
+        printk("OzAddHeapSize %d, %x\n", incr, oldbrk);
         return oldbrk;
     } else {
         oldbrk = prog->brk;
@@ -48,9 +50,10 @@ u64int OzAddHeapSize(s64int incr)
                     VMA_STATUS_USED | VMA_OWNER_USER | VMA_TYPE_HEAP);
             prog->allocBefore = newAllocBefore;
         }
-        if (ret == 0)
+        if (ret == 0) {
+            printk("OzAddHeapSize %d, %x\n", incr, oldbrk);
             return oldbrk;
-        else {
+        } else {
             return 0;
         }
     }

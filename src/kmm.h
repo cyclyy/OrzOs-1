@@ -26,7 +26,7 @@ u64int totalMemory(); /* in KB */
 
 u64int availMemory(); /* in KB */
 
-void initMemoryManagement(u64int upperMemKB, u64int freePMemStartAddr);
+void initMemoryManagement();
 
 /*-----------------------------------------------------------------------------
  *  Allocate physically continous memory.

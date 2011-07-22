@@ -1,8 +1,9 @@
 #include "kmm.h"
 #include "paging.h"
 #include "util.h"
-#include "screen.h"
+#include "debugcon.h"
 #include "tlsf.h"
+#include "bootinfo.h"
 
 /*-----------------------------------------------------------------------------
  *  they're all in bytes
@@ -26,16 +27,43 @@ u64int availMemory()
         return heap->maxSize - heap->usedSize;
 }
 
-void initMemoryManagement(u64int totalHighMem, u64int freePMemStartAddr)
+static u64int analyseTotalMemory()
+{
+    struct BootInfo *bi;
+    struct PhysicalMemoryChunk *chunk;
+    u64int i, ret;
+    bi = getBootInfo();
+    ret = 0;
+    i = 0;
+    chunk = bi->chunks;
+    while (i < bi->mmapSize) {
+        if ((chunk->type == PMEM_CHUNK_FREE) && (chunk->start == HIGHMEM_START_ADDR)) {
+            ret = chunk->size;
+            break;
+        }
+        i += chunk->recLen + 4;
+        chunk = (struct PhysicalMemoryChunk*)(((u64int)bi->chunks) + i);
+    }
+    return ret;
+}
+
+void initMemoryManagement(u64int freePMemStartAddr)
 { 
     u64int n;
     u64int availableMemory;
+    struct BootInfo *bi;
 
+    bi = getBootInfo();
     // convert KB to bytes
-    totalHighMemory = totalHighMem*1024;
+    totalHighMemory = analyseTotalMemory();
+    if (!totalHighMemory) {
+        PANIC("InitMemoryFailed, unable to detect high memory");
+    }
+    /*
     if (totalHighMemory > 16*1024*1024)
         totalHighMemory = 16*1024*1024;
-    freeMemoryStart = CODE_LOAD_ADDR + ((freePMemStartAddr + PAGE_SIZE - 1) & (~0 << 12));
+        */
+    freeMemoryStart = CODE_LOAD_ADDR + ((bi->freeMemStartAddr + PAGE_SIZE - 1) & (~0 << 12));
 
     n = (totalHighMemory+HIGHMEM_START_ADDR) >> 12;
     //printk("start mapPages:%x\n",n);

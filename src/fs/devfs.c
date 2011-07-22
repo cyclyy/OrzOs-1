@@ -113,6 +113,7 @@ s64int devfsOpen(struct FileSystem *fs, s64int id, struct VNode *node)
     node->fs = fs;
     node->id = id;
     node->offset = 0;
+    node->size = 0;
     dnode = (struct DevFSNode *)(node->id + KERNEL_HEAP_START_ADDR);
     if (dnode->type == DEVFS_TYPE_OBJ) {
         dev = findDevice(dnode->objid);

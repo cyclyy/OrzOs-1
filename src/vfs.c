@@ -259,7 +259,6 @@ s64int vfsWrite(struct VNode *node, u64int size, char *buffer)
 
 s64int vfsSeek(struct VNode *node, s64int offset, s64int pos)
 {
-
     if (node->fs && node->fs->op->seek)
         return node->fs->op->seek(node, offset, pos);
     else
@@ -440,10 +439,11 @@ s64int vfsNopSeek(struct VNode *node, s64int offset, s64int pos)
     case SEEK_CUR:
         node->offset += offset;
     case SEEK_END:
+        node->offset = node->size + offset;
         break;
     }
 
-    return 0;
+    return node->offset;
 }
 
 s64int vnodeAddMemoryMap(struct VNode *node, u64int base, u64int size)

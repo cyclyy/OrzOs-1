@@ -37,6 +37,7 @@ struct VNode
     u64int flags;
     s64int id;
     s64int offset;
+    u64int size;
     struct FileSystem *fs;
     struct MemoryMap *mappings;
     void *priv;

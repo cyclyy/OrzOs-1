@@ -11,7 +11,6 @@ s64int ext2fsRoot(struct FileSystem *fs);
 s64int ext2fsOpen(struct FileSystem *fs, s64int id, struct VNode *node);
 s64int ext2fsClose(struct VNode *node);
 s64int ext2fsRead(struct VNode *node, u64int size, char *buffer);
-s64int ext2fsSeek(struct VNode *node, s64int offset, s64int pos);
 s64int ext2fsReaddir(struct VNode *node, u64int bufSize, char *buf);
 s64int ext2fsFinddir(struct FileSystem *fs, s64int id, const char *name);
 s64int ext2fsStat(struct FileSystem *fs, s64int id, struct VNodeInfo *info);
@@ -30,7 +29,6 @@ static struct FileSystemOperation fsOps = {
     .readdir = ext2fsReaddir,
     .finddir = ext2fsFinddir,
     .stat = ext2fsStat,
-    //.seek = ext2fsSeek,
     .seek = vfsNopSeek,
 } ;
 
@@ -167,9 +165,16 @@ s64int ext2fsRoot(struct FileSystem *fs)
 
 s64int ext2fsOpen(struct FileSystem *fs, s64int id, struct VNode *node)
 {
+    struct ext2_inode inode;
+
+    readINode(node->fs, node->id, &inode);
+    if (!(inode.i_mode & EXT2_S_IFREG)) {
+        return -1;
+    }
     node->fs = fs;
     node->id = id;
     node->offset = 0;
+    node->size = inode.i_size;
     return 0;
 }
 
@@ -310,11 +315,4 @@ s64int ext2fsStat(struct FileSystem *fs, s64int id, struct VNodeInfo *info)
 {
     return 0;
 }
-
-/*
-s64int ext2fsSeek(struct VNode *node, s64int offset, s64int pos)
-{
-    return 0;
-}
-*/
 

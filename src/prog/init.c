@@ -20,7 +20,7 @@ int main()
         p++;
     }
 
-    OzNewTask("Boot:/uiserver",0);
+    OzNewTask("C:/uiserver",0);
 
     while(1);
 }
