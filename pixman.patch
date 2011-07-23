@@ -1,0 +1,15 @@
+--- pixman/pixman-old.c	2011-07-23 09:31:20.620973362 +0800
++++ pixman/pixman.c	2011-07-23 01:16:13.060193166 +0800
+@@ -43,10 +43,10 @@
+ static force_inline pixman_implementation_t *
+ get_implementation (void)
+ {
+-#ifndef TOOLCHAIN_SUPPORTS_ATTRIBUTE_CONSTRUCTOR
++//#ifndef TOOLCHAIN_SUPPORTS_ATTRIBUTE_CONSTRUCTOR
+     if (!global_implementation)
+ 	global_implementation = _pixman_choose_implementation ();
+-#endif
++//#endif
+     return global_implementation;
+ }
+ 

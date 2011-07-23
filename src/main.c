@@ -20,6 +20,7 @@
 #include "video/vbe.h"
 #include "pci.h"
 #include "ide.h"
+#include "cpu.h"
 #include "fs/ext2fs.h"
 
 void testVBE()
@@ -71,6 +72,7 @@ u64int kmain(struct BootInfo *si)
     initTSS();
     initVFS();
     initSyscalls();
+    initFpu();
     initCpuExceptions();
     initIPC();
     vfsMount("Boot",0,"bootfs",0,(void*)PADDR_TO_VADDR(getBootInfo()->initrdAddr));
@@ -81,7 +83,7 @@ u64int kmain(struct BootInfo *si)
     pci_Init();
     ide_Init();
     ext2fs_Init();
-    testE9();
+    //testE9();
     vfsMount("C","Device:/Disk0Part0","ext2fs",0,0);
     struct VNode node;
     char buf[100];

@@ -4,6 +4,7 @@
 
 void commonFaultHandler(struct RegisterState *regs)
 {
+    PANIC("Interrupt number:%d, errcode:%d",regs->number, regs->errcode);
 }
 
 void pageFaultHandler(struct RegisterState *regs)

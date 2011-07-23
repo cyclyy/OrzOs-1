@@ -50,8 +50,13 @@ s64int setDMI(struct DisplayModeInfo *mi)
         if ((mi->width == 640) && (mi->height == 480)) {
             switch (mi->cellBits) {
             case 8:
+                setVBEMode(0x101);
                 break;
             case 16:
+                setVBEMode(0x111);
+                break;
+            case 24:
+                setVBEMode(0x112);
                 break;
             default:
                 return -1;

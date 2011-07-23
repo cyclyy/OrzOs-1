@@ -15,7 +15,7 @@ CAIRO_LIBS = -L/home/ora/cross/lib/gcc/x86_64-pc-orzos/4.5.0 -lcairo -lpixman-1 
 
 X86EMU_SOURCES = x86emu/decode.o x86emu/fpu.o x86emu/ops.o x86emu/ops2.o x86emu/prim_ops.o x86emu/sys.o
 
-CORE_C_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o dtable.o \
+CORE_C_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o cpu.o dtable.o \
 			interrupt.o tlsf.o vfs.o debugcon.o task.o paging.o \
 			elfloader.o waitqueue.o schedule.o semaphore.o mutex.o message.o \
 			ksyscall.o device.o i8042.o program.o except.o \
@@ -40,7 +40,7 @@ CORE_CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector
 #PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -I/home/ora/cross/include $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g
 PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -Ix86emu -Wall -I. -I/home/ora/cross/include $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g
 CORE_LDFLAGS=-Tcore.ld -m orzos_x86_64 -M=allsymbol.map -z max-page-size=0x1000
-PROG_LDFLAGS=-Tprog.ld -m orzos_x86_64 -z max-page-size=0x1000 -L/home/ora/cross/lib -L/home/ora/cross/x86_64-pc-orzos/lib $(FREETYPE2_LIBS) $(CAIRO_LIBS) -lc -lm
+PROG_LDFLAGS=-Tprog.ld -m orzos_x86_64 -z max-page-size=0x1000 -L/home/ora/cross/lib -L/home/ora/cross/x86_64-pc-orzos/lib $(FREETYPE2_LIBS) $(CAIRO_LIBS) $(FREETYPE2_LIBS) -lc -lm
 ASFLAGS=-felf64
 
 # all: $(CORE_SOURCES) $(MOD_SOURCES) $(PROG_SOURCES) libx86emu.a core_link prog_link

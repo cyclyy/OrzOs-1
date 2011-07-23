@@ -7,6 +7,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <cairo.h>
+#include <cairo-ft.h>
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -19,6 +20,7 @@ struct Pixel
 struct Pixel *frameBuffer;
 
 FT_Library library;
+FT_Face face;
 
 s64int parseMessage(char *buf, u64int size)
 {
@@ -54,6 +56,7 @@ s64int openDisplay()
 }
 
 unsigned char image[HEIGHT][WIDTH];
+u32int img2[4][4];
 
 void drawBitmap(FT_Bitmap *bitmap, FT_Int x, FT_Int y)
 {
@@ -91,14 +94,13 @@ void show_image( void )
 void initFontRender()
 {
     wchar_t *msg = L"我";
-    FT_Face face;
     FT_GlyphSlot slot;
     FT_Matrix matrix;
     FT_Vector pen;
     FT_Error error;
     error = FT_Init_FreeType(&library);
     error = FT_New_Face(library, "C:/zenhei.ttc", 0, &face);
-    error = FT_Set_Char_Size(face, 300*64, 0, 100, 0);
+    error = FT_Set_Char_Size(face, 10*64, 0, 100, 0);
     slot = face->glyph;
     //error = FT_Load_Char(face, 0x56e7, FT_LOAD_RENDER);
     error = FT_Load_Char(face, msg[0], FT_LOAD_RENDER);
@@ -108,8 +110,35 @@ void initFontRender()
 
 void initCairo()
 {
+    unsigned char *buf;
     cairo_surface_t *surface;
-    surface = cairo_image_surface_create(CAIRO_FORMAT_RGB16_565,WIDTH, HEIGHT);
+    cairo_t *cr;
+    cairo_font_face_t *font_face;
+    cairo_text_extents_t te;
+
+    memset(img2,0,4*4*4);
+    surface = cairo_image_surface_create_for_data(image, CAIRO_FORMAT_A8,WIDTH,HEIGHT,WIDTH);
+    font_face = cairo_ft_font_face_create_for_ft_face(face,0);
+    cr = cairo_create(surface);
+    cairo_set_font_face(cr,font_face);
+    cairo_set_font_size(cr,20);
+    //cairo_scale(cr,WIDTH,HEIGHT);
+    cairo_set_source_rgba(cr, 1,1,1,1);
+    //cairo_paint(cr);
+    cairo_move_to(cr,0.0,0.0);
+    cairo_line_to(cr,WIDTH,HEIGHT);
+    cairo_move_to(cr,WIDTH,0);
+    cairo_line_to(cr,0,HEIGHT);
+    cairo_set_line_width(cr,1);
+    cairo_stroke(cr);
+    //cairo_move_to(cr,WIDTH/2,HEIGHT/2);
+    cairo_text_extents(cr, "囧", &te);
+    cairo_move_to(cr,WIDTH/2 - te.width / 2 - te.x_bearing,HEIGHT/2 - te.height/2 -te.y_bearing);
+    cairo_show_text(cr, "囧");
+    //cairo_rectangle(cr,0,0,1,1);
+    //cairo_fill(cr);
+    cairo_surface_flush(surface);
+    show_image();
 }
 
 int main()
