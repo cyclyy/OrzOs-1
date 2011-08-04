@@ -106,6 +106,9 @@ s64int getCurrentDMI()
         currentDMI.cellBits = 16;
         currentDMI.addr = 0xB8000;
         break;
+    case 0x111:
+    case 0x112:
+    case 0x114:
     case 0x115:
         currentDMI.mode = DISPLAY_MODE_VESA;
         currentDMI.color = 1;
@@ -253,6 +256,7 @@ s64int display_MemoryMap(struct VNode *node, u64int addr, u64int size, s64int fl
     } else if (currentDMI.mode == DISPLAY_MODE_VESA) {
         size = ROUND_PAGE_ALIGN(currentDMI.width*currentDMI.height*(currentDMI.cellBits/8));
         ret = vmMapArea(currentTask->vm, addr, size, VMA_TYPE_MMAP | VMA_STATUS_USED | VMA_OWNER_USER, currentDMI.addr);
+        printk("mmap:%d\n",size);
         vnodeAddMemoryMap(node, addr, size);
     } else {
         ret = 0;

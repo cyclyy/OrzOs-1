@@ -66,7 +66,7 @@ void syscallHandler(struct RegisterState *regs)
 
 
 //    asm volatile("xchg %bx,%bx");
-    DBG("func:%d, rax:%x", regs->rax, ret);
+//    DBG("func:%d, rax:%x", regs->rax, ret);
     regs->rax = ret;
 }
 

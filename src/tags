@@ -922,6 +922,7 @@ AWK	build-newlib/x86_64-pc-orzos/newlib/libm/machine/Makefile	/^AWK = gawk$/;"	m
 AWK	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^AWK = gawk$/;"	m
 AWK	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^AWK = gawk$/;"	m
 B	x86emu/x86emu/regs.h	/^	i386_general_register A, B, C, D;$/;"	m	struct:i386_general_regs
+BASE_CFLAGS	Makefile	/^BASE_CFLAGS = --sysroot=$(PREFIX) -I\/home\/ora\/cross\/include -I\/home\/ora\/cross\/x86_64-pc-orzos\/include$/;"	m
 BASE_EXPORTS	build-newlib/Makefile	/^BASE_EXPORTS = \\$/;"	m
 BASE_FLAGS_TO_PASS	build-newlib/Makefile	/^BASE_FLAGS_TO_PASS = \\$/;"	m
 BASE_QUANTUM	schedule.c	7;"	d	file:
@@ -951,7 +952,7 @@ BootInfo	bootinfo.h	/^struct BootInfo {$/;"	s
 BytesPerScanline	video/vbe.h	/^    u16int  BytesPerScanline;$/;"	m	struct:VBEModeInfoBlock
 C	x86emu/x86emu/regs.h	/^	i386_general_register A, B, C, D;$/;"	m	struct:i386_general_regs
 CAIRO_CFLAGS	Makefile	/^CAIRO_CFLAGS = -I\/home\/ora\/cross\/include\/cairo -I\/home\/ora\/cross\/include\/pixman-1 $/;"	m
-CAIRO_LIBS	Makefile	/^CAIRO_LIBS = -L\/home\/ora\/cross\/lib\/gcc\/x86_64-pc-orzos\/4.5.0 -lcairo -lpixman-1 -lgcc$/;"	m
+CAIRO_LIBS	Makefile	/^CAIRO_LIBS = -L\/home\/ora\/cross\/lib\/gcc\/x86_64-pc-orzos\/4.5.0 -lcairo -lpixman-1 -lpng -lgcc$/;"	m
 CALL_TRACE	x86emu/x86emu/debug.h	164;"	d
 CALL_TRACE	x86emu/x86emu/debug.h	175;"	d
 CC	Makefile	/^CC = x86_64-pc-orzos-gcc$/;"	m
@@ -1535,6 +1536,26 @@ CLEAR_FLAG	x86emu/x86emu/regs.h	207;"	d
 CLIENT_STATUS_READY	message.h	13;"	d
 CLIENT_STATUS_REPLY_BLOCKED	message.h	15;"	d
 CLIENT_STATUS_SEND_BLOCKED	message.h	14;"	d
+CMOS_BASE_PORT	cmos.h	6;"	d
+CMOS_DATA_PORT	cmos.h	7;"	d
+CMOS_H	cmos.h	2;"	d
+CMOS_REG_CENTURY	cmos.h	23;"	d
+CMOS_REG_DATE_OF_MONTH	cmos.h	16;"	d
+CMOS_REG_DAY_OF_WEEK	cmos.h	15;"	d
+CMOS_REG_HOURS	cmos.h	13;"	d
+CMOS_REG_HOURS_ALARM	cmos.h	14;"	d
+CMOS_REG_MINUTES	cmos.h	11;"	d
+CMOS_REG_MINUTES_ALARM	cmos.h	12;"	d
+CMOS_REG_MONTH	cmos.h	17;"	d
+CMOS_REG_SA	cmos.h	19;"	d
+CMOS_REG_SB	cmos.h	20;"	d
+CMOS_REG_SB_ENABLE_24HOURS	cmos.h	25;"	d
+CMOS_REG_SB_ENABLE_BINARY_MODE	cmos.h	26;"	d
+CMOS_REG_SC	cmos.h	21;"	d
+CMOS_REG_SD	cmos.h	22;"	d
+CMOS_REG_SECONDS	cmos.h	9;"	d
+CMOS_REG_SECONDS_ALARM	cmos.h	10;"	d
+CMOS_REG_YEAR	cmos.h	18;"	d
 CODE_LOAD_ADDR	sysdef.h	23;"	d
 COMMON_H	common.h	2;"	d
 COMPILE	build-newlib/x86_64-pc-elf/newlib/Makefile	/^COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \\$/;"	m
@@ -1759,6 +1780,7 @@ CONFIG_STATUS_DEPENDENCIES	build-newlib/x86_64-pc-orzos/newlib/libc/machine/x86_
 CONFIG_STATUS_DEPENDENCIES	build-newlib/x86_64-pc-orzos/newlib/libc/sys/Makefile	/^CONFIG_STATUS_DEPENDENCIES = $(newlib_basedir)\/configure.host$/;"	m
 CONFIG_STATUS_DEPENDENCIES	build-newlib/x86_64-pc-orzos/newlib/libm/Makefile	/^CONFIG_STATUS_DEPENDENCIES = $(newlib_basedir)\/configure.host$/;"	m
 CONFIG_STATUS_DEPENDENCIES	build-newlib/x86_64-pc-orzos/newlib/libm/machine/Makefile	/^CONFIG_STATUS_DEPENDENCIES = $(newlib_basedir)\/configure.host$/;"	m
+CONVERT_FROM_DIGIT	cmos.c	4;"	d	file:
 CORE_ASM_SOURCES	Makefile	/^CORE_ASM_SOURCES = flushdtable.o isr.o taskasm.o usermemcopy.o$/;"	m
 CORE_CFLAGS	Makefile	/^CORE_CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -mcmodel=kernel -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g$/;"	m
 CORE_C_SOURCES	Makefile	/^CORE_C_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o cpu.o dtable.o \\$/;"	m
@@ -2230,6 +2252,7 @@ DB	x86emu/x86emu/debug.h	180;"	d
 DB	x86emu/x86emu/debug.h	182;"	d
 DBG	util.h	7;"	d
 DEBUGCON_H	debugcon.h	2;"	d
+DEBUGDEV_H	debugdev.h	2;"	d
 DEBUG_BREAK	x86emu/x86emu/debug.h	69;"	d
 DEBUG_BREAK	x86emu/x86emu/debug.h	88;"	d
 DEBUG_BREAK_F	x86emu/x86emu.h	173;"	d
@@ -4032,6 +4055,7 @@ FileSystem	vfs.h	/^struct FileSystem$/;"	s
 FileSystemDriver	vfs.h	/^struct FileSystemDriver$/;"	s
 FileSystemDriverOperation	vfs.h	/^struct FileSystemDriverOperation$/;"	s
 FileSystemOperation	vfs.h	/^struct FileSystemOperation$/;"	s
+Friday	cmos.h	/^    Sunday = 1,Monday, Tuesday, Wendesday, Thursday, Friday, Saturday,$/;"	e	enum:Weekday
 GCC_FLAGS_TO_PASS	build-newlib/Makefile	/^GCC_FLAGS_TO_PASS = $(BASE_FLAGS_TO_PASS) $(EXTRA_HOST_FLAGS) $(EXTRA_GCC_FLAGS)$/;"	m
 GCC_FOR_TARGET	build-newlib/Makefile	/^GCC_FOR_TARGET=$(STAGE_CC_WRAPPER) x86_64-pc-elf-gcc$/;"	m
 GCC_LDFLAGS	build-newlib/x86_64-pc-elf/libgloss/libnosys/Makefile	/^GCC_LDFLAGS = `if [ -d ${objroot}\/..\/gcc ] ; \\$/;"	m
@@ -4724,6 +4748,7 @@ IRQ6	interrupt.h	16;"	d
 IRQ7	interrupt.h	17;"	d
 IRQ8	interrupt.h	18;"	d
 IRQ9	interrupt.h	19;"	d
+IS_VALID_CMOS_REG	cmos.h	28;"	d
 IS_VALID_HANDLE_INDEX	handle.h	6;"	d
 IsrHandlerFunc	interrupt.h	/^typedef void (*IsrHandlerFunc)(struct RegisterState *);$/;"	t
 KDIR_OP_ADDOBJECT	kobject.c	7;"	d	file:
@@ -6772,6 +6797,7 @@ MessageInfo	syscall.h	/^struct MessageInfo $/;"	s
 MessageInfo	syscall/ozipc.h	/^struct MessageInfo$/;"	s
 MessageQueue	message.h	/^struct MessageQueue$/;"	s
 ModeAttributes	video/vbe.h	/^    unsigned short  ModeAttributes;$/;"	m	struct:VBEModeInfoBlock
+Monday	cmos.h	/^    Sunday = 1,Monday, Tuesday, Wendesday, Thursday, Friday, Saturday,$/;"	e	enum:Weekday
 MountPoint	vfs.c	/^struct MountPoint {$/;"	s	file:
 Mutex	mutex.h	/^struct Mutex {$/;"	s
 NEWLIB_CFLAGS	build-newlib/x86_64-pc-elf/libgloss/Makefile	/^NEWLIB_CFLAGS = `if [ -d ${objroot}\/newlib ]; then echo -I${objroot}\/newlib\/targ-include -I${srcroot}\/newlib\/libc\/include; fi`$/;"	m
@@ -8218,6 +8244,7 @@ POST_UNINSTALL	build-newlib/x86_64-pc-orzos/newlib/libm/complex/Makefile	/^POST_
 POST_UNINSTALL	build-newlib/x86_64-pc-orzos/newlib/libm/machine/Makefile	/^POST_UNINSTALL = :$/;"	m
 POST_UNINSTALL	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^POST_UNINSTALL = :$/;"	m
 POST_UNINSTALL	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^POST_UNINSTALL = :$/;"	m
+PREFIX	Makefile	/^PREFIX = \/home\/ora\/cross$/;"	m
 PRE_INSTALL	build-newlib/x86_64-pc-elf/newlib/Makefile	/^PRE_INSTALL = :$/;"	m
 PRE_INSTALL	build-newlib/x86_64-pc-elf/newlib/doc/Makefile	/^PRE_INSTALL = :$/;"	m
 PRE_INSTALL	build-newlib/x86_64-pc-elf/newlib/libc/Makefile	/^PRE_INSTALL = :$/;"	m
@@ -8356,7 +8383,7 @@ PRE_UNINSTALL	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^PRE_UNINS
 PRE_UNINSTALL	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^PRE_UNINSTALL = :$/;"	m
 PRIM_OPS_NO_REDEFINE_ASM	x86emu/prim_ops.c	103;"	d	file:
 PROGRAM_H	program.h	2;"	d
-PROG_CFLAGS	Makefile	/^PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -Ix86emu -Wall -I. -I\/home\/ora\/cross\/include $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g$/;"	m
+PROG_CFLAGS	Makefile	/^PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -Ix86emu -Wall -I. $(BASE_CFLAGS) $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g$/;"	m
 PROG_LDFLAGS	Makefile	/^PROG_LDFLAGS=-Tprog.ld -m orzos_x86_64 -z max-page-size=0x1000 -L\/home\/ora\/cross\/lib -L\/home\/ora\/cross\/x86_64-pc-orzos\/lib $(FREETYPE2_LIBS) $(CAIRO_LIBS) $(FREETYPE2_LIBS) -lc -lm$/;"	m
 PROG_SOURCES	Makefile	/^PROG_SOURCES = prog\/uiproto.o prog\/uiserver.o prog\/init.o prog\/server.o prog\/client.o syscall.o $/;"	m
 PSS	build-newlib/x86_64-pc-elf/newlib/libc/Makefile	/^PSS = libc.ps$/;"	m
@@ -8622,6 +8649,7 @@ RHF_SGI_ONLY	elf.h	1631;"	d
 ROUND_MEM_ALIGN	paging.h	8;"	d
 ROUND_PAGE_ALIGN	paging.h	6;"	d
 RPATH_ENVVAR	build-newlib/Makefile	/^RPATH_ENVVAR = LD_LIBRARY_PATH$/;"	m
+RTC	cmos.h	/^struct RTC$/;"	s
 RUNTEST	build-newlib/Makefile	/^RUNTEST = runtest$/;"	m
 RUNTEST	build-newlib/x86_64-pc-elf/newlib/Makefile	/^RUNTEST = `if test -f $(top_srcdir)\/..\/dejagnu\/runtest; then \\$/;"	m
 RUNTEST	build-newlib/x86_64-pc-orzos/newlib/Makefile	/^RUNTEST = `if test -f $(top_srcdir)\/..\/dejagnu\/runtest; then \\$/;"	m
@@ -10290,8 +10318,10 @@ SYS_MACH_OBJECTLIST	build-newlib/x86_64-pc-elf/newlib/Makefile	/^SYS_MACH_OBJECT
 SYS_MACH_OBJECTLIST	build-newlib/x86_64-pc-orzos/newlib/Makefile	/^SYS_MACH_OBJECTLIST = $/;"	m
 SYS_OBJECTLIST	build-newlib/x86_64-pc-elf/newlib/Makefile	/^SYS_OBJECTLIST = $/;"	m
 SYS_OBJECTLIST	build-newlib/x86_64-pc-orzos/newlib/Makefile	/^SYS_OBJECTLIST = $/;"	m
+Saturday	cmos.h	/^    Sunday = 1,Monday, Tuesday, Wendesday, Thursday, Friday, Saturday,$/;"	e	enum:Weekday
 Semaphore	semaphore.h	/^struct Semaphore {$/;"	s
 Server	message.h	/^struct Server$/;"	s
+Sunday	cmos.h	/^    Sunday = 1,Monday, Tuesday, Wendesday, Thursday, Friday, Saturday,$/;"	e	enum:Weekday
 TARGET-etc	build-newlib/Makefile	/^TARGET-etc=all$/;"	m
 TARGET-target-libgloss	build-newlib/Makefile	/^TARGET-target-libgloss=all$/;"	m
 TARGET-target-newlib	build-newlib/Makefile	/^TARGET-target-newlib=all$/;"	m
@@ -10403,7 +10433,9 @@ TSSEntry	dtable.h	/^struct TSSEntry {$/;"	s
 TSSPtr	dtable.h	/^struct TSSPtr {$/;"	s
 TarHeader	fs/bootfs.c	/^struct TarHeader {$/;"	s	file:
 Task	task.h	/^struct Task {$/;"	s
+Thursday	cmos.h	/^    Sunday = 1,Monday, Tuesday, Wendesday, Thursday, Friday, Saturday,$/;"	e	enum:Weekday
 TotalMemory	video/vbe.h	/^    unsigned short  TotalMemory;$/;"	m	struct:VBEInfoBlock
+Tuesday	cmos.h	/^    Sunday = 1,Monday, Tuesday, Wendesday, Thursday, Friday, Saturday,$/;"	e	enum:Weekday
 UIConsoleWriteReply	prog/uidef.h	/^struct UIConsoleWriteReply$/;"	s
 UIConsoleWriteRequest	prog/uidef.h	/^struct UIConsoleWriteRequest$/;"	s
 UIDEF_H	prog/uidef.h	2;"	d
@@ -10693,6 +10725,8 @@ WINDRES	build-newlib/Makefile	/^WINDRES = windres$/;"	m
 WINDRES_FOR_BUILD	build-newlib/Makefile	/^WINDRES_FOR_BUILD = $(WINDRES)$/;"	m
 WINDRES_FOR_TARGET	build-newlib/Makefile	/^WINDRES_FOR_TARGET=x86_64-pc-elf-windres$/;"	m
 WaitQueue	waitqueue.h	/^struct WaitQueue {$/;"	s
+Weekday	cmos.h	/^enum Weekday {$/;"	g
+Wendesday	cmos.h	/^    Sunday = 1,Monday, Tuesday, Wendesday, Thursday, Friday, Saturday,$/;"	e	enum:Weekday
 WinAAttributes	video/vbe.h	/^    unsigned char   WinAAttributes;$/;"	m	struct:VBEModeInfoBlock
 WinABegment	video/vbe.h	/^    unsigned short  WinABegment;$/;"	m	struct:VBEModeInfoBlock
 WinASegment	video/vbe.h	/^    unsigned short  WinASegment;$/;"	m	struct:VBEModeInfoBlock
@@ -12722,7 +12756,7 @@ atoi	util.c	/^s32int atoi(const char *nptr)$/;"	f
 atol	util.h	69;"	d
 attach	pci.h	/^    s64int (*attach)(struct PCIDevice *dev);$/;"	m	struct:PCIDriver
 availMemory	kmm.c	/^u64int availMemory() $/;"	f
-b	prog/uiserver.c	/^    char r,g,b;$/;"	m	struct:Pixel	file:
+b	prog/uiserver.c	/^    char b:5;$/;"	m	struct:Pixel	file:
 base	dtable.h	/^    u64int base;$/;"	m	struct:GDTPtr
 base	dtable.h	/^    u64int base;$/;"	m	struct:IDTPtr
 base	dtable.h	/^    u64int base;$/;"	m	struct:TSSPtr
@@ -13390,6 +13424,8 @@ close	vfs.h	/^    s64int (*close)(struct VNode *node);$/;"	m	struct:FileSystemOp
 close	vfs2.h	/^    s64int   (*close)   (file_t *f);$/;"	m	struct:VnodeOperations
 cmdline	multiboot.h	/^    u32int cmdline;$/;"	m	struct:multiboot
 cmdline	multiboot.h	/^    u32int cmdline;$/;"	m	struct:multiboot_mod_list
+cmosGetRTC	cmos.c	/^const struct RTC *cmosGetRTC()$/;"	f
+cmosReadRegister	cmos.c	/^u8int cmosReadRegister(u8int regno)$/;"	f
 cmp	loader32.s	/^cmp eax, 1$/;"	l
 cmp	loader32.s	/^cmp eax, 2$/;"	l
 cmp	loader32.s	/^cmp rax, rbx$/;"	l
@@ -13586,6 +13622,7 @@ datarootdir	build-newlib/x86_64-pc-orzos/newlib/libm/complex/Makefile	/^dataroot
 datarootdir	build-newlib/x86_64-pc-orzos/newlib/libm/machine/Makefile	/^datarootdir = ${prefix}\/share$/;"	m
 datarootdir	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^datarootdir = ${prefix}\/share$/;"	m
 datarootdir	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^datarootdir = ${prefix}\/share$/;"	m
+day	cmos.h	/^    u8int month, day;$/;"	m	struct:RTC
 db	loader32.s	/^db 0                         ; Access.$/;"	l
 db	loader32.s	/^db 0                         ; Base (high).$/;"	l
 db	loader32.s	/^db 0                         ; Base (middle)$/;"	l
@@ -13613,6 +13650,11 @@ dd	loader32.s	/^dd  start                     ; Kernel entry point (initial EIP)
 deadQueue	task.c	/^struct Task *deadQueue = 0;$/;"	v	typeref:struct:Task
 deattach	pci.h	/^    s64int (*deattach)(struct PCIDevice *dev);$/;"	m	struct:PCIDriver
 debug	x86emu/x86emu/regs.h	/^	int                         debug;$/;"	m	struct:__anon23
+debugdev_Close	debugdev.c	/^s64int debugdev_Close(struct VNode *node)$/;"	f
+debugdev_Init	debugdev.c	/^void debugdev_Init()$/;"	f
+debugdev_Open	debugdev.c	/^s64int debugdev_Open(struct VNode *node)$/;"	f
+debugdev_Ops	debugdev.c	/^static struct DeviceOperation debugdev_Ops = {$/;"	v	typeref:struct:DeviceOperation	file:
+debugdev_Write	debugdev.c	/^s64int debugdev_Write(struct VNode *node, u64int size, char *buffer)$/;"	f
 dec_byte	x86emu/prim_ops.c	/^u8 dec_byte(u8 d)$/;"	f
 dec_long	x86emu/prim_ops.c	/^u32 dec_long(u32 d)$/;"	f
 dec_word	x86emu/prim_ops.c	/^u16 dec_word(u16 d)$/;"	f
@@ -13701,6 +13743,7 @@ dest	message.h	/^    char *src, *dest;$/;"	m	struct:Message
 destSize	message.h	/^    u64int srcSize, destSize;$/;"	m	struct:Message
 destruct	kobject.h	/^    void (*destruct)(struct Klass *klass, struct KObject *object);$/;"	m	struct:Klass
 destructKDirectory	kobject.c	/^void destructKDirectory(struct Klass *self, struct KObject *object)$/;"	f
+dev	debugdev.c	/^static struct Device *dev = 0;$/;"	v	typeref:struct:Device	file:
 dev	i8042.c	/^static struct Device *dev;$/;"	v	typeref:struct:Device	file:
 dev	video/display.c	/^static struct Device *dev = 0;$/;"	v	typeref:struct:Device	file:
 dev_id	vfs2.h	/^    u64int dev_id;   \/\/ set by fs driver to identify the vnode, or (major, minor) if it's a device$/;"	m	struct:Vnode
@@ -14334,7 +14377,7 @@ func_xform	build-newlib/x86_64-pc-orzos/newlib/libc/sys/config.status	/^func_xfo
 func_xform	build-newlib/x86_64-pc-orzos/newlib/libm/config.status	/^func_xform ()$/;"	f
 func_xform	build-newlib/x86_64-pc-orzos/newlib/libm/machine/config.status	/^func_xform ()$/;"	f
 fval	x86emu/x86emu/fpu_regs.h	/^    float               fval;$/;"	m	union:x86_fpu_reg_u
-g	prog/uiserver.c	/^    char r,g,b;$/;"	m	struct:Pixel	file:
+g	prog/uiserver.c	/^    char g:6;$/;"	m	struct:Pixel	file:
 gdt64	loader32.s	/^gdt64:                           ; Global Descriptor Table (64-bit).$/;"	l
 gdtPtr	dtable.c	/^struct GDTPtr   gdtPtr;$/;"	v	typeref:struct:GDTPtr
 gdtTable	dtable.c	/^struct GDTEntry gdtTable[8];$/;"	v	typeref:struct:GDTEntry
@@ -14815,6 +14858,7 @@ host_vendor	build-newlib/x86_64-pc-orzos/newlib/libm/complex/Makefile	/^host_ven
 host_vendor	build-newlib/x86_64-pc-orzos/newlib/libm/machine/Makefile	/^host_vendor = pc$/;"	m
 host_vendor	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^host_vendor = pc$/;"	m
 host_vendor	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^host_vendor = pc$/;"	m
+hour	cmos.h	/^    u8int hour, minute, second;$/;"	m	struct:RTC
 htCreate	handle.c	/^struct HandleTable *htCreate()$/;"	f
 htDeref	handle.c	/^s64int htDeref(struct HandleTable *ht)$/;"	f
 htDestory	handle.c	/^void htDestory(struct HandleTable *ht)$/;"	f
@@ -15122,6 +15166,7 @@ initMemoryManagement	kmm.c	/^void initMemoryManagement(u64int freePMemStartAddr)
 initMultitasking	task.c	/^void initMultitasking()$/;"	f
 initObjectTree	kobject.c	/^void initObjectTree()$/;"	f
 initPCI	pci.c	/^static void initPCI()$/;"	f	file:
+initRTC	cmos.c	/^void initRTC()$/;"	f
 initRealModeInterface	rmi.c	/^void initRealModeInterface()$/;"	f
 initSse	cpu.c	/^void initSse()$/;"	f
 initSyscalls	ksyscall.c	/^void initSyscalls()$/;"	f
@@ -16678,6 +16723,19 @@ memory	bootinfo.h	/^    u64int memory;$/;"	m	struct:BootInfo
 memoryMapped	kmm.c	/^int memoryMapped = 0;$/;"	v
 memset	common.c	/^void memset(void *addr, u8int c, u32int n)$/;"	f
 memset	util.c	/^void memset(void *addr, u8int c, u64int n)$/;"	f
+miceByte	i8042.c	/^static u8int miceByte[3];$/;"	v	file:
+miceCycle	i8042.c	/^static u8int miceCycle = 0;$/;"	v	file:
+miceWaitQueue	i8042.c	/^static struct WaitQueue *wq = 0, *miceWaitQueue = 0;$/;"	v	typeref:struct:	file:
+mice_Close	i8042.c	/^s64int mice_Close(struct VNode *node)$/;"	f
+mice_Command	i8042.c	/^void mice_Command(u8int cmd)$/;"	f
+mice_ISR	i8042.c	/^void mice_ISR(struct RegisterState *regs)$/;"	f
+mice_Init	i8042.c	/^void mice_Init()$/;"	f
+mice_Open	i8042.c	/^s64int mice_Open(struct VNode *node)$/;"	f
+mice_Ops	i8042.c	/^static struct DeviceOperation mice_Ops = {$/;"	v	typeref:struct:DeviceOperation	file:
+mice_Probe	i8042.c	/^s64int mice_Probe()$/;"	f
+mice_Read	i8042.c	/^s64int mice_Read(struct VNode *node, u64int size, char *buffer)$/;"	f
+mice_ReadDataPort	i8042.c	/^u8int mice_ReadDataPort()$/;"	f
+minute	cmos.h	/^    u8int hour, minute, second;$/;"	m	struct:RTC
 mkdir	vfs.h	/^    s64int (*mkdir)(struct FileSystem *fs, s64int id, const char *name);$/;"	m	struct:FileSystemOperation
 mkdir	vfs2.h	/^    s64int   (*mkdir)   (vnode_t *dir, char *name, u64int flags);$/;"	m	struct:VnodeOperations
 mkdir_p	build-newlib/x86_64-pc-elf/newlib/Makefile	/^mkdir_p = \/bin\/mkdir -p$/;"	m
@@ -16874,6 +16932,7 @@ module_testmod_cleanup	testmod.c	/^void module_testmod_cleanup()$/;"	f
 module_testmod_init	testmod.c	/^MODULE_INIT(module_testmod_init);$/;"	v
 module_testmod_init	testmod.c	/^void module_testmod_init()$/;"	f
 modules	module.c	/^module_t *modules = 0;$/;"	v
+month	cmos.h	/^    u8int month, day;$/;"	m	struct:RTC
 mount	vfs.h	/^    s64int (*mount)(struct FileSystemDriver *driver, struct FileSystem **fs, const char *source, u64int flags, void *data);$/;"	m	struct:FileSystemDriverOperation
 mountPoints	vfs.c	/^struct MountPoint *mountPoints = 0;$/;"	v	typeref:struct:MountPoint
 mounts	vfs2.h	/^    } mounts[MAX_VFSMOUNTS];$/;"	m	struct:__anon6	typeref:struct:__anon6::__anon7
@@ -18074,7 +18133,7 @@ push	loader32.s	/^push    eax                   ; Initial esp  $/;"	l
 push	loader32.s	/^push    ebx                   ; Load multiboot header location$/;"	l
 push_long	x86emu/prim_ops.c	/^void push_long(u32 w)$/;"	f
 push_word	x86emu/prim_ops.c	/^void push_word(u16 w)$/;"	f
-r	prog/uiserver.c	/^    char r,g,b;$/;"	m	struct:Pixel	file:
+r	prog/uiserver.c	/^    char r:5;$/;"	m	struct:Pixel	file:
 r10	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 r11	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
 r8	interrupt.h	/^    u64int r11, r10, r9, r8, rbp, rsp, rdi, rsi, rdx, rcx, rbx, rax;$/;"	m	struct:RegisterState
@@ -18220,6 +18279,8 @@ rsp0	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp, rax, rbx, rcx, rdx;$/;
 rsp1	dtable.h	/^        u64int rsp1;$/;"	m	struct:TSS
 rsp2	dtable.h	/^        u64int rsp2;$/;"	m	struct:TSS
 rsp3	task.h	/^    u64int rsp0, rsp3, rip3, rip, rsp, rbp, rax, rbx, rcx, rdx;$/;"	m	struct:Task
+rtc	cmos.c	/^static struct RTC rtc;$/;"	v	typeref:struct:RTC	file:
+rtcEnabled	cmos.c	/^static u8int rtcEnabled = 0;$/;"	v	file:
 runQueue	schedule.c	/^struct Task *runQueue[MLFQ_LEVELS] = {0};$/;"	v	typeref:struct:Task
 s	build-newlib/Makefile	/^	s=`cd $(srcdir); ${PWD_COMMAND}`; export s; \\$/;"	m
 s16	x86emu/x86emu/types.h	/^typedef short 				s16;$/;"	t
@@ -18364,6 +18425,7 @@ sbindir	build-newlib/x86_64-pc-orzos/newlib/libm/machine/Makefile	/^sbindir = ${
 sbindir	build-newlib/x86_64-pc-orzos/newlib/libm/math/Makefile	/^sbindir = ${exec_prefix}\/sbin$/;"	m
 sbindir	build-newlib/x86_64-pc-orzos/newlib/libm/mathfp/Makefile	/^sbindir = ${exec_prefix}\/sbin$/;"	m
 schedule	schedule.c	/^void schedule()$/;"	f
+second	cmos.h	/^    u8int hour, minute, second;$/;"	m	struct:RTC
 section	elf.h	/^  Elf32_Section section;	\/* Section header index of section affected,$/;"	m	struct:__anon72
 seek	device.h	/^    s64int (*seek)(struct VNode *node, s64int offset, s64int pos);$/;"	m	struct:DeviceOperation
 seek	vfs.h	/^    s64int (*seek)(struct VNode *node, s64int offset, s64int pos);$/;"	m	struct:FileSystemOperation
@@ -18639,6 +18701,7 @@ startupinfo	loader32.s	/^startupinfo:$/;"	l
 stat	vfs.h	/^    s64int (*stat)(struct FileSystem *fs, s64int id, struct VNodeInfo *ni);$/;"	m	struct:FileSystemOperation
 state	task.h	/^    u64int state;$/;"	m	struct:Task
 state	task2.h	/^    u32int state;$/;"	m	struct:task
+statusB	cmos.c	/^static u8int statusB = 0;$/;"	v	file:
 stl_u	x86emu/sys.c	/^static __inline__ void stl_u(unsigned long r5, unsigned int * r11)$/;"	f	file:
 store_data_byte	x86emu/decode.c	/^void store_data_byte($/;"	f
 store_data_byte_abs	x86emu/decode.c	/^void store_data_byte_abs($/;"	f
@@ -19573,10 +19636,11 @@ wakeUpEx	waitqueue.c	/^void wakeUpEx(struct WaitQueue *wq, struct Task *task, s6
 wakeUpOne	waitqueue.c	/^void wakeUpOne(struct WaitQueue *wq)$/;"	f
 wake_up_all	task2.c	/^void wake_up_all(wait_queue_t *wq)$/;"	f
 wake_up_one	task2.c	/^void wake_up_one(wait_queue_t *wq)$/;"	f
+weekday	cmos.h	/^    enum Weekday weekday;$/;"	m	struct:RTC	typeref:enum:RTC::Weekday
 width	prog/uidef.h	/^    u16int width;$/;"	m	struct:DisplayModeInfo
 width	video/display.h	/^    u16int width;$/;"	m	struct:DisplayModeInfo
 work_path	task2.h	/^    char *work_path;$/;"	m	struct:task
-wq	i8042.c	/^static struct WaitQueue *wq = 0;$/;"	v	typeref:struct:WaitQueue	file:
+wq	i8042.c	/^static struct WaitQueue *wq = 0, *miceWaitQueue = 0;$/;"	v	typeref:struct:WaitQueue	file:
 wq	ide.c	/^struct WaitQueue wq = {0};$/;"	v	typeref:struct:WaitQueue
 wq	semaphore.h	/^    struct WaitQueue *wq;$/;"	m	struct:Semaphore	typeref:struct:Semaphore::WaitQueue
 wqAppend	waitqueue.c	/^void wqAppend(struct WaitQueue *wq, struct Task *t)$/;"	f
@@ -19642,4 +19706,5 @@ xor_byte	x86emu/prim_ops.c	/^u8 xor_byte(u8 d, u8 s)$/;"	f
 xor_long	x86emu/prim_ops.c	/^u32 xor_long(u32 d, u32 s)$/;"	f
 xor_word	x86emu/prim_ops.c	/^u16 xor_word(u16 d, u16 s)$/;"	f
 xorl	x86emu/ops2.c	74;"	d	file:
+year	cmos.h	/^    u16int year;$/;"	m	struct:RTC
 zero	dtable.h	/^    u8int zero;$/;"	m	struct:IDTEntry

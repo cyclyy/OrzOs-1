@@ -13,6 +13,12 @@ s64int i8042_Read(struct VNode *node, u64int size, char *buffer);
 s64int i8042_Probe();
 void i8042_ISR(struct RegisterState *regs);
 
+s64int mice_Open(struct VNode *node);
+s64int mice_Close(struct VNode *node);
+s64int mice_Read(struct VNode *node, u64int size, char *buffer);
+s64int mice_Probe();
+void mice_ISR(struct RegisterState *regs);
+
 static u64int kbdus[128] =
 {
     0,  Key_Escape, Key_1, Key_2, Key_3, Key_4, Key_5, Key_6, Key_7, Key_8, /* 9 */
@@ -55,10 +61,13 @@ static u64int kbdus[128] =
 
 static struct Device *dev;
 
-static struct WaitQueue *wq = 0;
+static struct WaitQueue *wq = 0, *miceWaitQueue = 0;
 
 static u8int inEscape = 0;
 static u64int key;
+
+static u8int miceCycle = 0;
+static u8int miceByte[3];
 
 static struct DeviceOperation i8042_Ops = {
     .open  = &i8042_Open,
@@ -66,28 +75,117 @@ static struct DeviceOperation i8042_Ops = {
     .read  = &i8042_Read,
 };
 
+static struct DeviceOperation mice_Ops = {
+    .open  = &mice_Open,
+    .close = &mice_Close,
+    .read  = &mice_Read,
+//    .write  = &mice_Write,
+};
+
+void cleanupBuffers()
+{
+    while ((inb(0x64) & 3))
+        inb(0x60);
+}
+
+void prepareRead()
+{
+    int timeOut = 100000;
+    while (timeOut--) {
+        if ((inb(0x64) & 1)==1)
+            return;
+    }
+}
+
+void prepareWrite()
+{
+    int timeOut = 100000;
+    while (timeOut--) {
+        if ((inb(0x64) & 2)==1)
+            return;
+    }
+}
+
+s64int mice_Probe()
+{
+    return 0;
+}
+
+void mice_Command(u8int cmd)
+{
+    //Wait to be able to send a command
+    prepareWrite();
+    //Tell the mouse we are sending a command
+    outb(0x64, 0xD4);
+    //Wait for the final part
+    prepareWrite();
+    //Finally write
+    outb(0x60, cmd);
+}
+
+u8int mice_ReadDataPort()
+{
+    prepareRead();
+    return inb(0x60);
+}
+
+void mice_Init()
+{
+    struct Device *micedev;
+    u8int status;
+    //Enable the auxiliary mouse device
+    prepareWrite();
+    outb(0x64, 0xA8);
+
+    //Enable the interrupts
+    prepareWrite();
+    outb(0x64, 0x20);
+    prepareRead();
+    status=(inb(0x60) | 2);
+    prepareWrite();
+    outb(0x64, 0x60);
+    prepareWrite();
+    outb(0x60, status);
+
+    //Tell the mouse to use default settings
+    mice_Command(0xF6);
+    mice_ReadDataPort();  //Acknowledge
+
+    //Enable the mouse
+    mice_Command(0xF4);
+    mice_ReadDataPort();  //Acknowledge
+
+    micedev = (struct Device*)kMalloc(sizeof(struct Device));
+    memset(micedev, 0, sizeof(struct Device));
+    micedev->id = 0x20000;
+    micedev->op  = &mice_Ops;
+    addDevice(micedev);
+    vfsCreateObject("Device:/Mice",micedev->id);
+    miceWaitQueue = (struct WaitQueue*)kMalloc(sizeof(struct WaitQueue));
+    memset(miceWaitQueue, 0, sizeof(struct WaitQueue));
+    //Setup the mouse handler
+    registerInterruptHandler(IRQ12, mice_ISR);
+}
+
 void i8042_Init()
 {
-    struct Device *dev;
-    dev = (struct Device*)kMalloc(sizeof(struct Device));
-    memset(dev, 0, sizeof(struct Device));
-    dev->id = 0x10000;
-    dev->op  = &i8042_Ops;
+    struct Device *kbddev;
 
     if (i8042_Probe() == 0) {
-        /*
-        cleanupBuffers();
-        outb(0x64,0xAE);
-        */
-        addDevice(dev);
-        vfsCreateObject("Device:/Keyboard",dev->id);
+        kbddev = (struct Device*)kMalloc(sizeof(struct Device));
+        memset(kbddev, 0, sizeof(struct Device));
+        kbddev->id = 0x10000;
+        kbddev->op  = &i8042_Ops;
+        addDevice(kbddev);
+        vfsCreateObject("Device:/Keyboard",kbddev->id);
         wq = (struct WaitQueue*)kMalloc(sizeof(struct WaitQueue));
         memset(wq, 0, sizeof(struct WaitQueue));
         registerInterruptHandler(IRQ1, &i8042_ISR);
+        if (mice_Probe() == 0) {
+            mice_Init();
+        }
     } else {
         printk("failed to init i8042.\n");
-        kFree(dev);
-        dev = 0;
     }
 }
 
@@ -100,24 +198,6 @@ void i8042_Cleanup()
         wakeUpAll(wq);
         kFree(wq);
     }
-}
-
-void cleanupBuffers()
-{
-    while ((inb(0x64) & 3))
-        inb(0x60);
-}
-
-void prepareRead()
-{
-    while ((inb(0x64) & 1)==0)
-        ;
-}
-
-void prepareWrite()
-{
-    while ((inb(0x64) & 2))
-        inb(0x60);
 }
 
 s64int i8042_Probe()
@@ -135,6 +215,46 @@ s64int i8042_Probe()
         return -1;
 
     return 0;
+}
+
+s64int mice_Read(struct VNode *node, u64int size, char *buffer)
+{
+    /*printk("%s\n", __FUNCTION__);*/
+    if ((size<4) || !buffer)
+        return 0;
+
+    sleepOn(wq);
+
+    *(u64int*)buffer = key;
+
+    return 4;
+}
+
+s64int mice_Open(struct VNode *node)
+{
+    node->priv = dev;
+    return 0;
+}
+
+s64int mice_Close(struct VNode *node)
+{
+    return 0;
+}
+
+void mice_ISR(struct RegisterState *regs)
+{
+    switch (miceCycle) {
+    case 0:
+    case 1:
+        miceByte[miceCycle] = inb(0x60);
+        miceCycle++;
+        break;
+    case 2:
+        miceByte[miceCycle] = inb(0x60);
+        miceCycle = 0;
+        wakeUpAll(miceWaitQueue);
+        break;
+    }
 }
 
 s64int i8042_Read(struct VNode *node, u64int size, char *buffer)

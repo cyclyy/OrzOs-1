@@ -31,5 +31,6 @@ rm /tmp/c/uiserver
 cp initrd/a.txt /tmp/c/t1.txt -v
 cp src/prog/uiserver /tmp/c -v
 cp zenhei.ttc /tmp/c -v
+cp wallpaper.png /tmp/c -v
 sudo umount /tmp/c
 sudo losetup -d /dev/loop5

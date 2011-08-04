@@ -21,6 +21,8 @@
 #include "pci.h"
 #include "ide.h"
 #include "cpu.h"
+#include "cmos.h"
+#include "debugdev.h"
 #include "fs/ext2fs.h"
 
 void testVBE()
@@ -75,11 +77,13 @@ u64int kmain(struct BootInfo *si)
     initFpu();
     initCpuExceptions();
     initIPC();
+    initRTC();
     vfsMount("Boot",0,"bootfs",0,(void*)PADDR_TO_VADDR(getBootInfo()->initrdAddr));
     vfsMount("Device",0,"devfs",0,0);
     initRealModeInterface();
     i8042_Init();
     display_Init();
+    debugdev_Init();
     pci_Init();
     ide_Init();
     ext2fs_Init();

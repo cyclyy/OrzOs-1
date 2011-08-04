@@ -37,7 +37,7 @@ u64int OzAddHeapSize(s64int incr)
     } else if (incr < 0) {
         oldbrk = prog->brk;
         prog->brk += incr;
-        printk("OzAddHeapSize %d, %x\n", incr, oldbrk);
+        printk("OzAddHeapSize -%d, %x\n", -incr, oldbrk);
         return oldbrk;
     } else {
         oldbrk = prog->brk;
