@@ -6,6 +6,7 @@
 #include "task.h"
 #include "key.h"
 #include "waitqueue.h"
+#include "mice.h"
 
 s64int i8042_Open(struct VNode *node);
 s64int i8042_Close(struct VNode *node);
@@ -67,7 +68,8 @@ static u8int inEscape = 0;
 static u64int key;
 
 static u8int miceCycle = 0;
-static u8int miceByte[3];
+static u8int miceByte[3], savedMiceByte[3] = {0};
+static struct MiceEvent miceEvent;
 
 static struct DeviceOperation i8042_Ops = {
     .open  = &i8042_Open,
@@ -81,6 +83,7 @@ static struct DeviceOperation mice_Ops = {
     .read  = &mice_Read,
 //    .write  = &mice_Write,
 };
+
 
 void cleanupBuffers()
 {
@@ -104,6 +107,33 @@ void prepareWrite()
         if ((inb(0x64) & 2)==1)
             return;
     }
+}
+
+static s64int mice_CreateEvent()
+{
+    u64int oldBtn, newBtn;
+    memset(&miceEvent, 0, sizeof(struct MiceEvent));
+    if ((miceByte[1] == 0) && (miceByte[2] == 0)) {
+        oldBtn = savedMiceByte[0] & 7;
+        newBtn = miceByte[0] & 7;
+        printk("D:%d:%d\n",oldBtn,newBtn);
+        if (newBtn > oldBtn) {
+            miceEvent.type = MICE_EVENT_PRESS;
+            miceEvent.button = newBtn ^ oldBtn;
+        } else if (newBtn < oldBtn) {
+            miceEvent.type = MICE_EVENT_RELEASE;
+            miceEvent.button = newBtn ^ oldBtn;
+        } else {
+            miceEvent.type = MICE_EVENT_NULL;
+        }
+    } else {
+        miceEvent.type = MICE_EVENT_MOVE;
+        miceEvent.deltaX = miceByte[1];
+        miceEvent.deltaY = miceByte[2];
+        miceEvent.button = miceByte[0] & 7;
+    }
+    memcpy(&savedMiceByte, &miceByte, 3);
+    return 0;
 }
 
 s64int mice_Probe()
@@ -220,14 +250,16 @@ s64int i8042_Probe()
 s64int mice_Read(struct VNode *node, u64int size, char *buffer)
 {
     /*printk("%s\n", __FUNCTION__);*/
-    if ((size<4) || !buffer)
+    if ((size<sizeof(struct MiceEvent)) || !buffer)
         return 0;
 
     sleepOn(wq);
+    if (miceEvent.type == MICE_EVENT_NULL) {
+        return 0;
+    }
+    memcpy(buffer, &miceEvent, sizeof(struct MiceEvent));
 
-    *(u64int*)buffer = key;
-
-    return 4;
+    return sizeof(struct MiceEvent);
 }
 
 s64int mice_Open(struct VNode *node)
@@ -252,6 +284,7 @@ void mice_ISR(struct RegisterState *regs)
     case 2:
         miceByte[miceCycle] = inb(0x60);
         miceCycle = 0;
+        mice_CreateEvent();
         wakeUpAll(miceWaitQueue);
         break;
     }
