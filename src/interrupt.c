@@ -58,6 +58,6 @@ void initTimer(u16int freq)
 void initInterrupt()
 {
     initIDT();
-    initTimer(1000);
+    initTimer(HZ);
     asm ("sti");
 }

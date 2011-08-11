@@ -38,8 +38,7 @@ MOD_SOURCES = testmod.o            \
               ext2fs.o          \
 
 PROG_SOURCES = prog/uiproto.o prog/uiserver.o prog/init.o prog/server.o prog/client.o syscall.o 
-
-CORE_CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -mcmodel=kernel -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g
+CORE_CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -mcmodel=kernel -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g 
 #PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -I/home/ora/cross/include $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g
 PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -Ix86emu -Wall -I. $(BASE_CFLAGS) $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g
 CORE_LDFLAGS=-Tcore.ld -m orzos_x86_64 -M=allsymbol.map -z max-page-size=0x1000
@@ -51,6 +50,14 @@ all: $(CORE_C_SOURCES) $(CORE_ASM_SOURCES) $(PROG_SOURCES) $(X86EMU_SOURCES) lib
 
 clean:
 	$(QUIET)-rm *.o ../util/*.o prog/*.o prog/init video/*.o fs/*.o syscall/*.o x86emu/*.o kernel allsymbol.map global.map
+
+include $(CORE_C_SOURCES:.o=.d)
+
+%.d: %.c
+	@set -e; rm -f $@; \
+	$(CC) -I. -Ix86emu -MM $(CPPFLAGS) $< > $@.$$$$; \
+	sed -r 's,($*)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
 
 loader32: loader32.s
 	@echo "AS	$@"

@@ -7,6 +7,7 @@
 #define NULL 0
 #endif
 
+#define HZ  1000
 #define PAGE_SIZE 4096
 #define PAGE_LOG2_SIZE 12
 #define PAGE_MASK 0xfffffffffffff000
