@@ -25,7 +25,7 @@ CORE_C_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o cpu.o dtable.o \
 			handle.o fs/bootfs.o fs/devfs.o fs/ext2fs.o \
 			syscall/ozipc.o syscall/oztask.o syscall/ozfs.o \
 			rmi.o video/display.o video/vbe.o \
-			pci.o ide.o disk.o cmos.o debugdev.o
+			pci.o ide.o disk.o cmos.o debugdev.o timer.o
 
 CORE_ASM_SOURCES = flushdtable.o isr.o taskasm.o usermemcopy.o
 
@@ -50,8 +50,6 @@ all: $(CORE_C_SOURCES) $(CORE_ASM_SOURCES) $(PROG_SOURCES) $(X86EMU_SOURCES) lib
 
 clean:
 	$(QUIET)-rm *.o ../util/*.o prog/*.o prog/init video/*.o fs/*.o syscall/*.o x86emu/*.o kernel allsymbol.map global.map
-
-include $(CORE_C_SOURCES:.o=.d)
 
 %.d: %.c
 	@set -e; rm -f $@; \
@@ -92,3 +90,6 @@ $(PROG_SOURCES):%.o:%.c
 
 ctags:
 	$(QUIET)ctags -R .
+
+include $(CORE_C_SOURCES:.o=.d)
+

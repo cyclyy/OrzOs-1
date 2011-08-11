@@ -1,22 +1,22 @@
 #include "timer.h"
-#include "isr.h"
-#include "screen.h"
+#include "interrupt.h"
+#include "schedule.h"
 #include "task.h"
 
-u32int ticks = 0;
+u64int ticks = 0;
 
-void timer_irq(registers_t *regs)
+void timerHandler(struct RegisterState *rs)
 {
-    ticks++;
-
-    handle_timer_queue();
-
-    switch_task();
+    ++currentTask->ticks;
+    --currentTask->slices;
+    if (!currentTask->slices) {
+        schedule();
+    }
 }
 
-void init_timer(u32int freq)
+void initTimer()
 {
-    u32int divisor = 1193180 / freq;
+    u16int divisor = 1193180 / HZ;
 
     // send command byte
     outb(0x43, 0x36);
@@ -26,6 +26,10 @@ void init_timer(u32int freq)
     outb(0x40, l);
     outb(0x40, h);
 
-    register_interrupt_handler(IRQ0, &timer_irq);
+}
+
+void startTimer()
+{
+    registerInterruptHandler(IRQ0, timerHandler);
 }
 

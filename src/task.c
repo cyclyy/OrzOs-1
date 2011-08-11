@@ -10,6 +10,7 @@
 #include "interrupt.h"
 #include "elfloader.h"
 #include "vfs.h"
+#include "timer.h"
 
 struct Task *kernelTask = 0;
 struct Task *taskQueue = 0;
@@ -58,15 +59,6 @@ void moveKernelStack()
     asm("mov %0, %%rbp" :: "r"(newRbp));
 }
 
-void timerHandler(struct RegisterState *rs)
-{
-    ++currentTask->ticks;
-    --currentTask->slices;
-    if (!currentTask->slices) {
-        schedule();
-    }
-}
-
 void initMultitasking()
 {
     moveKernelStack();
@@ -85,7 +77,7 @@ void initMultitasking()
 
     taskQueue = currentTask;
 
-    registerInterruptHandler(IRQ0, timerHandler);
+    startTimer();
 }
 
 void startUserThread()

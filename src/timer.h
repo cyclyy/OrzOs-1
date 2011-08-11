@@ -1,13 +1,13 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include "common.h"
+#include "sysdef.h"
 
-#define HZ            100
+extern u64int ticks;
 
-extern u32int ticks;
+void initTimer();
 
-void init_timer(u32int freq);
+void startTimer();
 
 #endif
 

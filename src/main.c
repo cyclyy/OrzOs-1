@@ -69,6 +69,7 @@ u64int kmain(struct BootInfo *si)
     printk("Booting...\n");
 
     setBootInfo(si);
+    initTimer();
     initInterrupt();
     initMemoryManagement();
     initTSS();

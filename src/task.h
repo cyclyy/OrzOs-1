@@ -38,4 +38,5 @@ s64int kNewTask(const char *path, u64int flags);
 
 void kExitTask(s64int exitCode);
 
+extern struct Task *currentTask;
 #endif /* TASK_H */

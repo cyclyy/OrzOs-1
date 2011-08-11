@@ -42,22 +42,8 @@ void registerInterruptHandler(u64int n, IsrHandlerFunc handler)
     interruptHandlers[n] = handler;
 }
 
-void initTimer(u16int freq)
-{
-    u16int divisor = 1193180 / freq;
-
-    // send command byte
-    outb(0x43, 0x36);
-
-    u8int l = divisor & 0xff;
-    u8int h = (divisor >> 8) & 0xff;
-    outb(0x40, l);
-    outb(0x40, h);
-
-}
 void initInterrupt()
 {
     initIDT();
-    initTimer(HZ);
     asm ("sti");
 }
