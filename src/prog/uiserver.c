@@ -14,9 +14,9 @@
 
 struct Pixel
 {
-    char r:5;
-    char g:6;
-    char b:5;
+    unsigned short r:5;
+    unsigned short g:6;
+    unsigned short b:5;
 } __attribute__((packed));
 
 struct Pixel *frameBuffer;
@@ -112,7 +112,7 @@ void initCairo()
 
     memset(img2,0,4*4*4);
     //surface = cairo_image_surface_create_for_data(image, CAIRO_FORMAT_RGB8,WIDTH,HEIGHT,WIDTH);
-    surface = cairo_image_surface_create_for_data(frameBuffer, CAIRO_FORMAT_RGB16_565,WIDTH,HEIGHT,WIDTH*2);
+    surface = cairo_image_surface_create_for_data((unsigned char*)frameBuffer, CAIRO_FORMAT_RGB16_565,WIDTH,HEIGHT,WIDTH*2);
     font_face = cairo_ft_font_face_create_for_ft_face(face,0);
     cr = cairo_create(surface);
     cairo_set_font_face(cr,font_face);

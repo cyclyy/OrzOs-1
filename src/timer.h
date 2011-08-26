@@ -3,11 +3,32 @@
 
 #include "sysdef.h"
 
-extern u64int ticks;
+struct ExpireNode;
+typedef void (*DelayedCallbackFunction)(struct ExpireNode *, void *);
 
-void initTimer();
+struct ExpireNode
+{
+    u64int expire;
+    DelayedCallbackFunction func;
+    void *arg;
+    struct ExpireNode *next, *prev;
+};
 
-void startTimer();
+struct TimerQueue
+{
+    struct ExpireNode *head;
+    struct WaitQueue *wq;
+};
+
+extern u64int globalTicks;
+
+void initGlobalTimer();
+
+void startGlobalTimer();
+
+struct ExpireNode *addDelayedCallback(u64int expire, DelayedCallbackFunction func, void *arg);
+
+void removeDelayedCallback(struct ExpireNode *enode);
 
 #endif
 

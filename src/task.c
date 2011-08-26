@@ -77,7 +77,7 @@ void initMultitasking()
 
     taskQueue = currentTask;
 
-    startTimer();
+    startGlobalTimer();
 }
 
 void startUserThread()
