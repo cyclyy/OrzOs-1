@@ -19,6 +19,8 @@ struct TimerQueue *globalTimerQueue()
     return tq;
 };
 
+void reAddPeriodicCallback(struct ExpireNode *p);
+
 void processSoftTimers()
 {
     struct TimerQueue *tq;
@@ -26,10 +28,21 @@ void processSoftTimers()
     tq =  globalTimerQueue();
     if (tq->head) {
         --tq->head->expire;
-        while (tq->head && (tq->head->expire == 0)) {
+        while (tq->head && (tq->head->expire <= 0)) {
             p = tq->head;
             tq->head = p->next;
+            if (p->next) {
+                p->next->prev = 0;
+            }
+            p->next = p->prev = 0;
             p->func(p, p->arg);
+            switch (p->type) {
+            case TIMER_ONESHOT:
+                break;
+            case TIMER_PERIODIC:
+                //reAddPeriodicCallback(p);
+                break;
+            }
         }
     }
 }
@@ -64,13 +77,52 @@ void startGlobalTimer()
     registerInterruptHandler(IRQ0, timerHandler);
 }
 
-struct ExpireNode *addDelayedCallback(u64int expire, DelayedCallbackFunction func, void *arg)
+struct ExpireNode *addPeriodicCallback(u64int expire, DelayedCallbackFunction func, void *arg)
+{
+
+    struct ExpireNode *enode, *p, *q;
+    struct TimerQueue *tq;
+
+    enode = (struct ExpireNode *)kMalloc(sizeof(struct ExpireNode));
+    memset(enode,0,sizeof(struct ExpireNode));
+    enode->type = TIMER_PERIODIC;
+    enode->base = expire;
+    enode->expire = expire;
+    enode->func = func;
+    enode->arg = arg;
+    tq = globalTimerQueue();
+    q = 0;
+    p = tq->head;
+    while (p && (expire >= p->expire)) {
+        expire -= p->expire;
+        q = p;
+        p = p->next;
+    }
+    enode->expire = expire;
+    enode->prev = q;
+    enode->next = p;
+    if (!q) {
+        tq->head = enode;
+    } else {
+        q->next = enode;
+        enode->prev = q;
+    }
+    if (p) {
+        p->expire -= expire;
+        p->prev = enode;
+    }
+    return enode;
+}
+
+struct ExpireNode *addOneshotCallback(u64int expire, DelayedCallbackFunction func, void *arg)
 {
     struct ExpireNode *enode, *p, *q;
     struct TimerQueue *tq;
 
     enode = (struct ExpireNode *)kMalloc(sizeof(struct ExpireNode));
     memset(enode,0,sizeof(struct ExpireNode));
+    enode->type = TIMER_ONESHOT;
+    enode->base = expire;
     enode->expire = expire;
     enode->func = func;
     enode->arg = arg;

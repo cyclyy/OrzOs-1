@@ -24,6 +24,7 @@
 #include "cmos.h"
 #include "debugdev.h"
 #include "timer.h"
+#include "libc/list.h"
 #include "fs/ext2fs.h"
 
 void cb(struct ExpireNode *enode, void *arg);
@@ -106,9 +107,10 @@ u64int kmain(struct BootInfo *si)
     initMultitasking();
     kNewTask("Boot:/init", 0);
 
-    addDelayedCallback(1000, cb, 1);
-    addDelayedCallback(3000, cb, 3);
-    addDelayedCallback(2000, cb, 2);
+    //addOneshotCallback(1000, cb, (void*)1);
+    //addOneshotCallback(3000, cb, (void*)3);
+    //addOneshotCallback(2000, cb, (void*)2);
+
     rootTask();
     // never return here;
     return 0;
@@ -119,5 +121,5 @@ void cb(struct ExpireNode *enode, void *arg)
     int i = (int)arg;
     printk("Delayed call %d\n", i);
     removeDelayedCallback(enode);
-    addDelayedCallback(i*1000, cb, i);
+    addOneshotCallback(i*1000, cb, (void*)i);
 }
