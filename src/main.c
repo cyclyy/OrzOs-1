@@ -27,7 +27,8 @@
 #include "libc/list.h"
 #include "fs/ext2fs.h"
 
-void cb(struct ExpireNode *enode, void *arg);
+void cb(void *arg);
+struct Timer *t;
 
 void testVBE()
 {
@@ -83,9 +84,9 @@ u64int kmain(struct BootInfo *si)
     initCpuExceptions();
     initIPC();
     initRTC();
+    initRealModeInterface();
     vfsMount("Boot",0,"bootfs",0,(void*)PADDR_TO_VADDR(getBootInfo()->initrdAddr));
     vfsMount("Device",0,"devfs",0,0);
-    initRealModeInterface();
     i8042_Init();
     display_Init();
     debugdev_Init();
@@ -105,21 +106,27 @@ u64int kmain(struct BootInfo *si)
     printk("AvailMem:%dKB\n",availMemory()/1024);
 
     initMultitasking();
+    initSoftTimer();
     kNewTask("Boot:/init", 0);
 
-    //addOneshotCallback(1000, cb, (void*)1);
-    //addOneshotCallback(3000, cb, (void*)3);
-    //addOneshotCallback(2000, cb, (void*)2);
+    t = createTimer(1000, cb, (void*)1);
+    startTimer(t);
 
     rootTask();
     // never return here;
     return 0;
 } 
 
-void cb(struct ExpireNode *enode, void *arg)
+void cb(void *arg)
 {
-    int i = (int)arg;
-    printk("Delayed call %d\n", i);
-    removeDelayedCallback(enode);
-    addOneshotCallback(i*1000, cb, (void*)i);
+    static long interval = 1;
+    long i = (long)arg;
+    if (interval > 64) {
+        destroyTimer(t);
+        return;
+    }
+    printk("Delayed call %d\n", interval);
+    interval *= 2;
+    t->expireTick = globalTicks + interval*1000;
+    startTimer(t);
 }

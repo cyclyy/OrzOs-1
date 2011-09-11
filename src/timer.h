@@ -2,28 +2,20 @@
 #define TIMER_H
 
 #include "sysdef.h"
+#include "libc/list.h"
 
-#define TIMER_DISABLE   0
-#define TIMER_ONESHOT   1
-#define TIMER_PERIODIC  2
+#define TIMER_STOPPED   0
+#define TIMER_RUNNING   1
 
-struct ExpireNode;
-typedef void (*DelayedCallbackFunction)(struct ExpireNode *, void *);
+typedef void (*Callback)(void *);
 
-struct ExpireNode
+struct Timer
 {
-    int type;
-    u64int base;
-    u64int expire;
-    DelayedCallbackFunction func;
+    int state;
+    long expireTick;
+    Callback cb;
     void *arg;
-    struct ExpireNode *next, *prev;
-};
-
-struct TimerQueue
-{
-    struct ExpireNode *head;
-    struct WaitQueue *wq;
+    struct ListHead link;
 };
 
 extern u64int globalTicks;
@@ -32,11 +24,15 @@ void initGlobalTimer();
 
 void startGlobalTimer();
 
-struct ExpireNode *addPeriodicCallback(u64int expire, DelayedCallbackFunction func, void *arg);
+void initSoftTimer();
 
-struct ExpireNode *addOneshotCallback(u64int expire, DelayedCallbackFunction func, void *arg);
+struct Timer *createTimer(long expire, Callback cb, void *arg);
 
-void removeDelayedCallback(struct ExpireNode *enode);
+int startTimer(struct Timer *timer);
+
+int stopTimer(struct Timer *timer);
+
+void destroyTimer(struct Timer *timer);
 
 #endif
 

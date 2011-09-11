@@ -5,54 +5,39 @@
 #include "task.h"
 #include "waitqueue.h"
 #include "util.h"
+#include "libc/list.h"
+
+struct TimerQueue
+{
+    struct ListHead list;
+    struct WaitQueue *wq;
+};
+
 
 u64int globalTicks = 0;
 
-struct TimerQueue *globalTimerQueue()
-{
-    static struct TimerQueue *tq = 0;
-    if (!tq) {
-        tq = (struct TimerQueue*)kMalloc(sizeof(struct TimerQueue));
-        tq->head = 0;
-        tq->wq = wqCreate();
-    }
-    return tq;
-};
+static struct TimerQueue *tq = 0;
 
-void reAddPeriodicCallback(struct ExpireNode *p);
-
-void processSoftTimers()
+static void timerTick()
 {
-    struct TimerQueue *tq;
-    struct ExpireNode *p;
-    tq =  globalTimerQueue();
-    if (tq->head) {
-        --tq->head->expire;
-        while (tq->head && (tq->head->expire <= 0)) {
-            p = tq->head;
-            tq->head = p->next;
-            if (p->next) {
-                p->next->prev = 0;
-            }
-            p->next = p->prev = 0;
-            p->func(p, p->arg);
-            switch (p->type) {
-            case TIMER_ONESHOT:
-                break;
-            case TIMER_PERIODIC:
-                //reAddPeriodicCallback(p);
-                break;
-            }
+    struct Timer *t, *tmp;
+    listForEachEntrySafe(t, tmp, &tq->list, link) {
+        if (t->expireTick <= globalTicks) {
+            t->state = TIMER_STOPPED;
+            listDel(&t->link);
+            t->cb(t->arg);
+        } else {
+            break;
         }
     }
 }
 
-void timerHandler(struct RegisterState *rs)
+static void timerHandler(struct RegisterState *rs)
 {
     ++globalTicks;
     ++currentTask->ticks;
     --currentTask->slices;
-    processSoftTimers();
+    timerTick();
     if (!currentTask->slices) {
         schedule();
     }
@@ -69,7 +54,6 @@ void initGlobalTimer()
     u8int h = (divisor >> 8) & 0xff;
     outb(0x40, l);
     outb(0x40, h);
-
 }
 
 void startGlobalTimer()
@@ -77,94 +61,61 @@ void startGlobalTimer()
     registerInterruptHandler(IRQ0, timerHandler);
 }
 
-struct ExpireNode *addPeriodicCallback(u64int expire, DelayedCallbackFunction func, void *arg)
+void initSoftTimer()
 {
-
-    struct ExpireNode *enode, *p, *q;
-    struct TimerQueue *tq;
-
-    enode = (struct ExpireNode *)kMalloc(sizeof(struct ExpireNode));
-    memset(enode,0,sizeof(struct ExpireNode));
-    enode->type = TIMER_PERIODIC;
-    enode->base = expire;
-    enode->expire = expire;
-    enode->func = func;
-    enode->arg = arg;
-    tq = globalTimerQueue();
-    q = 0;
-    p = tq->head;
-    while (p && (expire >= p->expire)) {
-        expire -= p->expire;
-        q = p;
-        p = p->next;
+    if (!tq) {
+        tq = (struct TimerQueue*)kMalloc(sizeof(struct TimerQueue));
+        INIT_LIST_HEAD(&tq->list);
+        tq->wq = wqCreate();
     }
-    enode->expire = expire;
-    enode->prev = q;
-    enode->next = p;
-    if (!q) {
-        tq->head = enode;
-    } else {
-        q->next = enode;
-        enode->prev = q;
-    }
-    if (p) {
-        p->expire -= expire;
-        p->prev = enode;
-    }
-    return enode;
 }
 
-struct ExpireNode *addOneshotCallback(u64int expire, DelayedCallbackFunction func, void *arg)
+struct Timer *createTimer(long expire, Callback cb, void *arg)
 {
-    struct ExpireNode *enode, *p, *q;
-    struct TimerQueue *tq;
+    struct Timer *timer;
 
-    enode = (struct ExpireNode *)kMalloc(sizeof(struct ExpireNode));
-    memset(enode,0,sizeof(struct ExpireNode));
-    enode->type = TIMER_ONESHOT;
-    enode->base = expire;
-    enode->expire = expire;
-    enode->func = func;
-    enode->arg = arg;
-    tq = globalTimerQueue();
-    q = 0;
-    p = tq->head;
-    while (p && (expire >= p->expire)) {
-        expire -= p->expire;
-        q = p;
-        p = p->next;
-    }
-    enode->expire = expire;
-    enode->prev = q;
-    enode->next = p;
-    if (!q) {
-        tq->head = enode;
-    } else {
-        q->next = enode;
-        enode->prev = q;
-    }
-    if (p) {
-        p->expire -= expire;
-        p->prev = enode;
-    }
-    return enode;
+    timer = (struct Timer*)kMalloc(sizeof(struct Timer));
+    INIT_LIST_HEAD(&timer->link);
+    timer->expireTick = globalTicks + expire;
+    timer->cb = cb;
+    timer->arg = arg;
+    timer->state = TIMER_STOPPED;
+
+    return timer;
 }
 
-void removeDelayedCallback(struct ExpireNode *enode)
+int startTimer(struct Timer *timer)
 {
-    struct TimerQueue *tq;
-    tq = globalTimerQueue();
-    if (enode->expire) {
-        if (enode->prev) {
-            enode->prev->next = enode->next;
-        }
-        if (enode->next) {
-            enode->next->prev = enode->prev;
-        }
-        if (tq->head == enode) {
-            tq->head = enode->next;
+    struct Timer *t;
+    if ((timer->state != TIMER_STOPPED) && (timer->expireTick <= globalTicks)) {
+        return -1;
+    }
+    timer->state = TIMER_RUNNING;
+    listForEachEntry(t, &tq->list, link) {
+        if (t->expireTick >= timer->expireTick) {
+            listAdd(&timer->link, &t->link);
+            return 0;
         }
     }
-    kFree(enode);
+    listAddTail(&timer->link, &tq->list);
+    return 0;
+}
+
+int stopTimer(struct Timer *timer)
+{
+    if (timer->state != TIMER_RUNNING) {
+        return -1;
+    }
+    timer->state = TIMER_STOPPED;
+    listDel(&timer->link);
+    return 0;
+}
+
+void destroyTimer(struct Timer *timer)
+{
+    if (timer->state == TIMER_RUNNING) {
+        stopTimer(timer);
+    }
+    kFree(timer);
 }
 
