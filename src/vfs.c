@@ -249,6 +249,14 @@ s64int vfsRead(struct VNode *node, u64int size, void *buffer)
         return -1;
 }
 
+s64int vfsReadAsync(struct VNode *node, u64int size, void *buffer)
+{
+    if (node->fs && node->fs->op->readAsync)
+        return node->fs->op->readAsync(node, size, buffer);
+    else
+        return -1;
+}
+
 s64int vfsWrite(struct VNode *node, u64int size, char *buffer)
 {
     if (node->fs && node->fs->op->write)

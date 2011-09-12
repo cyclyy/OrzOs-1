@@ -7,12 +7,12 @@
 
 s64int OzPost(s64int pid, void *buffer, u64int size)
 {
-    Post(pid, buffer, size);
+    return Post(lookupPid(pid), buffer, size);
 }
 
 s64int OzSend(s64int pid, void *buffer, u64int size)
 {
-    Send(pid, buffer, size);
+    return Send(lookupPid(pid), buffer, size);
 }
 
 s64int OzReceive(struct MessageHeader *header, void *buffer, u64int size)
@@ -20,7 +20,8 @@ s64int OzReceive(struct MessageHeader *header, void *buffer, u64int size)
     struct MessageHeader hdr;
     Receive(&hdr, buffer, size);
     if (header)
-        copyToUser(header, &hdr, sizeof(struct MessageHeader));
+        return copyToUser(header, &hdr, sizeof(struct MessageHeader));
+    return -1;
 }
 
 // vim: sw=4 sts=4 et tw=100

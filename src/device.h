@@ -3,6 +3,7 @@
 
 #include "sysdef.h"
 #include "vfs.h"
+#include "libc/list.h"
 
 struct DeviceOperation;
 
@@ -22,6 +23,7 @@ struct DeviceOperation {
     s64int (*ioctl)(struct VNode *node, s64int request, u64int size, void *data);
     s64int (*mmap)(struct VNode *node, u64int addr, u64int size, s64int flags);
     s64int (*munmap)(struct VNode *node, u64int addr);
+    s64int (*readAsync)(struct VNode *node, u64int size, char *buffer);
 };
 
 void addDevice(struct Device *dev);

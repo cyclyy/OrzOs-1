@@ -146,7 +146,8 @@ int main()
 {
     s64int display;
     struct MessageHeader hdr;
-    char buf[1000];
+    char buf[1000], buf2[1000];
+    int n, fd;
 
     f = fopen("Device:/Debug", "w");
     display = openDisplay();
@@ -154,9 +155,13 @@ int main()
     initCairo();
 
     fprintf(f,"pid %ld\n", OzGetPid());
+
+    fd = OzOpen("Device:/Mice", 0);
+
     for (;;) {
         OzReceive(&hdr, buf, 1000);
-        fputs(buf,f);
+        fprintf(f, "Header:pid:%d,time:%d,size:%ld\n",hdr.pid, hdr.tstamp, hdr.size);
+        n = OzReadAsync(fd, 1000, buf2);
     }
     return 0;
 }

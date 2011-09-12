@@ -23,10 +23,9 @@ struct MessageQueue *mqCreate()
     return mq;
 }
 
-int Post(int pid, void *buffer, size_t size)
+int Post(struct Task *task, void *buffer, unsigned long size)
 {
     struct Message *msg;
-    struct Task *task;
     msg = (struct Message*)kMalloc(sizeof(struct Message));
     msg->type = MESSAGE_POST;
     msg->header.pid = currentTask->pid;
@@ -37,7 +36,6 @@ int Post(int pid, void *buffer, size_t size)
     copyFromUser(msg->buffer, buffer, size);
     INIT_LIST_HEAD(&msg->link);
 
-    task = lookupPid(pid);
     if (!task) {
         kFree(msg);
         return -1;
@@ -47,10 +45,9 @@ int Post(int pid, void *buffer, size_t size)
     return 0;
 }
 
-int Notify(int pid, void *buffer, size_t size)
+int Notify(struct Task *task, void *buffer, unsigned long size)
 {
     struct Message *msg;
-    struct Task *task;
     msg = (struct Message*)kMalloc(sizeof(struct Message));
     msg->type = MESSAGE_POST;
     msg->header.pid = 0;
@@ -61,7 +58,6 @@ int Notify(int pid, void *buffer, size_t size)
     memcpy(msg->buffer, buffer, size);
     INIT_LIST_HEAD(&msg->link);
 
-    task = lookupPid(pid);
     if (!task) {
         kFree(msg);
         return -1;
@@ -71,10 +67,9 @@ int Notify(int pid, void *buffer, size_t size)
     return 0;
 }
 
-int Send(int pid, void *buffer, size_t size)
+int Send(struct Task *task, void *buffer, unsigned long size)
 {
     struct Message *msg;
-    struct Task *task;
     msg = (struct Message*)kMalloc(sizeof(struct Message));
     msg->type = MESSAGE_POST;
     msg->header.pid = currentTask->pid;
@@ -84,7 +79,6 @@ int Send(int pid, void *buffer, size_t size)
     msg->buffer = buffer;
     INIT_LIST_HEAD(&msg->link);
 
-    task = lookupPid(pid);
     if (!task) {
         kFree(msg);
         return -1;
@@ -95,24 +89,24 @@ int Send(int pid, void *buffer, size_t size)
     return 0;
 }
 
-int Receive(struct MessageHeader *header, void *buffer, size_t size)
+int Receive(struct MessageHeader *header, void *buffer, unsigned long size)
 {
     struct Message *msg;
     int ret;
-    if (listEmpty(&currentTask->mq->list)) {
+    while (listEmpty(&currentTask->mq->list)) {
         sleepOn(currentTask->mq->recvWQ);
-    } else {
-        msg = listFirstEntry(&currentTask->mq->list, struct Message, link);
-        listDel(&msg->link);
-        if (msg->type == MESSAGE_POST) {
-            ret = copyToUser(buffer, msg->buffer, MIN(size, msg->header.size));
-            kFree(msg->buffer);
-        } else {
-            ret = vmemcpy(currentTask->vm, buffer, msg->task->vm, msg->buffer, MIN(size, msg->header.size));
-            wakeUp(currentTask->mq->wq, msg->task);
-        }
-        kFree(msg);
     }
+    msg = listFirstEntry(&currentTask->mq->list, struct Message, link);
+    memcpy(header, &msg->header, sizeof(struct MessageHeader));
+    listDel(&msg->link);
+    if (msg->type == MESSAGE_POST) {
+        ret = copyToUser(buffer, msg->buffer, MIN(size, msg->header.size));
+        kFree(msg->buffer);
+    } else {
+        ret = vmemcpy(currentTask->vm, buffer, msg->task->vm, msg->buffer, MIN(size, msg->header.size));
+        wakeUp(currentTask->mq->wq, msg->task);
+    }
+    kFree(msg);
     return ret;
 }
 

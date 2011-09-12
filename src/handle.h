@@ -25,6 +25,8 @@ void hClose(struct Handle *handle);
 
 s64int htFindFreeIndex(struct HandleTable *ht);
 
+s64int htFindIndex(struct HandleTable *ht, void *pointer);
+
 struct HandleTable *htCreate();
 
 void htDestory(struct HandleTable *ht);

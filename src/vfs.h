@@ -54,6 +54,8 @@ struct FileSystemOperation
     s64int (*mmap)(struct VNode *node, u64int addr, u64int size, s64int flags);
     s64int (*munmap)(struct VNode *node, u64int addr);
 
+    s64int (*readAsync)(struct VNode *node, u64int size, char *buffer);
+
     s64int (*root)(struct FileSystem *fs);
     s64int (*stat)(struct FileSystem *fs, s64int id, struct VNodeInfo *ni);
     s64int (*readdir)(struct VNode *node, u64int size, char *buf);
@@ -97,6 +99,8 @@ s64int vfsWrite(struct VNode *node, u64int size, char *buffer);
 s64int vfsSeek(struct VNode *node, s64int offset, s64int pos);
 s64int vfsState(const char *path, struct VNodeInfo *ni);
 s64int vfsIoControl(struct VNode *node, s64int request, u64int size, void *data);
+
+s64int vfsReadAsync(struct VNode *node, u64int size, void *buffer);
 
 s64int vfsCreateObject(const char *name, s64int id);
 s64int vfsCreateDirectory(const char *name);

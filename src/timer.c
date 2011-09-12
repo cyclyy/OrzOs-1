@@ -21,6 +21,9 @@ static struct TimerQueue *tq = 0;
 static void timerTick()
 {
     struct Timer *t, *tmp;
+    if (!tq) {
+        return;
+    }
     listForEachEntrySafe(t, tmp, &tq->list, link) {
         if (t->expireTick <= globalTicks) {
             t->state = TIMER_STOPPED;
@@ -63,11 +66,13 @@ void startGlobalTimer()
 
 void initSoftTimer()
 {
+    registerInterruptHandler(IRQ0, 0);
     if (!tq) {
         tq = (struct TimerQueue*)kMalloc(sizeof(struct TimerQueue));
         INIT_LIST_HEAD(&tq->list);
         tq->wq = wqCreate();
     }
+    registerInterruptHandler(IRQ0, timerHandler);
 }
 
 struct Timer *createTimer(long expire, Callback cb, void *arg)

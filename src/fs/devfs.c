@@ -16,6 +16,8 @@ s64int devfsIoControl(struct VNode *node, s64int request, u64int size, void *dat
 s64int devfsMap(struct VNode *node, u64int addr, u64int size, s64int flags);
 s64int devfsUnmap(struct VNode *node, u64int addr);
 
+s64int devfsReadAsync(struct VNode *node, u64int size, char *buffer);
+
 s64int devfsRoot(struct FileSystem *fs);
 s64int devfsStat(struct FileSystem *fs, s64int id, struct VNodeInfo *info);
 s64int devfsReaddir(struct VNode *node, u64int bufSize, char *buf);
@@ -47,6 +49,7 @@ static struct FileSystemOperation fsOps = {
     .open = devfsOpen,
     .close = devfsClose,
     .read = devfsRead,
+    .readAsync = devfsReadAsync,
     .write = devfsWrite,
     .readdir = devfsReaddir,
     .finddir = devfsFinddir,
@@ -158,6 +161,25 @@ s64int devfsRead(struct VNode *node, u64int size, char *buffer)
         dev = findDevice(dnode->objid);
         if (dev && dev->op->read) {
             ret = dev->op->read(node,size,buffer);
+        } else
+            ret = -1;
+    } else 
+        ret = -1;
+
+    return ret;
+}
+
+s64int devfsReadAsync(struct VNode *node, u64int size, char *buffer)
+{
+    struct DevFSNode *dnode;
+    struct Device *dev;
+    s64int ret;
+
+    dnode = (struct DevFSNode *)(node->id + KERNEL_HEAP_START_ADDR);
+    if (dnode->type == DEVFS_TYPE_OBJ) {
+        dev = findDevice(dnode->objid);
+        if (dev && dev->op->readAsync) {
+            ret = dev->op->readAsync(node,size,buffer);
         } else
             ret = -1;
     } else 

@@ -16,6 +16,18 @@ s64int htFindFreeIndex(struct HandleTable *ht)
     return -1;
 }
 
+s64int htFindIndex(struct HandleTable *ht, void *pointer)
+{
+    s64int i;
+
+    for (i=0; i<MAX_HANDLE_NUMBER; i++) {
+        if ((ht->handle[i].type != HANDLE_FREE) && (ht->handle[i].pointer == pointer))
+            return i;
+    }
+
+    return -1;
+}
+
 struct HandleTable *htCreate()
 {
     struct HandleTable *ht;

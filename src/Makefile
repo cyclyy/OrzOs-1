@@ -25,7 +25,7 @@ CORE_C_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o cpu.o dtable.o \
 			handle.o fs/bootfs.o fs/devfs.o fs/ext2fs.o \
 			syscall/ozipc.o syscall/oztask.o syscall/ozfs.o \
 			rmi.o video/display.o video/vbe.o \
-			pci.o ide.o disk.o cmos.o debugdev.o timer.o
+			pci.o ide.o disk.o cmos.o debugdev.o timer.o iorequest.o
 
 CORE_ASM_SOURCES = flushdtable.o isr.o taskasm.o usermemcopy.o
 
@@ -37,7 +37,8 @@ MOD_SOURCES = testmod.o            \
               ide.o                \
               ext2fs.o          \
 
-PROG_SOURCES = prog/uiproto.o prog/uiserver.o prog/init.o prog/server.o prog/client.o syscall.o 
+#PROG_SOURCES = prog/uiproto.o prog/uiserver.o prog/init.o prog/server.o prog/client.o syscall.o 
+PROG_SOURCES = prog/uiproto.o prog/uiserver.o prog/init.o syscall.o 
 CORE_CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -mcmodel=kernel -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g 
 #PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -I/home/ora/cross/include $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g
 PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -Ix86emu -Wall -I. $(BASE_CFLAGS) $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g

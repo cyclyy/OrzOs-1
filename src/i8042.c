@@ -3,10 +3,13 @@
 #include "util.h"
 #include "interrupt.h"
 #include "kmm.h"
+#include "vmm.h"
 #include "task.h"
 #include "key.h"
 #include "waitqueue.h"
 #include "mice.h"
+#include "iorequest.h"
+#include "libc/list.h"
 
 s64int i8042_Open(struct VNode *node);
 s64int i8042_Close(struct VNode *node);
@@ -17,6 +20,7 @@ void i8042_ISR(struct RegisterState *regs);
 s64int mice_Open(struct VNode *node);
 s64int mice_Close(struct VNode *node);
 s64int mice_Read(struct VNode *node, u64int size, char *buffer);
+s64int mice_ReadAsync(struct VNode *node, u64int size, char *buffer);
 s64int mice_Probe();
 void mice_ISR(struct RegisterState *regs);
 
@@ -82,6 +86,7 @@ static struct DeviceOperation mice_Ops = {
     .close = &mice_Close,
     .read  = &mice_Read,
 //    .write  = &mice_Write,
+    .readAsync = &mice_ReadAsync,
 };
 
 
@@ -187,7 +192,7 @@ void mice_Init()
 
     micedev = (struct Device*)kMalloc(sizeof(struct Device));
     memset(micedev, 0, sizeof(struct Device));
-    micedev->id = 0x20000;
+    micedev->id = 0x40000;
     micedev->op  = &mice_Ops;
     addDevice(micedev);
     vfsCreateObject("Device:/Mice",micedev->id);
@@ -253,13 +258,33 @@ s64int mice_Read(struct VNode *node, u64int size, char *buffer)
     if ((size<sizeof(struct MiceEvent)) || !buffer)
         return 0;
 
-    sleepOn(wq);
+    sleepOn(miceWaitQueue);
     if (miceEvent.type == MICE_EVENT_NULL) {
         return 0;
     }
     memcpy(buffer, &miceEvent, sizeof(struct MiceEvent));
 
     return sizeof(struct MiceEvent);
+}
+
+LIST_HEAD(miceList);
+
+s64int mice_ReadAsync(struct VNode *node, u64int size, char *buffer)
+{
+    struct IORequest *ior;
+    /*printk("%s\n", __FUNCTION__);*/
+    if ((size<sizeof(struct MiceEvent)) || !buffer)
+        return 0;
+
+    ior = createIORequest(node, IO_ASYNC_READ, buffer, size);
+    listAddTail(&ior->link, &miceList);
+
+    if (miceEvent.type == MICE_EVENT_NULL) {
+        return 0;
+    }
+    memcpy(buffer, &miceEvent, sizeof(struct MiceEvent));
+
+    return 0;
 }
 
 s64int mice_Open(struct VNode *node)
@@ -275,6 +300,7 @@ s64int mice_Close(struct VNode *node)
 
 void mice_ISR(struct RegisterState *regs)
 {
+    struct IORequest *ior, *tmp;
     switch (miceCycle) {
     case 0:
     case 1:
@@ -285,6 +311,11 @@ void mice_ISR(struct RegisterState *regs)
         miceByte[miceCycle] = inb(0x60);
         miceCycle = 0;
         mice_CreateEvent();
+        listForEachEntrySafe(ior, tmp, &miceList, link) {
+            vmemcpy(ior->task->vm, ior->buffer, kernelVM, &miceEvent, MIN(sizeof(struct MiceEvent), ior->size));
+            listDel(&ior->link);
+            completeIoRequest(ior, MIN(ior->size,sizeof(struct MiceEvent)));
+        }
         wakeUpAll(miceWaitQueue);
         break;
     }

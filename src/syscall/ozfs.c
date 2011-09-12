@@ -214,4 +214,20 @@ s64int OzMap(s64int fd, u64int addr, u64int size, s64int flags)
         return -1;
     }
 }
+
+s64int OzReadAsync(s64int fd, u64int size, char *buffer)
+{
+    struct Handle *handle;
+
+    if (!IS_VALID_HANDLE_INDEX(fd)) {
+        return -1;
+    }
+    
+    handle = &currentTask->handleTable->handle[fd];
+    if (handle->type == HANDLE_VNODE)  {
+        return vfsReadAsync((struct VNode*)handle->pointer, size, buffer);
+    } else {
+        return -1;
+    }
+}
 // vim: sw=4 sts=4 et tw=100

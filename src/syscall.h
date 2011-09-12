@@ -66,7 +66,7 @@ struct MessageHeader
 {
     int pid;
     int tstamp;
-    size_t size;
+    unsigned long size;
 };
 
 DECL_SYSCALL_0(OzTestSyscall);
@@ -86,5 +86,6 @@ DECL_SYSCALL_1(OzAddHeapSize, s64int);
 DECL_SYSCALL_4(OzIoControl, u64int, s64int, u64int, void *);
 DECL_SYSCALL_3(OzSeek, s64int, s64int, s64int);
 DECL_SYSCALL_4(OzMap, s64int, u64int, u64int, s64int);
+DECL_SYSCALL_3(OzReadAsync, s64int, u64int, void *);
 
 #endif /* SYSCALL_H */

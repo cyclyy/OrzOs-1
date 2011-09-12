@@ -10,7 +10,7 @@ struct MessageHeader
 {
     int pid;
     int tstamp;
-    size_t size;
+    unsigned long size;
 };
 
 struct Message
@@ -31,9 +31,9 @@ struct MessageQueue
 
 struct MessageQueue *mqCreate();
 
-int Post(int pid, void *buffer, size_t size);
-int Notify(int pid, void *buffer, size_t size);
-int Send(int pid, void *buffer, size_t size);
-int Receive(struct MessageHeader *header, void *buffer, size_t size);
+int Post(struct Task *task, void *buffer, unsigned long size);
+int Notify(struct Task *task, void *buffer, unsigned long size);
+int Send(struct Task *task, void *buffer, unsigned long size);
+int Receive(struct MessageHeader *header, void *buffer, unsigned long size);
 #endif /* MESSAGE_H */
 
