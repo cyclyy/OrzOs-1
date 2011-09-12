@@ -10,19 +10,15 @@
 
 void syscallTest();
 
-#define N_SYSCALLS 21
+#define N_SYSCALLS 17
 
 void *syscalls[N_SYSCALLS] = {
     &syscallTest,
     &dbgPutch,
-    OzCreateServer,
-    OzDestroyServer,
-    OzConnect,
-    OzDisconnect,
-    OzSend,
     OzPost,
+    OzSend,
     OzReceive,
-    OzReply,
+    OzGetPid,
     OzNewTask,
     OzExitTask,
     OzOpen,

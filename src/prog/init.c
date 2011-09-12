@@ -21,6 +21,7 @@ int main()
     }
 
     OzNewTask("C:/uiserver",0);
+    OzPost(2, s, strlen(s) + 1);
 
     while(1);
 }

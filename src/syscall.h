@@ -62,21 +62,19 @@
         return ret;         \
     }                       
 
-struct MessageInfo 
+struct MessageHeader
 {
-    u64int srcSize;
-} __attribute__((packed));
+    int pid;
+    int tstamp;
+    size_t size;
+};
 
 DECL_SYSCALL_0(OzTestSyscall);
 DECL_SYSCALL_1(OzPutChar, char);
-DECL_SYSCALL_1(OzCreateServer, s64int);
-DECL_SYSCALL_1(OzDestroyServer, s64int);
-DECL_SYSCALL_1(OzConnect, s64int);
-DECL_SYSCALL_1(OzDisconnect, s64int);
-DECL_SYSCALL_5(OzSend, s64int, u64int, void *, u64int, void *);
-DECL_SYSCALL_3(OzPost, s64int, u64int, void *);
-DECL_SYSCALL_4(OzReceive, s64int, u64int, void *, struct MessageInfo *);
-DECL_SYSCALL_3(OzReply, s64int, u64int, void *);
+DECL_SYSCALL_3(OzPost, s64int,  void *, u64int);
+DECL_SYSCALL_3(OzSend, s64int, void *, u64int);
+DECL_SYSCALL_3(OzReceive, struct MessageHeader *, void *, u64int);
+DECL_SYSCALL_0(OzGetPid);
 DECL_SYSCALL_2(OzNewTask, char *, u64int);
 DECL_SYSCALL_1(OzExitTask, s64int);
 DECL_SYSCALL_2(OzOpen, char *, s64int);

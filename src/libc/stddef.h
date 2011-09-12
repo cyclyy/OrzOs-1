@@ -5,6 +5,4 @@
 #define NULL (void*)0
 #endif
 
-typedef size_t unsigned long
-
 #endif

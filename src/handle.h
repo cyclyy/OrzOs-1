@@ -7,9 +7,6 @@
 
 #define HANDLE_FREE         0
 #define HANDLE_VNODE        1
-#define HANDLE_SERVER       2
-#define HANDLE_CLIENT       3
-#define HANDLE_MESSAGE      4
 
 struct Handle
 {

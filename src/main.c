@@ -82,7 +82,7 @@ u64int kmain(struct BootInfo *si)
     initSyscalls();
     initFpu();
     initCpuExceptions();
-    initIPC();
+    //initIPC();
     initRTC();
     initRealModeInterface();
     vfsMount("Boot",0,"bootfs",0,(void*)PADDR_TO_VADDR(getBootInfo()->initrdAddr));

@@ -10,6 +10,7 @@
 struct VM;
 struct Program;
 struct HandleTable;
+struct MessageQueue;
 
 struct Task {
     u64int pid;
@@ -19,6 +20,7 @@ struct Task {
     u64int slices;
     s64int exitCode;
     s64int wakeCode;
+    struct MessageQueue *mq;
     struct VM *vm;
     struct Program *prog;
     struct HandleTable *handleTable;
@@ -39,4 +41,9 @@ s64int kNewTask(const char *path, u64int flags);
 void kExitTask(s64int exitCode);
 
 extern struct Task *currentTask;
+
+struct Task *lookupPid(int pid);
+
+int getPid();
+
 #endif /* TASK_H */

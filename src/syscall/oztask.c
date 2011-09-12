@@ -60,4 +60,9 @@ u64int OzAddHeapSize(s64int incr)
 
 }
 
+s64int OzGetPid()
+{
+    return getPid();
+}
+
 // vim: sw=4 sts=4 et tw=100

@@ -7,6 +7,8 @@
 #define NULL 0
 #endif
 
+typedef unsigned long size_t;
+
 #define HZ  1000
 #define PAGE_SIZE 4096
 #define PAGE_LOG2_SIZE 12

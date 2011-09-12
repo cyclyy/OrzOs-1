@@ -11,6 +11,7 @@
 #include "elfloader.h"
 #include "vfs.h"
 #include "timer.h"
+#include "message.h"
 
 struct Task *kernelTask = 0;
 struct Task *taskQueue = 0;
@@ -126,6 +127,7 @@ s64int kNewKernelThread(void *entry)
     newTask->state = TASK_STATE_READY;
     newTask->priority = 0;
     newTask->pid = ++lastPid;
+    newTask->mq = mqCreate();
     newTask->prog = 0;
     newTask->vm = vmRef(kernelTask->vm);
     newTask->handleTable = htRef(kernelTask->handleTable);
@@ -170,6 +172,7 @@ s64int kNewThread(void *entry)
     newTask->state = TASK_STATE_READY;
     newTask->priority = 0;
     newTask->pid = ++lastPid;
+    newTask->mq = mqCreate();
     newTask->prog = progRef(currentTask->prog);
     newTask->vm = vmRef(currentTask->vm);
     newTask->handleTable = htRef(currentTask->handleTable);
@@ -225,6 +228,7 @@ s64int kNewTask(const char *path, u64int flags)
     newTask->state = TASK_STATE_READY;
     newTask->priority = 0;
     newTask->pid = ++lastPid;
+    newTask->mq = mqCreate();
     newTask->rip = (u64int)&startUserThread;
     newTask->rbp = KERNEL_STACK_TOP;
     newTask->rsp = KERNEL_STACK_TOP;
@@ -302,5 +306,19 @@ void rootTask()
         }
         schedule();
     }
+}
+
+struct Task *lookupPid(int pid)
+{
+    struct Task *task = taskQueue;
+    while (task && (task->pid != pid)) {
+        task = task->next;
+    }
+    return task;
+}
+
+int getPid()
+{
+    return currentTask->pid;
 }
 

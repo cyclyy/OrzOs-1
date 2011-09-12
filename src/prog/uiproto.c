@@ -9,6 +9,7 @@ static s64int coid = 0;
 
 s64int uiInitApp(const char *name, u64int flags)
 {
+    /*
     struct UIInitRequest initRequest;
     struct UIInitReply initReply;
 
@@ -19,11 +20,12 @@ s64int uiInitApp(const char *name, u64int flags)
     initRequest.flags = flags;
     OzSend(coid, sizeof(struct UIInitRequest), &initRequest, sizeof(struct UIInitReply), &initReply);
     return initReply.clientId;
+    */
+    return 0;
 }
 
 s64int uiQuitApp(s64int id)
 {
-    OzDisconnect(coid);
     return 0;
 }
 
@@ -34,6 +36,7 @@ s64int uiConsoleRead(s64int id, u64int size, void *buf)
 
 s64int uiConsoleWrite(s64int id, u64int size, void *buf)
 {
+    /*
     struct UIConsoleWriteRequest writeRequest;
     u64int n, total;
     total = 0;
@@ -46,6 +49,7 @@ s64int uiConsoleWrite(s64int id, u64int size, void *buf)
         size -= n;
         OzSend(coid, sizeof(struct UIConsoleWriteRequest), &writeRequest, 0, 0);
     }
+    */
     return 0;
 }
 

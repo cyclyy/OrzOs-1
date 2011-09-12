@@ -35,12 +35,6 @@ void hClose(struct Handle *handle)
     switch (handle->type) {
     case HANDLE_FREE:
         break;
-    case HANDLE_SERVER:
-        kDestroyServer((struct Server*)handle->pointer);
-        break;
-    case HANDLE_CLIENT:
-        kDisconnect((struct Client*)handle->pointer);
-        break;
     case HANDLE_VNODE:
         vfsClose((struct VNode*)handle->pointer);
         break;

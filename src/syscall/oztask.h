@@ -9,4 +9,6 @@ s64int OzExitTask(s64int status);
 
 u64int OzAddHeapSize(s64int incr);
 
+s64int OzGetPid();
+
 #endif // OZTASK_H

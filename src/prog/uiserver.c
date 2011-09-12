@@ -19,17 +19,11 @@ struct Pixel
     unsigned short b:5;
 } __attribute__((packed));
 
+FILE *f;
 struct Pixel *frameBuffer;
 
 FT_Library library;
 FT_Face face;
-
-s64int parseMessage(char *buf, u64int size)
-{
-    struct UIRequestHeader *header;
-    header = (struct UIRequestHeader*)buf;
-    return header->type;
-}
 
 s64int openDisplay()
 {
@@ -138,13 +132,10 @@ void initCairo()
     //cairo_move_to(cr,WIDTH/2 - te.width / 2 - te.x_bearing,HEIGHT/2 - te.height/2 -te.y_bearing);
     cairo_move_to(cr,WIDTH/2,HEIGHT/2);
     cairo_show_text(cr, "i");
-    FILE *f;
-    f = fopen("Device:/Debug", "w");
     fprintf(f,"我width:%lf,height:%lf,x_bear:%lf,y_bear:%lf,x_adv:%lf,y_adv:%lf\n",te.width,te.height,te.x_bearing,te.y_bearing,te.x_advance,te.y_advance);
     cairo_font_extents_t fex;
     cairo_font_extents(cr, &fex);
     fprintf(f,"ascent:%lf,descent:%lf,height:%lf,max_x_adv:%lf,max_y_adv:%lf\n",fex.ascent,fex.descent,fex.height,fex.max_x_advance,fex.max_y_advance);
-    fclose(f);
     //cairo_rectangle(cr,0,0,1,1);
     //cairo_fill(cr);
     cairo_surface_flush(surface);
@@ -153,48 +144,19 @@ void initCairo()
 
 int main()
 {
-    s64int serverId, msgId, display;
-    char *recvBuf, *replyBuf;
-    u64int n;
-    struct MessageInfo mi;
-    struct UIInitRequest *initReq;
-    struct UIConsoleWriteRequest *conWriteReq;
-    struct UIInitReply *initReply;
-    struct UIConsoleWriteReply *conWriteReply;
+    s64int display;
+    struct MessageHeader hdr;
+    char buf[1000];
 
+    f = fopen("Device:/Debug", "w");
     display = openDisplay();
     initFontRender();
     initCairo();
 
-    n = 1000;
-    recvBuf = (char*)malloc(n);
-    replyBuf = (char*)malloc(n);
-    initReq = (struct UIInitRequest*)recvBuf;
-    conWriteReq = (struct UIConsoleWriteRequest*)recvBuf;
-    initReply = (struct UIInitReply*)replyBuf;
-    conWriteReply = (struct UIConsoleWriteReply*)replyBuf;
-    serverId = OzCreateServer(UI_PORT);
-    while ((msgId = OzReceive(serverId, n, recvBuf, &mi)) >= 0) {
-        switch (parseMessage(recvBuf, mi.srcSize)) {
-            case UI_REQUEST_INIT:
-                initReply->type = UI_REPLY_INIT;
-                initReply->retCode = 0;
-                initReply->clientId = 1;
-                if (msgId) {
-                    OzReply(msgId,sizeof(struct UIInitRequest),initReply);
-                }
-                break;
-            case UI_REQUEST_CONSOLE_WRITE:
-                conWriteReply->type = UI_REPLY_CONSOLE_WRITE;
-                conWriteReply->retCode = 0;
-                if (msgId) {
-                    OzReply(msgId,sizeof(struct UIConsoleWriteReply),conWriteReply);
-                }
-                break;
-            default:
-                ;
-        }
-
+    fprintf(f,"pid %ld\n", OzGetPid());
+    for (;;) {
+        OzReceive(&hdr, buf, 1000);
+        fputs(buf,f);
     }
     return 0;
 }
