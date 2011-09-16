@@ -8,7 +8,7 @@ struct WaitQueue {
     struct Task *head, *tail;
 };
 
-void sleepOn(struct WaitQueue *wq);
+int sleepOn(struct WaitQueue *wq);
 
 void wakeUpEx(struct WaitQueue *wq, struct Task *task, s64int wakeCode);
 

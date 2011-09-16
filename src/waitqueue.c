@@ -3,12 +3,14 @@
 #include "util.h"
 #include "schedule.h"
 
-void sleepOn(struct WaitQueue *wq)
+int sleepOn(struct WaitQueue *wq)
 {
+    currentTask->wakeCode = 0;
     currentTask->state = TASK_STATE_WAIT;
     rqRemove(currentTask);
     wqAppend(wq,currentTask);
     schedule();
+    return currentTask->wakeCode;
 }
 
 void wakeUpEx(struct WaitQueue *wq, struct Task *task, s64int wakeCode)
@@ -39,6 +41,7 @@ void wakeUp(struct WaitQueue *wq, struct Task *task)
 void wakeUpOne(struct WaitQueue *wq)
 {
     wakeUpEx(wq,wq->head,0);
+    /*
     struct Task *t;
 
     t = wqTakeFirst(wq);
@@ -48,6 +51,7 @@ void wakeUpOne(struct WaitQueue *wq)
 
     t->state = TASK_STATE_READY;
     rqAdd(t);
+    */
 }
 
 void wakeUpAll(struct WaitQueue *wq)

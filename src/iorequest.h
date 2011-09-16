@@ -4,6 +4,7 @@
 #include "sysdef.h"
 #include "task.h"
 #include "vfs.h"
+#include "waitqueue.h"
 #include "libc/list.h"
 
 #define IO_SYNC_READ       1
@@ -13,24 +14,19 @@
 
 struct IORequest
 {
+    int detached;
     struct VNode *vnode;
     int op;
     void *buffer;
     unsigned long size;
     struct Task *task;
+    struct WaitQueue *wq;
     struct ListHead link;
-};
-
-struct IOEvent
-{
-    int type;
-    int fd;
-    int op;
-    int ret;
 };
 
 struct IORequest *createIORequest(struct VNode *vnode, int op, void *buffer, unsigned long size);
 void completeIoRequest(struct IORequest *ior, int ret);
+int waitIoResult(struct IORequest *ior);
 void destroyIORequest(struct IORequest *ior);
 
 #endif /* IOREQUEST_H */

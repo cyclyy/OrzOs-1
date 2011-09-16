@@ -157,6 +157,7 @@ int main()
     fprintf(f,"pid %ld\n", OzGetPid());
 
     fd = OzOpen("Device:/Mice", 0);
+    n = OzRead(fd, 1000, buf2);
 
     for (;;) {
         OzReceive(&hdr, buf, 1000);

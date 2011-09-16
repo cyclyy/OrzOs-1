@@ -20,7 +20,7 @@ s64int doRead(struct VNode *node, u64int size, char *buffer)
             ret = n;
             break;
         }
-        n = copyToUser(buffer,kbuf,len);
+        n = copyToUser(buffer,kbuf,n);
         if (n<len) {
             ret += n;
             break;
