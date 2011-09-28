@@ -157,7 +157,11 @@ int main()
     fprintf(f,"pid %ld\n", OzGetPid());
 
     fd = OzOpen("Device:/Mice", 0);
-    n = OzRead(fd, 1000, buf2);
+    //n = OzRead(fd, 1000, buf2);
+
+    fprintf(f,"before sleep.\n");
+    OzMilliSleep(3000);
+    fprintf(f,"after sleep.\n");
 
     for (;;) {
         OzReceive(&hdr, buf, 1000);

@@ -9,6 +9,7 @@ s64int htFindFreeIndex(struct HandleTable *ht)
     s64int i;
 
     for (i=0; i<MAX_HANDLE_NUMBER; i++) {
+
         if (ht->handle[i].type == HANDLE_FREE)
             return i;
     }

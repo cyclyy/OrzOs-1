@@ -23,7 +23,7 @@ CORE_C_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o cpu.o dtable.o \
 			elfloader.o waitqueue.o schedule.o semaphore.o mutex.o message.o \
 			ksyscall.o device.o i8042.o program.o except.o \
 			handle.o fs/bootfs.o fs/devfs.o fs/ext2fs.o \
-			syscall/ozipc.o syscall/oztask.o syscall/ozfs.o \
+			syscall/ozipc.o syscall/oztask.o syscall/oztime.o syscall/ozfs.o \
 			rmi.o video/display.o video/vbe.o \
 			pci.o ide.o disk.o cmos.o debugdev.o timer.o iorequest.o
 
@@ -90,7 +90,7 @@ $(PROG_SOURCES):%.o:%.c
 	$(QUIET)$(CC) $(PROG_CFLAGS) -c $< -o $@
 
 ctags:
-	$(QUIET)ctags -R .
+	$(QUIET)ctags -R --c-kinds=+p --fields=+S . 
 
 include $(CORE_C_SOURCES:.o=.d)
 

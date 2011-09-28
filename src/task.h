@@ -7,6 +7,7 @@
 #define TASK_STATE_WAIT     2
 #define TASK_STATE_DEAD     4
 
+struct Timer;
 struct VM;
 struct Program;
 struct HandleTable;
@@ -24,6 +25,7 @@ struct Task {
     struct VM *vm;
     struct Program *prog;
     struct HandleTable *handleTable;
+    struct Timer *timer;
     u64int rsp0, rsp3, rip3, rip, rsp, rbp, rax, rbx, rcx, rdx;
     struct Task *next, *prev;
     struct Task *rqNext, *rqPrev;

@@ -63,6 +63,20 @@ int waitIoResult(struct IORequest *ior)
     return sleepOn(ior->wq);
 }
 
+void cancelIORequest(struct IORequest* ior)
+{
+    struct IOEvent ev;
+    int i;
+    i = htFindIndex(ior->task->handleTable, ior->vnode);
+    ior->detached = 0;
+    ev.type = EVENT_IO_CANCEL;
+    ev.op = ior->op;
+    ev.fd = i;
+    ev.ret = -1;
+    Notify(ior->task,&ev,sizeof(struct IOEvent));
+    wakeUpEx(ior->wq, ior->task, -1);
+}
+
 void destroyIORequest(struct IORequest *ior)
 {
     kFree(ior);

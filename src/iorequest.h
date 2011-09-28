@@ -27,6 +27,7 @@ struct IORequest
 struct IORequest *createIORequest(struct VNode *vnode, int op, void *buffer, unsigned long size);
 void completeIoRequest(struct IORequest *ior, int ret);
 int waitIoResult(struct IORequest *ior);
+void cancelIORequest(struct IORequest *ior);
 void destroyIORequest(struct IORequest *ior);
 
 #endif /* IOREQUEST_H */

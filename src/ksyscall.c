@@ -7,10 +7,11 @@
 #include "syscall/ozipc.h"
 #include "syscall/oztask.h"
 #include "syscall/ozfs.h"
+#include "syscall/oztime.h"
 
 void syscallTest();
 
-#define N_SYSCALLS 18
+#define N_SYSCALLS 20
 
 void *syscalls[N_SYSCALLS] = {
     &syscallTest,
@@ -31,6 +32,8 @@ void *syscalls[N_SYSCALLS] = {
     OzSeek,
     OzMap,
     OzReadAsync,
+    OzMilliAlarm,
+    OzMilliSleep,
 };
 
 u64int nsyscalls = N_SYSCALLS;

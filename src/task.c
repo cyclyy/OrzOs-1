@@ -301,6 +301,9 @@ void rootTask()
             if (t->handleTable) {
                 htDeref(t->handleTable);
             }
+            if (t->timer) {
+                destroyTimer(t->timer);
+            }
             kFree(t);
             deadQueue = deadQueue->sqNext;
         }

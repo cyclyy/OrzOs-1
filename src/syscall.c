@@ -18,4 +18,6 @@ DEFN_SYSCALL_4(OzIoControl,     14, u64int, s64int, u64int, void *);
 DEFN_SYSCALL_3(OzSeek,          15, s64int, s64int, s64int);
 DEFN_SYSCALL_4(OzMap,           16, s64int, u64int, u64int, s64int);
 DEFN_SYSCALL_3(OzReadAsync,     17, s64int, u64int, void *);
+DEFN_SYSCALL_1(OzMilliAlarm, 	18, u64int);
+DEFN_SYSCALL_1(OzMilliSleep, 	19, u64int);
 
