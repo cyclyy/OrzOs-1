@@ -109,8 +109,8 @@ u64int kmain(struct BootInfo *si)
     initSoftTimer();
     kNewTask("Boot:/init", 0);
 
-    t = createTimer(1000, cb, (void*)1);
-    startTimer(t);
+//    t = createTimer(1000, cb, (void*)1);
+//    startTimer(t);
 
     rootTask();
     // never return here;

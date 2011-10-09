@@ -37,7 +37,7 @@ void tlsfAllocMapping(u64int *size, u64int *fl, u64int *sl)
     u64int t;
     if (*size < SMALL_BLOCK) {
         *fl = 0;
-        *sl = *size / (SMALL_BLOCK / MAX_SLI);
+        *sl = (*size + (SMALL_BLOCK / MAX_SLI) - 1) / (SMALL_BLOCK / MAX_SLI);
     } else {
         t = (1 << (msBit(*size) - MAX_SLI_LOG2)) - 1;
         *size += t;
@@ -122,10 +122,16 @@ struct TLSFBlock *tlsfAlloc(struct TLSFHeader *tlsf, u64int size)
     u64int fl, sl, remainSize;
     struct TLSFBlock *freeBlock, *remainBlock, *nextBlock;
 
-    if (size < MIN_BLOCK_SIZE)
-        size = MIN_BLOCK_SIZE;
+    if (size < MIN_BLOCK_SIZE*2)
+        size = MIN_BLOCK_SIZE*2;
 
+    //size = ROUND_MEM_ALIGN(size) + 8;
     size = ROUND_MEM_ALIGN(size);
+
+    /*
+    if (size<=16)
+        DBG("size:%d",size);
+        */
 
     tlsfAllocMapping(&size, &fl, &sl);
     freeBlock = tlsfFindFreeBlock(tlsf, &fl, &sl);
@@ -165,18 +171,18 @@ struct TLSFHeader *tlsfInitHeap(u64int startAddr, u64int size)
     prevBlock = (struct TLSFBlock *)(startAddr + sizeof(struct TLSFHeader));
     memset(prevBlock,0,sizeof(struct TLSFBlock));
     prevBlock->signature = TLSF_SIGNATURE;
-    prevBlock->size = MIN_BLOCK_SIZE;
+    prevBlock->size = MIN_BLOCK_SIZE*2;
 
     block = getNextBlock(prevBlock);
     memset(block,0,sizeof(struct TLSFBlock));
     block->signature = TLSF_SIGNATURE;
-    block->size = size - sizeof(struct TLSFHeader) - BLOCK_OVERHEAD - (BLOCK_OVERHEAD + MIN_BLOCK_SIZE)*2;
+    block->size = size - sizeof(struct TLSFHeader) - BLOCK_OVERHEAD - (BLOCK_OVERHEAD + MIN_BLOCK_SIZE*2)*2;
     block->prev = prevBlock;
 
     nextBlock = getNextBlock(block);
     memset(nextBlock,0,sizeof(struct TLSFBlock));
     nextBlock->signature = TLSF_SIGNATURE;
-    nextBlock->size = MIN_BLOCK_SIZE;
+    nextBlock->size = MIN_BLOCK_SIZE*2;
     nextBlock->prev = block;
 
     tlsf->blockHead = block;
@@ -196,7 +202,9 @@ void tlsfFree(struct TLSFHeader *tlsf, struct TLSFBlock *blk)
     struct TLSFBlock *prevBlock, *nextBlock;
 
     if (blk->signature != TLSF_SIGNATURE)
-        PANIC("Free bad pointer\n");
+        PANIC("Free bad block: %p\n",blk);
+    if (getNextBlock(blk)->signature != TLSF_SIGNATURE)
+        PANIC("Free bad block,overflow next: %p\n",blk);
 
     blk->ptr.free.prev = blk->ptr.free.next = 0;
     prevBlock = blk->prev;

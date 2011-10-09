@@ -110,6 +110,7 @@ u64int kMallocEx(u64int size, u64int pageAligned, u64int *physicalAddr)
                 ret = 0;
             else {
                 ret = (u64int)&blk->ptr.buffer + PTR_SIZE;
+                //DBG("%x,%x,%x,%x,%x,%x",blk,blk->size,getNextBlock(blk), *(u64int*)getNextBlock(blk), getNextBlock(getNextBlock(blk)), *(u64int*)getNextBlock(getNextBlock(blk)));
                 *((u64int*)(ret-PTR_SIZE)) = (u64int)blk;
             }
         } else {
@@ -140,7 +141,10 @@ u64int kMalloc(u64int size)
 
 void kFree(void *addr)
 {
-    //DBG("%x,%x",addr,*(struct TLSFBlock **)(addr - PTR_SIZE));
+    struct TLSFBlock *blk, *nextBlk;
+    blk = *(struct TLSFBlock **)(addr - PTR_SIZE);
+    nextBlk = getNextBlock(blk);
+    //DBG("Before: %x,%x,%x,%x",blk,*(u64int*)blk, nextBlk, *(u64int*)nextBlk);
     if (!addr)
         return;
     if (!heap) {
@@ -151,6 +155,7 @@ void kFree(void *addr)
             tlsfFree(heap,*(struct TLSFBlock **)(addr - PTR_SIZE));
         else
             PANIC("Free bad pointer %x", addr);
+        //DBG(" After:%x,%x,%x,%x",blk,*(u64int*)blk,nextBlk, *(u64int*)nextBlk);
     }
 }
 

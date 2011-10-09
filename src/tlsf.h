@@ -26,15 +26,13 @@
 #define MAX_FLI 40                              /* manage 1TB memory */
 #define FLI_OFFSET 6                           
 #define SMALL_BLOCK (1<<(FLI_OFFSET+1))             /* 128 byte */
-#define MIN_BLOCK_SIZE (1 << (FLI_OFFSET - MAX_SLI_LOG2)) /* 8 byte */
+#define MIN_BLOCK_SIZE  (1 << (FLI_OFFSET - MAX_SLI_LOG2)) /* 8 byte on 64-bit machine*/
 #define REAL_FLI (MAX_FLI - FLI_OFFSET)     
 #define BLOCK_OVERHEAD (sizeof(struct TLSFBlock) - sizeof(struct TLSFFreePtr))
-#define SPLIT_THREHOLD (BLOCK_OVERHEAD + MIN(sizeof(struct TLSFFreePtr),MIN_BLOCK_SIZE))
+#define SPLIT_THREHOLD (BLOCK_OVERHEAD + MAX(sizeof(struct TLSFFreePtr),MIN_BLOCK_SIZE))
 
 #define BLOCK_SIZE  (~0 - MIN_BLOCK_SIZE + 1)
 #define BLOCK_FREE  0x1
-
-//#define ROUND_MEM_ALIGN
 
 #define TLSF_SIGNATURE 0xABCDFFFFEEEEDCBA
 
@@ -52,7 +50,7 @@ struct TLSFBlock {
     union {
         struct TLSFFreePtr free;
         u8int *buffer;
-    } ptr;
+    } ptr __attribute__((packed));
 }__attribute__((packed));
 
 struct TLSFHeader {
@@ -72,5 +70,6 @@ struct TLSFBlock *tlsfAlloc(struct TLSFHeader *tlsf, u64int size);
 void tlsfFree(struct TLSFHeader *tlsf, struct TLSFBlock *blk);
 
 void tlsfDump(struct TLSFHeader *tlsf);
+struct TLSFBlock *getNextBlock(struct TLSFBlock *blk);
 
 #endif

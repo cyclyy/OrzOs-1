@@ -1,6 +1,8 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#define NULL 0
+
 #define offsetOf(TYPE, MEMBER) ((unsigned long) &((TYPE *)0)->MEMBER)
 
 /**

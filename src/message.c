@@ -55,6 +55,7 @@ int Notify(struct Task *task, void *buffer, unsigned long size)
     msg->header.size = size;
     msg->task = 0;
     msg->buffer = (void*)kMalloc(size);
+    //DBG("%p",msg->buffer);
     memcpy(msg->buffer, buffer, size);
     INIT_LIST_HEAD(&msg->link);
 

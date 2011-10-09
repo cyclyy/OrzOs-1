@@ -74,7 +74,7 @@ static u8int inEscape = 0;
 static u64int key;
 
 static u8int miceCycle = 0;
-static u8int miceByte[3], savedMiceByte[3] = {0};
+static s8int miceByte[3], savedMiceByte[3] = {0};
 static struct MiceEvent miceEvent;
 
 static struct DeviceOperation i8042_Ops = {
@@ -136,7 +136,7 @@ static s64int mice_CreateEvent()
     } else {
         miceEvent.type = MICE_EVENT_MOVE;
         miceEvent.deltaX = miceByte[1];
-        miceEvent.deltaY = miceByte[2];
+        miceEvent.deltaY = -miceByte[2];
         miceEvent.button = miceByte[0] & 7;
     }
     memcpy(&savedMiceByte, &miceByte, 3);

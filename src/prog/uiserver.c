@@ -1,7 +1,13 @@
 #include "uidef.h"
+#include "window_p.h"
+#include "gcontext_p.h"
 #include "uiserver.h"
 #include "uiproto.h"
+#include "window.h"
 #include "syscall.h"
+#include "mice.h"
+#include "event.h"
+#include "rect.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ft2build.h>
@@ -11,7 +17,71 @@
 
 #define WIDTH 800
 #define HEIGHT 600
+#define CURSOR_SIZE 32
+#define FB_SIZE (WIDTH*HEIGHT*2)
 
+FILE *dbgFile;
+
+char *fbAddr = 0;
+int fbFD = -1;
+struct Pixmap *shadowPixmap;
+struct GC *rootGC = 0;
+cairo_surface_t *bg_surface;
+int cursorX = WIDTH / 2, cursorY = HEIGHT / 2;
+
+int miceFD = -1;
+cairo_surface_t *cursor_surface;
+
+RECT_INIT(dirtyRect, 0, 0, WIDTH, HEIGHT);
+RECT_INIT(cursorRect, 0, 0, 0, 0);
+
+void initDisplay()
+{
+    struct DisplayModeInfo mi;
+    char *s = "Device:/Display";
+    fbFD = OzOpen("Device:/Display", 0);
+    mi.mode = DISPLAY_MODE_VESA;
+    mi.width = WIDTH;
+    mi.height = HEIGHT;
+    mi.cellBits = 16;
+    OzIoControl(fbFD, DISPLAY_IOCTL_SET_MODE, sizeof(struct DisplayModeInfo), &mi);
+    fbAddr = (char*)OzMap(fbFD, 0, 0, 0);
+    shadowPixmap = createPixmap(WIDTH, HEIGHT);
+    rootGC = createGCForPixmap(shadowPixmap);
+
+    bg_surface = cairo_image_surface_create_from_png("C:/wallpaper.png");
+    cursor_surface = cairo_image_surface_create_from_png("C:/cursor.png");
+}
+
+void initMice()
+{
+    miceFD = OzOpen("Device:/Mice", 0);
+    initRect(&cursorRect, cursorX - CURSOR_SIZE, cursorY - CURSOR_SIZE, CURSOR_SIZE*2, CURSOR_SIZE*2);
+}
+
+void paintBackground(struct GC *gc)
+{
+    cairo_t *cr;
+    cr = gc->d->cr;
+    cairo_set_source_surface(cr, bg_surface, 0, 0);
+    cairo_paint(cr);
+}
+
+void paintCursor(struct GC *gc)
+{
+    cairo_t *cr;
+    cr = gc->d->cr;
+    cairo_set_source_surface(cr, cursor_surface, cursorX - CURSOR_SIZE, cursorY - CURSOR_SIZE);
+    cairo_paint(cr);
+} 
+
+inline void updateFrameBuffer()
+{
+    memcpy(fbAddr, shadowPixmap->buffer, FB_SIZE);
+}
+
+
+/*
 struct Pixel
 {
     unsigned short r:5;
@@ -141,32 +211,67 @@ void initCairo()
     cairo_surface_flush(surface);
     //show_image();
 }
+*/
+void paintAll()
+{
+    cairo_t *cr;
+    if (isNullRect(&dirtyRect))
+        return;
+    cr = rootGC->d->cr;
+    cairo_rectangle(cr, dirtyRect.x, dirtyRect.y, dirtyRect.w, dirtyRect.h);
+    cairo_clip(cr);
+    paintBackground(rootGC);
+    paintAllWindows(rootGC);
+    paintCursor(rootGC);
+    updateFrameBuffer();
+    cairo_reset_clip(rootGC->d->cr);
+    initRect(&dirtyRect, 0, 0, 0, 0);
+}
 
 int main()
 {
-    s64int display;
+    struct Window *window;
     struct MessageHeader hdr;
-    char buf[1000], buf2[1000];
-    int n, fd;
+    struct MiceEvent miceEvent;
+    struct IOEvent *ioEventPtr;
+    char buf[1000];
 
-    f = fopen("Device:/Debug", "w");
-    display = openDisplay();
-    initFontRender();
-    initCairo();
+    dbgFile = fopen("Device:/Debug", "w");
+    initDisplay();
+    initMice();
 
-    fprintf(f,"pid %ld\n", OzGetPid());
+    window = createWindow(200, 100, 0);
+    moveWindow(window, 100, 200);
 
-    fd = OzOpen("Device:/Mice", 0);
-    //n = OzRead(fd, 1000, buf2);
+    window = createWindow(200, 100, 0);
+    moveWindow(window, 150, 250);
 
-    fprintf(f,"before sleep.\n");
-    OzMilliSleep(3000);
-    fprintf(f,"after sleep.\n");
-
+    OzMilliAlarm(40);
+    OzReadAsync(miceFD, sizeof(struct MiceEvent), &miceEvent);
     for (;;) {
         OzReceive(&hdr, buf, 1000);
-        fprintf(f, "Header:pid:%d,time:%d,size:%ld\n",hdr.pid, hdr.tstamp, hdr.size);
-        n = OzReadAsync(fd, 1000, buf2);
+        switch (GET_EVENT_TYPE(buf)) {
+        case EVENT_TIMER:
+            OzMilliAlarm(40);
+            paintAll();
+            break;
+        case EVENT_IO_READ:
+            ioEventPtr = (struct IOEvent*)buf;
+            if (ioEventPtr->fd == miceFD) {
+                window = findWindowUnder(cursorX, cursorY);
+                //fprintf(dbgFile, "window:%p\n", window);
+                switch (miceEvent.type) {
+                case MICE_EVENT_MOVE:
+                    unionRect(&dirtyRect, &cursorRect);
+                    cursorX = MAX(0, MIN(WIDTH, cursorX + miceEvent.deltaX*5));
+                    cursorY = MAX(0, MIN(HEIGHT, cursorY + miceEvent.deltaY*5));
+                    initRect(&cursorRect, cursorX - CURSOR_SIZE, cursorY - CURSOR_SIZE, CURSOR_SIZE*2, CURSOR_SIZE*2);
+                    unionRect(&dirtyRect, &cursorRect);
+                    break;
+                }
+                OzReadAsync(miceFD, sizeof(struct MiceEvent), &miceEvent);
+            }
+        }
     }
     return 0;
 }
