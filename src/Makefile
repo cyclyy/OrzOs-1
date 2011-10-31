@@ -37,13 +37,19 @@ MOD_SOURCES = testmod.o            \
               ide.o                \
               ext2fs.o          \
 
-#PROG_SOURCES = prog/uiproto.o prog/uiserver.o prog/init.o prog/server.o prog/client.o syscall.o 
-PROG_SOURCES = prog/uiproto.o prog/rect.o prog/uiserver.o prog/window.o prog/guiconfig.o prog/init.o syscall.o 
+PROG_SOURCES = prog/uiproto.o prog/rect.o prog/uiserver.o prog/window.o prog/guiconfig.o prog/init.o syscall.o 	\
+			   prog/uiclient.o
+
 CORE_CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -mcmodel=kernel -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g 
+
 #PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -I/home/ora/cross/include $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g
+
 PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -Ix86emu -Wall -I. $(BASE_CFLAGS) $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g
+
 CORE_LDFLAGS=-Tcore.ld -m orzos_x86_64 -M=allsymbol.map -z max-page-size=0x1000
+
 PROG_LDFLAGS=-Tprog.ld -m orzos_x86_64 -z max-page-size=0x1000 -L/home/ora/cross/lib -L/home/ora/cross/x86_64-pc-orzos/lib $(FREETYPE2_LIBS) $(CAIRO_LIBS) $(FREETYPE2_LIBS) -lc -lm
+
 ASFLAGS=-felf64
 
 # all: $(CORE_SOURCES) $(MOD_SOURCES) $(PROG_SOURCES) libx86emu.a core_link prog_link
@@ -76,6 +82,8 @@ prog_link:
 	$(QUIET)$(LD) -o prog/init prog/init.o syscall.o $(PROG_LDFLAGS)
 	@echo "LD	uiserver"
 	$(QUIET)$(LD) -o prog/uiserver prog/uiserver.o prog/uiproto.o prog/window.o prog/rect.o prog/guiconfig.o syscall.o $(PROG_LDFLAGS)
+	@echo "LD	uilcient"
+	$(QUIET)$(LD) -o prog/uiclient prog/uiclient.o prog/uiproto.o prog/window.o prog/rect.o prog/guiconfig.o syscall.o $(PROG_LDFLAGS)
 
 $(CORE_ASM_SOURCES):%.o:%.s
 	@echo "AS	$@"

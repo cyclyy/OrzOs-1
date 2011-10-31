@@ -2,55 +2,60 @@
 #include "uidef.h"
 #include "sysdef.h"
 #include "syscall.h"
+#include "event.h"
 #include <string.h>
 #include <stdlib.h>
 
-static s64int coid = 0;
-
-s64int uiInitApp(const char *name, u64int flags)
+int OzUISendReceive(void *request, void *reply)
 {
-    /*
-    struct UIInitRequest initRequest;
-    struct UIInitReply initReply;
-
-    coid = OzConnect(UI_PORT);
-    strncpy(initRequest.name, name, MAX_NAME_LEN);
-    initRequest.type = UI_REQUEST_INIT;
-    initRequest.name[MAX_NAME_LEN-1] = 0;
-    initRequest.flags = flags;
-    OzSend(coid, sizeof(struct UIInitRequest), &initRequest, sizeof(struct UIInitReply), &initReply);
-    return initReply.clientId;
-    */
+    struct MessageHeader hdr;
+    hdr.pid = UISERVER_PID;
+    switch (GET_EVENT_TYPE(request)) {
+    case UI_EVENT_CREATE_WINDOW:
+        return OzSendReceive(&hdr, request, sizeof(struct OzUICreateWindowRequest), reply, sizeof(struct OzUICreateWindowReply));
+        break;
+    case UI_EVENT_DESTROY_WINDOW:
+        return OzSendReceive(&hdr, request, sizeof(struct OzUIDestroyWindowRequest), reply, sizeof(struct OzUIDestroyWindowReply));
+        break;
+    case UI_EVENT_MOVE_WINDOW:
+        return OzSendReceive(&hdr, request, sizeof(struct OzUIMoveWindowRequest), reply, sizeof(struct OzUIMoveWindowReply));
+        break;
+    };
     return 0;
 }
 
-s64int uiQuitApp(s64int id)
+unsigned long OzUICreateWindow(int w, int h, int flags)
 {
-    return 0;
+    struct OzUICreateWindowRequest request;
+    struct OzUICreateWindowReply reply;
+    request.type = UI_EVENT_CREATE_WINDOW;
+    request.width = w;
+    request.height = h;
+    request.flags = flags;
+    OzUISendReceive(&request, &reply);
+    return reply.id;
 }
 
-s64int uiConsoleRead(s64int id, u64int size, void *buf)
+int OzUIDestroyWindow(unsigned long id)
 {
-    return 0;
+    struct OzUIDestroyWindowRequest request;
+    struct OzUIDestroyWindowReply reply;
+    request.type = UI_EVENT_DESTROY_WINDOW;
+    request.id = id;
+    OzUISendReceive(&request, &reply);
+    return reply.ret;
 }
 
-s64int uiConsoleWrite(s64int id, u64int size, void *buf)
+int OzUIMoveWindow(unsigned long id, int x, int y)
 {
-    /*
-    struct UIConsoleWriteRequest writeRequest;
-    u64int n, total;
-    total = 0;
-    writeRequest.type = UI_REQUEST_CONSOLE_WRITE;
-    while (size) {
-        n = MIN(size, MAX_UI_CONSOLE_WRITE_LEN);
-        writeRequest.len = n;
-        memcpy(writeRequest.buf, (char*)buf + total, n);
-        total += n;
-        size -= n;
-        OzSend(coid, sizeof(struct UIConsoleWriteRequest), &writeRequest, 0, 0);
-    }
-    */
-    return 0;
+    struct OzUIMoveWindowRequest request;
+    struct OzUIMoveWindowReply reply;
+    request.type = UI_EVENT_MOVE_WINDOW;
+    request.id = id;
+    request.x = x;
+    request.y = y;
+    OzUISendReceive(&request, &reply);
+    return reply.ret;
 }
 
 // vim: sw=4 sts=4 et tw=100

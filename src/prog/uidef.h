@@ -5,17 +5,7 @@
 
 #define UIDBG(...)  fprintf(dbgFile, __VA_ARGS__)
 
-#define UI_PORT     256
-#define UI_APP_TYPE_CONSOLEN        0
-#define UI_APP_TYPE_CURSOR          1
-#define UI_APP_TYPE_GRAPHIC         2
-
-#define UI_REQUEST_INIT             1
-#define UI_REPLY_INIT               2
-#define UI_REQUEST_CONSOLE_WRITE    3
-#define UI_REPLY_CONSOLE_WRITE      4
-
-#define MAX_UI_CONSOLE_WRITE_LEN   100
+#define UISERVER_PID        2
 
 #ifndef MIN
 #define MIN(a,b) ( ((a) < (b)) ? (a) : (b))
@@ -30,6 +20,10 @@
 #define DISPLAY_IOCTL_GET_CURRENT_MODE_INFO     1
 #define DISPLAY_IOCTL_SET_MODE                  2
 
+#define UI_EVENT_CREATE_WINDOW        0x1001
+#define UI_EVENT_DESTROY_WINDOW       0x1002
+#define UI_EVENT_MOVE_WINDOW          0x1003
+
 struct DisplayModeInfo
 {
     u8int mode;
@@ -40,37 +34,41 @@ struct DisplayModeInfo
     u64int addr;
 }__attribute__((packed));
 
-struct UIRequestHeader
+struct OzUICreateWindowRequest
 {
-    u64int type;
-} __attribute__((packed));
+    int type;
+    int width, height, flags;
+}__attribute__((packed));
 
-struct UIInitRequest
+struct OzUICreateWindowReply
 {
-    u64int type;
-    char name[MAX_NAME_LEN];
-    u64int flags;
-} __attribute__((packed));
+    unsigned long id;
+    int screenX, screenY, width, height, flags;
+    int clientX, clientY, clientWidth, clientHeight;
+}__attribute__((packed));
 
-struct UIInitReply
+struct OzUIDestroyWindowRequest
 {
-    u64int type;
-    s64int retCode;
-    s64int clientId;
-} __attribute__((packed));
+    int type;
+    unsigned long id;
+}__attribute__((packed));
 
-struct UIConsoleWriteRequest
+struct OzUIDestroyWindowReply
 {
-    u64int type;
-    s64int clientId;
-    s64int len;
-    char buf[MAX_UI_CONSOLE_WRITE_LEN];
-} __attribute__((packed));
+    int type;
+    int ret;
+}__attribute__((packed));
 
-struct UIConsoleWriteReply
+struct OzUIMoveWindowRequest
 {
-    u64int type;
-    s64int retCode;
-} __attribute__((packed));
+    int type;
+    unsigned long id;
+    int x, y;
+}__attribute__((packed));
+
+struct OzUIMoveWindowReply
+{
+    int ret;
+}__attribute__((packed));
 
 #endif // UIDEF_H

@@ -19,6 +19,7 @@ struct MessageQueue *mqCreate()
     mq = (struct MessageQueue*)kMalloc(sizeof(struct MessageQueue));
     mq->wq = wqCreate();
     mq->recvWQ = wqCreate();
+    mq->replyWQ = wqCreate();
     INIT_LIST_HEAD(&mq->list);
 
     return mq;

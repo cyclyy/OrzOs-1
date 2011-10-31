@@ -154,3 +154,25 @@ struct Window *findWindowUnder(int x, int y)
     }
     return 0;
 }
+
+unsigned long windowId(struct Window *window)
+{
+    return (unsigned long)window;
+}
+
+struct Window *getWindowById(unsigned long id)
+{
+    struct Window *window ;
+    listForEachEntry(window, &windowList, link) {
+        if ((unsigned long)window == id)
+            return window;
+    }
+    return 0;
+}
+
+void unionWindowRect(struct Rect *rect, struct Window *window)
+{
+    struct Rect r2;
+    initRect(&r2, window->screenX, window->screenY, window->width, window->height);
+    unionRect(rect, &r2);
+}

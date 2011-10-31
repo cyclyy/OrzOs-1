@@ -31,10 +31,11 @@ s64int OzSendReceive(struct MessageHeader *header, void *sendBuffer, u64int send
 {
     struct MessageHeader hdr;
     s64int ret;
-    ret = SendReceive(&hdr, sendBuffer, sendSize, recvBuffer, recvSize);
-    if (header)
+    if (header) {
+        copyFromUser(&hdr, header, sizeof(struct MessageHeader));
+        SendReceive(&hdr, sendBuffer, sendSize, recvBuffer, recvSize);
         ret = copyToUser(header, &hdr, sizeof(struct MessageHeader));
-    else
+    } else
         ret = -1;
     return ret;
 }

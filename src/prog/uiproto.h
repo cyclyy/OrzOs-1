@@ -3,12 +3,12 @@
 
 #include "sysdef.h"
 
-s64int uiInitApp(const char *name, u64int flags);
+int OzUISendReceive(void *request, void *reply);
 
-s64int uiQuitApp(s64int id);
+unsigned long OzUICreateWindow(int w, int h, int flags);
 
-s64int uiConsoleRead(s64int id, u64int size, void *buf);
+int OzUIDestroyWindow(unsigned long id);
 
-s64int uiConsoleWrite(s64int id, u64int size, void *buf);
+int OzUIMoveWindow(unsigned long id, int x, int y);
 
 #endif // UIPROTO_H

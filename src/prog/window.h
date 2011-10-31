@@ -2,6 +2,7 @@
 #define WINDOW_H
 
 #include "libc/list.h"
+#include "rect.h"
 #include <cairo.h>
 
 #define PF_RGB565   1
@@ -51,5 +52,11 @@ void paintWindow(struct GC *gc, struct Window *window);
 void moveWindow(struct Window *window, int x, int y);
 
 struct Window *findWindowUnder(int x, int y);
+
+unsigned long windowId(struct Window *window);
+
+struct Window *getWindowById(unsigned long id);
+
+void unionWindowRect(struct Rect *rect, struct Window *window);
 
 #endif /* WINDOW_H */
