@@ -141,9 +141,7 @@ u64int kMalloc(u64int size)
 
 void kFree(void *addr)
 {
-    struct TLSFBlock *blk, *nextBlk;
-    blk = *(struct TLSFBlock **)(addr - PTR_SIZE);
-    nextBlk = getNextBlock(blk);
+    struct TLSFBlock *blk;
     //DBG("Before: %x,%x,%x,%x",blk,*(u64int*)blk, nextBlk, *(u64int*)nextBlk);
     if (!addr)
         return;
@@ -151,9 +149,13 @@ void kFree(void *addr)
         printk("Trying to free memory while heap is not created.");
     } else {
         if (((u64int)addr > (u64int)heap->blockHead) && 
-                ((u64int)addr < (u64int)heap->blockEnd))
-            tlsfFree(heap,*(struct TLSFBlock **)(addr - PTR_SIZE));
-        else
+                ((u64int)addr < (u64int)heap->blockEnd)) {
+            blk = *(struct TLSFBlock **)(addr - PTR_SIZE);
+            if (((u64int)addr < (u64int)&blk->ptr.buffer) || ((u64int)addr >= (u64int)&blk->ptr.buffer + (blk->size & BLOCK_SIZE))) {
+                PANIC("Free bad pointer %x", addr);
+            }
+            tlsfFree(heap,blk);
+        } else
             PANIC("Free bad pointer %x", addr);
         //DBG(" After:%x,%x,%x,%x",blk,*(u64int*)blk,nextBlk, *(u64int*)nextBlk);
     }

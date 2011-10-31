@@ -27,6 +27,8 @@ struct MessageQueue
     struct WaitQueue *wq;
     struct WaitQueue *recvWQ;
     struct ListHead list;
+    struct WaitQueue *replyWQ;
+    struct Message *replyMessage;
 };
 
 struct MessageQueue *mqCreate();
@@ -34,6 +36,9 @@ struct MessageQueue *mqCreate();
 int Post(struct Task *task, void *buffer, unsigned long size);
 int Notify(struct Task *task, void *buffer, unsigned long size);
 int Send(struct Task *task, void *buffer, unsigned long size);
+int SendReceive(struct MessageHeader *header, void *sendBuffer, unsigned long sendSize, void *recvBuffer, unsigned long recvSize);
+int Reply(struct Task *task, void *buffer, unsigned long size);
 int Receive(struct MessageHeader *header, void *buffer, unsigned long size);
+
 #endif /* MESSAGE_H */
 

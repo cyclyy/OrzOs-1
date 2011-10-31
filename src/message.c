@@ -8,8 +8,9 @@
 #include "timer.h"
 #include "libc/list.h"
 
-#define MESSAGE_SEND   1
-#define MESSAGE_POST   2
+#define MESSAGE_SEND        1
+#define MESSAGE_POST        2
+#define MESSAGE_SEND_RECV   3
 
 struct MessageQueue *mqCreate()
 {
@@ -72,7 +73,7 @@ int Send(struct Task *task, void *buffer, unsigned long size)
 {
     struct Message *msg;
     msg = (struct Message*)kMalloc(sizeof(struct Message));
-    msg->type = MESSAGE_POST;
+    msg->type = MESSAGE_SEND;
     msg->header.pid = currentTask->pid;
     msg->header.tstamp = globalTicks;
     msg->header.size = size;
@@ -111,4 +112,57 @@ int Receive(struct MessageHeader *header, void *buffer, unsigned long size)
     return ret;
 }
 
+
+int SendReceive(struct MessageHeader *header, void *sendBuffer, unsigned long sendSize, void *recvBuffer, unsigned long recvSize)
+{
+    struct Task *task;
+    struct Message *msg;
+
+    msg = (struct Message*)kMalloc(sizeof(struct Message));
+    msg->type = MESSAGE_SEND_RECV;
+    msg->header.pid = currentTask->pid;
+    msg->header.tstamp = globalTicks;
+    msg->header.size = sendSize;
+    msg->task = currentTask;
+    msg->buffer = sendBuffer;
+    INIT_LIST_HEAD(&msg->link);
+
+    task = lookupPid(header->pid);
+    if (!task) {
+        kFree(msg);
+        return -1;
+    }
+    listAddTail(&msg->link,&task->mq->list); 
+
+    currentTask->mq->replyMessage = (struct Message*)kMalloc(sizeof(struct Message));
+    msg = currentTask->mq->replyMessage;
+    msg->type = MESSAGE_SEND_RECV;
+    msg->header.pid = currentTask->pid;
+    msg->header.tstamp = globalTicks;
+    msg->header.size = recvSize;
+    msg->task = currentTask;
+    msg->buffer = recvBuffer;
+    INIT_LIST_HEAD(&msg->link);
+    wakeUpOne(task->mq->recvWQ);
+    sleepOn(task->mq->replyWQ);
+    memcpy(header, &msg->header, sizeof(struct MessageHeader));
+    kFree(currentTask->mq->replyMessage);
+    currentTask->mq->replyMessage = 0;
+
+    return header->size;
+}
+
+int Reply(struct Task *task, void *buffer, unsigned long size)
+{
+    struct Message *msg;
+    int ret;
+    msg = task->mq->replyMessage;
+    if (!msg || (msg->task != task))
+        return -1;
+    ret = MIN(size, msg->header.size);
+    vmemcpy(msg->task->vm, msg->buffer, currentTask->vm, buffer, ret);
+    msg->header.size = ret;
+    wakeUp(currentTask->mq->replyWQ, task);
+    return ret;
+}
 

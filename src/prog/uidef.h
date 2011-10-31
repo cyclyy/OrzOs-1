@@ -3,6 +3,8 @@
 
 #include "sysdef.h"
 
+#define UIDBG(...)  fprintf(dbgFile, __VA_ARGS__)
+
 #define UI_PORT     256
 #define UI_APP_TYPE_CONSOLEN        0
 #define UI_APP_TYPE_CURSOR          1

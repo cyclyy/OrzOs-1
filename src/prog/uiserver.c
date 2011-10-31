@@ -8,6 +8,7 @@
 #include "mice.h"
 #include "event.h"
 #include "rect.h"
+#include <locale.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ft2build.h>
@@ -39,7 +40,7 @@ void initDisplay()
 {
     struct DisplayModeInfo mi;
     char *s = "Device:/Display";
-    fbFD = OzOpen("Device:/Display", 0);
+    fbFD = OzOpen(s, 0);
     mi.mode = DISPLAY_MODE_VESA;
     mi.width = WIDTH;
     mi.height = HEIGHT;
@@ -240,6 +241,13 @@ int main()
     initDisplay();
     initMice();
 
+    char *s = "我";
+    wchar_t wch;
+    int n;
+
+//    n = __utf8_mbtowc(&wch, s, strlen(s));
+//    UIDBG("mbtowc:n:%d, wch:%lx\n", n, (unsigned long)wch);
+
     window = createWindow(200, 100, 0);
     moveWindow(window, 100, 200);
 
@@ -259,7 +267,7 @@ int main()
             ioEventPtr = (struct IOEvent*)buf;
             if (ioEventPtr->fd == miceFD) {
                 window = findWindowUnder(cursorX, cursorY);
-                //fprintf(dbgFile, "window:%p\n", window);
+                //UIDBG("window:%p\n", window);
                 switch (miceEvent.type) {
                 case MICE_EVENT_MOVE:
                     unionRect(&dirtyRect, &cursorRect);

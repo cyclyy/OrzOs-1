@@ -89,5 +89,7 @@ DECL_SYSCALL_4(OzMap, s64int, u64int, u64int, s64int);
 DECL_SYSCALL_3(OzReadAsync, s64int, u64int, void *);
 DECL_SYSCALL_1(OzMilliAlarm, u64int);
 DECL_SYSCALL_1(OzMilliSleep, u64int);
+DECL_SYSCALL_5(OzSendReceive, struct MessageHeader *, void *, u64int, void *, u64int);
+DECL_SYSCALL_3(OzReply, s64int, void *, u64int);
 
 #endif /* SYSCALL_H */
