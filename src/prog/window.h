@@ -3,6 +3,7 @@
 
 #include "libc/list.h"
 #include "rect.h"
+#include "app.h"
 #include <cairo.h>
 
 #define PF_RGB565   1
@@ -20,14 +21,16 @@ struct Pixmap {
 };
 
 struct Window {
+    struct App *app;
     int screenX, screenY, width, height, flags;
-    int clientX, clientY, clientWidth, clientHeight;
+    struct Rect clientRect;
     struct Pixmap *pixmap;
+    struct ListHead appLink;
     struct ListHead link;
     struct WindowPrivate *d;
 };
 
-extern struct ListHead windowList;
+struct ListHead *getWindowList();
 
 struct Pixmap *createPixmap(int w, int h);
 
@@ -35,7 +38,7 @@ struct Pixmap *createPixmapForData(int w, int h, char *buffer);
 
 void destroyPixmap(struct Pixmap *pixmap);
 
-struct Window *createWindow(int w, int h, int flags);
+struct Window *createWindow(int pid, int w, int h, int flags);
 
 void destroyWindow(struct Window *window);
 

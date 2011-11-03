@@ -14,6 +14,8 @@ struct Rect *unionRect(struct Rect *rect1, struct Rect *rect2);
 
 struct Rect *crossRect(struct Rect *rect1, struct Rect *rect2);
 
+inline int insideRect(struct Rect *rect, int x, int y);
+
 int isNullRect(struct Rect *rect);
 
 #endif /* RECT_H */

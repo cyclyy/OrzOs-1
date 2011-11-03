@@ -121,8 +121,8 @@ void rqAdd(struct Task *task)
         runQueue[prio]->rqPrev = task;
         t->rqNext = task;
     }
-    task->slices = BASE_QUANTUM << prio;
-//    task->slices = BASE_QUANTUM;
+//    task->slices = BASE_QUANTUM << prio;
+    task->slices = BASE_QUANTUM;
 }
 
 void rqRemove(struct Task *task)

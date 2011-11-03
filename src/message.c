@@ -157,6 +157,8 @@ int Reply(struct Task *task, void *buffer, unsigned long size)
 {
     struct Message *msg;
     int ret;
+    if (!task->mq)
+        return -1;
     msg = task->mq->replyMessage;
     if (!msg || (msg->task != task))
         return -1;

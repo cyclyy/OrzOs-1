@@ -52,6 +52,12 @@ struct Rect *crossRect(struct Rect *rect1, struct Rect *rect2)
     return rect1;
 }
 
+inline int insideRect(struct Rect *rect, int x, int y)
+{
+    return ((x >= rect->x) && (x <= rect->x + rect->w)
+        && (y >= rect->y) && (y <= rect->y + rect->h));
+}
+
 int isNullRect(struct Rect *rect)
 {
     return ((rect->w == 0) && (rect->h == 0));

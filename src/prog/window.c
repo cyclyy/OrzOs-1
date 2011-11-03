@@ -2,11 +2,17 @@
 #include "window_p.h"
 #include "gcontext_p.h"
 #include "guiconfig.h"
+#include "app.h"
 #include <stdlib.h>
 #include <string.h>
 #include <cairo.h>
 
-LIST_HEAD(windowList);
+static LIST_HEAD(windowList);
+
+struct ListHead *getWindowList()
+{
+    return &windowList;
+}
 
 static void drawWindowBorder(struct Window *window)
 {
@@ -18,8 +24,8 @@ static void drawWindowBorder(struct Window *window)
     cairo_set_source_rgb(cr, 1, 1, 1);
     cairo_set_line_width(cr, guiConfig()->borderSize);
     cairo_rectangle(cr, pad, pad, window->width - pad, window->height - pad);
-    cairo_move_to(cr, window->clientX - pad, window->clientY - pad);
-    cairo_line_to(cr, window->width - pad, window->clientY - pad);
+    cairo_move_to(cr, window->clientRect.x - pad, window->clientRect.y - pad);
+    cairo_line_to(cr, window->width - pad, window->clientRect.y - pad);
     cairo_stroke(cr);
 }
 
@@ -67,22 +73,31 @@ void destroyPixmap(struct Pixmap *pixmap)
     free(pixmap);
 }
 
-struct Window *createWindow(int w, int h, int flags)
+struct Window *createWindow(int pid, int w, int h, int flags)
 {
     struct Window *window;
     struct Pixmap *pixmap;
     struct GC *gc;
+    struct App *app;
+
+    app = getApp(pid);
+    if (!app)
+        app = createApp(pid);
+
     pixmap = createPixmap(w,h);
+
     window = (struct Window*)malloc(sizeof(struct Window));
+    window->app = app;
     window->pixmap = pixmap;
     window->width = w;
     window->height = h;
     window->screenX = 0;
     window->screenY = 0;
-    window->clientX = guiConfig()->borderSize;
-    window->clientY = guiConfig()->borderSize*2 + guiConfig()->titleHeight;
-    window->clientWidth = w - guiConfig()->borderSize*2;
-    window->clientHeight = h - window->clientY - guiConfig()->borderSize;
+    window->clientRect.x = guiConfig()->borderSize;
+    window->clientRect.y = guiConfig()->borderSize*2 + guiConfig()->titleHeight;
+    window->clientRect.w = w - guiConfig()->borderSize*2;
+    window->clientRect.h = h - window->clientRect.y - guiConfig()->borderSize;
+    INIT_LIST_HEAD(&window->appLink);
     INIT_LIST_HEAD(&window->link);
 
     gc = createGCForWindow(window);
@@ -90,6 +105,7 @@ struct Window *createWindow(int w, int h, int flags)
     drawWindowTitle(window);
     destroyGC(gc);
 
+    listAdd(&window->appLink, &app->windowList);
     listAddTail(&window->link, &windowList);
 
     return window;

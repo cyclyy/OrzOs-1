@@ -2,13 +2,21 @@
 #define UIPROTO_H
 
 #include "sysdef.h"
+#include "uidef.h"
 
-int OzUISendReceive(void *request, void *reply);
+struct OzUIWindow *OzUICreateWindow(int w, int h, int flags);
 
-unsigned long OzUICreateWindow(int w, int h, int flags);
+int OzUIDestroyWindow(struct OzUIWindow *window);
 
-int OzUIDestroyWindow(unsigned long id);
+int OzUIMoveWindow(struct OzUIWindow *window, int x, int y);
 
-int OzUIMoveWindow(unsigned long id, int x, int y);
+int OzUIReadEvent(struct OzUIWindow *window);
+
+int OzUIDispatchEvent(void *buf);
+
+void OzUINextEvent();
+
+struct OzUIWindow *OzUIGetWindowById(unsigned long id);
+
 
 #endif // UIPROTO_H

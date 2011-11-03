@@ -225,15 +225,15 @@ void paintAll()
     paintBackground(rootGC);
     paintAllWindows(rootGC);
     paintCursor(rootGC);
-    updateFrameBuffer();
+//    updateFrameBuffer();
     cairo_reset_clip(rootGC->d->cr);
     initRect(&dirtyRect, 0, 0, 0, 0);
 }
 
 int main()
 {
-    char buf[1000];
-    char replyBuf[1000];
+    char buf[512];
+    char replyBuf[512];
     struct Window *window;
     struct MessageHeader hdr;
     struct MiceEvent miceEvent;
@@ -244,40 +244,45 @@ int main()
     struct OzUIDestroyWindowReply *destroyWindowReply = (struct OzUIDestroyWindowReply*)replyBuf;
     struct OzUIMoveWindowRequest *moveWindowRequest;
     struct OzUIMoveWindowReply *moveWindowReply = (struct OzUIMoveWindowReply*)replyBuf;
-    struct Rect rect;
+    struct OzUIMiceEventNotify *miceEventNotify = (struct OzUIMiceEventNotify*)replyBuf;
+    //struct OzUINextEventRequest *nextEventRequest = (struct OzUINextEventRequest*)buf;
+    struct App *app;
 
     dbgFile = fopen("Device:/Debug", "w");
     initDisplay();
     initMice();
 
+
+    /*
     char *s = "我";
     wchar_t wch;
     int n;
+    */
 
 //    n = __utf8_mbtowc(&wch, s, strlen(s));
 //    UIDBG("mbtowc:n:%d, wch:%lx\n", n, (unsigned long)wch);
 
     OzNewTask("C:/uiclient",0);
 
-    window = createWindow(200, 100, 0);
+    window = createWindow(OzGetPid(), 200, 100, 0);
     moveWindow(window, 100, 200);
 
-    window = createWindow(200, 100, 0);
+    window = createWindow(OzGetPid(), 200, 100, 0);
     moveWindow(window, 150, 250);
 
     OzMilliAlarm(40);
     OzReadAsync(miceFD, sizeof(struct MiceEvent), &miceEvent);
     for (;;) {
+        paintAll();
         OzReceive(&hdr, buf, 1000);
         switch (GET_EVENT_TYPE(buf)) {
         case EVENT_TIMER:
             OzMilliAlarm(40);
-            paintAll();
+            updateFrameBuffer();
             break;
         case EVENT_IO_READ:
             ioEventPtr = (struct IOEvent*)buf;
             if (ioEventPtr->fd == miceFD) {
-                window = findWindowUnder(cursorX, cursorY);
                 //UIDBG("window:%p\n", window);
                 switch (miceEvent.type) {
                 case MICE_EVENT_MOVE:
@@ -288,12 +293,27 @@ int main()
                     unionRect(&dirtyRect, &cursorRect);
                     break;
                 }
+                window = findWindowUnder(cursorX, cursorY);
+                if (window) {
+                    miceEventNotify->type = UI_EVENT_MICE;
+                    miceEventNotify->id = windowId(window);
+                    memcpy(&miceEventNotify->miceEvent, &miceEvent, sizeof(struct MiceEvent));
+                    miceEventNotify->miceEvent.x = cursorX - window->screenX - window->clientRect.x;
+                    miceEventNotify->miceEvent.y = cursorY - window->screenY - window->clientRect.y;
+                    if (insideRect(&window->clientRect, 
+                                   miceEventNotify->miceEvent.x + window->clientRect.x, 
+                                   miceEventNotify->miceEvent.y + window->clientRect.y)
+                            && window->app->needEvent) {
+                        --window->app->needEvent;
+                        OzPost(window->app->pid, miceEventNotify, sizeof(struct OzUIMiceEventNotify));
+                    }
+                }
                 OzReadAsync(miceFD, sizeof(struct MiceEvent), &miceEvent);
             }
             break;
         case UI_EVENT_CREATE_WINDOW:
             createWindowRequest = (struct OzUICreateWindowRequest*)buf;
-            window = createWindow(createWindowRequest->width, createWindowRequest->height, createWindowRequest->flags);
+            window = createWindow(hdr.pid, createWindowRequest->width, createWindowRequest->height, createWindowRequest->flags);
             createWindowReply->id = windowId(window);
             OzReply(hdr.pid, createWindowReply, sizeof(struct OzUICreateWindowReply));
             unionWindowRect(&dirtyRect, window);
@@ -314,6 +334,10 @@ int main()
             unionWindowRect(&dirtyRect, window);
             moveWindowReply->ret = 0;
             OzReply(hdr.pid, moveWindowReply, sizeof(struct OzUIMoveWindowReply));
+            break;
+        case UI_EVENT_NEXT_EVENT:
+            app = getApp(hdr.pid);
+            app->needEvent++;
             break;
         }
     }
