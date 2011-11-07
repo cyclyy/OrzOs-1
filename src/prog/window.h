@@ -4,6 +4,7 @@
 #include "libc/list.h"
 #include "rect.h"
 #include "app.h"
+#include "uidef.h"
 #include <cairo.h>
 
 #define PF_RGB565   1
@@ -62,4 +63,6 @@ struct Window *getWindowById(unsigned long id);
 
 void unionWindowRect(struct Rect *rect, struct Window *window);
 
+int drawRectangle(struct Window *window, struct Rect *clipRect,
+        struct Rect *rect, struct LineStyle *lineStyle, struct FillStyle *fillStyle);
 #endif /* WINDOW_H */

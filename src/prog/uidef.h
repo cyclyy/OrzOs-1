@@ -28,9 +28,14 @@
 #define UI_EVENT_DESTROY_WINDOW       0x1002
 #define UI_EVENT_MOVE_WINDOW          0x1003
 #define UI_EVENT_NEXT_EVENT           0x1004
+#define UI_EVENT_DRAW_RECTANGLE       0x1005
 
-// events received by clients
+// events received by client window
 #define UI_EVENT_MICE                 0x2001
+
+// events received by client widgets
+#define UI_EVENT_MICE_ENTER           0x3001
+#define UI_EVENT_MICE_LEAVE           0x3002
 
 struct DisplayModeInfo
 {
@@ -41,6 +46,22 @@ struct DisplayModeInfo
     u16int cellBits;
     u64int addr;
 }__attribute__((packed));
+
+struct Color
+{
+    int r, g, b;
+};
+
+struct LineStyle
+{
+    struct Color color;
+    int lineWidth;
+};
+
+struct FillStyle
+{
+    struct Color color;
+};
 
 // format of message need synchronous reply
 struct OzUICreateWindowRequest
@@ -80,6 +101,20 @@ struct OzUIMoveWindowReply
     int ret;
 }__attribute__((packed));
 
+struct OzUIWindowDrawRectangleRequest
+{
+    int type;
+    unsigned long id;
+    struct Rect clipRect, rect;
+    struct LineStyle lineStyle;
+    struct FillStyle fillStyle;
+}__attribute__((packed));
+
+struct OzUIWindowDrawRectangleReply
+{
+    int ret;
+}__attribute__((packed));
+
 // format of received event
 struct OzUIMiceEvent
 {
@@ -114,12 +149,17 @@ struct OzUIWindow
     struct OzUIWindowOperation *ops;
     struct ListHead widgetList;
     struct ListHead link;
+    // private members
+    struct OzUIWidget *miceWidget, *focusWidget;
 };
 
 struct OzUIWidget;
 struct OzUIWidgetOperation
 {
-    void (*onMiceEvent)(struct OzUIWidget *widget, struct OzUIMiceEvent *event);
+    void (*onCreate)(struct OzUIWidget *widget);
+    void (*onDestroy)(struct OzUIWidget *widget);
+    void (*onMiceEnter)(struct OzUIWidget *widget);
+    void (*onMiceLeave)(struct OzUIWidget *widget);
 };
 
 struct OzUIWidget

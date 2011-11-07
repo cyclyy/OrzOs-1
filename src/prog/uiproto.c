@@ -29,6 +29,9 @@ static int OzUISendReceive(void *request, void *reply)
     case UI_EVENT_MOVE_WINDOW:
         return OzSendReceive(&hdr, request, sizeof(struct OzUIMoveWindowRequest), reply, sizeof(struct OzUIMoveWindowReply));
         break;
+    case UI_EVENT_DRAW_RECTANGLE:
+        return OzSendReceive(&hdr, request, sizeof(struct OzUIWindowDrawRectangleRequest), reply, sizeof(struct OzUIWindowDrawRectangleReply));
+        break;
     };
     return 0;
 }
@@ -43,19 +46,48 @@ static int OzUISend(void *request)
     return 0;
 }
 
+static struct OzUIWidget *widgetUnderMice(struct OzUIWindow *window, struct OzUIMiceEvent *miceEvent, struct OzUIMiceEvent *localMiceEvent)
+{
+    struct OzUIWidget *widget;
+    listForEachEntry(widget, &window->widgetList, link) {
+        if (insideRect(&widget->rect, miceEvent->x, miceEvent->y)) {
+            if (localMiceEvent) {
+                memcpy(localMiceEvent, miceEvent, sizeof(struct MiceEvent));
+                localMiceEvent->x -= widget->rect.x;
+                localMiceEvent->y -= widget->rect.y;
+            }
+            return widget;
+        }
+    }
+    return 0;
+}
+
 void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *miceEvent)
 {
     struct OzUIWidget *widget;
-    struct OzUIMiceEvent newMiceEvent;
-    memcpy(&newMiceEvent, miceEvent, sizeof(struct MiceEvent));
-    listForEachEntry(widget, &window->widgetList, link) {
-        if (insideRect(&widget->rect, miceEvent->x, miceEvent->y)) {
-            newMiceEvent.x -= widget->rect.x;
-            newMiceEvent.y -= widget->rect.y;
-            if (widget->ops && widget->ops->onMiceEvent)
-                widget->ops->onMiceEvent(widget, &newMiceEvent);
+    struct OzUIMiceEvent localMiceEvent;
+    widget = widgetUnderMice(window, miceEvent, &localMiceEvent);
+    if (widget) {
+        if (window->miceWidget != widget) {
+            // TODO: handle mice leave in old miceWidget
+            ;;
+            // handle mice enter event
+            localMiceEvent.type = UI_EVENT_MICE_ENTER;
+            if (widget->ops && widget->ops->onMiceEnter)
+                widget->ops->onMiceEnter(widget);
         }
+
+        /*
+        localMiceEvent.type = miceEvent.type;
+        if (widget->ops && widget->ops->onMiceEvent)
+            widget->ops->onMiceEvent(widget, &localMiceEvent);
+        */
+    } else if (window->miceWidget) {
+        localMiceEvent.type = UI_EVENT_MICE_LEAVE;
+        if (window->miceWidget->ops && window->miceWidget->ops->onMiceLeave)
+            window->miceWidget->ops->onMiceLeave(window->miceWidget);
     }
+    window->miceWidget = widget;
 }
 
 struct OzUIWindow *OzUIGetWindowById(unsigned long id)
@@ -139,4 +171,48 @@ void OzUINextEvent()
     OzUISend(&request);
 }
 
+int OzUIWindowDrawRectangle(struct OzUIWindow *window, struct Rect *clipRect,
+        struct Rect *rect, struct LineStyle *lineStyle, struct FillStyle *fillStyle)
+{
+    struct OzUIWindowDrawRectangleRequest request;
+    struct OzUIWindowDrawRectangleReply reply;
+    request.type = UI_EVENT_DRAW_RECTANGLE;
+    request.id = window->id;
+    memcpy(&request.clipRect, clipRect, sizeof(struct Rect));
+    memcpy(&request.rect, rect, sizeof(struct Rect));
+    memcpy(&request.lineStyle, lineStyle, sizeof(struct LineStyle));
+    memcpy(&request.fillStyle, fillStyle, sizeof(struct FillStyle));
+    OzUISendReceive(&request, &reply);
+    return reply.ret;
+}
+
+struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, struct Rect *rect, struct OzUIWidgetOperation *ops)
+{
+    struct OzUIWidget *widget;
+    widget = (struct OzUIWidget*)malloc(sizeof(struct OzUIWidget));
+    memset(widget, 0, sizeof(struct OzUIWidget));
+    widget->window = window;
+    widget->type = type;
+    memcpy(&widget->rect, rect, sizeof(struct Rect));
+    widget->ops = ops;
+    listAdd(&widget->link, &window->widgetList);
+    return widget;
+}
+
+int OzUIDestroyWidget(struct OzUIWidget *widget)
+{
+    listDel(&widget->link);
+    free(widget);
+    return 0;
+}
+
+int OzUIWidgetDrawRectangle(struct OzUIWidget *widget, struct Rect *rect,
+        struct LineStyle *lineStyle, struct FillStyle *fillStyle)
+{
+    struct Rect baseRect;
+    memcpy(&baseRect, rect, sizeof(struct Rect));
+    baseRect.x += widget->rect.x;
+    baseRect.y += widget->rect.y;
+    return OzUIWindowDrawRectangle(widget->window, &widget->rect, &baseRect, lineStyle, fillStyle);
+}
 // vim: sw=4 sts=4 et tw=100

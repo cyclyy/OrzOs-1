@@ -24,7 +24,7 @@ sudo losetup -d /dev/loop20
 mkdir /tmp/c
 sudo losetup -d /dev/loop5
 sudo losetup -o 32256 /dev/loop5 c.img
-sudo mount -t ext2 /dev/loop5 /tmp/c
+sudo mount /dev/loop5 /tmp/c
 rm /tmp/c/uiserver
 cp initrd/a.txt /tmp/c/t1.txt -v
 cp src/prog/uiserver /tmp/c -v

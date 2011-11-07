@@ -5,6 +5,7 @@
 #include "uiserver.h"
 #include "uiproto.h"
 #include "window.h"
+#include "drawops.h"
 #include "syscall.h"
 #include "mice.h"
 #include "event.h"
@@ -244,6 +245,8 @@ int main()
     struct OzUIDestroyWindowReply *destroyWindowReply = (struct OzUIDestroyWindowReply*)replyBuf;
     struct OzUIMoveWindowRequest *moveWindowRequest;
     struct OzUIMoveWindowReply *moveWindowReply = (struct OzUIMoveWindowReply*)replyBuf;
+    struct OzUIDrawRectangleRequest *drawRectangleRequest;
+    struct OzUIDrawRectangleReply *drawRectangleReply = (struct OzUIDrawRectangleReply*)replyBuf;
     struct OzUIMiceEventNotify *miceEventNotify = (struct OzUIMiceEventNotify*)replyBuf;
     //struct OzUINextEventRequest *nextEventRequest = (struct OzUINextEventRequest*)buf;
     struct App *app;
@@ -338,6 +341,14 @@ int main()
         case UI_EVENT_NEXT_EVENT:
             app = getApp(hdr.pid);
             app->needEvent++;
+            break;
+        case UI_EVENT_DRAW_RECTANGLE:
+            drawRectangleRequest = (struct OzUIDrawRectangleRequest*)buf;
+            window = getWindowById(drawRectangleRequest->id);
+            drawRectangle(window, &drawRectangleRequest->clipRect, &drawRectangleRequest->rect, &drawRectangleRequest->lineStyle, &drawRectangleRequest->fillStyle);
+            unionWindowRect(&dirtyRect, window);
+            drawRectangleReply->ret = 0;
+            OzReply(hdr.pid, drawRectangleReply, sizeof(struct OzUIMoveWindowReply));
             break;
         }
     }

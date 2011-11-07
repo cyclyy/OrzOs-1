@@ -33,6 +33,29 @@ static void drawWindowTitle(struct Window *window)
 {
 }
 
+int drawRectangle(struct Window *window, struct Rect *clipRect,
+        struct Rect *rect, struct LineStyle *lineStyle, struct FillStyle *fillStyle)
+{
+    cairo_t *cr;
+    cr = window->pixmap->d->cr;
+
+    cairo_save(cr);
+    cairo_translate(cr, window->clientRect.x, window->clientRect.y);
+    cairo_rectangle(cr, clipRect->x, clipRect->y, clipRect->w, clipRect->h);
+    cairo_clip(cr);
+    cairo_set_source_rgb(cr, lineStyle->color.r/255.0, lineStyle->color.g/255.0,
+            lineStyle->color.b/255.0);
+    cairo_set_line_width(cr, lineStyle->lineWidth);
+    cairo_rectangle(cr, rect->x, rect->y, rect->w, rect->h);
+    cairo_stroke_preserve(cr);
+    cairo_set_source_rgb(cr, fillStyle->color.r/255.0, fillStyle->color.g/255.0,
+            fillStyle->color.b/255.0);
+    cairo_fill(cr);
+    cairo_reset_clip(cr);
+    cairo_restore(cr);
+    return 0;
+}
+
 struct Pixmap *createPixmap(int w, int h)
 {
     char *buffer;
