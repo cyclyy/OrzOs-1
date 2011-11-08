@@ -196,12 +196,16 @@ struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, struct 
     memcpy(&widget->rect, rect, sizeof(struct Rect));
     widget->ops = ops;
     listAdd(&widget->link, &window->widgetList);
+    if (widget->ops && widget->ops->onCreate)
+        widget->ops->onCreate(widget);
     return widget;
 }
 
 int OzUIDestroyWidget(struct OzUIWidget *widget)
 {
     listDel(&widget->link);
+    if (widget->ops && widget->ops->onDestroy)
+        widget->ops->onDestroy(widget);
     free(widget);
     return 0;
 }

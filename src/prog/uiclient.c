@@ -31,6 +31,7 @@ void onMyMiceLeave(struct OzUIWidget *widget)
 }
 
 struct OzUIWidgetOperation myOps = {
+    .onCreate = &onMyMiceLeave,
     .onMiceEnter = &onMyMiceEnter,
     .onMiceLeave = &onMyMiceLeave,
 };

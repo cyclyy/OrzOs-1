@@ -5,6 +5,7 @@
 #include "mice.h"
 #include "rect.h"
 #include "libc/list.h"
+#include <wchar.h>
 
 #define UIDBG(...)  fprintf(dbgFile, __VA_ARGS__)
 
@@ -113,6 +114,33 @@ struct OzUIWindowDrawRectangleRequest
 struct OzUIWindowDrawRectangleReply
 {
     int ret;
+}__attribute__((packed));
+
+struct OzUIWindowDrawTextRequest
+{
+    int type;
+    unsigned long id;
+    struct Rect clipRect, rect;
+    struct LineStyle lineStyle;
+    char text[0];
+}__attribute__((packed));
+
+struct OzUICharLayout
+{
+    wchar_t ch;
+    struct Rect rect;
+}__attribute__((packed));
+
+struct OzUITextLayout 
+{
+    int n;
+    struct OzUICharLayout charLayout[0];
+}__attribute__((packed));
+
+struct OzUIWindowDrawTextReply
+{
+    int ret;
+    struct OzUITextLayout layout;
 }__attribute__((packed));
 
 // format of received event
