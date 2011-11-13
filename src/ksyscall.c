@@ -52,19 +52,12 @@ void syscallHandler(struct RegisterState *regs)
     }
 
     u64int ret;
-    asm volatile("push %1;  \
-                  push %2;  \
-                  push %3;  \
-                  push %4;  \
-                  push %5;  \
-                  call *%6; \
-                  pop %%rbx;\
-                  pop %%rbx;\
-                  pop %%rbx;\
-                  pop %%rbx;\
-                  pop %%rbx;"
+    asm volatile("push %%r8;  \
+                  mov %%r8, %%rbx; \
+                  call *%%rax; \
+                  pop %%r8;"
                   : "=a"(ret) : "D"(regs->rbx), "S"(regs->rcx), "d"(regs->rdx), 
-                    "c"(regs->rsi), "b"(regs->rdi), "r"(func));
+                    "c"(regs->rsi), "b"(regs->rdi), "a"(func));
 
 
 //    asm volatile("xchg %bx,%bx");

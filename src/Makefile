@@ -81,7 +81,7 @@ prog_link:
 	@echo "LD	init"
 	$(QUIET)$(LD) -o prog/init prog/init.o syscall.o $(PROG_LDFLAGS)
 	@echo "LD	uiserver"
-	$(QUIET)$(LD) -o prog/uiserver prog/uiserver.o prog/uiproto.o prog/window.o prog/rect.o prog/guiconfig.o prog/app.o prog/drawops.o syscall.o $(PROG_LDFLAGS)
+	$(QUIET)$(LD) -o prog/uiserver prog/uiserver.o prog/uiproto.o prog/window.o prog/rect.o prog/guiconfig.o prog/app.o prog/drawops.o prog/layout.o prog/utf8.o syscall.o $(PROG_LDFLAGS)
 	@echo "LD	uilcient"
 	$(QUIET)$(LD) -o prog/uiclient prog/uiclient.o prog/uiproto.o prog/rect.o prog/guiconfig.o syscall.o $(PROG_LDFLAGS)
 
@@ -101,4 +101,5 @@ ctags:
 	$(QUIET)ctags -R --c-kinds=+p --fields=+S . 
 
 include $(CORE_C_SOURCES:.o=.d)
+$(PROG_SOURCES):$(wildcard *.h prog/*.h)
 

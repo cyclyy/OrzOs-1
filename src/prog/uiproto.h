@@ -23,7 +23,7 @@ int OzUIWindowDrawRectangle(struct OzUIWindow *window, struct Rect *clipRect,
         struct Rect *rect, struct LineStyle *lineStyle, struct FillStyle *fillStyle);
 
 int OzUIWindowDrawText(struct OzUIWindow *window, struct Rect *clipRect,
-        struct Rect *rect, char *text, struct LineStyle *lineStyle, struct OzUITextLayout *layout);
+        struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct LineStyle *lineStyle, struct OzUITextLayout *layout);
 
 // widget related functions
 struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, struct Rect *rect, struct OzUIWidgetOperation *ops);
@@ -32,5 +32,8 @@ int OzUIDestroyWidget(struct OzUIWidget *widget);
 
 int OzUIWidgetDrawRectangle(struct OzUIWidget *widget, struct Rect *rect,
         struct LineStyle *lineStyle, struct FillStyle *fillStyle);
+
+int OzUIWidgetDrawText(struct OzUIWidget *widget, 
+        struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct LineStyle *lineStyle, struct OzUITextLayout *layout);
 
 #endif // UIPROTO_H

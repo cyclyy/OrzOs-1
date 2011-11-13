@@ -30,6 +30,7 @@
 #define UI_EVENT_MOVE_WINDOW          0x1003
 #define UI_EVENT_NEXT_EVENT           0x1004
 #define UI_EVENT_DRAW_RECTANGLE       0x1005
+#define UI_EVENT_DRAW_TEXT            0x1006
 
 // events received by client window
 #define UI_EVENT_MICE                 0x2001
@@ -65,10 +66,14 @@ struct FillStyle
 };
 
 // format of message need synchronous reply
+#define SIZE_OZUI_CREATE_WINDOW_REQUEST(x) \
+    (sizeof(struct OzUICreateWindowRequest) \
+    + sizeof(wchar_t) * (wcslen(((struct OzUICreateWindowRequest*)(x))->title) + 1))
 struct OzUICreateWindowRequest
 {
     int type;
     int width, height, flags;
+    wchar_t title[0];
 }__attribute__((packed));
 
 struct OzUICreateWindowReply
@@ -116,27 +121,58 @@ struct OzUIWindowDrawRectangleReply
     int ret;
 }__attribute__((packed));
 
+struct OzUICharLayout
+{
+    unsigned int glyphIndex;
+    struct Rect rect;
+}__attribute__((packed));
+
+#define SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS(chars) \
+    (sizeof(struct OzUITextLayout) \
+    + sizeof(struct OzUICharLayout) * ((chars) + 1))
+#define SIZE_OZUI_TEXT_LAYOUT(x) \
+    SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS(((struct OzUITextLayout*)(x))->chars)
+struct OzUITextLayout 
+{
+    int chars;
+    struct Rect rect;
+    int ascent;
+    int descent;
+    int height;
+    struct OzUICharLayout charLayout[0];
+}__attribute__((packed));
+
+struct OzUITextLayoutConstraint 
+{
+    struct Rect rect;
+    int fontSize;
+    int originX; 
+    int originY;
+    int flags;
+}__attribute__((packed));
+
+#define SIZE_OZUI_WINDOW_DRAW_TEXT_REQUEST_FOR_TEXT(text) \
+    (sizeof(struct OzUIWindowDrawTextRequest) \
+    + sizeof(wchar_t) * (wcslen(text) + 1))
+#define SIZE_OZUI_WINDOW_DRAW_TEXT_REQUEST(x) \
+    SIZE_OZUI_WINDOW_DRAW_TEXT_REQUEST_FOR_TEXT( \
+            ((struct OzUIWindowDrawTextRequest*)(x))->text)
 struct OzUIWindowDrawTextRequest
 {
     int type;
     unsigned long id;
-    struct Rect clipRect, rect;
+    struct Rect clipRect;
+    struct OzUITextLayoutConstraint tlc;
     struct LineStyle lineStyle;
-    char text[0];
+    wchar_t text[0];
 }__attribute__((packed));
 
-struct OzUICharLayout
-{
-    wchar_t ch;
-    struct Rect rect;
-}__attribute__((packed));
-
-struct OzUITextLayout 
-{
-    int n;
-    struct OzUICharLayout charLayout[0];
-}__attribute__((packed));
-
+#define SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY_FOR_TEXT(str) \
+    (sizeof(int)  + SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS( \
+        wcslen(str)))
+#define SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY(x) \
+    (sizeof(int)  + SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS( \
+        ((struct OzUIWindowDrawTextReply*)(x))->layout.chars ))
 struct OzUIWindowDrawTextReply
 {
     int ret;

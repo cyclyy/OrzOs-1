@@ -151,9 +151,7 @@ void show_image( void )
 }
 
 
-void initFontRender()
-{
-    wchar_t *msg = L"我";
+void initFontRender() {
     FT_GlyphSlot slot;
     FT_Matrix matrix;
     FT_Vector pen;
@@ -249,7 +247,10 @@ int main()
     struct OzUIWindowDrawRectangleReply *drawRectangleReply = (struct OzUIWindowDrawRectangleReply*)replyBuf;
     struct OzUIMiceEventNotify *miceEventNotify = (struct OzUIMiceEventNotify*)replyBuf;
     //struct OzUINextEventRequest *nextEventRequest = (struct OzUINextEventRequest*)buf;
+    struct OzUIWindowDrawTextRequest *drawTextRequest;
+    struct OzUIWindowDrawTextReply *drawTextReply = (struct OzUIWindowDrawTextReply*)replyBuf;
     struct App *app;
+    int drawTextReplyLen;
 
     dbgFile = fopen("Device:/Debug", "w");
     initDisplay();
@@ -348,7 +349,17 @@ int main()
             drawRectangle(window, &drawRectangleRequest->clipRect, &drawRectangleRequest->rect, &drawRectangleRequest->lineStyle, &drawRectangleRequest->fillStyle);
             unionWindowRect(&dirtyRect, window);
             drawRectangleReply->ret = 0;
-            OzReply(hdr.pid, drawRectangleReply, sizeof(struct OzUIMoveWindowReply));
+            OzReply(hdr.pid, drawRectangleReply, sizeof(struct OzUIWindowDrawRectangleReply));
+            break;
+        case UI_EVENT_DRAW_TEXT:
+            drawTextRequest = (struct OzUIWindowDrawTextRequest*)buf;
+            window = getWindowById(drawTextRequest->id);
+            drawText(window, &drawTextRequest->clipRect, &drawTextRequest->tlc, drawTextRequest->text, &drawTextRequest->lineStyle, &drawTextReply->layout);
+            unionWindowRect(&dirtyRect, window);
+            drawTextReply->ret = 0;
+            drawTextReplyLen = SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY(drawTextReply);
+            //OzReply(hdr.pid, drawTextReply, SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY(drawTextReply));
+            OzReply(hdr.pid, drawTextReply,  200);
             break;
         }
     }

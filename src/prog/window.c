@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cairo.h>
+#include <cairo-ft.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 static LIST_HEAD(windowList);
 
@@ -31,29 +34,6 @@ static void drawWindowBorder(struct Window *window)
 
 static void drawWindowTitle(struct Window *window)
 {
-}
-
-int drawRectangle(struct Window *window, struct Rect *clipRect,
-        struct Rect *rect, struct LineStyle *lineStyle, struct FillStyle *fillStyle)
-{
-    cairo_t *cr;
-    cr = window->pixmap->d->cr;
-
-    cairo_save(cr);
-    cairo_translate(cr, window->clientRect.x, window->clientRect.y);
-    cairo_rectangle(cr, clipRect->x, clipRect->y, clipRect->w, clipRect->h);
-    cairo_clip(cr);
-    cairo_set_source_rgb(cr, lineStyle->color.r/255.0, lineStyle->color.g/255.0,
-            lineStyle->color.b/255.0);
-    cairo_set_line_width(cr, lineStyle->lineWidth);
-    cairo_rectangle(cr, rect->x, rect->y, rect->w, rect->h);
-    cairo_stroke_preserve(cr);
-    cairo_set_source_rgb(cr, fillStyle->color.r/255.0, fillStyle->color.g/255.0,
-            fillStyle->color.b/255.0);
-    cairo_fill(cr);
-    cairo_reset_clip(cr);
-    cairo_restore(cr);
-    return 0;
 }
 
 struct Pixmap *createPixmap(int w, int h)
@@ -83,6 +63,7 @@ struct Pixmap *createPixmapForData(int w, int h, char *buffer)
             h,
             w*2);
     pixmap->d->cr = cairo_create(pixmap->d->surface);
+    cairo_set_font_face(pixmap->d->cr, guiConfig()->fontFace);
     return pixmap;
 }
 
@@ -215,3 +196,110 @@ void unionWindowRect(struct Rect *rect, struct Window *window)
     initRect(&r2, window->screenX, window->screenY, window->width, window->height);
     unionRect(rect, &r2);
 }
+
+int drawRectangle(struct Window *window, struct Rect *clipRect,
+        struct Rect *rect, struct LineStyle *lineStyle, struct FillStyle *fillStyle)
+{
+    cairo_t *cr;
+    cr = window->pixmap->d->cr;
+
+    cairo_save(cr);
+    cairo_translate(cr, window->clientRect.x, window->clientRect.y);
+    cairo_rectangle(cr, clipRect->x, clipRect->y, clipRect->w, clipRect->h);
+    cairo_clip(cr);
+    cairo_set_source_rgb(cr, lineStyle->color.r/255.0, lineStyle->color.g/255.0,
+            lineStyle->color.b/255.0);
+    cairo_set_line_width(cr, lineStyle->lineWidth);
+    cairo_rectangle(cr, rect->x, rect->y, rect->w, rect->h);
+    cairo_stroke_preserve(cr);
+    cairo_set_source_rgb(cr, fillStyle->color.r/255.0, fillStyle->color.g/255.0,
+            fillStyle->color.b/255.0);
+    cairo_fill(cr);
+    cairo_reset_clip(cr);
+    cairo_restore(cr);
+    return 0;
+}
+
+int drawTextLayouted(const wchar_t *text, const struct TextLayout *layout, const struct LayoutConstraint *lc)
+{
+    int n;
+    cairo_t *cr;
+    cairo_glyph_t *glyphs;
+    struct CharLayout *charLayout;
+
+    n = 0;
+    cr = lc->cr;
+
+    glyphs = cairo_glyph_allocate(layout->chars);
+    listForEachEntry(charLayout, &layout->charList, link) {
+        if (!isEmptyRect(&charLayout->rect)) {
+            glyphs[n].index = charLayout->glyphIndex;
+            glyphs[n].x = charLayout->rect.x;
+            glyphs[n].y = charLayout->rect.y + layout->ascent;
+            n++;
+        }
+    }
+    cairo_show_glyphs(cr, glyphs, n);
+
+    return layout->chars;
+}
+
+
+static void packOzUITextLayout(struct OzUITextLayout *utl, const struct TextLayout *layout)
+{
+    int i;
+    struct CharLayout *cl;
+
+    utl->chars = layout->chars;
+    copyRect(&utl->rect, &layout->rect);
+    utl->ascent = layout->ascent;
+    utl->descent = layout->descent;
+    utl->height = layout->height;
+    i = 0;
+    listForEachEntry(cl, &layout->charList, link) {
+        utl->charLayout[i].glyphIndex = cl->glyphIndex;
+        copyRect(&utl->charLayout[i].rect, &cl->rect);
+        i++;
+    }
+}
+
+int drawText(struct Window *window, struct Rect *clipRect,
+        struct OzUITextLayoutConstraint *tlc, wchar_t *text, 
+        struct LineStyle *lineStyle, struct OzUITextLayout *utl)
+{
+    int ret;
+    cairo_t *cr;
+    struct LayoutConstraint lc;
+    struct TextLayout *layout;
+
+    cr = window->pixmap->d->cr;
+
+    cairo_save(cr);
+    cairo_translate(cr, window->clientRect.x, window->clientRect.y);
+    cairo_rectangle(cr, clipRect->x, clipRect->y, clipRect->w, clipRect->h);
+    cairo_clip(cr);
+    cairo_set_source_rgb(cr, lineStyle->color.r/255.0, lineStyle->color.g/255.0,
+            lineStyle->color.b/255.0);
+    cairo_set_line_width(cr, lineStyle->lineWidth);
+    cairo_set_font_size(cr, tlc->fontSize);
+
+    lc.cr = cr;
+    copyRect(&lc.rect, &tlc->rect);
+    lc.originX = tlc->originX;
+    lc.originY = tlc->originY;
+    lc.flags = tlc->flags;
+
+    layout = createTextLayout();
+    layoutText(layout, text, &lc);
+
+    packOzUITextLayout(utl, layout);
+
+    ret = drawTextLayouted(text, layout, &lc);
+
+    destroyTextLayout(layout);
+
+    cairo_reset_clip(cr);
+    cairo_restore(cr);
+    return ret;
+}
+

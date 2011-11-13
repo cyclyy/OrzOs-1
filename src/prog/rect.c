@@ -10,6 +10,12 @@ void initRect(struct Rect *rect, int x, int y, int w, int h)
     rect->h = h;
 }
 
+struct Rect *copyRect(struct Rect *dst, const struct Rect *src)
+{
+    initRect(dst, src->x, src->y, src->w, src->h);
+    return dst;
+}
+
 struct Rect *unionRect(struct Rect *rect1, struct Rect *rect2)
 {
     int x,y,w,h;
@@ -52,13 +58,46 @@ struct Rect *crossRect(struct Rect *rect1, struct Rect *rect2)
     return rect1;
 }
 
-inline int insideRect(struct Rect *rect, int x, int y)
+inline int insideRect(const struct Rect *rect, int x, int y)
 {
     return ((x >= rect->x) && (x <= rect->x + rect->w)
         && (y >= rect->y) && (y <= rect->y + rect->h));
 }
 
-int isNullRect(struct Rect *rect)
+int isNullRect(const struct Rect *rect)
 {
     return ((rect->w == 0) && (rect->h == 0));
 }
+
+int isEmptyRect(const struct Rect *rect)
+{
+    return ((rect->w == 0) || (rect->h == 0));
+}
+
+int rectTop(const struct Rect *rect)
+{
+    return rect->y;
+}
+
+int rectLeft(const struct Rect *rect)
+{
+    return rect->x;
+}
+
+int rectRight(const struct Rect *rect)
+{
+    return rect->x + rect->w;
+}
+
+int rectBottom(const struct Rect *rect)
+{
+    return rect->y + rect->h;
+}
+
+struct Rect *translateRect(struct Rect *rect, int deltaX, int deltaY)
+{
+    rect->x += deltaX;
+    rect->y += deltaY;
+    return rect;
+}
+

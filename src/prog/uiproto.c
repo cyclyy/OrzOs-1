@@ -32,6 +32,9 @@ static int OzUISendReceive(void *request, void *reply)
     case UI_EVENT_DRAW_RECTANGLE:
         return OzSendReceive(&hdr, request, sizeof(struct OzUIWindowDrawRectangleRequest), reply, sizeof(struct OzUIWindowDrawRectangleReply));
         break;
+    case UI_EVENT_DRAW_TEXT:
+        return OzSendReceive(&hdr, request, SIZE_OZUI_WINDOW_DRAW_TEXT_REQUEST(request), reply, SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY_FOR_TEXT(((struct OzUIWindowDrawTextRequest*)request)->text));
+        break;
     };
     return 0;
 }
@@ -218,5 +221,54 @@ int OzUIWidgetDrawRectangle(struct OzUIWidget *widget, struct Rect *rect,
     baseRect.x += widget->rect.x;
     baseRect.y += widget->rect.y;
     return OzUIWindowDrawRectangle(widget->window, &widget->rect, &baseRect, lineStyle, fillStyle);
+}
+
+int OzUIWindowDrawText(struct OzUIWindow *window, struct Rect *clipRect,
+        struct OzUITextLayoutConstraint *tlc, 
+        const wchar_t *text, 
+        struct LineStyle *lineStyle, 
+        struct OzUITextLayout *layout)
+{
+    struct OzUIWindowDrawTextRequest *request;
+    struct OzUIWindowDrawTextReply *reply;
+    int i,j;
+    i = SIZE_OZUI_WINDOW_DRAW_TEXT_REQUEST_FOR_TEXT(text);
+    j = SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY_FOR_TEXT(text);
+    request = (struct OzUIWindowDrawTextRequest*)malloc(SIZE_OZUI_WINDOW_DRAW_TEXT_REQUEST_FOR_TEXT(text));
+    reply = (struct OzUIWindowDrawTextReply*)malloc(SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY_FOR_TEXT(text));
+    request->type = UI_EVENT_DRAW_TEXT;
+    request->id = window->id;
+    memcpy(&request->clipRect, clipRect, sizeof(struct Rect));
+    memcpy(&request->tlc, tlc, sizeof(struct OzUITextLayoutConstraint));
+    wcscpy(request->text, text);
+    memcpy(&request->lineStyle, lineStyle, sizeof(struct LineStyle));
+    OzUISendReceive(request, reply);
+    memcpy(layout, &reply->layout, SIZE_OZUI_TEXT_LAYOUT(&reply->layout));
+    free(request);
+    free(reply);
+    return reply->ret;
+}
+
+static void translateLayoutCoords(struct OzUITextLayout *layout, int deltaX, int deltaY) 
+{
+    int i;
+    translateRect(&layout->rect, deltaX, deltaY);
+    for (i = 0; i <= layout->chars; i++) {
+        translateRect(&layout->charLayout[i].rect, deltaX, deltaY);
+    }
+}
+
+int OzUIWidgetDrawText(struct OzUIWidget *widget, struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct LineStyle *lineStyle, struct OzUITextLayout *layout)
+{
+    struct OzUITextLayoutConstraint baseTLC;
+    int ret;
+    memcpy(&baseTLC, tlc, sizeof(struct OzUITextLayoutConstraint));
+    baseTLC.originX += widget->rect.x;
+    baseTLC.originY += widget->rect.y;
+    baseTLC.rect.x += widget->rect.x;
+    baseTLC.rect.y += widget->rect.y;
+    ret =  OzUIWindowDrawText(widget->window, &widget->rect, &baseTLC, text, lineStyle, layout);
+    translateLayoutCoords(layout, -widget->rect.x, -widget->rect.y);
+    return ret;
 }
 // vim: sw=4 sts=4 et tw=100

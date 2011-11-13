@@ -10,12 +10,26 @@ struct Rect {
 
 void initRect(struct Rect *rect, int x, int y, int w, int h);
 
+struct Rect *copyRect(struct Rect *dst, const struct Rect *src);
+
 struct Rect *unionRect(struct Rect *rect1, struct Rect *rect2);
 
 struct Rect *crossRect(struct Rect *rect1, struct Rect *rect2);
 
-inline int insideRect(struct Rect *rect, int x, int y);
+inline int insideRect(const struct Rect *rect, int x, int y);
 
-int isNullRect(struct Rect *rect);
+int isNullRect(const struct Rect *rect);
+
+int isEmptyRect(const struct Rect *rect);
+
+int rectTop(const struct Rect *rect);
+
+int rectLeft(const struct Rect *rect);
+
+int rectRight(const struct Rect *rect);
+
+int rectBottom(const struct Rect *rect);
+
+struct Rect *translateRect(struct Rect *rect, int deltaX, int deltaY);
 
 #endif /* RECT_H */
