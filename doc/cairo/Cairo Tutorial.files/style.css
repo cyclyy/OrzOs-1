@@ -1,0 +1,187 @@
+.header {
+	DISPLAY: block; FONT-WEIGHT: bold; MARGIN: 0px; LINE-HEIGHT: 1em
+}
+.author {
+	DISPLAY: block; FONT-WEIGHT: bold; MARGIN: 0px
+}
+.actions UL {
+	PADDING-RIGHT: 6px; PADDING-LEFT: 6px; PADDING-BOTTOM: 6px; MARGIN: 0px; PADDING-TOP: 6px; LIST-STYLE-TYPE: none
+}
+.inlinepage .actions UL {
+	BORDER-BOTTOM-WIDTH: 0px
+}
+.actions LI {
+	PADDING-RIGHT: 0.4em; DISPLAY: inline; PADDING-LEFT: 0.4em; PADDING-BOTTOM: 0.2em; PADDING-TOP: 0.2em
+}
+.tags {
+	CLEAR: both
+}
+#footer {
+	BORDER-TOP: #000 1px solid
+}
+DIV.tags {
+	MARGIN-TOP: 1em
+}
+#backlinks {
+	MARGIN-TOP: 1em
+}
+#searchform {
+	DISPLAY: inline; FLOAT: right
+}
+#editcontent {
+	WIDTH: 100%
+}
+IMG {
+	BORDER-TOP-STYLE: none; BORDER-RIGHT-STYLE: none; BORDER-LEFT-STYLE: none; BORDER-BOTTOM-STYLE: none
+}
+TR.changeheader {
+	BACKGROUND: #eee; COLOR: black! important
+}
+TR.changeinfo {
+	BACKGROUND: #eee; COLOR: black! important
+}
+TH.changeheader {
+	PADDING-RIGHT: 0.3em; PADDING-LEFT: 0.3em; PADDING-BOTTOM: 1px; PADDING-TOP: 1px
+}
+TD.changeinfo {
+	PADDING-RIGHT: 0.3em; PADDING-LEFT: 0.3em; PADDING-BOTTOM: 1px; PADDING-TOP: 1px
+}
+TD.changetime {
+	PADDING-RIGHT: 0.3em; PADDING-LEFT: 0.3em; PADDING-BOTTOM: 1px; PADDING-TOP: 1px; WHITE-SPACE: nowrap
+}
+TD.changelog {
+	FONT-STYLE: italic
+}
+#blogform {
+	BORDER-RIGHT: #aaa 1px solid; PADDING-RIGHT: 10px; BORDER-TOP: #aaa 1px solid; PADDING-LEFT: 10px; BACKGROUND: #eee; PADDING-BOTTOM: 10px; BORDER-LEFT: #aaa 1px solid; COLOR: black! important; PADDING-TOP: 10px; BORDER-BOTTOM: #aaa 1px solid
+}
+.inlinepage {
+	BORDER-RIGHT: #aaa 1px solid; PADDING-RIGHT: 10px; BORDER-TOP: #aaa 1px solid; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; BORDER-LEFT: #aaa 1px solid; PADDING-TOP: 10px; BORDER-BOTTOM: #aaa 1px solid
+}
+.fb_invalid {
+	BACKGROUND: white; COLOR: red
+}
+.fb_required {
+	FONT-WEIGHT: bold
+}
+.feedbutton {
+	BORDER-RIGHT: #993300 1px solid; PADDING-RIGHT: 0.5em; BORDER-TOP: #ccaa99 1px solid; MARGIN-TOP: 1em; PADDING-LEFT: 0.5em; FONT-WEIGHT: bold; FONT-SIZE: small; BACKGROUND: #ff6600; PADDING-BOTTOM: 0px; BORDER-LEFT: #cc9966 1px solid; COLOR: white! important; PADDING-TOP: 0px; BORDER-BOTTOM: #331100 1px solid; FONT-FAMILY: sans-serif; TEXT-DECORATION: none
+}
+.feedbutton:hover {
+	BACKGROUND: #ff9900; COLOR: white! important
+}
+.pagecloud {
+	BORDER-RIGHT: #aaa 1px solid; PADDING-RIGHT: 10px; BORDER-TOP: #aaa 1px solid; PADDING-LEFT: 10px; BACKGROUND: #eee; FLOAT: right; PADDING-BOTTOM: 10px; BORDER-LEFT: #aaa 1px solid; WIDTH: 30%; COLOR: black! important; PADDING-TOP: 10px; BORDER-BOTTOM: #aaa 1px solid; TEXT-ALIGN: center
+}
+.smallestPC {
+	FONT-SIZE: 70%
+}
+.smallPC {
+	FONT-SIZE: 85%
+}
+.normalPC {
+	FONT-SIZE: 100%
+}
+.bigPC {
+	FONT-SIZE: 115%
+}
+.biggestPC {
+	FONT-SIZE: 130%
+}
+#sidebar {
+	PADDING-RIGHT: 2ex; PADDING-LEFT: 2ex; FLOAT: right; MARGIN-BOTTOM: 40px; PADDING-BOTTOM: 2ex; MARGIN-LEFT: 40px; WIDTH: 20ex; LINE-HEIGHT: 3ex; PADDING-TOP: 2ex
+}
+LI.L1 {
+	LIST-STYLE-TYPE: upper-roman
+}
+LI.L2 {
+	LIST-STYLE-TYPE: decimal
+}
+LI.L3 {
+	LIST-STYLE-TYPE: lower-alpha
+}
+LI.L4 {
+	LIST-STYLE-TYPE: disc
+}
+LI.L5 {
+	LIST-STYLE-TYPE: square
+}
+LI.L6 {
+	LIST-STYLE-TYPE: circle
+}
+LI.L7 {
+	LIST-STYLE-TYPE: lower-roman
+}
+LI.L8 {
+	LIST-STYLE-TYPE: upper-alpha
+}
+HR.poll {
+	BORDER-RIGHT: black 2px solid; BORDER-TOP: black 2px solid; BACKGROUND: #eee; BORDER-LEFT: black 2px solid; COLOR: white! important; BORDER-BOTTOM: black 2px solid; HEIGHT: 10pt
+}
+DIV.poll {
+	BORDER-RIGHT: #aaa 1px solid; PADDING-RIGHT: 1ex; BORDER-TOP: #aaa 1px solid; MARGIN-TOP: 1ex; PADDING-LEFT: 1ex; MARGIN-BOTTOM: 1ex; PADDING-BOTTOM: 1ex; BORDER-LEFT: #aaa 1px solid; PADDING-TOP: 1ex; BORDER-BOTTOM: #aaa 1px solid
+}
+INPUT#openid_url {
+	PADDING-LEFT: 18px; BACKGROUND: url(wikiicons/openidlogin-bg.gif) #fff no-repeat 0px 50%; COLOR: #000
+}
+
+@media Print    
+{
+.actions {
+	DISPLAY: none
+}
+.tags {
+	DISPLAY: none
+}
+.feedbutton {
+	DISPLAY: none
+}
+#searchform {
+	DISPLAY: none
+}
+#blogform {
+	DISPLAY: none
+}
+#backlinks {
+	DISPLAY: none
+}
+    }
+.infobox {
+	BORDER-RIGHT: #aaa 1px solid; PADDING-RIGHT: 1ex; BORDER-TOP: #aaa 1px solid; MARGIN-TOP: 1ex; PADDING-LEFT: 1ex; FLOAT: right; MARGIN-BOTTOM: 1ex; PADDING-BOTTOM: 1ex; MARGIN-LEFT: 2ex; BORDER-LEFT: #aaa 1px solid; PADDING-TOP: 1ex; BORDER-BOTTOM: #aaa 1px solid
+}
+.notebox {
+	BORDER-RIGHT: #aaa 1px solid; PADDING-RIGHT: 1ex; BORDER-TOP: #aaa 1px solid; MARGIN-TOP: 1ex; PADDING-LEFT: 1ex; FLOAT: right; MARGIN-BOTTOM: 1ex; PADDING-BOTTOM: 1ex; MARGIN-LEFT: 2ex; BORDER-LEFT: #aaa 1px solid; WIDTH: 25%; PADDING-TOP: 1ex; BORDER-BOTTOM: #aaa 1px solid
+}
+.popup {
+	COLOR: #366; BORDER-BOTTOM: #366 1px dotted
+}
+.popup .balloon {
+	DISPLAY: none
+}
+.popup .paren {
+	DISPLAY: none
+}
+.popup .expand {
+	DISPLAY: none
+}
+.popup:hover .balloon {
+	BORDER-RIGHT: 2px solid; PADDING-RIGHT: 0.62em; BORDER-TOP: 2px solid; DISPLAY: inline; PADDING-LEFT: 0.62em; PADDING-BOTTOM: 0.62em; MARGIN: 1em 0px 0px -2em; BORDER-LEFT: 2px solid; COLOR: black; PADDING-TOP: 0.62em; BORDER-BOTTOM: 2px solid; POSITION: absolute; BACKGROUND-COLOR: #dee
+}
+.popup:unknown .balloon {
+	BORDER-RIGHT: 2px solid; PADDING-RIGHT: 0.62em; BORDER-TOP: 2px solid; DISPLAY: inline; PADDING-LEFT: 0.62em; PADDING-BOTTOM: 0.62em; MARGIN: 1em 0px 0px -2em; BORDER-LEFT: 2px solid; COLOR: black; PADDING-TOP: 0.62em; BORDER-BOTTOM: 2px solid; POSITION: absolute; BACKGROUND-COLOR: #dee
+}
+FIELDSET {
+	BORDER-RIGHT: black 1px solid; BORDER-TOP: black 1px solid; MARGIN: 1ex 0px; BORDER-LEFT: black 1px solid; BORDER-BOTTOM: black 1px solid
+}
+LEGEND {
+	PADDING-RIGHT: 1ex; PADDING-LEFT: 1ex; PADDING-BOTTOM: 0px; PADDING-TOP: 0px
+}
+.fb_submit {
+	FLOAT: left; MARGIN: 2px 0px
+}
+#signin_openid_url_label {
+	FLOAT: left; MARGIN-RIGHT: 1ex
+}
+#signin_openid {
+	BORDER-RIGHT: #aaa 1px solid; PADDING-RIGHT: 10px; BORDER-TOP: #aaa 1px solid; PADDING-LEFT: 10px; BACKGROUND: #eee; PADDING-BOTTOM: 10px; BORDER-LEFT: #aaa 1px solid; COLOR: black! important; PADDING-TOP: 10px; BORDER-BOTTOM: #aaa 1px solid
+}

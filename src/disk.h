@@ -1,33 +1,31 @@
 #ifndef DISK_H
 #define DISK_H 
 
-#include "common.h"
+#include "sysdef.h"
 
-typedef struct disk_struct disk_t; 
-struct disk_struct {
-    u32int dev_id;
+struct Disk {
+    u64int id;
     char *name;
-    u32int blk_size;
-    u32int nr_blks;
-    u32int (*read_blks)(disk_t *disk, u32int start_blk, u32int nr_blks, u8int *buf);
-    u32int (*write_blks)(disk_t *disk, u32int start_blk, u32int nr_blks, u8int *buf);
-    disk_t *next;
+    u64int blockSize;
+    u64int nBlocks;
+    u64int (*readBlocks)(struct Disk *disk, u64int startBlock, u64int nBlocks, void *buf);
+    u64int (*writeBlocks)(struct Disk *disk, u64int startBlock, u64int nBlocks, void *buf);
+    struct Disk *next;
     void *priv;
 };
 
-typedef struct partition_struct partition_t;
-struct partition_struct {
-    disk_t *disk;
-    u32int start_blk;
-    u32int nr_blks;
-    partition_t *next;
+struct Partition {
+    struct Disk *disk;
+    u64int startBlock;
+    u64int nBlocks;
+    struct Partition *next;
 };
 
-extern disk_t *disks;
+extern struct Disk *disks;
 
 // create and call add_dev(dev_t *disk_dev), handle partitions
-void add_disk(disk_t *disk);
+void addDisk(struct Disk *disk);
 
-void del_disk(disk_t *disk);
+void removeDisk(struct Disk *disk);
 
 #endif /* DISK_H */

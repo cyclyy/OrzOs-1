@@ -1,8 +1,6 @@
 #include "ramfs.h"
-#include "module.h"
 #include "vfs.h"
-#include "file.h"
-#include "kheap.h"
+#include "kmm.h"
 
 void    ramfs_init(struct fs_driver *);
 void    ramfs_cleanup(struct fs_driver *);
@@ -26,21 +24,11 @@ s32int   ramfs_rmdir   (vnode_t *dir, char *name);
 s32int   ramfs_rm      (vnode_t *dir, char *name);
 s32int   ramfs_rename  (vnode_t *dir, char *old_name, char *name);
 
-struct file_operations ramfs_fops = {
-    .open = &ramfs_open,
-    .close= &ramfs_close,
-    .read = &ramfs_read,
-    .write= &ramfs_write,
-};
-
-struct vnode_operations ramfs_vops = {
-    .subnodes= &ramfs_subnodes,
-    .mkdir   = &ramfs_mkdir,
-    .mknod   = &ramfs_mknod,
-    .create  = &ramfs_create,
-    .rmdir   = &ramfs_rmdir,
-    .rm      = &ramfs_rm,
-    .rename  = &ramfs_rename,
+static struct FileSystemOperation ramfsOp = {
+    .open = &ramfsOpen,
+    .close = &ramfsClose,
+    .read = &ramfsRead,
+    .write = &ramfsWrite,
 };
 
 struct fs_operations ramfs_ops = {

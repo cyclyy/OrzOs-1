@@ -1,0 +1,171 @@
+BODY {
+	MARGIN-LEFT: 4%; COLOR: black; MARGIN-RIGHT: 4%; BACKGROUND-COLOR: white
+}
+H1 {
+	CLEAR: both
+}
+.header {
+	CLEAR: both
+}
+#footer {
+	CLEAR: both
+}
+#title {
+	CLEAR: both
+}
+.header {
+	PADDING-BOTTOM: 1em
+}
+IMG {
+	BORDER-TOP-STYLE: none; BORDER-RIGHT-STYLE: none; BORDER-LEFT-STYLE: none; BORDER-BOTTOM-STYLE: none
+}
+H1 {
+	CLEAR: both; COLOR: #f39914; FONT-FAMILY: sans-serif
+}
+H2 {
+	CLEAR: both; COLOR: #f39914; FONT-FAMILY: sans-serif
+}
+H3 {
+	CLEAR: both; COLOR: #f39914; FONT-FAMILY: sans-serif
+}
+H4 {
+	CLEAR: both; COLOR: #f39914; FONT-FAMILY: sans-serif
+}
+H5 {
+	CLEAR: both; COLOR: #f39914; FONT-FAMILY: sans-serif
+}
+H6 {
+	CLEAR: both; COLOR: #f39914; FONT-FAMILY: sans-serif
+}
+.header {
+	CLEAR: both; COLOR: #f39914; FONT-FAMILY: sans-serif
+}
+#title {
+	CLEAR: both; COLOR: #f39914; FONT-FAMILY: sans-serif
+}
+H1 {
+	FONT-WEIGHT: bold; FONT-SIZE: 150%
+}
+#title {
+	FONT-WEIGHT: bold; FONT-SIZE: 150%
+}
+H2 {
+	FONT-SIZE: 125%; MARGIN-LEFT: 2%; MARGIN-RIGHT: 2%
+}
+H3 {
+	FONT-SIZE: 125%; MARGIN-LEFT: 2%; MARGIN-RIGHT: 2%
+}
+H4 {
+	FONT-SIZE: 125%; MARGIN-LEFT: 2%; MARGIN-RIGHT: 2%
+}
+H5 {
+	FONT-SIZE: 125%; MARGIN-LEFT: 2%; MARGIN-RIGHT: 2%
+}
+H6 {
+	FONT-SIZE: 125%; MARGIN-LEFT: 2%; MARGIN-RIGHT: 2%
+}
+P {
+	MARGIN-LEFT: 4%; MARGIN-RIGHT: 4%
+}
+OL {
+	MARGIN-LEFT: 4%; MARGIN-RIGHT: 4%
+}
+UL {
+	MARGIN-LEFT: 4%; MARGIN-RIGHT: 4%
+}
+HR {
+	MARGIN-LEFT: 4%; MARGIN-RIGHT: 4%
+}
+TABLE {
+	MARGIN-LEFT: 4%; MARGIN-RIGHT: 4%
+}
+OL OL {
+	MARGIN-LEFT: 0%; LIST-STYLE-TYPE: lower-alpha
+}
+UL UL {
+	MARGIN-LEFT: 0px
+}
+LI P {
+	MARGIN-LEFT: 0%
+}
+PRE {
+	BORDER-RIGHT: #c5c5f6 1px solid; PADDING-RIGHT: 0.5em; BORDER-TOP: #c5c5f6 1px solid; PADDING-LEFT: 0.5em; PADDING-BOTTOM: 0.5em; MARGIN-LEFT: 10%; BORDER-LEFT: #c5c5f6 1px solid; MARGIN-RIGHT: 10%; PADDING-TOP: 0.5em; BORDER-BOTTOM: #c5c5f6 1px solid; FONT-FAMILY: mono; BACKGROUND-COLOR: #dbdbf7
+}
+A:link {
+	COLOR: #4c4ce6
+}
+A:visited {
+	COLOR: #8f8fe6
+}
+A:hover {
+	COLOR: #f29915; TEXT-DECORATION: underline
+}
+#logo {
+	TEXT-ALIGN: center
+}
+#footer {
+	FONT-SIZE: 80%; PADDING-TOP: 0.25em
+}
+#legal {
+	CLEAR: both; MARGIN-TOP: 2em; MARGIN-LEFT: 15%; MARGIN-RIGHT: 15%; TEXT-ALIGN: center
+}
+#pageinfo {
+	CLEAR: none; FLOAT: right; WIDTH: 49%; TEXT-ALIGN: right
+}
+.actions {
+	FLOAT: left; WIDTH: 49%; TEXT-ALIGN: left
+}
+.actions UL {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; PADDING-TOP: 0px
+}
+.actions UL LI {
+	PADDING-RIGHT: 0.5em; PADDING-LEFT: 0px
+}
+.left {
+	PADDING-RIGHT: 0.5em; FLOAT: left
+}
+.right {
+	PADDING-LEFT: 0.5em; FLOAT: right
+}
+HR {
+	BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; COLOR: black; HEIGHT: 1px; BACKGROUND-COLOR: black; BORDER-RIGHT-WIDTH: 0px
+}
+#navcontainer UL {
+	MARGIN-TOP: 0px; PADDING-LEFT: 0px; FONT-WEIGHT: bold; PADDING-BOTTOM: 5px; MARGIN-LEFT: 0px; WIDTH: 100%; COLOR: white; LINE-HEIGHT: 18px; PADDING-TOP: 5px; FONT-FAMILY: Arial,Helvetica,sans-serif; BACKGROUND-COLOR: #162284; TEXT-ALIGN: center
+}
+#navcontainer UL LI {
+	PADDING-RIGHT: 0px; DISPLAY: inline; PADDING-LEFT: 0px; PADDING-BOTTOM: 5px; PADDING-TOP: 5px
+}
+#navcontainer UL LI A {
+	BORDER-RIGHT: #fff 1px solid; PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 5px; COLOR: white; PADDING-TOP: 5px; TEXT-DECORATION: none
+}
+#navcontainer UL LI A:hover {
+	COLOR: #f39914
+}
+#navcontainer #active {
+	BORDER-LEFT: #fff 1px solid
+}
+DIV.tutright {
+	BORDER-RIGHT: #888 1px solid; PADDING-RIGHT: 0.5em; BORDER-TOP: #888 1px solid; PADDING-LEFT: 0.5em; FLOAT: right; PADDING-BOTTOM: 0.5em; MARGIN-LEFT: 1em; BORDER-LEFT: #888 1px solid; PADDING-TOP: 0.5em; BORDER-BOTTOM: #888 1px solid; BACKGROUND-COLOR: #eee
+}
+DIV.tutright IMG {
+	MARGIN: 0px
+}
+DIV.clear {
+	CLEAR: both
+}
+DIV.eqn {
+	PADDING-RIGHT: 0.5em; PADDING-LEFT: 0.5em; PADDING-BOTTOM: 0.5em; MARGIN-LEFT: 10%; PADDING-TOP: 0.5em; FONT-FAMILY: mono; WHITE-SPACE: pre
+}
+A {
+	TEXT-DECORATION: none
+}
+TABLE {
+	BORDER-RIGHT: #aaa 1px solid; BORDER-TOP: #aaa 1px solid; BORDER-LEFT: #aaa 1px solid; BORDER-BOTTOM: #aaa 1px solid; border-spacing: 1px
+}
+TD {
+	BORDER-RIGHT: #aaa 1px solid; PADDING-RIGHT: 5px; BORDER-TOP: #aaa 1px solid; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; BORDER-LEFT: #aaa 1px solid; PADDING-TOP: 5px; BORDER-BOTTOM: #aaa 1px solid
+}
+TH {
+	BORDER-RIGHT: #aaa 1px solid; PADDING-RIGHT: 5px; BORDER-TOP: #aaa 1px solid; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; BORDER-LEFT: #aaa 1px solid; PADDING-TOP: 5px; BORDER-BOTTOM: #aaa 1px solid
+}

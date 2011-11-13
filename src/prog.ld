@@ -1,14 +1,19 @@
 /* Link.ld -- Linker script for the programs - ensure everything goes in the */
 /*            Correct place.  */
 
-ENTRY(main)
+PAGE_SIZE = 0x1000;
+STARTUP(/home/ora/cross/x86_64-pc-orzos/lib/crt0.o)
+ENTRY(_start)
+OUTPUT_FORMAT(elf64-x86-64)
+SEARCH_DIR(/home/ora/cross/x86_64-pc-orzos/lib)
 SECTIONS
 {
-  .text 0x40000000 :
+  . = 0x0000040000000000;
+  .text :
   {
     code = .; _code = .; __code = .;
     *(.text)
-    . = ALIGN(4096);
+     . = ALIGN(0x1000);
   }
 
   .data :
@@ -16,14 +21,14 @@ SECTIONS
      data = .; _data = .; __data = .;
      *(.data)
      *(.rodata)
-     . = ALIGN(4096);
+  . = ALIGN(0x1000);
   }
 
   .bss :
   {
-    bss = .; _bss = .; __bss = .;
+    __bss_start = .; bss = .; _bss = .; __bss = .;
     *(.bss)
-    . = ALIGN(4096);
+  . = ALIGN(0x1000);
   }
 
   end = .; _end = .; __end = .;

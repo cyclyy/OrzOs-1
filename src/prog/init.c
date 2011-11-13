@@ -1,203 +1,27 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
 #include "syscall.h"
-#include "file.h"
-
-#define VMA_ANON      1     /* memory mapping, no back-file*/
-#define VMA_READ      2  
-#define VMA_WRITE     4 
-#define VMA_EXEC      8
-#define VMA_STACK     16 
-#define VMA_PRIVATE   32 
-#define VMA_FILE      64 
-#define VMA_SHARED    128
-
-void puts(char *s)
-{
-    while (*s)
-        syscall_putch(*s++);
-}
-
-void putn(u32int n)
-{
-    u32int base = 1000000;
-    u32int i = 0;
-    
-    if (n==0)
-        syscall_putch('0');
-
-    while ((base!=1) && (n/base==0))
-        base /= 10;
-
-    while (base) {
-        i = n/base;
-        syscall_putch(i + '0');
-        n -= base * i;
-        base /= 10;
-    }
-
-}
-
-void puthex(u32int n)
-{
-    u32int i;
-    u32int base = 0x10000000;
-    puts(" 0x");
-    while (base) {
-        i = n/base;
-        if (i<10)
-            syscall_putch(i + '0');
-        else 
-            syscall_putch(i-10 + 'A');
-        n -= base * i;
-        base /= 16;
-    }
-}
-int recur(int i)
-{
-    if (i)
-        return recur(i-1);
-    else
-        return 0;
-}
-
-void test_kbd()
-{
-    u32int ret;
-    s32int fd;
-    char buf[1000];
-
-    fd = syscall_open("/dev/kbd", 0);
-
-    while(1) {
-        syscall_read(fd, buf, 4);
-        ret = *(u32int*)buf;
-        // key release
-        if (!(ret & 0x10000000))
-            syscall_putch(ret &0xff);
-    }
-}
-
-void test_disk()
-{
-    u32int ret;
-    s32int fd;
-    char buf[4000];
-
-    fd = syscall_open("/dev/part", 0);
-
-    syscall_read(fd, buf, 1024);
-    syscall_read(fd, buf, 1024);
-    u16int magic = *(u16int*)(buf+56);
-    puts("ext2 magic:");
-    putn(magic);
-    puts("\n");
-
-}
-
-void test_ramfs()
-{
-    u32int ret;
-    s32int fd;
-    char buf[1000] = {"miao "};
-    char buf2[2000];
-
-    fd = syscall_open("/a.txt", 0);
-    ret = syscall_read(fd, buf2, 1000);
-    syscall_close(fd);
-    puts(buf2);
-
-    syscall_rename("/a.txt", "b.txt");
-    syscall_rm("/b.txt");
-    syscall_create("/b.txt",0);
-    fd = syscall_open("./././../b.txt", 0);
-    ret = syscall_write(fd, buf, 6);
-    syscall_lseek(fd,0,SEEK_SET);
-    ret = syscall_read(fd, buf2, 1000);
-    syscall_close(fd);
-    puts(buf2);
-
-    ret = syscall_chdir("modules/");
-    fd = syscall_open(".", 0);
-    ret = syscall_getdents(fd,(u8int*)buf2,2000);
-    u32int i;
-    for (i=0;i<ret;i+=260) {
-        puts(buf2+i);
-        puts("\n");
-    }
-    syscall_close(fd);
-
-    ret = syscall_chdir("..");
-    ret = syscall_getcwd(buf2, 100);
-    puts("working dir: ");
-    puts(buf2);
-    puts("\n");
-
-}
-
-void test_ext2fs()
-{
-    u32int ret;
-    s32int fd;
-    char buf[1000] = {"miao "};
-    char buf2[1024];
-
-    /*
-    fd = syscall_open("/volumn/c/b/c.txt", 0);
-    ret = syscall_read(fd, buf2, 1024);
-    putn(ret);
-    puts("\n");
-    buf2[ret] = 0;
-    puts(buf2);
-    ret = syscall_write(fd, buf, 4);
-    putn(ret);
-    puts("\n");
-    syscall_lseek(fd,0,SEEK_SET);
-    ret = syscall_read(fd, buf2, 1024);
-    buf2[ret] = 0;
-    puts(buf2);
-    syscall_close(fd);
-    */
-    syscall_mkdir("/volumn/c/tt",0);
-}
 
 int main()
 {
     char *s = "Init process running.\n";
-    puts(s);
+    char *p;
+    u64int fd;
+    u16int ch = 0x0F00 + 'A';
 
-    test_ext2fs();
-    /*test_ramfs();*/
-    /*test_kbd();*/
-    /*test_disk();*/
-
-    /*
-    while (1) {
-        puts(s);
-        syscall_msleep(1000);
+    ch = 0x0F00 + toupper('o');
+    fd = OzOpen("Device:/Display",0);
+    OzWrite(fd,2,&ch);
+    p = s;
+    while (*p) {
+        OzPutChar(*p);
+        p++;
     }
-    */
 
-    /*
-    fd=syscall_open("/a.txt",0);
-    char *pa = (char*)syscall_mmap(0x30000000, 0x1000, 
-            VMA_READ | VMA_WRITE | VMA_FILE,
-            fd, 0x1000);
-    u32int i;
-    for (i=0; i<10; i++)
-        pa[i] = s[i];
-    pa[10] = 0;
-
-    puts(pa);
-    syscall_unmap(pa, 1000);
-    puts(pa);
-    while(1);
-
-    ret = syscall_read(fd, buf, 1000);
-    putn(ret);
-    syscall_putch('\n');
-    buf[ret] = 0;
-    puts(buf);
-    syscall_close(fd);
-    */
+    OzNewTask("C:/uiserver",0);
+    OzPost(2, s, strlen(s) + 1);
 
     while(1);
 }

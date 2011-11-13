@@ -1,31 +1,36 @@
 #! /bin/bash
 
-rm initrd/boot/init
-rm initrd/boot/modules/testmod.o
-rm initrd/boot/modules/i8042.o
-rm initrd/boot/modules/pci.o
-rm initrd/boot/modules/ide.o
-rm initrd/boot/modules/ext2fs.o
-cd src
-make 
-cd ..
-mkdir initrd/boot 2>/dev/null
-mkdir initrd/boot/modules 2>/dev/null
-cp src/prog/init initrd/boot/
-cp src/testmod.o initrd/boot/modules/
-cp src/i8042.o initrd/boot/modules/
-cp src/pci.o initrd/boot/modules/
-cp src/ide.o initrd/boot/modules/
-cp src/fs/ext2fs.o initrd/boot/modules/
-rm initrd.img
-cd initrd
-find -depth -print | sort | cpio -ov > ../initrd.img
-cd ..
-ls c.img 2>/dev/null || bximage -hd -mode=flat -size=10 -q c.img
-sudo losetup /dev/loop0 floppy.img
+rm  initrd/init
+cp src/prog/init initrd/
+rm  initrd/server
+cp src/prog/server initrd/
+rm  initrd/client
+cp src/prog/client initrd/
+rm  initrd/init
+cp src/prog/init initrd/
+rm initrd.tar
+tar cvf initrd.tar initrd/
+mv initrd.tar initrd.img
+ls c.img 2>/dev/null || bximage -hd -mode=flat -size=100 -q c.img
+sudo losetup /dev/loop20 floppy.img
 ls /tmp/floppy 1>/dev/null || mkdir /tmp/floppy
-sudo mount /dev/loop0 /tmp/floppy
+sudo mount /dev/loop20 /tmp/floppy
+sudo cp src/loader32 /tmp/floppy/loader32
 sudo cp src/kernel /tmp/floppy/kernel
 sudo cp initrd.img /tmp/floppy/initrd.img
-sudo umount /dev/loop0
-sudo losetup -d /dev/loop0 
+sudo umount /dev/loop20
+sudo losetup -d /dev/loop20 
+
+mkdir /tmp/c
+sudo losetup -d /dev/loop5
+sudo losetup -o 32256 /dev/loop5 c.img
+sudo mount /dev/loop5 /tmp/c
+rm /tmp/c/uiserver
+cp initrd/a.txt /tmp/c/t1.txt -v
+cp src/prog/uiserver /tmp/c -v
+cp src/prog/uiclient /tmp/c -v
+cp zenhei.ttc /tmp/c -v
+cp wallpaper.png /tmp/c -v
+cp cursor.png /tmp/c -v
+sudo umount /tmp/c
+sudo losetup -d /dev/loop5

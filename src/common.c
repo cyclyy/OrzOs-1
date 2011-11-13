@@ -304,7 +304,7 @@ u32int strbrk(char **result, const char *str, const char *delim)
     return n;
 }
 
-char *dirname(char *s)
+char *dirname(char *dest, char *s)
 {
     char *ret = strdup(s);
 

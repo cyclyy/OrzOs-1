@@ -1,7 +1,8 @@
 #ifndef EXT2FS_H
 #define EXT2FS_H 
 
-#include "common.h"
+#include "sysdef.h"
+#include "vfs.h"
 
 #define EXT2_MAGIC              0xef53
 
@@ -182,7 +183,7 @@ struct ext2_super_block {
     u32int  s_default_mount_opts;
     u32int  s_first_meta_bg;    /* First metablock block group */
     u32int   s_reserved[190];    /* Padding to the end of the block */
-};
+} __attribute__((packed));
 
 /*
  * Structure of a blocks group descriptor
@@ -197,7 +198,7 @@ struct ext2_group_desc
     u16int  bg_used_dirs_count; /* Directories count */
     u16int  bg_pad;
     u32int  bg_reserved[3];
-};
+} __attribute__((packed));
 
 struct ext2_inode {
     u16int  i_mode;     /* File mode */
@@ -251,7 +252,7 @@ struct ext2_inode {
             u32int   m_i_reserved2[2];
         } masix2;
     } osd2;             /* OS dependent 2 */
-};
+} __attribute__((packed));
 
 /*
  * Structure of a directory entry
@@ -271,5 +272,9 @@ struct ext2_dir_entry {
 	u8int	name_len;		/* Name length */
 	u8int	file_type;
 	char	name[EXT2_NAME_LEN];	/* File name */
-};
+} __attribute__((packed));
+
+extern struct FileSystemDriver ext2fsDriver;
+
+void    ext2fs_Init();
 #endif /* EXT2FS_H */

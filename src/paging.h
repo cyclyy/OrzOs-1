@@ -1,56 +1,59 @@
 #ifndef PAGING_H
 #define PAGING_H
 
-#include "common.h"
+#include "sysdef.h"
 
-#define PAGE_SIZE 0x1000
-#define PAGE_MASK 0xfffff000
+#define ROUND_PAGE_ALIGN(x) (((x)+PAGE_SIZE-1) & (~0 - PAGE_SIZE + 1))
+#define FLOOR_PAGE_ALIGN(x) ((x) & (~0 & PAGE_SIZE))
+#define ROUND_MEM_ALIGN(x) (((x)+PTR_SIZE-1) & (~0 - PTR_SIZE + 1))
 
-#define PFAULT_HANDLED   0
-#define PFAULT_EACCESS   1
-#define PFAULT_ERDONLY   2
+/*
+#define VADDR_TO_PADDR(x) ((((u64int)x)>=CODE_LOAD_ADDR)?(((u64int)x)-CODE_LOAD_ADDR):(((u64int)x)-KERNEL_HEAP_START_ADDR))
+#define PADDR_TO_VADDR(x) (((u64int)x)+KERNEL_HEAP_START_ADDR)
+*/
+#define PADDR_TO_VADDR(x) ((x) ? ((u64int)(x) + KERNEL_HEAP_START_ADDR) : 0)
+#define VADDR_TO_PADDR(x) ((x) ? ((((u64int)(x))>=CODE_LOAD_ADDR)?(((u64int)(x))-CODE_LOAD_ADDR):(((u64int)(x))-KERNEL_HEAP_START_ADDR)) : 0)
 
-#define INVLPG(X) {asm volatile("invlpg %0"::"m"(*(char*)X)); }
-#define ALIGN(X) (((X)&(PAGE_SIZE-1)) ? (((X)&PAGE_MASK)+PAGE_SIZE) : X)
 
-typedef struct {
-    u32int present : 1;
-    u32int rw : 1;
-    u32int us : 1;
-    u32int rsvd1 : 2;
-    u32int accessed : 1;
-    u32int dirty : 1;
-    u32int rsvd2 : 2;
-    u32int avail : 3;
-    u32int addr : 20;
-} page_t;
+struct PageTable {
+    u64int page[512];
+};
 
-typedef struct {
-    page_t pages[1024];
-} page_table_t;
+struct PageDirectory {
+    u64int pt[512];
+};
 
-typedef struct {
-    page_table_t *page_tables[1024];
-    u32int table_addr[1024];
-    u32int addr;
-} page_directory_t;
+struct PageDirectoryPointer {
+    u64int pd[512];
+};
 
-void init_paging();
+struct PML4E {
+    u64int pdp[512];
+};
 
-void switch_page_directory(page_directory_t *dir);
+struct PML4E *getPML4E();
+struct PageDirectoryPointer *getPDP(struct PML4E *pml4e, u64int addr);
+struct PageDirectoryPointer *getPDP(struct PML4E *pml4e, u64int addr);
+struct PageDirectory *getPD(struct PageDirectoryPointer *pdp, u64int addr);
+struct PageTable *getPT(struct PageDirectory *pd, u64int addr);
+u64int* getPage(struct PageTable *pt, u64int addr);
 
-page_t *get_page(u32int vaddr, u32int make, page_directory_t *dir);
+u64int getPAddr(u64int vaddr, struct PML4E *pml4e);
 
-void alloc_frame(page_t *p, u32int is_user, u32int writable);
+u64int buildVAddr(u64int pml4eIdx, u64int pdpIdx, u64int pdIdx, u64int ptIdx);
 
-void free_page(page_t *page);
+void parseVAddr(u64int vaddr, u64int *pml4eIdx, u64int *pdpIdx, u64int *pdIdx, u64int *ptIdx);
 
-void copy_page(page_t *src, page_t *dst);
+/*-----------------------------------------------------------------------------
+ *  Map n pages start from vaddr to paddr
+ *-----------------------------------------------------------------------------*/
+void mapPagesVtoP(u64int vaddr, u64int paddr, u64int n, struct PML4E *pml4e, u64int user);
 
-page_table_t *clone_table(page_table_t *table, u32int *phys);
+/*-----------------------------------------------------------------------------
+ *  Unmap n pages start from vaddr
+ *-----------------------------------------------------------------------------*/
+void unmapPages(u64int vaddr, u64int n, struct PML4E *);
 
-page_directory_t *clone_directory(page_directory_t *dir);
 
-//void dump_tables(page_directory_t *dir);
 
-#endif
+#endif /* PAGING_H */

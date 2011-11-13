@@ -1,137 +1,122 @@
 #ifndef VFS_H
-#define VFS_H 
+#define VFS_H
 
-#include "common.h"
-#include "file.h"
+#include "sysdef.h"
 
-#define VFS_UNKNOWN     0x80
-#define VFS_FILE        0x01
-#define VFS_DIRECTORY   0x02
-#define VFS_DEV_FILE    0x04
-#define VFS_DEV_DIR     0x08
-#define VFS_PIPE        0x10
-#define VFS_SYMLINK     0x20
-#define VFS_MOUNTPOINT  0x40 // Is the vnode an active mountpoint?
-#define MAX_VFSMOUNTS   10
-#define MAX_PATH_DEPS   20
+#define SEEK_SET            0
+#define SEEK_CUR            1
+#define SEEK_END            2
 
-typedef struct fs_struct fs_t;
-typedef struct vnode_struct vnode_t;
+#define VNODE_FILE          0x01
+#define VNODE_DIRECTORY     0x02
+#define VNODE_OBJECT        0x04
 
-struct file_operations {
-    s32int   (*open)    (file_t *f);
-    s32int   (*close)   (file_t *f);
-    s32int   (*read)    (file_t *f, u32int offset, u32int sz, u8int *buffer);
-    s32int   (*write)   (file_t *f, u32int offset, u32int sz, u8int *buffer);
+struct FileSystem;
+struct FileSystemDriver;
+
+struct DirectoryRecord
+{
+    u64int size;
+    char buffer[1];
 };
 
-struct vnode_operations {
-    s32int   (*subnodes)(vnode_t *dir, vnode_t ***nodes);
-    s32int   (*mkdir)   (vnode_t *dir, char *name, u32int flags);
-    s32int   (*mknod)   (vnode_t *dir, char *name, u32int dev_id, u32int flags);
-    s32int   (*create)  (vnode_t *dir, char *name, u32int flags);
-    s32int   (*rmdir)   (vnode_t *dir, char *name);
-    s32int   (*rm)      (vnode_t *dir, char *name);
-    s32int   (*rename)  (vnode_t *dir, char *old_name, char *name);
+struct VNodeInfo
+{
+    u64int size;
 };
 
-struct vnode_struct {
-    char name[MAX_NAME_LEN]; //filename
-    u32int length;
+struct MemoryMap
+{
+    u64int base;
+    u64int size;
+    struct MemoryMap *next, *prev;
+};
 
-    u32int mask;    //permission
-    u32int flags;   //filetype 
-    u32int uid;     
-    u32int gid;
-    u32int dev_id;   // set by fs driver to identify the vnode, or (major, minor) if it's a device
-    u32int ino; 
-
-    struct file_operations  *f_ops;
-    struct vnode_operations *v_ops;
-
-    fs_t    *fs;    // the file system instance is resides in.
-    vnode_t *covered;
-    vnode_t *ptr;
-
+struct VNode
+{
+    u64int flags;
+    s64int id;
+    s64int offset;
+    u64int size;
+    struct FileSystem *fs;
+    struct MemoryMap *mappings;
     void *priv;
 };
 
-typedef struct vnode_list_struct {
-    vnode_t *node;
-    struct vnode_list_struct *prev;
-    struct vnode_list_struct *next;
-} vnode_list_t;
+struct FileSystemOperation
+{
+    s64int (*open)(struct FileSystem *fs, s64int id, struct VNode *node);
+    s64int (*close)(struct VNode *node);
+    s64int (*read)(struct VNode *node, u64int size, char *buffer);
+    s64int (*write)(struct VNode *node, u64int size, char *buffer);
+    s64int (*seek)(struct VNode *node, s64int offset, s64int pos);
+    s64int (*ioctl)(struct VNode *node, s64int request, u64int size, void *data);
+    s64int (*mmap)(struct VNode *node, u64int addr, u64int size, s64int flags);
+    s64int (*munmap)(struct VNode *node, u64int addr);
 
-struct fs_operations {
-    vnode_t* (*get_root)(fs_t *fs);
-    void (*sync)(fs_t *fs);
-    vnode_t* (*lookup)    (fs_t *fs, char *name);
-    void (*drop_node) (fs_t *fs, vnode_t*node);
+    s64int (*readAsync)(struct VNode *node, u64int size, char *buffer);
+
+    s64int (*root)(struct FileSystem *fs);
+    s64int (*stat)(struct FileSystem *fs, s64int id, struct VNodeInfo *ni);
+    s64int (*readdir)(struct VNode *node, u64int size, char *buf);
+    s64int (*finddir)(struct FileSystem *fs, s64int id, const char *name);
+    s64int (*mkobj)(struct FileSystem *fs, s64int id, const char *name, s64int objid);
+    s64int (*mkdir)(struct FileSystem *fs, s64int id, const char *name);
+    s64int (*remove)(struct FileSystem *fs, s64int id, const char *name);
+    s64int (*rmdir)(struct FileSystem *fs, s64int id, const char *name);
 };
-    
-struct fs_struct {
-    struct fs_operations *fs_ops;
-    struct fs_driver *driver;
+
+struct FileSystem
+{
+    struct FileSystemDriver *driver;
+    struct FileSystemOperation *op;
     void *priv;
 };
 
-struct fs_driver_operations {
-    void (*init)(struct fs_driver *);
-    void (*cleanup)(struct fs_driver *);
-    fs_t* (*createfs)(struct fs_driver *, char *path, u32int flags, void *data);
-    void (*removefs)(struct fs_driver *, fs_t *fs);
+struct FileSystemDriverOperation
+{
+    s64int (*mount)(struct FileSystemDriver *driver, struct FileSystem **fs, const char *source, u64int flags, void *data);
+    s64int (*unmount)(struct FileSystemDriver *driver, struct FileSystem *fs);
 };
 
-typedef struct fs_driver {
+struct FileSystemDriver
+{
     char name[MAX_NAME_LEN];
-    struct fs_driver_operations *fs_drv_ops;
-    void *priv;
-    struct fs_driver *next;
-} fs_driver_t;
+    struct FileSystemDriverOperation *op;
+    struct FileSystemDriver *next, *prev;
+};
 
-typedef struct {
-    u32int n;
-    struct {
-        char *path;
-        fs_t *fs;
-    } mounts[MAX_VFSMOUNTS];
-} vfsmount_t;
+s64int registerFileSystemDriver(struct FileSystemDriver *fsDriver);
+s64int unregisterFileSystemDriver(const char *name);
 
-extern vnode_t      *vfs_root;
-extern fs_driver_t  *fs_drivers;
-extern vfsmount_t   *vfs_mounts;
+s64int vfsMount(const char *dest, const char *source, const char *fsType, u64int flags, void *data);
+s64int vfsUnmount(const char *path);
 
-void            init_vfs();
+s64int vfsOpen(const char *path, u64int flags, struct VNode *node);
+s64int vfsClose(struct VNode *node);
+s64int vfsRead(struct VNode *node, u64int size, void *buffer);
+s64int vfsWrite(struct VNode *node, u64int size, char *buffer);
+s64int vfsSeek(struct VNode *node, s64int offset, s64int pos);
+s64int vfsState(const char *path, struct VNodeInfo *ni);
+s64int vfsIoControl(struct VNode *node, s64int request, u64int size, void *data);
 
-void            register_fs_driver(fs_driver_t *driver);
-void            unregister_fs_driver(fs_driver_t *driver);
-fs_driver_t*    get_fs_driver_byname(char *name);
+s64int vfsReadAsync(struct VNode *node, u64int size, void *buffer);
 
-char*           vfs_abs_path(char *rel_path);
+s64int vfsCreateObject(const char *name, s64int id);
+s64int vfsCreateDirectory(const char *name);
+s64int vfsRemoveDirectory(const char *name);
+s64int vfsReadDirectory(struct VNode *node, u64int size, char *buf);
 
-// The difference with vnode->fs->*() and vfs_*() is:
-//   vfs_*() works across file-systems, it handles mount points.
-vnode_t*        vfs_lookup  (char *path);
-s32int          vfs_subnodes(char *path, vnode_t ***nodes);
-s32int          vfs_mkdir   (char *path, u32int flags);
-s32int          vfs_mknod   (char *path, u32int dev_id, u32int flags);
-s32int          vfs_create  (char *path, u32int flags);
-s32int          vfs_rmdir   (char *path);
-s32int          vfs_rm      (char *path);
-s32int          vfs_rename  (char *path, char *name);
-s32int          vfs_mount   (char *path, fs_t *fs);
-s32int          vfs_mount_root(fs_t *fs);
+s64int vfsMap(struct VNode *node, u64int addr, u64int size, s64int flags);
+s64int vfsUnmap(struct VNode *node, u64int addr);
 
-s32int          sys_mkdir   (char *path, u32int flags);
-s32int          sys_mknod   (char *path, u32int dev_id, u32int flags);
-s32int          sys_create  (char *path, u32int flags);
-s32int          sys_rmdir   (char *path);
-s32int          sys_rm      (char *path);
-s32int          sys_rename  (char *path, char *name);
+s64int vfsNopOpen(struct VNode *node);
+s64int vfsNopClose(struct VNode *node);
+s64int vfsNopSeek(struct VNode *node, s64int offset, s64int pos);
 
-s32int          sys_getcwd  (char *buf,u32int size);
-s32int          sys_chdir   (char *path);
+s64int vnodeAddMemoryMap(struct VNode *node, u64int base, u64int size);
+s64int vnodeRemoveMemoryMap(struct VNode *node, u64int base);
 
-void vfs_dump(char *path);
+void initVFS();
 
 #endif /* VFS_H */
