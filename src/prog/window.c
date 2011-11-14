@@ -201,6 +201,7 @@ int drawRectangle(struct Window *window, struct Rect *clipRect,
         struct Rect *rect, struct LineStyle *lineStyle, struct FillStyle *fillStyle)
 {
     cairo_t *cr;
+    double borderPadding;
     cr = window->pixmap->d->cr;
 
     cairo_save(cr);
@@ -210,7 +211,8 @@ int drawRectangle(struct Window *window, struct Rect *clipRect,
     cairo_set_source_rgb(cr, lineStyle->color.r/255.0, lineStyle->color.g/255.0,
             lineStyle->color.b/255.0);
     cairo_set_line_width(cr, lineStyle->lineWidth);
-    cairo_rectangle(cr, rect->x, rect->y, rect->w, rect->h);
+    borderPadding = lineStyle->lineWidth/2.0;
+    cairo_rectangle(cr, rect->x + borderPadding, rect->y + borderPadding, rect->w - borderPadding*2.0, rect->h - borderPadding*2.0);
     cairo_stroke_preserve(cr);
     cairo_set_source_rgb(cr, fillStyle->color.r/255.0, fillStyle->color.g/255.0,
             fillStyle->color.b/255.0);

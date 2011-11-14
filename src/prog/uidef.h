@@ -142,6 +142,10 @@ struct OzUITextLayout
     struct OzUICharLayout charLayout[0];
 }__attribute__((packed));
 
+// NOTE: these defines must be consistent with layout.h
+#define OZUI_TEXT_ALIGN_CENTER      1
+#define OZUI_TEXT_ALIGN_VCENTER     2
+
 struct OzUITextLayoutConstraint 
 {
     struct Rect rect;

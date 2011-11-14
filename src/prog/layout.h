@@ -26,6 +26,9 @@ struct TextLayout
     struct ListHead charList;
 };
 
+#define TEXT_ALIGN_CENTER   1
+#define TEXT_ALIGN_VCENTER  2
+
 struct LayoutConstraint
 {
     cairo_t *cr;
