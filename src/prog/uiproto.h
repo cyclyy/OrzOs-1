@@ -26,13 +26,15 @@ int OzUIWindowDrawText(struct OzUIWindow *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct LineStyle *lineStyle, struct OzUITextLayout *layout);
 
 // widget related functions
-struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, struct Rect *rect, struct OzUIWidgetOperation *ops);
+struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, struct Rect *rect, struct OzUIWidgetOperation *ops, void *userData);
 
 int OzUIDestroyWidget(struct OzUIWidget *widget);
 
 int OzUIWidgetBeginDraw(struct OzUIWidget *widget, const struct Rect *dirtyRect);
 
 int OzUIWidgetEndDraw(struct OzUIWidget *widget);
+
+int OzUIWidgetInvalidateAll(struct OzUIWidget *widget);
 
 int OzUIWidgetInvalidate(struct OzUIWidget *widget, const struct Rect *dirtyRect);
 

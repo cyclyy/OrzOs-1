@@ -209,13 +209,14 @@ int OzUIWindowDrawText(struct OzUIWindow *window, struct Rect *clipRect,
     wcscpy(request->text, text);
     memcpy(&request->lineStyle, lineStyle, sizeof(struct LineStyle));
     OzUISendReceive(request, reply);
-    memcpy(layout, &reply->layout, SIZE_OZUI_TEXT_LAYOUT(&reply->layout));
+    if (layout)
+        memcpy(layout, &reply->layout, SIZE_OZUI_TEXT_LAYOUT(&reply->layout));
     free(request);
     free(reply);
     return reply->ret;
 }
 
-struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, struct Rect *rect, struct OzUIWidgetOperation *ops)
+struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, struct Rect *rect, struct OzUIWidgetOperation *ops, void *userData)
 {
     struct OzUIWidget *widget;
     widget = (struct OzUIWidget*)malloc(sizeof(struct OzUIWidget));
@@ -225,6 +226,7 @@ struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, struct 
     memcpy(&widget->rect, rect, sizeof(struct Rect));
     initRect(&widget->dirtyRect, 0, 0, 0, 0);
     widget->ops = ops;
+    widget->d = userData;
     listAdd(&widget->link, &window->widgetList);
     if (widget->ops && widget->ops->onCreate)
         widget->ops->onCreate(widget);
@@ -272,6 +274,14 @@ int OzUIWidgetInvalidate(struct OzUIWidget *widget, const struct Rect *dirtyRect
     return 0;
 }
 
+int OzUIWidgetInvalidateAll(struct OzUIWidget *widget)
+{
+    struct Rect dirtyRect;
+
+    initRect(&dirtyRect, 0, 0, widget->rect.w, widget->rect.h);
+    return OzUIWidgetInvalidate(widget, &dirtyRect);
+}
+
 int OzUIWidgetDrawRectangle(struct OzUIWidget *widget, struct Rect *rect,
         struct LineStyle *lineStyle, struct FillStyle *fillStyle)
 {
@@ -311,7 +321,8 @@ int OzUIWidgetDrawText(struct OzUIWidget *widget, struct OzUITextLayoutConstrain
     baseTLC.rect.x += widget->rect.x;
     baseTLC.rect.y += widget->rect.y;
     ret =  OzUIWindowDrawText(widget->window, &widget->dirtyRect, &baseTLC, text, lineStyle, layout);
-    translateLayoutCoords(layout, -widget->rect.x, -widget->rect.y);
+    if (layout)
+        translateLayoutCoords(layout, -widget->rect.x, -widget->rect.y);
     return ret;
 }
 // vim: sw=4 sts=4 et tw=100

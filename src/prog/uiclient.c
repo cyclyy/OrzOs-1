@@ -1,5 +1,6 @@
 #include "uidef.h"
 #include "uiproto.h"
+#include "uilabel.h"
 #include "syscall.h"
 
 char replyBuf[1000];
@@ -97,8 +98,15 @@ int main()
 
     fs.color.r = fs.color.g = fs.color.b = 0;
 
-    widget = OzUICreateWidget(window, 1, &rect, &myOps);
-    widget->d = msgOut;
+    widget = OzUICreateWidget(window, 0, &rect, &myOps, msgOut);
+
+    struct OzUILabel *label;
+    struct Rect labelRect;
+    initRect(&labelRect, 60, 160, 300, 40);
+    label = OzUICreateLabel(window, &labelRect);
+    OzUILabelSetFontSize(label, 28);
+    OzUILabelSetText(label, L"我们都是好人");
+
     OzUINextEvent();
     for (;;) {
         OzReceive(&hdr, buf, 512);
