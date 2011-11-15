@@ -189,40 +189,6 @@ int OzUIWindowDrawRectangle(struct OzUIWindow *window, struct Rect *clipRect,
     return reply.ret;
 }
 
-struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, struct Rect *rect, struct OzUIWidgetOperation *ops)
-{
-    struct OzUIWidget *widget;
-    widget = (struct OzUIWidget*)malloc(sizeof(struct OzUIWidget));
-    memset(widget, 0, sizeof(struct OzUIWidget));
-    widget->window = window;
-    widget->type = type;
-    memcpy(&widget->rect, rect, sizeof(struct Rect));
-    widget->ops = ops;
-    listAdd(&widget->link, &window->widgetList);
-    if (widget->ops && widget->ops->onCreate)
-        widget->ops->onCreate(widget);
-    return widget;
-}
-
-int OzUIDestroyWidget(struct OzUIWidget *widget)
-{
-    listDel(&widget->link);
-    if (widget->ops && widget->ops->onDestroy)
-        widget->ops->onDestroy(widget);
-    free(widget);
-    return 0;
-}
-
-int OzUIWidgetDrawRectangle(struct OzUIWidget *widget, struct Rect *rect,
-        struct LineStyle *lineStyle, struct FillStyle *fillStyle)
-{
-    struct Rect baseRect;
-    memcpy(&baseRect, rect, sizeof(struct Rect));
-    baseRect.x += widget->rect.x;
-    baseRect.y += widget->rect.y;
-    return OzUIWindowDrawRectangle(widget->window, &widget->rect, &baseRect, lineStyle, fillStyle);
-}
-
 int OzUIWindowDrawText(struct OzUIWindow *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc, 
         const wchar_t *text, 
@@ -249,6 +215,83 @@ int OzUIWindowDrawText(struct OzUIWindow *window, struct Rect *clipRect,
     return reply->ret;
 }
 
+struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, struct Rect *rect, struct OzUIWidgetOperation *ops)
+{
+    struct OzUIWidget *widget;
+    widget = (struct OzUIWidget*)malloc(sizeof(struct OzUIWidget));
+    memset(widget, 0, sizeof(struct OzUIWidget));
+    widget->window = window;
+    widget->type = type;
+    memcpy(&widget->rect, rect, sizeof(struct Rect));
+    initRect(&widget->dirtyRect, 0, 0, 0, 0);
+    widget->ops = ops;
+    listAdd(&widget->link, &window->widgetList);
+    if (widget->ops && widget->ops->onCreate)
+        widget->ops->onCreate(widget);
+    return widget;
+}
+
+int OzUIDestroyWidget(struct OzUIWidget *widget)
+{
+    listDel(&widget->link);
+    if (widget->ops && widget->ops->onDestroy)
+        widget->ops->onDestroy(widget);
+    free(widget);
+    return 0;
+}
+
+int OzUIWidgetBeginDraw(struct OzUIWidget *widget, const struct Rect *dirtyRect)
+{
+    copyRect(&widget->dirtyRect, dirtyRect);
+    translateRect(&widget->dirtyRect, widget->rect.x, widget->rect.y);
+    crossRect(&widget->dirtyRect, &widget->rect);
+    return 0;
+}
+
+int OzUIWidgetEndDraw(struct OzUIWidget *widget)
+{
+    initRect(&widget->dirtyRect, 0, 0, 0, 0);
+    return 0;
+}
+
+static void doWidgetPaint(struct OzUIWidget *widget)
+{
+    if (isEmptyRect(&widget->dirtyRect))
+        return;
+    if (!widget->ops || !widget->ops->paint)
+        return;
+
+    widget->ops->paint(widget);
+}
+
+int OzUIWidgetInvalidate(struct OzUIWidget *widget, const struct Rect *dirtyRect)
+{
+    OzUIWidgetBeginDraw(widget, dirtyRect);
+    doWidgetPaint(widget);
+    OzUIWidgetEndDraw(widget);
+    return 0;
+}
+
+int OzUIWidgetDrawRectangle(struct OzUIWidget *widget, struct Rect *rect,
+        struct LineStyle *lineStyle, struct FillStyle *fillStyle)
+{
+    struct Rect baseRect;
+    memcpy(&baseRect, rect, sizeof(struct Rect));
+    baseRect.x += widget->rect.x;
+    baseRect.y += widget->rect.y;
+    return OzUIWindowDrawRectangle(widget->window, &widget->dirtyRect, &baseRect, lineStyle, fillStyle);
+}
+
+void OzUIWidgetSetUserData(struct OzUIWidget *widget, void *userData)
+{
+    widget->d = userData;
+}
+
+void *OzUIWidgetGetUserData(struct OzUIWidget *widget)
+{
+    return widget->d;
+}
+
 static void translateLayoutCoords(struct OzUITextLayout *layout, int deltaX, int deltaY) 
 {
     int i;
@@ -267,7 +310,7 @@ int OzUIWidgetDrawText(struct OzUIWidget *widget, struct OzUITextLayoutConstrain
     baseTLC.originY += widget->rect.y;
     baseTLC.rect.x += widget->rect.x;
     baseTLC.rect.y += widget->rect.y;
-    ret =  OzUIWindowDrawText(widget->window, &widget->rect, &baseTLC, text, lineStyle, layout);
+    ret =  OzUIWindowDrawText(widget->window, &widget->dirtyRect, &baseTLC, text, lineStyle, layout);
     translateLayoutCoords(layout, -widget->rect.x, -widget->rect.y);
     return ret;
 }

@@ -30,6 +30,16 @@ struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, struct 
 
 int OzUIDestroyWidget(struct OzUIWidget *widget);
 
+int OzUIWidgetBeginDraw(struct OzUIWidget *widget, const struct Rect *dirtyRect);
+
+int OzUIWidgetEndDraw(struct OzUIWidget *widget);
+
+int OzUIWidgetInvalidate(struct OzUIWidget *widget, const struct Rect *dirtyRect);
+
+void OzUIWidgetSetUserData(struct OzUIWidget *widget, void *userData);
+
+void *OzUIWidgetGetUserData(struct OzUIWidget *widget);
+
 int OzUIWidgetDrawRectangle(struct OzUIWidget *widget, struct Rect *rect,
         struct LineStyle *lineStyle, struct FillStyle *fillStyle);
 

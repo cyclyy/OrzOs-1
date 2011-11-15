@@ -228,6 +228,7 @@ struct OzUIWidgetOperation
     void (*onDestroy)(struct OzUIWidget *widget);
     void (*onMiceEnter)(struct OzUIWidget *widget);
     void (*onMiceLeave)(struct OzUIWidget *widget);
+    void (*paint)(struct OzUIWidget *widget);
 };
 
 struct OzUIWidget
@@ -235,8 +236,10 @@ struct OzUIWidget
     struct OzUIWindow *window;
     int type;
     struct Rect rect;
+    struct Rect dirtyRect;
     struct OzUIWidgetOperation *ops;
     struct ListHead link;
+    void *d;
 };
 
 #endif // UIDEF_H
