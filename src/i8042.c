@@ -94,7 +94,8 @@ static struct DeviceOperation mice_Ops = {
 
 void cleanupBuffers()
 {
-    while ((inb(0x64) & 3))
+    prepareWrite();
+    while ((inb(0x64) & 1))
         inb(0x60);
 }
 
@@ -111,7 +112,7 @@ void prepareWrite()
 {
     int timeOut = 100000;
     while (timeOut--) {
-        if ((inb(0x64) & 2)==1)
+        if ((inb(0x64) & 2)==0)
             return;
     }
 }
