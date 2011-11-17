@@ -1,7 +1,7 @@
 #ifndef KEY_H
 #define KEY_H 
 
-#define Key_Release_Mask 0x10000000
+//#define Key_Release_Mask 0x10000000
 
 #define Key_Escape 0x01000000                // misc keys
 #define Key_Tab 0x01000009
@@ -146,5 +146,14 @@
 #define Key_Bar 0x7c
 #define Key_BraceRight 0x7d
 #define Key_AsciiTilde 0x7e
+
+#define     KEY_EVENT_DOWN  1
+#define     KEY_EVENT_UP    2
+
+struct KeyEvent
+{
+    int type;
+    int code;
+}__attribute__((packed));
 
 #endif /* KEY_H */

@@ -12,11 +12,13 @@
 #include "libc/list.h"
 
 LIST_HEAD(miceReqList);
+LIST_HEAD(i8042ReqList);
 
 s64int i8042_Open(struct VNode *node);
 s64int i8042_Close(struct VNode *node);
 s64int i8042_Read(struct VNode *node, u64int size, char *buffer);
 s64int i8042_Probe();
+s64int i8042_ReadAsync(struct VNode *node, u64int size, char *buffer);
 void i8042_ISR(struct RegisterState *regs);
 
 s64int mice_Open(struct VNode *node);
@@ -72,6 +74,7 @@ static struct WaitQueue *wq = 0;
 
 static u8int inEscape = 0;
 static u64int key;
+static struct KeyEvent keyEvent;
 
 static u8int miceCycle = 0;
 static s8int miceByte[3], savedMiceByte[3] = {0};
@@ -81,6 +84,7 @@ static struct DeviceOperation i8042_Ops = {
     .open  = &i8042_Open,
     .close = &i8042_Close,
     .read  = &i8042_Read,
+    .readAsync = &i8042_ReadAsync,
 };
 
 static struct DeviceOperation mice_Ops = {
@@ -92,14 +96,7 @@ static struct DeviceOperation mice_Ops = {
 };
 
 
-void cleanupBuffers()
-{
-    prepareWrite();
-    while ((inb(0x64) & 1))
-        inb(0x60);
-}
-
-void prepareRead()
+static void prepareRead()
 {
     int timeOut = 100000;
     while (timeOut--) {
@@ -108,13 +105,20 @@ void prepareRead()
     }
 }
 
-void prepareWrite()
+static void prepareWrite()
 {
     int timeOut = 100000;
     while (timeOut--) {
         if ((inb(0x64) & 2)==0)
             return;
     }
+}
+
+static void cleanupBuffers()
+{
+    prepareWrite();
+    while ((inb(0x64) & 1))
+        inb(0x60);
 }
 
 static s64int mice_CreateEvent()
@@ -332,15 +336,39 @@ void mice_ISR(struct RegisterState *regs)
 
 s64int i8042_Read(struct VNode *node, u64int size, char *buffer)
 {
-    /*printk("%s\n", __FUNCTION__);*/
-    if ((size<4) || !buffer)
+    struct IORequest *ior;
+    int ret;
+
+    if ((size<sizeof(struct KeyEvent)) || !buffer)
         return 0;
 
-    sleepOn(wq);
+    ior = createIORequest(node, IO_SYNC_READ, buffer, size);
+    listAddTail(&ior->link, &i8042ReqList);
 
-    *(u64int*)buffer = key;
+    ret =  waitIoResult(ior);
+    destroyIORequest(ior);
 
-    return 4;
+    return ret;
+}
+
+s64int i8042_ReadAsync(struct VNode *node, u64int size, char *buffer)
+{
+    struct IORequest *ior;
+    /*printk("%s\n", __FUNCTION__);*/
+    if ((size<sizeof(struct KeyEvent)) || !buffer)
+        return 0;
+
+    ior = createIORequest(node, IO_ASYNC_READ, buffer, size);
+    listAddTail(&ior->link, &i8042ReqList);
+
+    return 0;
+
+    /*
+    if (miceEvent.type == MICE_EVENT_NULL) {
+        return 0;
+    }
+    memcpy(buffer, &miceEvent, sizeof(struct MiceEvent));
+    */
 }
 
 s64int i8042_Open(struct VNode *node)
@@ -356,6 +384,7 @@ s64int i8042_Close(struct VNode *node)
 
 void i8042_ISR(struct RegisterState *regs)
 {
+    struct IORequest *ior, *tmp;
     u8int ch = inb(0x60);
     u8int c = ch;
 
@@ -413,11 +442,19 @@ void i8042_ISR(struct RegisterState *regs)
         }
     }
 
+    keyEvent.code = key;
 
     if (ch & 0x80) {
-        key |= Key_Release_Mask;
+        keyEvent.type = KEY_EVENT_UP;
+    } else {
+        keyEvent.type = KEY_EVENT_DOWN;
     }
 
-    wakeUpAll(wq);
+//    wakeUpAll(wq);
+    listForEachEntrySafe(ior, tmp, &i8042ReqList, link) {
+        vmemcpy(ior->task->vm, ior->buffer, kernelVM, &keyEvent, MIN(sizeof(struct KeyEvent), ior->size));
+        listDel(&ior->link);
+        completeIoRequest(ior, MIN(ior->size,sizeof(struct KeyEvent)));
+    }
 }
 

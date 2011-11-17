@@ -8,6 +8,7 @@
 #include "drawops.h"
 #include "syscall.h"
 #include "mice.h"
+#include "key.h"
 #include "event.h"
 #include "rect.h"
 #include <locale.h>
@@ -34,6 +35,10 @@ int cursorX = WIDTH / 2, cursorY = HEIGHT / 2;
 
 int miceFD = -1;
 cairo_surface_t *cursor_surface;
+struct MiceEvent miceEvent;
+
+int kbdFD = -1;
+struct KeyEvent keyEvent;
 
 RECT_INIT(dirtyRect, 0, 0, WIDTH, HEIGHT);
 RECT_INIT(cursorRect, 0, 0, 0, 0);
@@ -235,7 +240,6 @@ int main()
     char replyBuf[512];
     struct Window *window;
     struct MessageHeader hdr;
-    struct MiceEvent miceEvent;
     struct IOEvent *ioEventPtr;
     struct OzUICreateWindowRequest *createWindowRequest;
     struct OzUICreateWindowReply *createWindowReply = (struct OzUICreateWindowReply*)replyBuf;
@@ -255,16 +259,7 @@ int main()
     dbgFile = fopen("Device:/Debug", "w");
     initDisplay();
     initMice();
-
-
-    /*
-    char *s = "我";
-    wchar_t wch;
-    int n;
-    */
-
-//    n = __utf8_mbtowc(&wch, s, strlen(s));
-//    UIDBG("mbtowc:n:%d, wch:%lx\n", n, (unsigned long)wch);
+    kbdFD = OzOpen("Device:/Keyboard", 0);
 
     OzNewTask("C:/uiclient",0);
 
@@ -275,6 +270,7 @@ int main()
     moveWindow(window, 150, 250);
 
     OzMilliAlarm(40);
+    OzReadAsync(kbdFD, sizeof(struct KeyEvent), &keyEvent);
     OzReadAsync(miceFD, sizeof(struct MiceEvent), &miceEvent);
     for (;;) {
         paintAll();
@@ -313,6 +309,8 @@ int main()
                     }
                 }
                 OzReadAsync(miceFD, sizeof(struct MiceEvent), &miceEvent);
+            } else if (ioEventPtr->fd == kbdFD) {
+                OzReadAsync(kbdFD, sizeof(struct KeyEvent), &keyEvent);
             }
             break;
         case UI_EVENT_CREATE_WINDOW:
