@@ -1,6 +1,6 @@
 #include "uidef.h"
 #include "uiproto.h"
-#include "uilabel.h"
+#include "uibutton.h"
 #include "syscall.h"
 
 char replyBuf[1000];
@@ -11,24 +11,18 @@ struct LineStyle ls;
 struct FillStyle fs;
 struct OzUIWindow *window;
 struct OzUIWidget *widget;
+struct OzUIButton *button;
+struct OzUILabel *label;
 wchar_t *msgIn = L"在里面！";
 wchar_t *msgOut = L"在外面！";
 
+/*
 void onMyMiceEnter(struct OzUIWidget *widget)
 {
     struct Rect rect;
     rect.x = rect.y = 0;
     rect.w = 100;
     rect.h = 40;
-    /*
-    fs.color.r = 255;
-    fs.color.g = 0;
-    fs.color.b = 0;
-    OzUIWidgetBeginDraw(widget, &rect);
-    OzUIWidgetDrawRectangle(widget, &rect, &ls, &fs);
-    OzUIWidgetDrawText(widget, &tlc, L"里面!", &ls, layout);
-    OzUIWidgetEndDraw(widget);
-    */
     widget->d = msgIn;
     OzUIWidgetInvalidate(widget, &rect);
 }
@@ -39,15 +33,6 @@ void onMyMiceLeave(struct OzUIWidget *widget)
     rect.x = rect.y = 0;
     rect.w = 100;
     rect.h = 40;
-    /*
-    fs.color.r = 0;
-    fs.color.g = 255;
-    fs.color.b = 0;
-    OzUIWidgetBeginDraw(widget, &rect);
-    OzUIWidgetDrawRectangle(widget, &rect, &ls, &fs);
-    OzUIWidgetDrawText(widget, &tlc, L"外面!", &ls, layout);
-    OzUIWidgetEndDraw(widget);
-    */
     widget->d = msgOut;
     OzUIWidgetInvalidate(widget, &rect);
 }
@@ -70,6 +55,21 @@ struct OzUIWidgetOperation myOps = {
     .onMiceEnter = &onMyMiceEnter,
     .onMiceLeave = &onMyMiceLeave,
     .paint = &myPaint,
+};
+*/
+
+void myBtnMiceLeftClick(struct OzUIButton *button, struct OzUIMiceEvent *miceEvent)
+{
+    long i = (long)button->d;
+    wchar_t s[100];
+    i++;
+    button->d = (void*)i;
+    swprintf(s, 100, L"左点击了%ld次", i);
+    OzUIButtonSetText(button, s);
+}
+
+static struct OzUIButtonOperation myBtnOps = {
+    .onMiceLeftClick = &myBtnMiceLeftClick,
 };
 
 int main()
@@ -98,14 +98,10 @@ int main()
 
     fs.color.r = fs.color.g = fs.color.b = 0;
 
-    widget = OzUICreateWidget(window, 0, &rect, &myOps, msgOut);
-
-    struct OzUILabel *label;
-    struct Rect labelRect;
-    initRect(&labelRect, 60, 160, 300, 40);
-    label = OzUICreateLabel(window, &labelRect);
-    OzUILabelSetFontSize(label, 28);
-    OzUILabelSetText(label, L"我们都是好人");
+    struct Rect buttonRect;
+    initRect(&buttonRect, 60, 160, 300, 40);
+    button = OzUICreateButton(window, &buttonRect, &myBtnOps, 0);
+    OzUIButtonSetText(button, L"我们都是好人");
 
     OzUINextEvent();
     for (;;) {

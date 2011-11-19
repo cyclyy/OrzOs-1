@@ -3,6 +3,7 @@
 #include "sysdef.h"
 #include "syscall.h"
 #include "event.h"
+#include "mice.h"
 #include "libc/list.h"
 #include <string.h>
 #include <stdlib.h>
@@ -20,21 +21,21 @@ static int OzUISendReceive(void *request, void *reply)
     struct MessageHeader hdr;
     hdr.pid = UISERVER_PID;
     switch (GET_EVENT_TYPE(request)) {
-    case UI_EVENT_CREATE_WINDOW:
-        return OzSendReceive(&hdr, request, sizeof(struct OzUICreateWindowRequest), reply, sizeof(struct OzUICreateWindowReply));
-        break;
-    case UI_EVENT_DESTROY_WINDOW:
-        return OzSendReceive(&hdr, request, sizeof(struct OzUIDestroyWindowRequest), reply, sizeof(struct OzUIDestroyWindowReply));
-        break;
-    case UI_EVENT_MOVE_WINDOW:
-        return OzSendReceive(&hdr, request, sizeof(struct OzUIMoveWindowRequest), reply, sizeof(struct OzUIMoveWindowReply));
-        break;
-    case UI_EVENT_DRAW_RECTANGLE:
-        return OzSendReceive(&hdr, request, sizeof(struct OzUIWindowDrawRectangleRequest), reply, sizeof(struct OzUIWindowDrawRectangleReply));
-        break;
-    case UI_EVENT_DRAW_TEXT:
-        return OzSendReceive(&hdr, request, SIZE_OZUI_WINDOW_DRAW_TEXT_REQUEST(request), reply, SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY_FOR_TEXT(((struct OzUIWindowDrawTextRequest*)request)->text));
-        break;
+        case OZUI_EVENT_CREATE_WINDOW:
+            return OzSendReceive(&hdr, request, sizeof(struct OzUICreateWindowRequest), reply, sizeof(struct OzUICreateWindowReply));
+            break;
+        case OZUI_EVENT_DESTROY_WINDOW:
+            return OzSendReceive(&hdr, request, sizeof(struct OzUIDestroyWindowRequest), reply, sizeof(struct OzUIDestroyWindowReply));
+            break;
+        case OZUI_EVENT_MOVE_WINDOW:
+            return OzSendReceive(&hdr, request, sizeof(struct OzUIMoveWindowRequest), reply, sizeof(struct OzUIMoveWindowReply));
+            break;
+        case OZUI_EVENT_DRAW_RECTANGLE:
+            return OzSendReceive(&hdr, request, sizeof(struct OzUIWindowDrawRectangleRequest), reply, sizeof(struct OzUIWindowDrawRectangleReply));
+            break;
+        case OZUI_EVENT_DRAW_TEXT:
+            return OzSendReceive(&hdr, request, SIZE_OZUI_WINDOW_DRAW_TEXT_REQUEST(request), reply, SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY_FOR_TEXT(((struct OzUIWindowDrawTextRequest*)request)->text));
+            break;
     };
     return 0;
 }
@@ -42,9 +43,9 @@ static int OzUISendReceive(void *request, void *reply)
 static int OzUISend(void *request)
 {
     switch (GET_EVENT_TYPE(request)) {
-    case UI_EVENT_NEXT_EVENT:
-        return OzSend(UISERVER_PID, request, sizeof(struct OzUINextEventRequest));
-        break;
+        case OZUI_EVENT_NEXT_EVENT:
+            return OzSend(UISERVER_PID, request, sizeof(struct OzUINextEventRequest));
+            break;
     };
     return 0;
 }
@@ -73,20 +74,23 @@ void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *mice
     if (widget) {
         if (window->miceWidget != widget) {
             // TODO: handle mice leave in old miceWidget
-            ;;
+            if (window->miceWidget) {
+                localMiceEvent.type = OZUI_EVENT_MICE_LEAVE;
+                if (window->miceWidget->ops && window->miceWidget->ops->onMiceLeave)
+                    window->miceWidget->ops->onMiceLeave(window->miceWidget);
+            }
+
             // handle mice enter event
-            localMiceEvent.type = UI_EVENT_MICE_ENTER;
+            localMiceEvent.type = OZUI_EVENT_MICE_ENTER;
             if (widget->ops && widget->ops->onMiceEnter)
                 widget->ops->onMiceEnter(widget);
         }
-
-        /*
-        localMiceEvent.type = miceEvent.type;
+        localMiceEvent.x = miceEvent->x - widget->rect.x;
+        localMiceEvent.y = miceEvent->y - widget->rect.y;
         if (widget->ops && widget->ops->onMiceEvent)
             widget->ops->onMiceEvent(widget, &localMiceEvent);
-        */
     } else if (window->miceWidget) {
-        localMiceEvent.type = UI_EVENT_MICE_LEAVE;
+        localMiceEvent.type = OZUI_EVENT_MICE_LEAVE;
         if (window->miceWidget->ops && window->miceWidget->ops->onMiceLeave)
             window->miceWidget->ops->onMiceLeave(window->miceWidget);
     }
@@ -108,7 +112,7 @@ struct OzUIWindow *OzUICreateWindow(int w, int h, int flags)
     struct OzUIWindow *window;
     struct OzUICreateWindowRequest request;
     struct OzUICreateWindowReply reply;
-    request.type = UI_EVENT_CREATE_WINDOW;
+    request.type = OZUI_EVENT_CREATE_WINDOW;
     request.width = w;
     request.height = h;
     request.flags = flags;
@@ -127,7 +131,7 @@ int OzUIDestroyWindow(struct OzUIWindow *window)
 {
     struct OzUIDestroyWindowRequest request;
     struct OzUIDestroyWindowReply reply;
-    request.type = UI_EVENT_DESTROY_WINDOW;
+    request.type = OZUI_EVENT_DESTROY_WINDOW;
     request.id = window->id;
     OzUISendReceive(&request, &reply);
     free(window);
@@ -139,7 +143,7 @@ int OzUIMoveWindow(struct OzUIWindow *window, int x, int y)
 {
     struct OzUIMoveWindowRequest request;
     struct OzUIMoveWindowReply reply;
-    request.type = UI_EVENT_MOVE_WINDOW;
+    request.type = OZUI_EVENT_MOVE_WINDOW;
     request.id = window->id;
     request.x = x;
     request.y = y;
@@ -155,14 +159,14 @@ int OzUIDispatchEvent(void *buf)
     struct OzUIWindow *window;
     int isUIEvent = 1;
     switch GET_EVENT_TYPE(buf) {
-    case UI_EVENT_MICE:
-        uiMiceEventNotify = (struct OzUIMiceEventNotify*)buf;
-        window = OzUIGetWindowById(uiMiceEventNotify->id);
-        if (window && window->ops && window->ops->onMiceEvent)
-            window->ops->onMiceEvent(window, &uiMiceEventNotify->miceEvent);
-        break;
-    default:
-        isUIEvent = 0;
+        case OZUI_EVENT_MICE:
+            uiMiceEventNotify = (struct OzUIMiceEventNotify*)buf;
+            window = OzUIGetWindowById(uiMiceEventNotify->id);
+            if (window && window->ops && window->ops->onMiceEvent)
+                window->ops->onMiceEvent(window, &uiMiceEventNotify->miceEvent);
+            break;
+        default:
+            isUIEvent = 0;
     };
     return isUIEvent;
 }
@@ -170,7 +174,7 @@ int OzUIDispatchEvent(void *buf)
 void OzUINextEvent()
 {
     struct OzUINextEventRequest request;
-    request.type = UI_EVENT_NEXT_EVENT;
+    request.type = OZUI_EVENT_NEXT_EVENT;
     OzUISend(&request);
 }
 
@@ -179,7 +183,7 @@ int OzUIWindowDrawRectangle(struct OzUIWindow *window, struct Rect *clipRect,
 {
     struct OzUIWindowDrawRectangleRequest request;
     struct OzUIWindowDrawRectangleReply reply;
-    request.type = UI_EVENT_DRAW_RECTANGLE;
+    request.type = OZUI_EVENT_DRAW_RECTANGLE;
     request.id = window->id;
     memcpy(&request.clipRect, clipRect, sizeof(struct Rect));
     memcpy(&request.rect, rect, sizeof(struct Rect));
@@ -202,7 +206,7 @@ int OzUIWindowDrawText(struct OzUIWindow *window, struct Rect *clipRect,
     j = SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY_FOR_TEXT(text);
     request = (struct OzUIWindowDrawTextRequest*)malloc(SIZE_OZUI_WINDOW_DRAW_TEXT_REQUEST_FOR_TEXT(text));
     reply = (struct OzUIWindowDrawTextReply*)malloc(SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY_FOR_TEXT(text));
-    request->type = UI_EVENT_DRAW_TEXT;
+    request->type = OZUI_EVENT_DRAW_TEXT;
     request->id = window->id;
     memcpy(&request->clipRect, clipRect, sizeof(struct Rect));
     memcpy(&request->tlc, tlc, sizeof(struct OzUITextLayoutConstraint));

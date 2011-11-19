@@ -25,19 +25,22 @@
 #define DISPLAY_IOCTL_SET_MODE                  2
 
 // events received by uiserver
-#define UI_EVENT_CREATE_WINDOW        0x1001
-#define UI_EVENT_DESTROY_WINDOW       0x1002
-#define UI_EVENT_MOVE_WINDOW          0x1003
-#define UI_EVENT_NEXT_EVENT           0x1004
-#define UI_EVENT_DRAW_RECTANGLE       0x1005
-#define UI_EVENT_DRAW_TEXT            0x1006
+#define OZUI_EVENT_CREATE_WINDOW        0x1001
+#define OZUI_EVENT_DESTROY_WINDOW       0x1002
+#define OZUI_EVENT_MOVE_WINDOW          0x1003
+#define OZUI_EVENT_NEXT_EVENT           0x1004
+#define OZUI_EVENT_DRAW_RECTANGLE       0x1005
+#define OZUI_EVENT_DRAW_TEXT            0x1006
 
 // events received by client window
-#define UI_EVENT_MICE                 0x2001
+#define OZUI_EVENT_MICE                 0x2001
 
 // events received by client widgets
-#define UI_EVENT_MICE_ENTER           0x3001
-#define UI_EVENT_MICE_LEAVE           0x3002
+#define OZUI_EVENT_MICE_ENTER           0x3001
+#define OZUI_EVENT_MICE_LEAVE           0x3002
+#define OZUI_EVENT_MICE_DOWN            0x3003
+#define OZUI_EVENT_MICE_UP              0x3004
+#define OZUI_EVENT_MICE_MOVE            0x3005
 
 struct DisplayModeInfo
 {
@@ -184,6 +187,14 @@ struct OzUIWindowDrawTextReply
 }__attribute__((packed));
 
 // format of received event
+#define OZUI_MICE_EVENT_MOVE  MICE_EVENT_MOVE
+#define OZUI_MICE_EVENT_DOWN  MICE_EVENT_PRESS
+#define OZUI_MICE_EVENT_UP    MICE_EVENT_RELEASE 
+
+#define OZUI_MICE_BUTTON_LEFT   MICE_BUTTON_LEFT
+#define OZUI_MICE_BUTTON_RIGHT  MICE_BUTTON_RIGHT
+#define OZUI_MICE_BUTTON_MIDDLE MICE_BUTTON_MIDDLE
+
 struct OzUIMiceEvent
 {
     unsigned long type;
@@ -228,6 +239,7 @@ struct OzUIWidgetOperation
     void (*onDestroy)(struct OzUIWidget *widget);
     void (*onMiceEnter)(struct OzUIWidget *widget);
     void (*onMiceLeave)(struct OzUIWidget *widget);
+    void (*onMiceEvent)(struct OzUIWidget *widget, struct OzUIMiceEvent *miceEvent);
     void (*paint)(struct OzUIWidget *widget);
 };
 
