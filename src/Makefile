@@ -60,7 +60,7 @@ loader32: loader32.s
 
 liborzos.a:syscall.o
 	@echo "LD	orzos"
-	$(QUIET)$(AR) rcs $@ $<
+	$(QUIET)$(AR) r $@ $<
 
 libx86emu.a: $(X86EMU_SOURCES)
 	@echo "LD	x86emu"

@@ -1,5 +1,8 @@
 #include "uiwindow.h"
+#include "uiproto.h"
+#include "uiwidget.h"
 #include "uiapp.h"
+#include "uilabel.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -8,6 +11,83 @@ void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *mice
 struct OzUIWindowOperation genericWindowOperation = {
     .onMiceEvent = &OzUIWindowOnMiceEvent,
 };
+
+static struct OzUIWidget *widgetUnderMice(struct OzUIWindow *window, struct OzUIMiceEvent *miceEvent, struct OzUIMiceEvent *localMiceEvent)
+{
+    struct OzUIWidget *widget;
+    listForEachEntry(widget, &window->widgetList, link) {
+        if (insideRect(&widget->rect, miceEvent->x, miceEvent->y)) {
+            if (localMiceEvent) {
+                memcpy(localMiceEvent, miceEvent, sizeof(struct MiceEvent));
+                localMiceEvent->x -= widget->rect.x;
+                localMiceEvent->y -= widget->rect.y;
+            }
+            return widget;
+        }
+    }
+    return 0;
+}
+
+void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *miceEvent)
+{
+    struct OzUIWidget *widget;
+    struct OzUIMiceEvent localMiceEvent;
+    static int inDrag = 0;
+    static int lastX, lastY;
+    if (inDrag) {
+        switch (miceEvent->type) {
+        case OZUI_MICE_EVENT_MOVE:
+            if (miceEvent->button == OZUI_MICE_BUTTON_LEFT)
+                OzUIMoveWindow(window, window->screenX + miceEvent->x - lastX, window->screenY + miceEvent->y - lastY);
+            else {
+                inDrag = 0;
+                lastX = lastY = 0;
+            }
+            break;
+        case OZUI_MICE_EVENT_UP:
+            inDrag = 0;
+            lastX = lastY = 0;
+            break;
+        }
+        return;
+    }
+    widget = widgetUnderMice(window, miceEvent, &localMiceEvent);
+    if (widget) {
+        if (window->miceWidget != widget) {
+            // TODO: handle mice leave in old miceWidget
+            if (window->miceWidget) {
+                localMiceEvent.type = OZUI_EVENT_MICE_LEAVE;
+                if (window->miceWidget->ops && window->miceWidget->ops->onMiceLeave)
+                    window->miceWidget->ops->onMiceLeave(window->miceWidget);
+            }
+
+            // handle mice enter event
+            localMiceEvent.type = OZUI_EVENT_MICE_ENTER;
+            if (widget->ops && widget->ops->onMiceEnter)
+                widget->ops->onMiceEnter(widget);
+        }
+        localMiceEvent.x = miceEvent->x - widget->rect.x;
+        localMiceEvent.y = miceEvent->y - widget->rect.y;
+        if (widget->ops && widget->ops->onMiceEvent)
+            widget->ops->onMiceEvent(widget, &localMiceEvent);
+    } else {
+        if (window->miceWidget) {
+            localMiceEvent.type = OZUI_EVENT_MICE_LEAVE;
+            if (window->miceWidget->ops && window->miceWidget->ops->onMiceLeave)
+                window->miceWidget->ops->onMiceLeave(window->miceWidget);
+        }
+        // handle user drag window
+        if (!inDrag) {
+            if ((miceEvent->type == OZUI_MICE_EVENT_DOWN) && (miceEvent->button == OZUI_MICE_BUTTON_LEFT)) {
+                inDrag = 1;
+                lastX = miceEvent->x;
+                lastY = miceEvent->y;
+            }
+        } else {
+        }
+    }
+    window->miceWidget = widget;
+}
 
 struct OzUIWindow *OzUIGetWindowById(unsigned long id)
 {
@@ -39,6 +119,17 @@ struct OzUIWindow *OzUICreateWindow(int w, int h, int flags)
     if (window->ops && window->ops->onCreate)
         window->ops->onCreate(window);
 
+    struct OzUILabel *title;
+    struct Rect titleRect;
+    wchar_t titleText[100];
+    titleRect.x = titleRect.y = 0;
+    titleRect.w = window->width;
+    titleRect.h = 20;
+    title = OzUICreateLabel(window, &titleRect);
+    OzUILabelSetFontSize(title, 14);
+    swprintf(titleText, 100, L"窗口：id=%p", window->id);
+    OzUILabelSetText(title, titleText);
+
     return window;
 }
 
@@ -46,8 +137,12 @@ int OzUIDestroyWindow(struct OzUIWindow *window)
 {
     struct OzUIDestroyWindowRequest request;
     struct OzUIDestroyWindowReply reply;
+    struct OzUIWidget *widget;
     if (window->ops && window->ops->onDestroy)
         window->ops->onDestroy(window);
+    listForEachEntry(widget, &window->widgetList, link) {
+        OzUIDestroyWidget(widget);
+    }
     OzUIAppRemoveWindow(window);
     request.type = OZUI_EVENT_DESTROY_WINDOW;
     request.id = window->id;

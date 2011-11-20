@@ -1,4 +1,5 @@
 #include "uilabel.h"
+#include "uiwindow.h"
 #include "uiwidget.h"
 #include <stdlib.h>
 #include <string.h>

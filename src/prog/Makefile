@@ -1,5 +1,5 @@
 PREFIX = /home/ora/cross
-QUIET = @
+QUIET = #@
 LD32 = ld
 CC = x86_64-pc-orzos-gcc
 AR = x86_64-pc-orzos-ar
@@ -36,15 +36,15 @@ uiclient_SRCS = uiclient.o uiproto.o uilabel.o uibutton.o uiapp.o uiwindow.o uiw
 
 init:$(init_SRCS)
 	@echo "LD	$@"
-	$(QUIET)$(LD) -o $@ $? $(PROG_LDFLAGS)
+	$(QUIET)$(LD) -o $@ $+ $(PROG_LDFLAGS)
 
 uiserver:$(uiserver_SRCS)
 	@echo "LD	$@"
-	$(QUIET)$(LD) -o $@ $? $(PROG_LDFLAGS)
+	$(QUIET)$(LD) -o $@ $+ $(PROG_LDFLAGS)
 
 uiclient:$(uiclient_SRCS)
 	@echo "LD	$@"
-	$(QUIET)$(LD) -o $@ $? $(PROG_LDFLAGS)
+	$(QUIET)$(LD) -o $@ $+ $(PROG_LDFLAGS)
 
 clean:
 	$(QUIET)-rm *.o init uiserver uiclient

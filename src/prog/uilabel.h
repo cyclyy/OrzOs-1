@@ -1,11 +1,13 @@
 #ifndef UILABEL_H
 #define UILABEL_H
 
-#include "uiwidget.h"
-#include "uiwindow.h"
+#include "uidef.h"
 
 #define OZUI_WIDGET_TYPE_LABEL  1
 #define OZUI_LABEL_DEFAULT_FONT_SIZE 12
+
+struct OzUIWindow;
+struct OzUIWidget;
 
 struct OzUILabel
 {

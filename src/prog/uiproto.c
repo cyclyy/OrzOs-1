@@ -44,53 +44,6 @@ int OzUISend(void *request)
     return 0;
 }
 
-static struct OzUIWidget *widgetUnderMice(struct OzUIWindow *window, struct OzUIMiceEvent *miceEvent, struct OzUIMiceEvent *localMiceEvent)
-{
-    struct OzUIWidget *widget;
-    listForEachEntry(widget, &window->widgetList, link) {
-        if (insideRect(&widget->rect, miceEvent->x, miceEvent->y)) {
-            if (localMiceEvent) {
-                memcpy(localMiceEvent, miceEvent, sizeof(struct MiceEvent));
-                localMiceEvent->x -= widget->rect.x;
-                localMiceEvent->y -= widget->rect.y;
-            }
-            return widget;
-        }
-    }
-    return 0;
-}
-
-void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *miceEvent)
-{
-    struct OzUIWidget *widget;
-    struct OzUIMiceEvent localMiceEvent;
-    widget = widgetUnderMice(window, miceEvent, &localMiceEvent);
-    if (widget) {
-        if (window->miceWidget != widget) {
-            // TODO: handle mice leave in old miceWidget
-            if (window->miceWidget) {
-                localMiceEvent.type = OZUI_EVENT_MICE_LEAVE;
-                if (window->miceWidget->ops && window->miceWidget->ops->onMiceLeave)
-                    window->miceWidget->ops->onMiceLeave(window->miceWidget);
-            }
-
-            // handle mice enter event
-            localMiceEvent.type = OZUI_EVENT_MICE_ENTER;
-            if (widget->ops && widget->ops->onMiceEnter)
-                widget->ops->onMiceEnter(widget);
-        }
-        localMiceEvent.x = miceEvent->x - widget->rect.x;
-        localMiceEvent.y = miceEvent->y - widget->rect.y;
-        if (widget->ops && widget->ops->onMiceEvent)
-            widget->ops->onMiceEvent(widget, &localMiceEvent);
-    } else if (window->miceWidget) {
-        localMiceEvent.type = OZUI_EVENT_MICE_LEAVE;
-        if (window->miceWidget->ops && window->miceWidget->ops->onMiceLeave)
-            window->miceWidget->ops->onMiceLeave(window->miceWidget);
-    }
-    window->miceWidget = widget;
-}
-
 int OzUIDispatchEvent(void *buf)
 {
     struct OzUIMiceEventNotify *uiMiceEventNotify;
