@@ -27,7 +27,6 @@ struct Window {
     int screenX, screenY, width, height, flags;
     struct Rect clientRect;
     struct Pixmap *pixmap;
-    struct ListHead appLink;
     struct ListHead link;
     struct WindowPrivate *d;
 };
@@ -69,5 +68,9 @@ int drawRectangle(struct Window *window, struct Rect *clipRect,
 
 int drawText(struct Window *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc, wchar_t *text, struct LineStyle *lineStyle, struct OzUITextLayout *utl);
+
+struct Window *focusWindow();
+
+void setFocusWindow(struct Window *window);
 
 #endif /* WINDOW_H */

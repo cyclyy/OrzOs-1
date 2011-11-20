@@ -1,5 +1,6 @@
 #include "uiproto.h"
 #include "uidef.h"
+#include "uiapp.h"
 #include "sysdef.h"
 #include "syscall.h"
 #include "event.h"
@@ -7,8 +8,6 @@
 #include "libc/list.h"
 #include <string.h>
 #include <stdlib.h>
-
-static LIST_HEAD(windowList);
 
 void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *miceEvent);
 
@@ -100,7 +99,7 @@ void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *mice
 struct OzUIWindow *OzUIGetWindowById(unsigned long id)
 {
     struct OzUIWindow *window;
-    listForEachEntry(window, &windowList, link) {
+    listForEachEntry(window, &app->windowList, link) {
         if (window->id == id)
             return window;
     }
@@ -123,7 +122,9 @@ struct OzUIWindow *OzUICreateWindow(int w, int h, int flags)
     window->height = h;
     window->ops = &genericWindowOperation;
     INIT_LIST_HEAD(&window->widgetList);
-    listAdd(&window->link, &windowList);
+    OzUIAppAddWindow(window);
+    if (window->ops && window->ops->onCreate)
+        window->ops->onCreate(window);
     return window;
 }
 
@@ -131,6 +132,9 @@ int OzUIDestroyWindow(struct OzUIWindow *window)
 {
     struct OzUIDestroyWindowRequest request;
     struct OzUIDestroyWindowReply reply;
+    if (window->ops && window->ops->onDestroy)
+        window->ops->onDestroy(window);
+    OzUIAppRemoveWindow(window);
     request.type = OZUI_EVENT_DESTROY_WINDOW;
     request.id = window->id;
     OzUISendReceive(&request, &reply);

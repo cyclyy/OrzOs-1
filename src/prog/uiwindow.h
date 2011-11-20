@@ -96,6 +96,8 @@ struct OzUIWindowDrawTextReply
 struct OzUIWindowOperation
 {
     void (*onMiceEvent)(struct OzUIWindow *window, struct OzUIMiceEvent *event);
+    void (*onCreate)(struct OzUIWindow *window);
+    void (*onDestroy)(struct OzUIWindow *window);
 };
 
 struct OzUIWindow

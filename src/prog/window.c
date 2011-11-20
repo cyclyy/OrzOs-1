@@ -101,7 +101,6 @@ struct Window *createWindow(int pid, int w, int h, int flags)
     window->clientRect.y = guiConfig()->borderSize*2 + guiConfig()->titleHeight;
     window->clientRect.w = w - guiConfig()->borderSize*2;
     window->clientRect.h = h - window->clientRect.y - guiConfig()->borderSize;
-    INIT_LIST_HEAD(&window->appLink);
     INIT_LIST_HEAD(&window->link);
 
     gc = createGCForWindow(window);
@@ -109,7 +108,6 @@ struct Window *createWindow(int pid, int w, int h, int flags)
     drawWindowTitle(window);
     destroyGC(gc);
 
-    listAdd(&window->appLink, &app->windowList);
     listAddTail(&window->link, &windowList);
 
     return window;
@@ -303,5 +301,18 @@ int drawText(struct Window *window, struct Rect *clipRect,
     cairo_reset_clip(cr);
     cairo_restore(cr);
     return ret;
+}
+
+struct Window *focusWindow()
+{
+    if (listEmpty(&windowList))
+        return 0;
+    else
+        return listFirstEntry(&windowList, struct Window, link);
+}
+
+
+void setFocusWindow(struct Window *window)
+{
 }
 

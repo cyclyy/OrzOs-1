@@ -38,7 +38,8 @@ MOD_SOURCES = testmod.o            \
               ext2fs.o          \
 
 PROG_SOURCES = prog/uiproto.o prog/rect.o prog/uiserver.o prog/window.o prog/guiconfig.o prog/init.o syscall.o 	\
-			   prog/uiclient.o prog/app.o prog/drawops.o prog/utf8.o prog/layout.o prog/uilabel.o prog/uibutton.o
+			   prog/uiclient.o prog/app.o prog/drawops.o prog/utf8.o prog/layout.o prog/uilabel.o prog/uibutton.o \
+			   prog/uiapp.o
 
 CORE_CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -mcmodel=kernel -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g 
 
@@ -81,9 +82,9 @@ prog_link:
 	@echo "LD	init"
 	$(QUIET)$(LD) -o prog/init prog/init.o syscall.o $(PROG_LDFLAGS)
 	@echo "LD	uiserver"
-	$(QUIET)$(LD) -o prog/uiserver prog/uiserver.o prog/uiproto.o prog/window.o prog/rect.o prog/guiconfig.o prog/app.o prog/drawops.o prog/layout.o prog/utf8.o syscall.o $(PROG_LDFLAGS)
+	$(QUIET)$(LD) -o prog/uiserver prog/uiserver.o prog/window.o prog/rect.o prog/guiconfig.o prog/app.o prog/drawops.o prog/layout.o prog/utf8.o syscall.o $(PROG_LDFLAGS)
 	@echo "LD	uilcient"
-	$(QUIET)$(LD) -o prog/uiclient prog/uiclient.o prog/uiproto.o prog/uilabel.o prog/uibutton.o prog/rect.o prog/guiconfig.o syscall.o $(PROG_LDFLAGS)
+	$(QUIET)$(LD) -o prog/uiclient prog/uiclient.o prog/uiproto.o prog/uilabel.o prog/uibutton.o prog/uiapp.o prog/rect.o prog/guiconfig.o syscall.o $(PROG_LDFLAGS)
 
 $(CORE_ASM_SOURCES):%.o:%.s
 	@echo "AS	$@"
