@@ -16,31 +16,38 @@ FREETYPE2_LIBS = -lfreetype -lz
 CAIRO_CFLAGS = -I$(PREFIX)/include/cairo -I/home/ora/cross/include/pixman-1 
 CAIRO_LIBS = -L$(PREFIX)/lib/gcc/x86_64-pc-orzos/4.5.0 -lcairo -lpixman-1 -lpng -lgcc
 
-PROG_SOURCES = uiproto.o rect.o uiserver.o window.o guiconfig.o init.o 	\
-			   uiclient.o app.o drawops.o utf8.o layout.o uilabel.o uibutton.o \
-			   uiapp.o uiwindow.o uiwidget.o
-
 PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -Ix86emu -Wall $(BASE_CFLAGS) $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g
 
 PROG_LDFLAGS=-T$(PREFIX)/ldscripts/prog.ld -m orzos_x86_64 -z max-page-size=0x1000 -L$(PREFIX)/lib -L$(PREFIX)/x86_64-pc-orzos/lib $(FREETYPE2_LIBS) $(CAIRO_LIBS) $(FREETYPE2_LIBS) -lc -lm
 
 ASFLAGS=-felf64
 
-all:prog_link
+all:init uiserver uiclient
 
-$(PROG_SOURCES):%.o:%.c
+init_SRCS = init.o
+
+uiserver_SRCS = uiserver.o window.o rect.o guiconfig.o app.o drawops.o layout.o utf8.o
+
+uiclient_SRCS = uiclient.o uiproto.o uilabel.o uibutton.o uiapp.o uiwindow.o uiwidget.o rect.o guiconfig.o
+
+%.o:%.c
 	@echo "CC	$@"
 	$(QUIET)$(CC) $(PROG_CFLAGS) -c $< -o $@
 
-prog_link:$(PROG_SOURCES) 
-	@echo "LD	init"
-	$(QUIET)$(LD) -o init init.o $(PROG_LDFLAGS)
-	@echo "LD	uiserver"
-	$(QUIET)$(LD) -o uiserver uiserver.o window.o rect.o guiconfig.o app.o drawops.o layout.o utf8.o $(PROG_LDFLAGS)
-	@echo "LD	uilcient"
-	$(QUIET)$(LD) -o uiclient uiclient.o uiproto.o uilabel.o uibutton.o uiapp.o uiwindow.o uiwidget.o rect.o guiconfig.o $(PROG_LDFLAGS)
+init:$(init_SRCS)
+	@echo "LD	$@"
+	$(QUIET)$(LD) -o $@ $? $(PROG_LDFLAGS)
+
+uiserver:$(uiserver_SRCS)
+	@echo "LD	$@"
+	$(QUIET)$(LD) -o $@ $? $(PROG_LDFLAGS)
+
+uiclient:$(uiclient_SRCS)
+	@echo "LD	$@"
+	$(QUIET)$(LD) -o $@ $? $(PROG_LDFLAGS)
 
 clean:
-	$(QUIET)-rm *.o 
+	$(QUIET)-rm *.o init uiserver uiclient
+
 ctags:
 	$(QUIET)ctags -R --c-kinds=+p --fields=+S . 
