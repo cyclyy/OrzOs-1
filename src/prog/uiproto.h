@@ -1,9 +1,9 @@
 #ifndef UIPROTO_H
 #define UIPROTO_H
 
-#include "sysdef.h"
 #include "uidef.h"
 #include "rect.h"
+#include <os/sysdef.h>
 
 struct OzUIWindow *OzUICreateWindow(int w, int h, int flags);
 

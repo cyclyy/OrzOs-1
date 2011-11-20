@@ -1,7 +1,7 @@
 #ifndef UIMICE_H
 #define UIMICE_H
 
-#include "mice.h"
+#include <os/mice.h>
 
 struct OzUIMiceEvent
 {

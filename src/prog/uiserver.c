@@ -1,4 +1,3 @@
-#include "uidef.h"
 #include "uiproto.h"
 #include "window_p.h"
 #include "gcontext_p.h"
@@ -6,11 +5,11 @@
 #include "uiproto.h"
 #include "window.h"
 #include "drawops.h"
-#include "syscall.h"
-#include "mice.h"
-#include "key.h"
-#include "event.h"
 #include "rect.h"
+#include <os/syscall.h>
+#include <os/mice.h>
+#include <os/key.h>
+#include <os/event.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>

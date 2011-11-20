@@ -1,6 +1,5 @@
 #include "rect.h"
-#include "sysdef.h"
-#include "util.h"
+#include <os/sysdef.h>
 
 void initRect(struct Rect *rect, int x, int y, int w, int h)
 {

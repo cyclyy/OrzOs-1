@@ -2,7 +2,7 @@
 #define UIWIDGET_H
 
 #include "rect.h"
-#include "libc/list.h"
+#include <os/list.h>
 
 struct OzUIMiceEvent;
 struct OzUIWidget;

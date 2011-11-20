@@ -1,7 +1,7 @@
 #ifndef APP_H
 #define APP_H
 
-#include "libc/list.h"
+#include <os/list.h>
 
 struct App
 {

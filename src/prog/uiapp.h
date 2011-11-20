@@ -2,7 +2,7 @@
 #define UIAPP_H
 
 #include "uiproto.h"
-#include "libc/list.h"
+#include <os/list.h>
 
 struct OzUIApp
 {

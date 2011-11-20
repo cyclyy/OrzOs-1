@@ -1,7 +1,6 @@
-#include "uidef.h"
 #include "uiproto.h"
 #include "uibutton.h"
-#include "syscall.h"
+#include <os/syscall.h>
 
 char replyBuf[1000];
 struct OzUITextLayoutConstraint tlc;

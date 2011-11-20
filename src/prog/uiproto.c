@@ -1,11 +1,11 @@
 #include "uiproto.h"
 #include "uidef.h"
 #include "uiapp.h"
-#include "sysdef.h"
-#include "syscall.h"
-#include "event.h"
-#include "mice.h"
-#include "libc/list.h"
+#include <os/event.h>
+#include <os/list.h>
+#include <os/mice.h>
+#include <os/sysdef.h>
+#include <os/syscall.h>
 #include <string.h>
 #include <stdlib.h>
 

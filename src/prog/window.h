@@ -1,11 +1,11 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "libc/list.h"
 #include "rect.h"
 #include "app.h"
 #include "uidef.h"
 #include "layout.h"
+#include <os/list.h>
 #include <cairo.h>
 
 #define PF_RGB565   1

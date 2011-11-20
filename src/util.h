@@ -7,9 +7,6 @@
 #define DBG(...) do { printk("%s:%d:",__FUNCTION__,__LINE__); printk(__VA_ARGS__);printk("\n"); } while (0)
 #define PANIC(...) do { DBG(__VA_ARGS__); for(;;); } while(0)
 
-#define MIN(a,b) ( ((a) < (b)) ? (a) : (b))
-#define MAX(a,b) ( ((a) > (b)) ? (a) : (b))
-
 #define va_list __builtin_va_list
 #define va_start(ap,v) __builtin_va_start(ap,v)
 #define va_arg(ap,t)   __builtin_va_arg(ap,t)

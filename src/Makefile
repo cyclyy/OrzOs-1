@@ -18,7 +18,7 @@ CAIRO_LIBS = -L$(PREFIX)/lib/gcc/x86_64-pc-orzos/4.5.0 -lcairo -lpixman-1 -lpng 
 
 X86EMU_SOURCES = x86emu/decode.o x86emu/fpu.o x86emu/ops.o x86emu/ops2.o x86emu/prim_ops.o x86emu/sys.o
 
-CORE_HEADERS = syscall.h mice.h key.h
+CORE_HEADERS = syscall.h sysdef.h mice.h key.h event.h $(wildcard libc/*.h)
 
 CORE_C_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o cpu.o dtable.o \
 			interrupt.o tlsf.o vfs.o debugcon.o task.o paging.o \
@@ -45,7 +45,7 @@ PROG_SOURCES = prog/uiproto.o prog/rect.o prog/uiserver.o prog/window.o prog/gui
 
 CORE_CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -mcmodel=kernel -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g 
 
-PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -Ix86emu -Wall -I. $(BASE_CFLAGS) $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g
+PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -Ix86emu -Wall $(BASE_CFLAGS) $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g
 
 CORE_LDFLAGS=-Tcore.ld -m orzos_x86_64 -M=allsymbol.map -z max-page-size=0x1000
 
@@ -107,5 +107,5 @@ ctags:
 	$(QUIET)ctags -R --c-kinds=+p --fields=+S . 
 
 include $(CORE_C_SOURCES:.o=.d)
-$(PROG_SOURCES):$(wildcard *.h prog/*.h)
+$(PROG_SOURCES):$(wildcard prog/*.h) $(CORE_HEADERS)
 

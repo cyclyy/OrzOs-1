@@ -10,7 +10,7 @@
 #ifndef PREFETCH_H
 #define PREFETCH_H
 
-#include "types.h"
+#include "listtypes.h"
 
 /*
 	prefetch(x) attempts to pre-emptively get the memory pointed to

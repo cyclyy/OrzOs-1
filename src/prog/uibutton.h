@@ -1,9 +1,8 @@
 #ifndef UIBUTTON_H
 #define UIBUTTON_H
 
-#include "uidef.h"
 #include "uiproto.h"
-#include "mice.h"
+#include <os/mice.h>
 
 #define OZUI_WIDGET_TYPE_BUTTON         2
 

@@ -1,11 +1,11 @@
 #ifndef UIDEF_H
 #define UIDEF_H
 
-#include "sysdef.h"
 #include "uimice.h"
 #include "uiwidget.h"
 #include "uiwindow.h"
-#include "libc/list.h"
+#include <os/sysdef.h>
+#include <os/list.h>
 #include <wchar.h>
 
 #define UIDBG(...)  fprintf(dbgFile, __VA_ARGS__)

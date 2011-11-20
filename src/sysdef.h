@@ -1,6 +1,9 @@
 #ifndef SYSDEF_H
 #define SYSDEF_H
 
+#define MIN(a,b) ( ((a) < (b)) ? (a) : (b))
+#define MAX(a,b) ( ((a) > (b)) ? (a) : (b))
+
 #define always_inline __attribute__((always_inline)) inline
 
 #ifndef NULL

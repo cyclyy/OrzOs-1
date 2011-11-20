@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-#include "syscall.h"
+#include <os/syscall.h>
 
 int main()
 {
