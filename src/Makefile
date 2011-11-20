@@ -1,22 +1,24 @@
 PREFIX = /home/ora/cross
 QUIET = @
 LD32 = ld
-# CC = x86_64-pc-elf-gcc
 CC = x86_64-pc-orzos-gcc
 AR = x86_64-pc-orzos-ar
 LD = x86_64-pc-orzos-ld
 NM = x86_64-pc-orzos-nm
 AS = nasm
+INSTALL = install 
 
 BASE_CFLAGS = --sysroot=$(PREFIX) -I/home/ora/cross/include -I/home/ora/cross/x86_64-pc-orzos/include
 
-FREETYPE2_CFLAGS = -I/home/ora/cross/include/freetype2
+FREETYPE2_CFLAGS = -I$(PREFIX)/include/freetype2
 FREETYPE2_LIBS = -lfreetype -lz
 
-CAIRO_CFLAGS = -I/home/ora/cross/include/cairo -I/home/ora/cross/include/pixman-1 
-CAIRO_LIBS = -L/home/ora/cross/lib/gcc/x86_64-pc-orzos/4.5.0 -lcairo -lpixman-1 -lpng -lgcc
+CAIRO_CFLAGS = -I$(PREFIX)/include/cairo -I/home/ora/cross/include/pixman-1 
+CAIRO_LIBS = -L$(PREFIX)/lib/gcc/x86_64-pc-orzos/4.5.0 -lcairo -lpixman-1 -lpng -lgcc
 
 X86EMU_SOURCES = x86emu/decode.o x86emu/fpu.o x86emu/ops.o x86emu/ops2.o x86emu/prim_ops.o x86emu/sys.o
+
+CORE_HEADERS = syscall.h mice.h key.h
 
 CORE_C_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o cpu.o dtable.o \
 			interrupt.o tlsf.o vfs.o debugcon.o task.o paging.o \
@@ -43,13 +45,11 @@ PROG_SOURCES = prog/uiproto.o prog/rect.o prog/uiserver.o prog/window.o prog/gui
 
 CORE_CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -mcmodel=kernel -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g 
 
-#PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -I/home/ora/cross/include $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g
-
 PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -Ix86emu -Wall -I. $(BASE_CFLAGS) $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g
 
 CORE_LDFLAGS=-Tcore.ld -m orzos_x86_64 -M=allsymbol.map -z max-page-size=0x1000
 
-PROG_LDFLAGS=-Tprog.ld -m orzos_x86_64 -z max-page-size=0x1000 -L/home/ora/cross/lib -L/home/ora/cross/x86_64-pc-orzos/lib $(FREETYPE2_LIBS) $(CAIRO_LIBS) $(FREETYPE2_LIBS) -lc -lm
+PROG_LDFLAGS=-Tprog.ld -m orzos_x86_64 -z max-page-size=0x1000 -L$(PREFIX)/lib -L$(PREFIX)/x86_64-pc-orzos/lib $(FREETYPE2_LIBS) $(CAIRO_LIBS) $(FREETYPE2_LIBS) -lc -lm
 
 ASFLAGS=-felf64
 
@@ -97,6 +97,11 @@ $(CORE_C_SOURCES) $(X86EMU_SOURCES):%.o:%.c
 $(PROG_SOURCES):%.o:%.c
 	@echo "CC	$@"
 	$(QUIET)$(CC) $(PROG_CFLAGS) -c $< -o $@
+
+install:$(CORE_HEADERS)
+	@echo "INSTALL  $?"
+	$(QUIET)$(INSTALL) -d $(PREFIX)/include/os
+	$(QUIET)$(INSTALL) -t $(PREFIX)/include/os $?
 
 ctags:
 	$(QUIET)ctags -R --c-kinds=+p --fields=+S . 
