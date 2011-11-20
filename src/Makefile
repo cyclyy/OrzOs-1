@@ -8,17 +8,11 @@ NM = x86_64-pc-orzos-nm
 AS = nasm
 INSTALL = install 
 
-BASE_CFLAGS = --sysroot=$(PREFIX) -I/home/ora/cross/include -I/home/ora/cross/x86_64-pc-orzos/include
-
-FREETYPE2_CFLAGS = -I$(PREFIX)/include/freetype2
-FREETYPE2_LIBS = -lfreetype -lz
-
-CAIRO_CFLAGS = -I$(PREFIX)/include/cairo -I/home/ora/cross/include/pixman-1 
-CAIRO_LIBS = -L$(PREFIX)/lib/gcc/x86_64-pc-orzos/4.5.0 -lcairo -lpixman-1 -lpng -lgcc
-
 X86EMU_SOURCES = x86emu/decode.o x86emu/fpu.o x86emu/ops.o x86emu/ops2.o x86emu/prim_ops.o x86emu/sys.o
 
-CORE_HEADERS = syscall.h sysdef.h mice.h key.h event.h $(wildcard libc/*.h)
+INSTALL_HEADERS = syscall.h sysdef.h mice.h key.h event.h $(wildcard libc/*.h)
+INSTALL_LDSCRIPTS = prog.ld core.ld
+INSTALL_LIBRARIES = liborzos.a libx86emu.a
 
 CORE_C_SOURCES = main.o util.o kmm.o vmm.o bootinfo.o cpu.o dtable.o \
 			interrupt.o tlsf.o vfs.o debugcon.o task.o paging.o \
@@ -37,24 +31,19 @@ MOD_SOURCES = testmod.o            \
               i8042.o              \
               pci.o                \
               ide.o                \
-              ext2fs.o          \
-
-PROG_SOURCES = prog/uiproto.o prog/rect.o prog/uiserver.o prog/window.o prog/guiconfig.o prog/init.o syscall.o 	\
-			   prog/uiclient.o prog/app.o prog/drawops.o prog/utf8.o prog/layout.o prog/uilabel.o prog/uibutton.o \
-			   prog/uiapp.o
+              ext2fs.o             \
 
 CORE_CFLAGS=-ffreestanding -nostdlib -nostdinc -fno-builtin -fno-stack-protector -mcmodel=kernel -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -mno-sse3 -mno-3dnow -Ix86emu -DNO_SYS_HEADERS -Wall -I. -g 
 
-PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -Ix86emu -Wall $(BASE_CFLAGS) $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g
-
 CORE_LDFLAGS=-Tcore.ld -m orzos_x86_64 -M=allsymbol.map -z max-page-size=0x1000
-
-PROG_LDFLAGS=-Tprog.ld -m orzos_x86_64 -z max-page-size=0x1000 -L$(PREFIX)/lib -L$(PREFIX)/x86_64-pc-orzos/lib $(FREETYPE2_LIBS) $(CAIRO_LIBS) $(FREETYPE2_LIBS) -lc -lm
 
 ASFLAGS=-felf64
 
-# all: $(CORE_SOURCES) $(MOD_SOURCES) $(PROG_SOURCES) libx86emu.a core_link prog_link
-all: $(CORE_C_SOURCES) $(CORE_ASM_SOURCES) $(PROG_SOURCES) $(X86EMU_SOURCES) libx86emu.a core_link prog_link loader32 ctags
+###################################################################
+###################################################################
+
+all: kernel prog install ctags
+kernel: $(CORE_C_SOURCES) $(CORE_ASM_SOURCES) $(X86EMU_SOURCES) libx86emu.a core_link loader32
 
 clean:
 	$(QUIET)-rm *.o ../util/*.o prog/*.o prog/init video/*.o fs/*.o syscall/*.o x86emu/*.o kernel allsymbol.map global.map
@@ -69,6 +58,9 @@ loader32: loader32.s
 	@echo "AS	$@"
 	$(QUIET)nasm -f bin loader32.s -o loader32
 
+liborzos.a:syscall.o
+	$(AR) rcs $@ $<
+
 libx86emu.a: $(X86EMU_SOURCES)
 	@echo "LD	x86emu"
 	$(QUIET)$(AR) r $@ $+ 1>&/dev/null
@@ -78,13 +70,8 @@ core_link:libx86emu.a
 	$(QUIET)$(LD) $(CORE_LDFLAGS) -o kernel $(CORE_SOURCES) libx86emu.a
 	$(QUIET)$(NM) ./kernel > global.map
 
-prog_link: 
-	@echo "LD	init"
-	$(QUIET)$(LD) -o prog/init prog/init.o syscall.o $(PROG_LDFLAGS)
-	@echo "LD	uiserver"
-	$(QUIET)$(LD) -o prog/uiserver prog/uiserver.o prog/window.o prog/rect.o prog/guiconfig.o prog/app.o prog/drawops.o prog/layout.o prog/utf8.o syscall.o $(PROG_LDFLAGS)
-	@echo "LD	uilcient"
-	$(QUIET)$(LD) -o prog/uiclient prog/uiclient.o prog/uiproto.o prog/uilabel.o prog/uibutton.o prog/uiapp.o prog/rect.o prog/guiconfig.o syscall.o $(PROG_LDFLAGS)
+prog:FORCE
+	@make -C prog
 
 $(CORE_ASM_SOURCES):%.o:%.s
 	@echo "AS	$@"
@@ -94,18 +81,26 @@ $(CORE_C_SOURCES) $(X86EMU_SOURCES):%.o:%.c
 	@echo "CC	$@"
 	$(QUIET)$(CC) $(CORE_CFLAGS) -c $< -o $@
 
-$(PROG_SOURCES):%.o:%.c
-	@echo "CC	$@"
-	$(QUIET)$(CC) $(PROG_CFLAGS) -c $< -o $@
+install:install_headers install_ldscripts install_libraries
 
-install:$(CORE_HEADERS)
+install_headers:$(INSTALL_HEADERS)
 	@echo "INSTALL  $?"
 	$(QUIET)$(INSTALL) -d $(PREFIX)/include/os
 	$(QUIET)$(INSTALL) -t $(PREFIX)/include/os $?
+
+install_ldscripts:$(INSTALL_LDSCRIPTS)
+	@echo "INSTALL $?"
+	$(QUIET)$(INSTALL) -d $(PREFIX)/ldscripts
+	$(QUIET)$(INSTALL) -t $(PREFIX)/ldscripts $?
+
+install_libraries:$(INSTALL_LIBRARIES)
+	@echo "INSTALL $?"
+	$(QUIET)$(INSTALL) -d $(PREFIX)/lib
+	$(QUIET)$(INSTALL) -t $(PREFIX)/lib $?
 
 ctags:
 	$(QUIET)ctags -R --c-kinds=+p --fields=+S . 
 
 include $(CORE_C_SOURCES:.o=.d)
-$(PROG_SOURCES):$(wildcard prog/*.h) $(CORE_HEADERS)
 
+FORCE:
