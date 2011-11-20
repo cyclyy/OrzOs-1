@@ -1,9 +1,10 @@
 #ifndef UIDEF_H
 #define UIDEF_H
 
+#include "rect.h"
 #include "uimice.h"
-#include "uiwidget.h"
-#include "uiwindow.h"
+#include "uigraphic.h"
+#include "uitextlayout.h"
 #include <os/sysdef.h>
 #include <os/list.h>
 #include <wchar.h>

@@ -42,7 +42,7 @@ ASFLAGS=-felf64
 ###################################################################
 ###################################################################
 
-all: kernel prog install ctags
+all: kernel install prog ctags
 kernel: $(CORE_C_SOURCES) $(CORE_ASM_SOURCES) $(X86EMU_SOURCES) libx86emu.a core_link loader32
 
 clean:
@@ -59,7 +59,8 @@ loader32: loader32.s
 	$(QUIET)nasm -f bin loader32.s -o loader32
 
 liborzos.a:syscall.o
-	$(AR) rcs $@ $<
+	@echo "LD	orzos"
+	$(QUIET)$(AR) rcs $@ $<
 
 libx86emu.a: $(X86EMU_SOURCES)
 	@echo "LD	x86emu"

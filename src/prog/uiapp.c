@@ -1,4 +1,6 @@
 #include "uiapp.h"
+#include "uiwindow.h"
+#include <os/list.h>
 #include <stdlib.h>
 
 static struct OzUIApp _app = {

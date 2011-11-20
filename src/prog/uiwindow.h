@@ -1,8 +1,10 @@
 #ifndef UIWINDOW_H
 #define UIWINDOW_H
 
+#include "uidef.h"
 #include "uigraphic.h"
 #include "uitextlayout.h"
+#include <os/list.h>
 #include <wchar.h>
 
 struct OzUIWindow;
@@ -110,6 +112,20 @@ struct OzUIWindow
     // private members
     struct OzUIWidget *miceWidget, *focusWidget;
 };
+
+struct OzUIWindow *OzUIGetWindowById(unsigned long id);
+
+struct OzUIWindow *OzUICreateWindow(int w, int h, int flags);
+
+int OzUIDestroyWindow(struct OzUIWindow *window);
+
+int OzUIMoveWindow(struct OzUIWindow *window, int x, int y);
+
+int OzUIWindowDrawRectangle(struct OzUIWindow *window, struct Rect *clipRect,
+        struct Rect *rect, struct LineStyle *lineStyle, struct FillStyle *fillStyle);
+
+int OzUIWindowDrawText(struct OzUIWindow *window, struct Rect *clipRect,
+        struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct LineStyle *lineStyle, struct OzUITextLayout *layout);
 
 
 #endif /* UIWINDOW_H */

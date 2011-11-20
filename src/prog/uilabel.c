@@ -1,4 +1,5 @@
 #include "uilabel.h"
+#include "uiwidget.h"
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
@@ -24,7 +25,7 @@ static void labelPaint(struct OzUIWidget *widget)
     struct OzUILabel *label;
     struct OzUITextLayoutConstraint tlc;
 
-    label = (struct OzUILabel*)OzUIWidgetGetUserData(widget);
+    label = (struct OzUILabel*)widget->d;
     initRect(&rect, 0, 0, widget->rect.w, widget->rect.h);
     copyRect(&tlc.rect, &rect);
     tlc.fontSize = label->fontSize;

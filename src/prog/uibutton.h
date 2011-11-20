@@ -2,6 +2,7 @@
 #define UIBUTTON_H
 
 #include "uiproto.h"
+#include "uiwindow.h"
 #include <os/mice.h>
 
 #define OZUI_WIDGET_TYPE_BUTTON         2

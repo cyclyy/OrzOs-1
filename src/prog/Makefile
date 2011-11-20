@@ -18,7 +18,7 @@ CAIRO_LIBS = -L$(PREFIX)/lib/gcc/x86_64-pc-orzos/4.5.0 -lcairo -lpixman-1 -lpng 
 
 PROG_SOURCES = uiproto.o rect.o uiserver.o window.o guiconfig.o init.o 	\
 			   uiclient.o app.o drawops.o utf8.o layout.o uilabel.o uibutton.o \
-			   uiapp.o
+			   uiapp.o uiwindow.o uiwidget.o
 
 PROG_CFLAGS=-ffreestanding -fno-stack-protector -mcmodel=large -mno-red-zone -Ix86emu -Wall $(BASE_CFLAGS) $(FREETYPE2_CFLAGS) $(CAIRO_CFLAGS) -g
 
@@ -38,7 +38,7 @@ prog_link:$(PROG_SOURCES)
 	@echo "LD	uiserver"
 	$(QUIET)$(LD) -o uiserver uiserver.o window.o rect.o guiconfig.o app.o drawops.o layout.o utf8.o $(PROG_LDFLAGS)
 	@echo "LD	uilcient"
-	$(QUIET)$(LD) -o uiclient uiclient.o uiproto.o uilabel.o uibutton.o uiapp.o rect.o guiconfig.o $(PROG_LDFLAGS)
+	$(QUIET)$(LD) -o uiclient uiclient.o uiproto.o uilabel.o uibutton.o uiapp.o uiwindow.o uiwidget.o rect.o guiconfig.o $(PROG_LDFLAGS)
 
 clean:
 	$(QUIET)-rm *.o 

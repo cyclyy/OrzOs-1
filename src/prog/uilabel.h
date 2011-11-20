@@ -1,7 +1,8 @@
 #ifndef UILABEL_H
 #define UILABEL_H
 
-#include "uiproto.h"
+#include "uiwidget.h"
+#include "uiwindow.h"
 
 #define OZUI_WIDGET_TYPE_LABEL  1
 #define OZUI_LABEL_DEFAULT_FONT_SIZE 12

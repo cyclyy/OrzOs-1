@@ -1,4 +1,4 @@
-#include "uiproto.h"
+#include "uiwindow.h"
 #include "window_p.h"
 #include "gcontext_p.h"
 #include "uiserver.h"

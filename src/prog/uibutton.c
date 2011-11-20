@@ -1,4 +1,5 @@
 #include "uibutton.h"
+#include "uiwidget.h"
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
@@ -41,7 +42,7 @@ static void buttonPaint(struct OzUIWidget *widget)
     struct LineStyle *ls;
     struct FillStyle *fs;
 
-    button = (struct OzUIButton*)OzUIWidgetGetUserData(widget);
+    button = (struct OzUIButton*)widget->d;
     if (button->ops && button->ops->paint) {
         return button->ops->paint(button);
     }

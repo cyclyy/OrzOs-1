@@ -3,6 +3,9 @@
 
 #include "uiproto.h"
 #include <os/list.h>
+#include <wchar.h>
+
+struct OzUIWindow;
 
 struct OzUIApp
 {
