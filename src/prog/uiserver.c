@@ -39,6 +39,7 @@ struct MiceEvent miceEvent;
 int kbdFD = -1;
 struct KeyEvent keyEvent;
 
+RECT_INIT(screenRect, 0, 0, WIDTH, HEIGHT);
 RECT_INIT(dirtyRect, 0, 0, WIDTH, HEIGHT);
 RECT_INIT(cursorRect, 0, 0, 0, 0);
 
@@ -84,7 +85,15 @@ void paintCursor(struct GC *gc)
 
 inline void updateFrameBuffer()
 {
-    memcpy(fbAddr, shadowPixmap->buffer, FB_SIZE);
+    //memcpy(fbAddr, shadowPixmap->buffer, FB_SIZE);
+    register int i, offset;
+    crossRect(&dirtyRect, &screenRect);
+    offset = WIDTH * dirtyRect.y * 2;
+    for (i = 0; i < dirtyRect.h; i++) {
+        memcpy(fbAddr + offset + dirtyRect.x * 2, shadowPixmap->buffer + offset + dirtyRect.x * 2,
+              dirtyRect.w * 2);
+        offset += WIDTH * 2;
+    }
 }
 
 
@@ -228,7 +237,7 @@ void paintAll()
     paintBackground(rootGC);
     paintAllWindows(rootGC);
     paintCursor(rootGC);
-//    updateFrameBuffer();
+    updateFrameBuffer();
     cairo_reset_clip(rootGC->d->cr);
     initRect(&dirtyRect, 0, 0, 0, 0);
 }
@@ -248,6 +257,8 @@ int main()
     struct OzUIMoveWindowReply *moveWindowReply = (struct OzUIMoveWindowReply*)replyBuf;
     struct OzUIWindowDrawRectangleRequest *drawRectangleRequest;
     struct OzUIWindowDrawRectangleReply *drawRectangleReply = (struct OzUIWindowDrawRectangleReply*)replyBuf;
+    struct OzUIWindowDrawLineRequest *drawLineRequest;
+    struct OzUIWindowDrawLineReply *drawLineReply = (struct OzUIWindowDrawLineReply*)replyBuf;
     struct OzUIMiceEventNotify *miceEventNotify = (struct OzUIMiceEventNotify*)replyBuf;
     //struct OzUINextEventRequest *nextEventRequest = (struct OzUINextEventRequest*)buf;
     struct OzUIWindowDrawTextRequest *drawTextRequest;
@@ -262,22 +273,16 @@ int main()
 
     OzNewTask("C:/uiclient",0);
 
-    window = createWindow(OzGetPid(), 200, 100, 0);
-    moveWindow(window, 100, 200);
-
-    window = createWindow(OzGetPid(), 200, 100, 0);
-    moveWindow(window, 150, 250);
-
     OzMilliAlarm(40);
     OzReadAsync(kbdFD, sizeof(struct KeyEvent), &keyEvent);
     OzReadAsync(miceFD, sizeof(struct MiceEvent), &miceEvent);
     for (;;) {
-        paintAll();
+        //paintAll();
         OzReceive(&hdr, buf, 1000);
         switch (GET_EVENT_TYPE(buf)) {
         case EVENT_TIMER:
             OzMilliAlarm(40);
-            updateFrameBuffer();
+            paintAll();
             break;
         case EVENT_IO_READ:
             ioEventPtr = (struct IOEvent*)buf;
@@ -286,8 +291,8 @@ int main()
                 switch (miceEvent.type) {
                 case MICE_EVENT_MOVE:
                     unionRect(&dirtyRect, &cursorRect);
-                    cursorX = MAX(0, MIN(WIDTH, cursorX + miceEvent.deltaX*5));
-                    cursorY = MAX(0, MIN(HEIGHT, cursorY + miceEvent.deltaY*5));
+                    cursorX = MAX(0, MIN(WIDTH, cursorX + miceEvent.deltaX*4));
+                    cursorY = MAX(0, MIN(HEIGHT, cursorY + miceEvent.deltaY*4));
                     initRect(&cursorRect, cursorX - CURSOR_SIZE, cursorY - CURSOR_SIZE, CURSOR_SIZE*2, CURSOR_SIZE*2);
                     unionRect(&dirtyRect, &cursorRect);
                     break;
@@ -317,7 +322,7 @@ int main()
             window = createWindow(hdr.pid, createWindowRequest->width, createWindowRequest->height, createWindowRequest->flags);
             createWindowReply->id = windowId(window);
             OzReply(hdr.pid, createWindowReply, sizeof(struct OzUICreateWindowReply));
-            unionWindowRect(&dirtyRect, window);
+            unionWindow(&dirtyRect, window);
             break;
         case OZUI_EVENT_DESTROY_WINDOW:
             destroyWindowRequest = (struct OzUIDestroyWindowRequest*)buf;
@@ -325,14 +330,14 @@ int main()
             destroyWindow(window);
             destroyWindowReply->ret = 0;
             OzReply(hdr.pid, destroyWindowReply, sizeof(struct OzUIDestroyWindowReply));
-            unionWindowRect(&dirtyRect, window);
+            unionWindow(&dirtyRect, window);
             break;
         case OZUI_EVENT_MOVE_WINDOW:
             moveWindowRequest = (struct OzUIMoveWindowRequest*)buf;
             window = getWindowById(moveWindowRequest->id);
-            unionWindowRect(&dirtyRect, window);
+            unionWindow(&dirtyRect, window);
             moveWindow(window, moveWindowRequest->x, moveWindowRequest->y);
-            unionWindowRect(&dirtyRect, window);
+            unionWindow(&dirtyRect, window);
             moveWindowReply->ret = 0;
             OzReply(hdr.pid, moveWindowReply, sizeof(struct OzUIMoveWindowReply));
             break;
@@ -344,19 +349,30 @@ int main()
             drawRectangleRequest = (struct OzUIWindowDrawRectangleRequest*)buf;
             window = getWindowById(drawRectangleRequest->id);
             drawRectangle(window, &drawRectangleRequest->clipRect, &drawRectangleRequest->rect, &drawRectangleRequest->lineStyle, &drawRectangleRequest->fillStyle);
-            unionWindowRect(&dirtyRect, window);
+            //unionWindow(&dirtyRect, window);
+            unionWindowRect(&dirtyRect, window, &drawRectangleRequest->clipRect);
             drawRectangleReply->ret = 0;
             OzReply(hdr.pid, drawRectangleReply, sizeof(struct OzUIWindowDrawRectangleReply));
+            break;
+        case OZUI_EVENT_DRAW_LINE:
+            drawLineRequest = (struct OzUIWindowDrawLineRequest*)buf;
+            window = getWindowById(drawLineRequest->id);
+            drawLine(window, &drawLineRequest->clipRect, &drawLineRequest->p1, &drawLineRequest->p2, &drawLineRequest->lineStyle);
+            //unionWindow(&dirtyRect, window);
+            unionWindowRect(&dirtyRect, window, &drawLineRequest->clipRect);
+            drawLineReply->ret = 0;
+            OzReply(hdr.pid, drawLineReply, sizeof(struct OzUIWindowDrawLineReply));
             break;
         case OZUI_EVENT_DRAW_TEXT:
             drawTextRequest = (struct OzUIWindowDrawTextRequest*)buf;
             window = getWindowById(drawTextRequest->id);
             drawText(window, &drawTextRequest->clipRect, &drawTextRequest->tlc, drawTextRequest->text, &drawTextRequest->lineStyle, &drawTextReply->layout);
-            unionWindowRect(&dirtyRect, window);
+            //unionWindow(&dirtyRect, window);
+            unionWindowRect(&dirtyRect, window, &drawTextRequest->clipRect);
             drawTextReply->ret = 0;
-            drawTextReplyLen = SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY(drawTextReply);
-            //OzReply(hdr.pid, drawTextReply, SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY(drawTextReply));
-            OzReply(hdr.pid, drawTextReply,  200);
+            //drawTextReplyLen = SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY(drawTextReply);
+            OzReply(hdr.pid, drawTextReply, SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY(drawTextReply));
+            //OzReply(hdr.pid, drawTextReply,  200);
             break;
         }
     }

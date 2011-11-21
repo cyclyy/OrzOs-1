@@ -76,7 +76,7 @@ int main()
     struct MessageHeader hdr;
     char buf[512];
 
-    window = OzUICreateWindow(400,400,0);
+    window = OzUICreateWindow(200,200,0);
 
     tlc.fontSize = 12;
     tlc.rect.x = 0;
@@ -87,8 +87,8 @@ int main()
     tlc.originY = 0;
     tlc.flags = OZUI_TEXT_ALIGN_CENTER | OZUI_TEXT_ALIGN_VCENTER;
 
-    rect.x = 60;
-    rect.y = 60;
+    rect.x = 0;
+    rect.y = 0;
     rect.w = 100;
     rect.h = 40;
 
@@ -98,7 +98,7 @@ int main()
     fs.color.r = fs.color.g = fs.color.b = 0;
 
     struct Rect buttonRect;
-    initRect(&buttonRect, 60, 160, 300, 40);
+    initRect(&buttonRect, 60, 60, 80, 40);
     button = OzUICreateButton(window, &buttonRect, &myBtnOps, 0);
     OzUIButtonSetText(button, L"我们都是好人");
 

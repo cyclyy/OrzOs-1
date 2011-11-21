@@ -31,8 +31,9 @@
 #define OZUI_EVENT_DESTROY_WINDOW       0x1002
 #define OZUI_EVENT_MOVE_WINDOW          0x1003
 #define OZUI_EVENT_NEXT_EVENT           0x1004
-#define OZUI_EVENT_DRAW_RECTANGLE       0x1005
-#define OZUI_EVENT_DRAW_TEXT            0x1006
+#define OZUI_EVENT_DRAW_TEXT            0x1005
+#define OZUI_EVENT_DRAW_RECTANGLE       0x1006
+#define OZUI_EVENT_DRAW_LINE            0x1007
 
 // events received by client window
 #define OZUI_EVENT_MICE                 0x2001

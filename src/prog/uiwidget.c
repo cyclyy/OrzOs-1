@@ -1,5 +1,6 @@
 #include "uiwidget.h"
 #include "uiwindow.h"
+#include "point.h"
 #include <stdlib.h>
 #include <string.h>
 #include <os/list.h>
@@ -78,6 +79,17 @@ int OzUIWidgetDrawRectangle(struct OzUIWidget *widget, struct Rect *rect,
     baseRect.x += widget->rect.x;
     baseRect.y += widget->rect.y;
     return OzUIWindowDrawRectangle(widget->window, &widget->dirtyRect, &baseRect, lineStyle, fillStyle);
+}
+
+int OzUIWidgetDrawLine(struct OzUIWidget *widget,
+        struct Point *p1, struct Point *p2, struct LineStyle *lineStyle)
+{
+    struct Point baseP1, baseP2;
+    baseP1.x = p1->x + widget->rect.x;
+    baseP1.y = p1->y + widget->rect.y;
+    baseP2.x = p2->x + widget->rect.x;
+    baseP2.y = p2->y + widget->rect.y;
+    return OzUIWindowDrawLine(widget->window, &widget->dirtyRect, &baseP1, &baseP2, lineStyle);
 }
 
 static void translateLayoutCoords(struct OzUITextLayout *layout, int deltaX, int deltaY) 

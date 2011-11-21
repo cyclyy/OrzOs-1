@@ -3,6 +3,7 @@
 
 #include "uidef.h"
 #include "uigraphic.h"
+#include "point.h"
 #include "uitextlayout.h"
 #include <os/list.h>
 #include <wchar.h>
@@ -67,6 +68,20 @@ struct OzUIWindowDrawRectangleReply
     int ret;
 }__attribute__((packed));
 
+struct OzUIWindowDrawLineRequest
+{
+    int type;
+    unsigned long id;
+    struct Rect clipRect;
+    struct Point p1, p2;
+    struct LineStyle lineStyle;
+}__attribute__((packed));
+
+struct OzUIWindowDrawLineReply
+{
+    int ret;
+}__attribute__((packed));
+
 #define SIZE_OZUI_WINDOW_DRAW_TEXT_REQUEST_FOR_TEXT(text) \
     (sizeof(struct OzUIWindowDrawTextRequest) \
     + sizeof(wchar_t) * (wcslen(text) + 1))
@@ -123,6 +138,9 @@ int OzUIMoveWindow(struct OzUIWindow *window, int x, int y);
 
 int OzUIWindowDrawRectangle(struct OzUIWindow *window, struct Rect *clipRect,
         struct Rect *rect, struct LineStyle *lineStyle, struct FillStyle *fillStyle);
+
+int OzUIWindowDrawLine(struct OzUIWindow *window, struct Rect *clipRect,
+        struct Point *p1, struct Point *p2, struct LineStyle *lineStyle);
 
 int OzUIWindowDrawText(struct OzUIWindow *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct LineStyle *lineStyle, struct OzUITextLayout *layout);

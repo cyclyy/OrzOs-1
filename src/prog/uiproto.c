@@ -27,6 +27,9 @@ int OzUISendReceive(void *request, void *reply)
         case OZUI_EVENT_DRAW_RECTANGLE:
             return OzSendReceive(&hdr, request, sizeof(struct OzUIWindowDrawRectangleRequest), reply, sizeof(struct OzUIWindowDrawRectangleReply));
             break;
+        case OZUI_EVENT_DRAW_LINE:
+            return OzSendReceive(&hdr, request, sizeof(struct OzUIWindowDrawLineRequest), reply, sizeof(struct OzUIWindowDrawLineReply));
+            break;
         case OZUI_EVENT_DRAW_TEXT:
             return OzSendReceive(&hdr, request, SIZE_OZUI_WINDOW_DRAW_TEXT_REQUEST(request), reply, SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY_FOR_TEXT(((struct OzUIWindowDrawTextRequest*)request)->text));
             break;

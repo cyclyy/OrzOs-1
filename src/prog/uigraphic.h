@@ -17,7 +17,4 @@ struct FillStyle
     struct Color color;
 };
 
-
-
-
 #endif /* UIGRAPHIC_H */

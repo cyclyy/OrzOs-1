@@ -7,6 +7,7 @@
 
 struct OzUIMiceEvent;
 struct OzUIWidget;
+struct Point;
 struct OzUIWidgetOperation
 {
     void (*onCreate)(struct OzUIWidget *widget);
@@ -46,6 +47,9 @@ void *OzUIWidgetGetUserData(struct OzUIWidget *widget);
 
 int OzUIWidgetDrawRectangle(struct OzUIWidget *widget, struct Rect *rect,
         struct LineStyle *lineStyle, struct FillStyle *fillStyle);
+
+int OzUIWidgetDrawLine(struct OzUIWidget *widget,
+        struct Point *p1, struct Point *p2, struct LineStyle *lineStyle);
 
 int OzUIWidgetDrawText(struct OzUIWidget *widget, 
         struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct LineStyle *lineStyle, struct OzUITextLayout *layout);

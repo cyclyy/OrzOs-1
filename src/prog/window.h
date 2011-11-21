@@ -2,6 +2,7 @@
 #define WINDOW_H
 
 #include "rect.h"
+#include "point.h"
 #include "app.h"
 #include "uidef.h"
 #include "layout.h"
@@ -61,10 +62,15 @@ unsigned long windowId(struct Window *window);
 
 struct Window *getWindowById(unsigned long id);
 
-void unionWindowRect(struct Rect *rect, struct Window *window);
+void unionWindowRect(struct Rect *rect, struct Window *window, struct Rect *rect1);
+
+void unionWindow(struct Rect *rect, struct Window *window);
 
 int drawRectangle(struct Window *window, struct Rect *clipRect,
         struct Rect *rect, struct LineStyle *lineStyle, struct FillStyle *fillStyle);
+
+int drawLine(struct Window *window, struct Rect *clipRect,
+        struct Point *p1, struct Point *p2, struct LineStyle *lineStyle);
 
 int drawText(struct Window *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc, wchar_t *text, struct LineStyle *lineStyle, struct OzUITextLayout *utl);

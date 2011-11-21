@@ -181,6 +181,21 @@ int OzUIWindowDrawRectangle(struct OzUIWindow *window, struct Rect *clipRect,
     return reply.ret;
 }
 
+int OzUIWindowDrawLine(struct OzUIWindow *window, struct Rect *clipRect,
+        struct Point *p1, struct Point *p2, struct LineStyle *lineStyle)
+{
+    struct OzUIWindowDrawLineRequest request;
+    struct OzUIWindowDrawLineReply reply;
+    request.type = OZUI_EVENT_DRAW_LINE;
+    request.id = window->id;
+    memcpy(&request.clipRect, clipRect, sizeof(struct Rect));
+    memcpy(&request.p1, p1, sizeof(struct Point));
+    memcpy(&request.p2, p2, sizeof(struct Point));
+    memcpy(&request.lineStyle, lineStyle, sizeof(struct LineStyle));
+    OzUISendReceive(&request, &reply);
+    return reply.ret;
+}
+
 int OzUIWindowDrawText(struct OzUIWindow *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc, 
         const wchar_t *text, 

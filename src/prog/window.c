@@ -188,7 +188,17 @@ struct Window *getWindowById(unsigned long id)
     return 0;
 }
 
-void unionWindowRect(struct Rect *rect, struct Window *window)
+void unionWindowRect(struct Rect *rect, struct Window *window, struct Rect *rect1)
+{
+    struct Rect r2;
+    copyRect(&r2, rect1);
+    translateRect(&r2, window->clientRect.x, window->clientRect.y);
+    r2.x += window->screenX;
+    r2.y += window->screenY;
+    unionRect(rect, &r2);
+}
+
+void unionWindow(struct Rect *rect, struct Window *window)
 {
     struct Rect r2;
     initRect(&r2, window->screenX, window->screenY, window->width, window->height);
@@ -215,6 +225,27 @@ int drawRectangle(struct Window *window, struct Rect *clipRect,
     cairo_set_source_rgb(cr, fillStyle->color.r/255.0, fillStyle->color.g/255.0,
             fillStyle->color.b/255.0);
     cairo_fill(cr);
+    cairo_reset_clip(cr);
+    cairo_restore(cr);
+    return 0;
+}
+
+int drawLine(struct Window *window, struct Rect *clipRect,
+        struct Point *p1, struct Point *p2, struct LineStyle *lineStyle)
+{
+    cairo_t *cr;
+    cr = window->pixmap->d->cr;
+
+    cairo_save(cr);
+    cairo_translate(cr, window->clientRect.x, window->clientRect.y);
+    cairo_rectangle(cr, clipRect->x, clipRect->y, clipRect->w, clipRect->h);
+    cairo_clip(cr);
+    cairo_set_source_rgb(cr, lineStyle->color.r/255.0, lineStyle->color.g/255.0,
+            lineStyle->color.b/255.0);
+    cairo_set_line_width(cr, lineStyle->lineWidth);
+    cairo_move_to(cr, p1->x, p1->y);
+    cairo_line_to(cr, p2->x, p2->y);
+    cairo_stroke(cr);
     cairo_reset_clip(cr);
     cairo_restore(cr);
     return 0;
