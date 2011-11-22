@@ -102,6 +102,11 @@ int main()
     button = OzUICreateButton(window, &buttonRect, &myBtnOps, 0);
     OzUIButtonSetText(button, L"我们都是好人");
 
+    /*
+    initRect(&buttonRect, 60, 120, 40, 40);
+    OzUICreateCloseButton(window, &buttonRect, 0);
+    */
+
     OzUINextEvent();
     for (;;) {
         OzReceive(&hdr, buf, 512);

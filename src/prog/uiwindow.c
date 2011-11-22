@@ -3,6 +3,7 @@
 #include "uiwidget.h"
 #include "uiapp.h"
 #include "uilabel.h"
+#include "uiclosebutton.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -111,8 +112,10 @@ struct OzUIWindow *OzUICreateWindow(int w, int h, int flags)
     OzUISendReceive(&request, &reply);
     window = (struct OzUIWindow*)malloc(sizeof(struct OzUIWindow));
     window->id = reply.id;
-    window->width = w;
-    window->height = h;
+    window->screenX = reply.screenX;
+    window->screenY = reply.screenY;
+    window->width = reply.width;
+    window->height = reply.height;
     window->ops = &genericWindowOperation;
     INIT_LIST_HEAD(&window->widgetList);
     OzUIAppAddWindow(window);
@@ -123,12 +126,16 @@ struct OzUIWindow *OzUICreateWindow(int w, int h, int flags)
     struct Rect titleRect;
     wchar_t titleText[100];
     titleRect.x = titleRect.y = 0;
-    titleRect.w = window->width;
+    titleRect.w = window->width - 20;
     titleRect.h = 20;
     title = OzUICreateLabel(window, &titleRect);
     OzUILabelSetFontSize(title, 14);
     swprintf(titleText, 100, L"窗口：id=%p", window->id);
     OzUILabelSetText(title, titleText);
+
+    struct Rect buttonRect;
+    initRect(&buttonRect, rectRight(&titleRect), rectTop(&titleRect), 20, 20);
+    OzUICreateCloseButton(window, &buttonRect, 0);
 
     return window;
 }
@@ -137,10 +144,10 @@ int OzUIDestroyWindow(struct OzUIWindow *window)
 {
     struct OzUIDestroyWindowRequest request;
     struct OzUIDestroyWindowReply reply;
-    struct OzUIWidget *widget;
+    struct OzUIWidget *widget, *tmp;
     if (window->ops && window->ops->onDestroy)
         window->ops->onDestroy(window);
-    listForEachEntry(widget, &window->widgetList, link) {
+    listForEachEntrySafe(widget, tmp, &window->widgetList, link) {
         OzUIDestroyWidget(widget);
     }
     OzUIAppRemoveWindow(window);

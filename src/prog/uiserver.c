@@ -321,6 +321,10 @@ int main()
             createWindowRequest = (struct OzUICreateWindowRequest*)buf;
             window = createWindow(hdr.pid, createWindowRequest->width, createWindowRequest->height, createWindowRequest->flags);
             createWindowReply->id = windowId(window);
+            createWindowReply->screenX = window->screenX;
+            createWindowReply->screenY = window->screenY;
+            createWindowReply->width = window->width;
+            createWindowReply->height = window->height;
             OzReply(hdr.pid, createWindowReply, sizeof(struct OzUICreateWindowReply));
             unionWindow(&dirtyRect, window);
             break;

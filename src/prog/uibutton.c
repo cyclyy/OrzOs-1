@@ -68,12 +68,14 @@ static void buttonPaint(struct OzUIWidget *widget)
     }
 
     OzUIWidgetDrawRectangle(widget, &rect, ls, fs);
+    /*
     struct Point p1, p2;
     p1.x = 0;
     p1.y = 0;
     p2.x = rect.w;
     p2.y = rect.h;
     OzUIWidgetDrawLine(widget, &p1, &p2, ls);
+    */
     if (button && button->text)
         OzUIWidgetDrawText(widget, &tlc, button->text, ls, 0);
 }
