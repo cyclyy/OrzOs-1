@@ -8,9 +8,13 @@
 #include <string.h>
 
 void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *miceEvent);
+void OzUIWindowOnFocus(struct OzUIWindow *window);
+void OzUIWindowOnUnfocus(struct OzUIWindow *window);
 
 struct OzUIWindowOperation genericWindowOperation = {
     .onMiceEvent = &OzUIWindowOnMiceEvent,
+    .onFocus = &OzUIWindowOnFocus,
+    .onUnfocus = &OzUIWindowOnUnfocus,
 };
 
 static struct OzUIWidget *widgetUnderMice(struct OzUIWindow *window, struct OzUIMiceEvent *miceEvent, struct OzUIMiceEvent *localMiceEvent)
@@ -37,17 +41,17 @@ void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *mice
     static int lastX, lastY;
     if (inDrag) {
         switch (miceEvent->type) {
+        case OZUI_MICE_EVENT_DOWN:
         case OZUI_MICE_EVENT_MOVE:
             if (miceEvent->button == OZUI_MICE_BUTTON_LEFT)
                 OzUIMoveWindow(window, window->screenRect.x + miceEvent->x - lastX, window->screenRect.y + miceEvent->y - lastY);
             else {
                 inDrag = 0;
-                lastX = lastY = 0;
             }
             break;
         case OZUI_MICE_EVENT_UP:
+            OzUIMoveWindow(window, window->screenRect.x + miceEvent->x - lastX, window->screenRect.y + miceEvent->y - lastY);
             inDrag = 0;
-            lastX = lastY = 0;
             break;
         }
         return;
@@ -90,6 +94,16 @@ void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *mice
     window->miceWidget = widget;
 }
 
+void OzUIWindowOnFocus(struct OzUIWindow *window)
+{
+    OzUILabelSetText(window->titleLabel, L"focus");
+}
+
+void OzUIWindowOnUnfocus(struct OzUIWindow *window)
+{
+    OzUILabelSetText(window->titleLabel, L"unfocus");
+}
+
 struct OzUIWindow *OzUIGetWindowById(unsigned long id)
 {
     struct OzUIWindow *window;
@@ -121,20 +135,19 @@ struct OzUIWindow *OzUICreateWindow(int w, int h, int flags)
     if (window->ops && window->ops->onCreate)
         window->ops->onCreate(window);
 
-    struct OzUILabel *title;
     struct Rect titleRect;
     wchar_t titleText[100];
     titleRect.x = titleRect.y = 0;
     titleRect.w = window->screenRect.w - 20;
     titleRect.h = 20;
-    title = OzUICreateLabel(window, &titleRect);
-    OzUILabelSetFontSize(title, 14);
+    window->titleLabel = OzUICreateLabel(window, &titleRect);
+    OzUILabelSetFontSize(window->titleLabel, 14);
     swprintf(titleText, 100, L"窗口：id=%p", window->id);
-    OzUILabelSetText(title, titleText);
+    OzUILabelSetText(window->titleLabel, titleText);
 
     struct Rect buttonRect;
     initRect(&buttonRect, rectRight(&titleRect), rectTop(&titleRect), 20, 20);
-    OzUICreateCloseButton(window, &buttonRect, 0);
+    window->closeButton = OzUICreateCloseButton(window, &buttonRect, 0);
 
     initRect(&window->clientRect, 0, 20, w, h - 20);
 

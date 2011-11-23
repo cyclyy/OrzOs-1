@@ -50,6 +50,7 @@ int OzUISend(void *request)
 int OzUIDispatchEvent(void *buf)
 {
     struct OzUIMiceEventNotify *uiMiceEventNotify;
+    struct OzUIFocusEventNotify *uiFocusEventNotify;
     struct OzUIWindow *window;
     int isUIEvent = 1;
     switch GET_EVENT_TYPE(buf) {
@@ -58,6 +59,18 @@ int OzUIDispatchEvent(void *buf)
             window = OzUIGetWindowById(uiMiceEventNotify->id);
             if (window && window->ops && window->ops->onMiceEvent)
                 window->ops->onMiceEvent(window, &uiMiceEventNotify->miceEvent);
+            break;
+        case OZUI_EVENT_FOCUS:
+            uiFocusEventNotify = (struct OzUIFocusEventNotify*)buf;
+            window = OzUIGetWindowById(uiFocusEventNotify->id);
+            if (window && window->ops && window->ops->onFocus)
+                window->ops->onFocus(window);
+            break;
+        case OZUI_EVENT_UNFOCUS:
+            uiFocusEventNotify = (struct OzUIFocusEventNotify*)buf;
+            window = OzUIGetWindowById(uiFocusEventNotify->id);
+            if (window && window->ops && window->ops->onUnfocus)
+                window->ops->onUnfocus(window);
             break;
         default:
             isUIEvent = 0;

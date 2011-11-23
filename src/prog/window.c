@@ -1,8 +1,10 @@
 #include "window.h"
 #include "window_p.h"
+#include "uiwindow.h"
 #include "gcontext_p.h"
 #include "guiconfig.h"
 #include "app.h"
+#include <os/syscall.h>
 #include <stdlib.h>
 #include <string.h>
 #include <cairo.h>
@@ -335,14 +337,31 @@ struct Window *focusWindow()
 
 void setFocusWindow(struct Window *window)
 {
-    if (currentWindow != window)
+    struct Window *oldWindow;
+    struct OzUIFocusEventNotify focusEventNotify;
+    if (currentWindow != window) {
+        oldWindow = currentWindow;
         currentWindow = window;
-    else
+    } else
         return;
     if (window) {
         if (!listEmpty(&window->link))
             listDel(&window->link);
         listAddTail(&window->link, &windowList);
+    }
+    if (oldWindow != window) {
+        if (oldWindow && oldWindow->app->needEvent) {
+            focusEventNotify.type = OZUI_EVENT_UNFOCUS;
+            focusEventNotify.id = windowId(oldWindow);
+            --oldWindow->app->needEvent;
+            OzPost(oldWindow->app->pid, &focusEventNotify, sizeof(struct OzUIFocusEventNotify));
+        }
+        if (window && window->app->needEvent) {
+            focusEventNotify.type = OZUI_EVENT_FOCUS;
+            focusEventNotify.id = windowId(window);
+            --window->app->needEvent;
+            OzPost(window->app->pid, &focusEventNotify, sizeof(struct OzUIFocusEventNotify));
+        }
     }
 }
 

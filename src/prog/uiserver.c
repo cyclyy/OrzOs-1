@@ -246,7 +246,7 @@ int main()
 {
     char buf[512];
     char replyBuf[512];
-    struct Window *window;
+    struct Window *window, *oldWindow;
     struct MessageHeader hdr;
     struct IOEvent *ioEventPtr;
     struct OzUICreateWindowRequest *createWindowRequest;
@@ -260,6 +260,7 @@ int main()
     struct OzUIWindowDrawLineRequest *drawLineRequest;
     struct OzUIWindowDrawLineReply *drawLineReply = (struct OzUIWindowDrawLineReply*)replyBuf;
     struct OzUIMiceEventNotify *miceEventNotify = (struct OzUIMiceEventNotify*)replyBuf;
+    struct OzUIFocusEventNotify *focusEventNotify = (struct OzUIFocusEventNotify*)replyBuf;
     //struct OzUINextEventRequest *nextEventRequest = (struct OzUINextEventRequest*)buf;
     struct OzUIWindowDrawTextRequest *drawTextRequest;
     struct OzUIWindowDrawTextReply *drawTextReply = (struct OzUIWindowDrawTextReply*)replyBuf;
@@ -292,9 +293,11 @@ int main()
                 switch (miceEvent.type) {
                 case MICE_EVENT_PRESS:
                     if (miceEvent.button == MICE_BUTTON_LEFT) {
+                        oldWindow = focusWindow();
                         setFocusWindow(window);
                         if (window)
                             unionWindow(&dirtyRect, window);
+
                     }
                     break;
                 case MICE_EVENT_MOVE:

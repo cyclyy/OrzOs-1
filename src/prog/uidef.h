@@ -7,8 +7,10 @@
 #include "uitextlayout.h"
 #include <os/sysdef.h>
 #include <os/list.h>
+#include <stdio.h>
 #include <wchar.h>
 
+extern FILE *dbgFile;
 #define UIDBG(...)  fprintf(dbgFile, __VA_ARGS__)
 
 #define UISERVER_PID        2
@@ -37,6 +39,8 @@
 
 // events received by client window
 #define OZUI_EVENT_MICE                 0x2001
+#define OZUI_EVENT_FOCUS                0x2002
+#define OZUI_EVENT_UNFOCUS              0x2003
 
 // events received by client widgets
 #define OZUI_EVENT_MICE_ENTER           0x3001

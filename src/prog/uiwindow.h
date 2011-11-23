@@ -11,6 +11,8 @@
 struct OzUIWindow;
 struct OzUIWidget;
 struct OzUIMiceEvent;
+struct OzUILabel;
+struct OzUIButton;
 
 // format of message need synchronous reply
 #define SIZE_OZUI_CREATE_WINDOW_REQUEST(x) \
@@ -110,11 +112,20 @@ struct OzUIWindowDrawTextReply
     struct OzUITextLayout layout;
 }__attribute__((packed));
 
+// event notify
+struct OzUIFocusEventNotify
+{
+    int type;
+    unsigned long id;
+}__attribute__((packed));
+
 struct OzUIWindowOperation
 {
     void (*onMiceEvent)(struct OzUIWindow *window, struct OzUIMiceEvent *event);
     void (*onCreate)(struct OzUIWindow *window);
     void (*onDestroy)(struct OzUIWindow *window);
+    void (*onFocus)(struct OzUIWindow *window);
+    void (*onUnfocus)(struct OzUIWindow *window);
 };
 
 struct OzUIWindow
@@ -125,6 +136,8 @@ struct OzUIWindow
     struct ListHead widgetList;
     struct ListHead link;
     // private members
+    struct OzUILabel *titleLabel;
+    struct OzUIButton *closeButton;
     struct OzUIWidget *miceWidget, *focusWidget;
 };
 
