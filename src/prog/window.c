@@ -11,6 +11,7 @@
 #include FT_FREETYPE_H
 
 static LIST_HEAD(windowList);
+static struct Window *currentWindow = 0;
 
 struct ListHead *getWindowList()
 {
@@ -104,12 +105,15 @@ struct Window *createWindow(int pid, int w, int h, int flags)
     destroyGC(gc);
 
     listAddTail(&window->link, &windowList);
+    setFocusWindow(window);
 
     return window;
 }
 
 void destroyWindow(struct Window *window)
 {
+    if (currentWindow == window)
+        setFocusWindow(0);
     listDel(&window->link);
     destroyPixmap(window->pixmap);
     free(window);
@@ -325,14 +329,20 @@ int drawText(struct Window *window, struct Rect *clipRect,
 
 struct Window *focusWindow()
 {
-    if (listEmpty(&windowList))
-        return 0;
-    else
-        return listFirstEntry(&windowList, struct Window, link);
+    return currentWindow;
 }
 
 
 void setFocusWindow(struct Window *window)
 {
+    if (currentWindow != window)
+        currentWindow = window;
+    else
+        return;
+    if (window) {
+        if (!listEmpty(&window->link))
+            listDel(&window->link);
+        listAddTail(&window->link, &windowList);
+    }
 }
 

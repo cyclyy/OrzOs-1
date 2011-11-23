@@ -287,8 +287,16 @@ int main()
         case EVENT_IO_READ:
             ioEventPtr = (struct IOEvent*)buf;
             if (ioEventPtr->fd == miceFD) {
+                window = findWindowUnder(cursorX, cursorY);
                 //UIDBG("window:%p\n", window);
                 switch (miceEvent.type) {
+                case MICE_EVENT_PRESS:
+                    if (miceEvent.button == MICE_BUTTON_LEFT) {
+                        setFocusWindow(window);
+                        if (window)
+                            unionWindow(&dirtyRect, window);
+                    }
+                    break;
                 case MICE_EVENT_MOVE:
                     unionRect(&dirtyRect, &cursorRect);
                     cursorX = MAX(0, MIN(WIDTH, cursorX + miceEvent.deltaX*4));
@@ -297,7 +305,6 @@ int main()
                     unionRect(&dirtyRect, &cursorRect);
                     break;
                 }
-                window = findWindowUnder(cursorX, cursorY);
                 if (window) {
                     miceEventNotify->type = OZUI_EVENT_MICE;
                     miceEventNotify->id = windowId(window);
