@@ -26,8 +26,8 @@ struct OzUICreateWindowRequest
 struct OzUICreateWindowReply
 {
     unsigned long id;
-    int screenX, screenY, width, height, flags;
-    int clientX, clientY, clientWidth, clientHeight;
+    struct Rect screenRect;
+    int flags;
 }__attribute__((packed));
 
 struct OzUIDestroyWindowRequest
@@ -120,7 +120,7 @@ struct OzUIWindowOperation
 struct OzUIWindow
 {
     unsigned long id;
-    int screenX, screenY, width, height;
+    struct Rect screenRect, clientRect;
     struct OzUIWindowOperation *ops;
     struct ListHead widgetList;
     struct ListHead link;

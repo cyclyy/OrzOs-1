@@ -17,6 +17,7 @@ struct ListHead *getWindowList()
     return &windowList;
 }
 
+/*
 static void drawWindowBorder(struct Window *window)
 {
     int pad;
@@ -35,6 +36,7 @@ static void drawWindowBorder(struct Window *window)
 static void drawWindowTitle(struct Window *window)
 {
 }
+*/
 
 struct Pixmap *createPixmap(int w, int h)
 {
@@ -93,19 +95,12 @@ struct Window *createWindow(int pid, int w, int h, int flags)
     window = (struct Window*)malloc(sizeof(struct Window));
     window->app = app;
     window->pixmap = pixmap;
-    window->width = w;
-    window->height = h;
-    window->screenX = 0;
-    window->screenY = 0;
-    window->clientRect.x = guiConfig()->borderSize;
-    window->clientRect.y = guiConfig()->borderSize*2 + guiConfig()->titleHeight;
-    window->clientRect.w = w - guiConfig()->borderSize*2;
-    window->clientRect.h = h - window->clientRect.y - guiConfig()->borderSize;
+    initRect(&window->screenRect, 0, 0, w, h);
     INIT_LIST_HEAD(&window->link);
 
     gc = createGCForWindow(window);
-    drawWindowBorder(window);
-    drawWindowTitle(window);
+    //drawWindowBorder(window);
+    //drawWindowTitle(window);
     destroyGC(gc);
 
     listAddTail(&window->link, &windowList);
@@ -152,22 +147,21 @@ void paintWindow(struct GC *gc, struct Window *window)
 {
     cairo_t *cr;
     cr = gc->d->cr;
-    cairo_set_source_surface(cr, window->pixmap->d->surface, window->screenX, window->screenY);
+    cairo_set_source_surface(cr, window->pixmap->d->surface, window->screenRect.x, window->screenRect.y);
     cairo_paint(cr);
 }
 
 void moveWindow(struct Window *window, int x, int y)
 {
-    window->screenX = x;
-    window->screenY = y;
+    window->screenRect.x = x;
+    window->screenRect.y = y;
 }
 
 struct Window *findWindowUnder(int x, int y)
 {
     struct Window *window ;
     listForEachEntryReverse(window, &windowList, link) {
-        if ((x >= window->screenX) && (x <= window->screenX + window->width) 
-                && (y >= window->screenY) && (y <= window->screenY + window->height))
+        if (insideRect(&window->screenRect, x, y))
             return window;
     }
     return 0;
@@ -192,16 +186,14 @@ void unionWindowRect(struct Rect *rect, struct Window *window, struct Rect *rect
 {
     struct Rect r2;
     copyRect(&r2, rect1);
-    translateRect(&r2, window->clientRect.x, window->clientRect.y);
-    r2.x += window->screenX;
-    r2.y += window->screenY;
+    translateRect(&r2, window->screenRect.x, window->screenRect.y);
     unionRect(rect, &r2);
 }
 
 void unionWindow(struct Rect *rect, struct Window *window)
 {
     struct Rect r2;
-    initRect(&r2, window->screenX, window->screenY, window->width, window->height);
+    copyRect(&r2, &window->screenRect);
     unionRect(rect, &r2);
 }
 
@@ -213,7 +205,6 @@ int drawRectangle(struct Window *window, struct Rect *clipRect,
     cr = window->pixmap->d->cr;
 
     cairo_save(cr);
-    cairo_translate(cr, window->clientRect.x, window->clientRect.y);
     cairo_rectangle(cr, clipRect->x, clipRect->y, clipRect->w, clipRect->h);
     cairo_clip(cr);
     cairo_set_source_rgb(cr, lineStyle->color.r/255.0, lineStyle->color.g/255.0,
@@ -237,7 +228,6 @@ int drawLine(struct Window *window, struct Rect *clipRect,
     cr = window->pixmap->d->cr;
 
     cairo_save(cr);
-    cairo_translate(cr, window->clientRect.x, window->clientRect.y);
     cairo_rectangle(cr, clipRect->x, clipRect->y, clipRect->w, clipRect->h);
     cairo_clip(cr);
     cairo_set_source_rgb(cr, lineStyle->color.r/255.0, lineStyle->color.g/255.0,
@@ -306,7 +296,6 @@ int drawText(struct Window *window, struct Rect *clipRect,
     cr = window->pixmap->d->cr;
 
     cairo_save(cr);
-    cairo_translate(cr, window->clientRect.x, window->clientRect.y);
     cairo_rectangle(cr, clipRect->x, clipRect->y, clipRect->w, clipRect->h);
     cairo_clip(cr);
     cairo_set_source_rgb(cr, lineStyle->color.r/255.0, lineStyle->color.g/255.0,

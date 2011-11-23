@@ -65,6 +65,7 @@ void myBtnMiceLeftClick(struct OzUIButton *button, struct OzUIMiceEvent *miceEve
     button->d = (void*)i;
     swprintf(s, 100, L"左点击了%ld次", i);
     OzUIButtonSetText(button, s);
+    OzUICreateWindow(200*i,200*i,0);
 }
 
 static struct OzUIButtonOperation myBtnOps = {

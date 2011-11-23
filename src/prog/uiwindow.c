@@ -39,7 +39,7 @@ void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *mice
         switch (miceEvent->type) {
         case OZUI_MICE_EVENT_MOVE:
             if (miceEvent->button == OZUI_MICE_BUTTON_LEFT)
-                OzUIMoveWindow(window, window->screenX + miceEvent->x - lastX, window->screenY + miceEvent->y - lastY);
+                OzUIMoveWindow(window, window->screenRect.x + miceEvent->x - lastX, window->screenRect.y + miceEvent->y - lastY);
             else {
                 inDrag = 0;
                 lastX = lastY = 0;
@@ -111,11 +111,10 @@ struct OzUIWindow *OzUICreateWindow(int w, int h, int flags)
     request.flags = flags;
     OzUISendReceive(&request, &reply);
     window = (struct OzUIWindow*)malloc(sizeof(struct OzUIWindow));
+    memset(window, 0, sizeof(struct OzUIWindow));
     window->id = reply.id;
-    window->screenX = reply.screenX;
-    window->screenY = reply.screenY;
-    window->width = reply.width;
-    window->height = reply.height;
+    copyRect(&window->screenRect, &reply.screenRect);
+    initRect(&window->clientRect, 0, 0, w, h);
     window->ops = &genericWindowOperation;
     INIT_LIST_HEAD(&window->widgetList);
     OzUIAppAddWindow(window);
@@ -126,7 +125,7 @@ struct OzUIWindow *OzUICreateWindow(int w, int h, int flags)
     struct Rect titleRect;
     wchar_t titleText[100];
     titleRect.x = titleRect.y = 0;
-    titleRect.w = window->width - 20;
+    titleRect.w = window->screenRect.w - 20;
     titleRect.h = 20;
     title = OzUICreateLabel(window, &titleRect);
     OzUILabelSetFontSize(title, 14);
@@ -136,6 +135,8 @@ struct OzUIWindow *OzUICreateWindow(int w, int h, int flags)
     struct Rect buttonRect;
     initRect(&buttonRect, rectRight(&titleRect), rectTop(&titleRect), 20, 20);
     OzUICreateCloseButton(window, &buttonRect, 0);
+
+    initRect(&window->clientRect, 0, 20, w, h - 20);
 
     return window;
 }
@@ -168,8 +169,8 @@ int OzUIMoveWindow(struct OzUIWindow *window, int x, int y)
     request.x = x;
     request.y = y;
     OzUISendReceive(&request, &reply);
-    window->screenX = x;
-    window->screenY = y;
+    window->screenRect.x = x;
+    window->screenRect.y = y;
     return reply.ret;
 }
 

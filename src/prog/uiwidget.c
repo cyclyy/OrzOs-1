@@ -12,7 +12,8 @@ struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, struct 
     memset(widget, 0, sizeof(struct OzUIWidget));
     widget->window = window;
     widget->type = type;
-    memcpy(&widget->rect, rect, sizeof(struct Rect));
+    copyRect(&widget->rect, rect);
+    translateRect(&widget->rect, widget->window->clientRect.x, widget->window->clientRect.y);
     initRect(&widget->dirtyRect, 0, 0, 0, 0);
     widget->ops = ops;
     widget->d = userData;
@@ -75,9 +76,8 @@ int OzUIWidgetDrawRectangle(struct OzUIWidget *widget, struct Rect *rect,
         struct LineStyle *lineStyle, struct FillStyle *fillStyle)
 {
     struct Rect baseRect;
-    memcpy(&baseRect, rect, sizeof(struct Rect));
-    baseRect.x += widget->rect.x;
-    baseRect.y += widget->rect.y;
+    copyRect(&baseRect, rect);
+    translateRect(&baseRect, widget->rect.x, widget->rect.y);
     return OzUIWindowDrawRectangle(widget->window, &widget->dirtyRect, &baseRect, lineStyle, fillStyle);
 }
 

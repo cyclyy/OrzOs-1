@@ -25,8 +25,8 @@ struct Pixmap {
 
 struct Window {
     struct App *app;
-    int screenX, screenY, width, height, flags;
-    struct Rect clientRect;
+    struct Rect screenRect;
+    int flags;
     struct Pixmap *pixmap;
     struct ListHead link;
     struct WindowPrivate *d;

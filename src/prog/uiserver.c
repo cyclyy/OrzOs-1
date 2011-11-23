@@ -302,11 +302,9 @@ int main()
                     miceEventNotify->type = OZUI_EVENT_MICE;
                     miceEventNotify->id = windowId(window);
                     memcpy(&miceEventNotify->miceEvent, &miceEvent, sizeof(struct MiceEvent));
-                    miceEventNotify->miceEvent.x = cursorX - window->screenX - window->clientRect.x;
-                    miceEventNotify->miceEvent.y = cursorY - window->screenY - window->clientRect.y;
-                    if (insideRect(&window->clientRect, 
-                                   miceEventNotify->miceEvent.x + window->clientRect.x, 
-                                   miceEventNotify->miceEvent.y + window->clientRect.y)
+                    miceEventNotify->miceEvent.x = cursorX - window->screenRect.x;
+                    miceEventNotify->miceEvent.y = cursorY - window->screenRect.y;
+                    if (insideRect(&window->screenRect, cursorX, cursorY)
                             && window->app->needEvent) {
                         --window->app->needEvent;
                         OzPost(window->app->pid, miceEventNotify, sizeof(struct OzUIMiceEventNotify));
@@ -321,10 +319,7 @@ int main()
             createWindowRequest = (struct OzUICreateWindowRequest*)buf;
             window = createWindow(hdr.pid, createWindowRequest->width, createWindowRequest->height, createWindowRequest->flags);
             createWindowReply->id = windowId(window);
-            createWindowReply->screenX = window->screenX;
-            createWindowReply->screenY = window->screenY;
-            createWindowReply->width = window->width;
-            createWindowReply->height = window->height;
+            copyRect(&createWindowReply->screenRect, &window->screenRect);
             OzReply(hdr.pid, createWindowReply, sizeof(struct OzUICreateWindowReply));
             unionWindow(&dirtyRect, window);
             break;
