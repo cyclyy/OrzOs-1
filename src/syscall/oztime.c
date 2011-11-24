@@ -40,3 +40,8 @@ unsigned long OzMilliSleep(unsigned long msec)
     return 0;
 }
 
+unsigned long OzGetTicks()
+{
+    return globalTicks;
+}
+

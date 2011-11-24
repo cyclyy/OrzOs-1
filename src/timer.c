@@ -4,6 +4,8 @@
 #include "kmm.h"
 #include "task.h"
 #include "waitqueue.h"
+#include "cmos.h"
+#include "date.h"
 #include "util.h"
 #include "libc/list.h"
 
@@ -61,6 +63,14 @@ void initGlobalTimer()
 
 void startGlobalTimer()
 {
+    Date date;
+    date.year = cmosGetRTC()->year;
+    date.month = cmosGetRTC()->month;
+    date.day = cmosGetRTC()->day;
+    date.hour = cmosGetRTC()->hour;
+    date.minute = cmosGetRTC()->minute;
+    date.second = cmosGetRTC()->second;
+    globalTicks = ticksFromDate(&date);
     registerInterruptHandler(IRQ0, timerHandler);
 }
 

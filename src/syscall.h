@@ -91,5 +91,6 @@ DECL_SYSCALL_1(OzMilliAlarm, u64int);
 DECL_SYSCALL_1(OzMilliSleep, u64int);
 DECL_SYSCALL_5(OzSendReceive, struct MessageHeader *, void *, u64int, void *, u64int);
 DECL_SYSCALL_3(OzReply, s64int, void *, u64int);
+DECL_SYSCALL_0(OzGetTicks);
 
 #endif /* SYSCALL_H */

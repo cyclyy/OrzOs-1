@@ -11,7 +11,7 @@
 
 void syscallTest();
 
-#define N_SYSCALLS 22
+#define N_SYSCALLS 23
 
 void *syscalls[N_SYSCALLS] = {
     &syscallTest,
@@ -36,6 +36,7 @@ void *syscalls[N_SYSCALLS] = {
     OzMilliSleep,
     OzSendReceive,
     OzReply,
+    OzGetTicks,
 };
 
 u64int nsyscalls = N_SYSCALLS;

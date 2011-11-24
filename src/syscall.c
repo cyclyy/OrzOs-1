@@ -22,4 +22,5 @@ DEFN_SYSCALL_1(OzMilliAlarm, 	18, u64int);
 DEFN_SYSCALL_1(OzMilliSleep, 	19, u64int);
 DEFN_SYSCALL_5(OzSendReceive,   20, struct MessageHeader *, void *, u64int, void *, u64int);
 DEFN_SYSCALL_3(OzReply,         21, s64int, void *, u64int);
+DEFN_SYSCALL_0(OzGetTicks,      22);
 

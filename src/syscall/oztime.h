@@ -7,4 +7,6 @@ unsigned long OzMilliAlarm(unsigned long msec);
 
 unsigned long OzMilliSleep(unsigned long msec);
 
+unsigned long OzGetTicks();
+
 #endif /* OZTIME_H */
