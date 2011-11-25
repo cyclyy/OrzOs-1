@@ -139,6 +139,7 @@ struct OzUIWindow
     struct OzUILabel *titleLabel;
     struct OzUIButton *closeButton;
     struct OzUIWidget *miceWidget, *focusWidget;
+    int inDrag;
 };
 
 struct OzUIWindow *OzUIGetWindowById(unsigned long id);

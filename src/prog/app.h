@@ -6,8 +6,9 @@
 struct App
 {
     int pid;
-    int needEvent;
+    int nMissingEvents;
     struct ListHead windowList;
+    struct ListHead bufferList;
     struct ListHead link;
 };
 
@@ -19,5 +20,8 @@ void destroyApp(struct App *app);
 
 struct App *getApp(int pid);
 
+void notifyApp(struct App *app, void *data, int size);
+
+void pollAppEvent(struct App *app);
 
 #endif /* APP_H */

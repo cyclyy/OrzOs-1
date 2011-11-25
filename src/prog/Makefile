@@ -26,10 +26,15 @@ all:init uiserver uiclient
 
 init_SRCS = init.o
 
-uiserver_SRCS = uiserver.o window.o rect.o guiconfig.o app.o drawops.o layout.o utf8.o
+uiserver_SRCS = uiserver.o window.o rect.o guiconfig.o app.o drawops.o layout.o utf8.o buffer.o
 
 uiclient_SRCS = uiclient.o uiproto.o uilabel.o uibutton.o uiclosebutton.o uiapp.o uiwindow.o uiwidget.o rect.o guiconfig.o
 
+%.d: %.c
+	@set -e; rm -f $@; \
+	$(CC) -I. -Ix86emu -MM $(CPPFLAGS) $< > $@.$$$$; \
+	sed -r 's,($*)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
 %.o:%.c
 	@echo "CC	$@"
 	$(QUIET)$(CC) $(PROG_CFLAGS) -c $< -o $@
@@ -51,3 +56,4 @@ clean:
 
 ctags:
 	$(QUIET)ctags -R --c-kinds=+p --fields=+S . 
+

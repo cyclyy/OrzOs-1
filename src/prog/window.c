@@ -350,17 +350,15 @@ void setFocusWindow(struct Window *window)
         listAddTail(&window->link, &windowList);
     }
     if (oldWindow != window) {
-        if (oldWindow && oldWindow->app->needEvent) {
+        if (oldWindow) {
             focusEventNotify.type = OZUI_EVENT_UNFOCUS;
             focusEventNotify.id = windowId(oldWindow);
-            --oldWindow->app->needEvent;
-            OzPost(oldWindow->app->pid, &focusEventNotify, sizeof(struct OzUIFocusEventNotify));
+            notifyApp(oldWindow->app, &focusEventNotify, sizeof(struct OzUIFocusEventNotify));
         }
-        if (window && window->app->needEvent) {
+        if (window) {
             focusEventNotify.type = OZUI_EVENT_FOCUS;
             focusEventNotify.id = windowId(window);
-            --window->app->needEvent;
-            OzPost(window->app->pid, &focusEventNotify, sizeof(struct OzUIFocusEventNotify));
+            notifyApp(window->app, &focusEventNotify, sizeof(struct OzUIFocusEventNotify));
         }
     }
 }

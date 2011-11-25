@@ -63,7 +63,7 @@ void initGlobalTimer()
 
 void startGlobalTimer()
 {
-    Date date;
+    struct Date date;
     date.year = cmosGetRTC()->year;
     date.month = cmosGetRTC()->month;
     date.day = cmosGetRTC()->day;

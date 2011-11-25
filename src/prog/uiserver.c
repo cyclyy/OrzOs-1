@@ -314,10 +314,8 @@ int main()
                     memcpy(&miceEventNotify->miceEvent, &miceEvent, sizeof(struct MiceEvent));
                     miceEventNotify->miceEvent.x = cursorX - window->screenRect.x;
                     miceEventNotify->miceEvent.y = cursorY - window->screenRect.y;
-                    if (insideRect(&window->screenRect, cursorX, cursorY)
-                            && window->app->needEvent) {
-                        --window->app->needEvent;
-                        OzPost(window->app->pid, miceEventNotify, sizeof(struct OzUIMiceEventNotify));
+                    if (insideRect(&window->screenRect, cursorX, cursorY)) {
+                        notifyApp(window->app, miceEventNotify, sizeof(struct OzUIMiceEventNotify));
                     }
                 }
                 OzReadAsync(miceFD, sizeof(struct MiceEvent), &miceEvent);
@@ -352,7 +350,7 @@ int main()
             break;
         case OZUI_EVENT_NEXT_EVENT:
             app = getApp(hdr.pid);
-            app->needEvent++;
+            pollAppEvent(app);
             break;
         case OZUI_EVENT_DRAW_RECTANGLE:
             drawRectangleRequest = (struct OzUIWindowDrawRectangleRequest*)buf;

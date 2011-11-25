@@ -14,7 +14,7 @@ static int MONTH_DAYS[12] = {
     31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
 };
 
-long ticksFromDate(const Date *date)
+long ticksFromDate(const struct Date *date)
 {
     long i, days, seconds;
     days = 0;
@@ -27,7 +27,7 @@ long ticksFromDate(const Date *date)
     return seconds*1000;
 }
 
-void setDate(Date *date, long ticks)
+void setDate(struct Date *date, long ticks)
 {
     long seconds, minutes, hours, days, i;
     seconds = ticks/1000;
