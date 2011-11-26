@@ -2,8 +2,10 @@
 #include "uiwindow.h"
 #include "uiwidget.h"
 #include "uiapp.h"
+#include "uikey.h"
 #include <os/event.h>
 #include <os/list.h>
+#include <os/key.h>
 #include <os/mice.h>
 #include <os/sysdef.h>
 #include <os/syscall.h>
@@ -49,11 +51,18 @@ int OzUISend(void *request)
 
 int OzUIDispatchEvent(void *buf)
 {
+    struct OzUIKeyEventNotify *uiKeyEventNotify;
     struct OzUIMiceEventNotify *uiMiceEventNotify;
     struct OzUIFocusEventNotify *uiFocusEventNotify;
     struct OzUIWindow *window;
     int isUIEvent = 1;
     switch GET_EVENT_TYPE(buf) {
+        case OZUI_EVENT_KEY:
+            uiKeyEventNotify = (struct OzUIKeyEventNotify*)buf;
+            window = OzUIGetWindowById(uiKeyEventNotify->id);
+            if (window && window->ops && window->ops->onKeyEvent)
+                window->ops->onKeyEvent(window, &uiKeyEventNotify->keyEvent);
+            break;
         case OZUI_EVENT_MICE:
             uiMiceEventNotify = (struct OzUIMiceEventNotify*)buf;
             window = OzUIGetWindowById(uiMiceEventNotify->id);

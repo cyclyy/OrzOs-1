@@ -10,6 +10,7 @@
 
 struct OzUIWindow;
 struct OzUIWidget;
+struct OzUIKeyEvent;
 struct OzUIMiceEvent;
 struct OzUILabel;
 struct OzUIButton;
@@ -121,6 +122,7 @@ struct OzUIFocusEventNotify
 
 struct OzUIWindowOperation
 {
+    void (*onKeyEvent)(struct OzUIWindow *window, struct OzUIKeyEvent *event);
     void (*onMiceEvent)(struct OzUIWindow *window, struct OzUIMiceEvent *event);
     void (*onCreate)(struct OzUIWindow *window);
     void (*onDestroy)(struct OzUIWindow *window);

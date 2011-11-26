@@ -5,7 +5,9 @@
 #include "uiproto.h"
 #include "window.h"
 #include "drawops.h"
+#include "uikey.h"
 #include "rect.h"
+#include "keyhelper.h"
 #include <os/syscall.h>
 #include <os/mice.h>
 #include <os/key.h>
@@ -260,12 +262,13 @@ int main()
     struct OzUIWindowDrawLineRequest *drawLineRequest;
     struct OzUIWindowDrawLineReply *drawLineReply = (struct OzUIWindowDrawLineReply*)replyBuf;
     struct OzUIMiceEventNotify *miceEventNotify = (struct OzUIMiceEventNotify*)replyBuf;
-    struct OzUIFocusEventNotify *focusEventNotify = (struct OzUIFocusEventNotify*)replyBuf;
+    //struct OzUIFocusEventNotify *focusEventNotify = (struct OzUIFocusEventNotify*)replyBuf;
+    struct OzUIKeyEventNotify *keyEventNotify = (struct OzUIKeyEventNotify*)replyBuf;
     //struct OzUINextEventRequest *nextEventRequest = (struct OzUINextEventRequest*)buf;
     struct OzUIWindowDrawTextRequest *drawTextRequest;
     struct OzUIWindowDrawTextReply *drawTextReply = (struct OzUIWindowDrawTextReply*)replyBuf;
     struct App *app;
-    int drawTextReplyLen;
+    //int drawTextReplyLen;
 
     dbgFile = fopen("Device:/Debug", "w");
     initDisplay();
@@ -311,15 +314,23 @@ int main()
                 if (window) {
                     miceEventNotify->type = OZUI_EVENT_MICE;
                     miceEventNotify->id = windowId(window);
-                    memcpy(&miceEventNotify->miceEvent, &miceEvent, sizeof(struct MiceEvent));
-                    miceEventNotify->miceEvent.x = cursorX - window->screenRect.x;
-                    miceEventNotify->miceEvent.y = cursorY - window->screenRect.y;
-                    if (insideRect(&window->screenRect, cursorX, cursorY)) {
-                        notifyApp(window->app, miceEventNotify, sizeof(struct OzUIMiceEventNotify));
-                    }
+                    miceEventNotify->miceEvent.type = miceEvent.type;
+                    miceEventNotify->miceEvent.x = cursorX;
+                    miceEventNotify->miceEvent.y = cursorY;
+                    miceEventNotify->miceEvent.button = miceEvent.button;
+                    notifyApp(window->app, miceEventNotify, sizeof(struct OzUIMiceEventNotify));
                 }
                 OzReadAsync(miceFD, sizeof(struct MiceEvent), &miceEvent);
             } else if (ioEventPtr->fd == kbdFD) {
+                window = focusWindow();
+                if (window) {
+                    keyEventNotify->type = OZUI_EVENT_KEY;
+                    keyEventNotify->id = windowId(window);
+                    keyEventNotify->keyEvent.type = keyEvent.type;
+                    keyEventNotify->keyEvent.code = keyEvent.code;
+                    keyEventNotify->keyEvent.mask = updateKeyMask(&keyEvent);
+                    notifyApp(window->app, keyEventNotify, sizeof(struct OzUIKeyEventNotify));
+                }
                 OzReadAsync(kbdFD, sizeof(struct KeyEvent), &keyEvent);
             }
             break;

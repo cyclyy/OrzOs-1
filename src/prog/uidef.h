@@ -41,6 +41,7 @@ extern FILE *dbgFile;
 #define OZUI_EVENT_MICE                 0x2001
 #define OZUI_EVENT_FOCUS                0x2002
 #define OZUI_EVENT_UNFOCUS              0x2003
+#define OZUI_EVENT_KEY                  0x2004
 
 // events received by client widgets
 #define OZUI_EVENT_MICE_ENTER           0x3001

@@ -7,23 +7,34 @@
 #include <stdlib.h>
 #include <string.h>
 
+void OzUIWindowOnKeyEvent(struct OzUIWindow *window, struct OzUIKeyEvent *keyEvent);
 void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *miceEvent);
 void OzUIWindowOnFocus(struct OzUIWindow *window);
 void OzUIWindowOnUnfocus(struct OzUIWindow *window);
 
 struct OzUIWindowOperation genericWindowOperation = {
+    .onKeyEvent = &OzUIWindowOnKeyEvent,
     .onMiceEvent = &OzUIWindowOnMiceEvent,
     .onFocus = &OzUIWindowOnFocus,
     .onUnfocus = &OzUIWindowOnUnfocus,
 };
 
+void OzUIWindowOnKeyEvent(struct OzUIWindow *window, struct OzUIKeyEvent *keyEvent)
+{
+    ;
+}
+
 static struct OzUIWidget *widgetUnderMice(struct OzUIWindow *window, struct OzUIMiceEvent *miceEvent, struct OzUIMiceEvent *localMiceEvent)
 {
     struct OzUIWidget *widget;
+    struct OzUIMiceEvent ev;
+    memcpy(&ev, miceEvent, sizeof(struct MiceEvent));
+    ev.x -= window->screenRect.x;
+    ev.y -= window->screenRect.y;
     listForEachEntry(widget, &window->widgetList, link) {
-        if (insideRect(&widget->rect, miceEvent->x, miceEvent->y)) {
+        if (insideRect(&widget->rect, ev.x, ev.y)) {
             if (localMiceEvent) {
-                memcpy(localMiceEvent, miceEvent, sizeof(struct MiceEvent));
+                memcpy(localMiceEvent, &ev, sizeof(struct MiceEvent));
                 localMiceEvent->x -= widget->rect.x;
                 localMiceEvent->y -= widget->rect.y;
             }
@@ -43,13 +54,13 @@ void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *mice
         case OZUI_MICE_EVENT_DOWN:
         case OZUI_MICE_EVENT_MOVE:
             if (miceEvent->button == OZUI_MICE_BUTTON_LEFT)
-                OzUIMoveWindow(window, window->screenRect.x + miceEvent->x - lastX, window->screenRect.y + miceEvent->y - lastY);
+                OzUIMoveWindow(window, miceEvent->x - lastX, miceEvent->y - lastY);
             else {
                 window->inDrag = 0;
             }
             break;
         case OZUI_MICE_EVENT_UP:
-            OzUIMoveWindow(window, window->screenRect.x + miceEvent->x - lastX, window->screenRect.y + miceEvent->y - lastY);
+            OzUIMoveWindow(window, miceEvent->x - lastX, miceEvent->y - lastY);
             window->inDrag = 0;
             break;
         }
@@ -84,10 +95,9 @@ void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *mice
         if (!window->inDrag) {
             if ((miceEvent->type == OZUI_MICE_EVENT_DOWN) && (miceEvent->button == OZUI_MICE_BUTTON_LEFT)) {
                 window->inDrag = 1;
-                lastX = miceEvent->x;
-                lastY = miceEvent->y;
+                lastX = miceEvent->x - window->screenRect.x;
+                lastY = miceEvent->y - window->screenRect.y;
             }
-        } else {
         }
     }
     window->miceWidget = widget;
