@@ -36,6 +36,8 @@ extern FILE *dbgFile;
 #define OZUI_EVENT_DRAW_TEXT            0x1005
 #define OZUI_EVENT_DRAW_RECTANGLE       0x1006
 #define OZUI_EVENT_DRAW_LINE            0x1007
+#define OZUI_EVENT_LAYOUT_TEXT          0x1008
+#define OZUI_EVENT_DRAW_TEXT_LAYOUTED   0x1009
 
 // events received by client window
 #define OZUI_EVENT_MICE                 0x2001

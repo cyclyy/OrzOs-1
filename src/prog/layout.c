@@ -106,7 +106,7 @@ static void initTextLayout(struct TextLayout *layout)
     INIT_LIST_HEAD(&layout->charList);
 }
 
-static struct CharLayout *createCharLayout(struct TextLayout *layout)
+struct CharLayout *createCharLayout(struct TextLayout *layout)
 {
     struct CharLayout *charLayout;
     charLayout = (struct CharLayout*)malloc(sizeof(struct CharLayout));
@@ -115,6 +115,11 @@ static struct CharLayout *createCharLayout(struct TextLayout *layout)
     ++layout->chars;
     listAddTail(&charLayout->link, &layout->charList);
     return charLayout;
+}
+
+void destroyCharLayout(struct CharLayout *charLayout)
+{
+    free(charLayout);
 }
 
 static void centerTextLayout(struct TextLayout *layout, const struct LayoutConstraint *lc)

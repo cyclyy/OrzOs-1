@@ -53,4 +53,8 @@ struct TextLayout *createTextLayout();
 
 void destroyTextLayout(struct TextLayout *layout);
 
+struct CharLayout *createCharLayout(struct TextLayout *layout);
+
+void destroyCharLayout(struct CharLayout *layout);
+
 #endif /* LAYOUT_H */

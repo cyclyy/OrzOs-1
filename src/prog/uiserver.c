@@ -1,7 +1,6 @@
 #include "uiwindow.h"
 #include "window_p.h"
 #include "gcontext_p.h"
-#include "uiserver.h"
 #include "uiproto.h"
 #include "window.h"
 #include "drawops.h"
@@ -267,6 +266,10 @@ int main()
     //struct OzUINextEventRequest *nextEventRequest = (struct OzUINextEventRequest*)buf;
     struct OzUIWindowDrawTextRequest *drawTextRequest;
     struct OzUIWindowDrawTextReply *drawTextReply = (struct OzUIWindowDrawTextReply*)replyBuf;
+    struct OzUIWindowLayoutTextRequest *layoutTextRequest;
+    struct OzUIWindowLayoutTextReply *layoutTextReply = (struct OzUIWindowLayoutTextReply*)replyBuf;
+    struct OzUIWindowDrawTextLayoutedRequest *drawTextLayoutedRequest;
+    struct OzUIWindowDrawTextLayoutedReply *drawTextLayoutedReply = (struct OzUIWindowDrawTextLayoutedReply*)replyBuf;
     struct App *app;
     //int drawTextReplyLen;
 
@@ -391,6 +394,21 @@ int main()
             //drawTextReplyLen = SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY(drawTextReply);
             OzReply(hdr.pid, drawTextReply, SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY(drawTextReply));
             //OzReply(hdr.pid, drawTextReply,  200);
+            break;
+        case OZUI_EVENT_LAYOUT_TEXT:
+            layoutTextRequest = (struct OzUIWindowLayoutTextRequest*)buf;
+            window = getWindowById(layoutTextRequest->id);
+            windowLayoutText(window, &layoutTextRequest->clipRect, &layoutTextRequest->tlc, layoutTextRequest->text, &layoutTextReply->layout);
+            layoutTextReply->ret = 0;
+            OzReply(hdr.pid, layoutTextReply, SIZE_OZUI_WINDOW_LAYOUT_TEXT_REPLY(layoutTextReply));
+            break;
+        case OZUI_EVENT_DRAW_TEXT_LAYOUTED:
+            drawTextLayoutedRequest = (struct OzUIWindowDrawTextLayoutedRequest*)buf;
+            window = getWindowById(drawTextLayoutedRequest->id);
+            windowDrawTextLayouted(window, &drawTextLayoutedRequest->clipRect, &drawTextLayoutedRequest->tlc, &drawTextLayoutedRequest->lineStyle, &drawTextLayoutedRequest->layout);
+            unionWindowRect(&dirtyRect, window, &drawTextLayoutedRequest->clipRect);
+            drawTextLayoutedReply->ret = 0;
+            OzReply(hdr.pid, drawTextLayoutedReply, sizeof(struct OzUIWindowDrawTextLayoutedReply));
             break;
         }
     }

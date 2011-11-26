@@ -4,6 +4,7 @@
 #include "uiapp.h"
 #include "uilabel.h"
 #include "uiclosebutton.h"
+#include "uitextlayout.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -245,6 +246,29 @@ int OzUIWindowDrawText(struct OzUIWindow *window, struct Rect *clipRect,
     memcpy(&request->tlc, tlc, sizeof(struct OzUITextLayoutConstraint));
     wcscpy(request->text, text);
     memcpy(&request->lineStyle, lineStyle, sizeof(struct LineStyle));
+    OzUISendReceive(request, reply);
+    if (layout)
+        memcpy(layout, &reply->layout, SIZE_OZUI_TEXT_LAYOUT(&reply->layout));
+    free(request);
+    free(reply);
+    return reply->ret;
+}
+
+int OzUIWindowLayoutText(struct OzUIWindow *window, struct Rect *clipRect,
+        struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct OzUITextLayout *layout)
+{
+    struct OzUIWindowLayoutTextRequest *request;
+    struct OzUIWindowLayoutTextReply *reply;
+    int i,j;
+    i = SIZE_OZUI_WINDOW_LAYOUT_TEXT_REQUEST_FOR_TEXT(text);
+    j = SIZE_OZUI_WINDOW_LAYOUT_TEXT_REPLY_FOR_TEXT(text);
+    request = (struct OzUIWindowLayoutTextRequest*)malloc(SIZE_OZUI_WINDOW_LAYOUT_TEXT_REQUEST_FOR_TEXT(text));
+    reply = (struct OzUIWindowLayoutTextReply*)malloc(SIZE_OZUI_WINDOW_LAYOUT_TEXT_REPLY_FOR_TEXT(text));
+    request->type = OZUI_EVENT_LAYOUT_TEXT;
+    request->id = window->id;
+    memcpy(&request->clipRect, clipRect, sizeof(struct Rect));
+    memcpy(&request->tlc, tlc, sizeof(struct OzUITextLayoutConstraint));
+    wcscpy(request->text, text);
     OzUISendReceive(request, reply);
     if (layout)
         memcpy(layout, &reply->layout, SIZE_OZUI_TEXT_LAYOUT(&reply->layout));

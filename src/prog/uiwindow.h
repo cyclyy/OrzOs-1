@@ -3,8 +3,8 @@
 
 #include "uidef.h"
 #include "uigraphic.h"
-#include "point.h"
 #include "uitextlayout.h"
+#include "point.h"
 #include <os/list.h>
 #include <wchar.h>
 
@@ -113,6 +113,57 @@ struct OzUIWindowDrawTextReply
     struct OzUITextLayout layout;
 }__attribute__((packed));
 
+#define SIZE_OZUI_WINDOW_LAYOUT_TEXT_REQUEST_FOR_TEXT(text) \
+    (sizeof(struct OzUIWindowLayoutTextRequest) \
+    + sizeof(wchar_t) * (wcslen(text) + 1))
+#define SIZE_OZUI_WINDOW_LAYOUT_TEXT_REQUEST(x) \
+    SIZE_OZUI_WINDOW_LAYOUT_TEXT_REQUEST_FOR_TEXT( \
+            ((struct OzUIWindowLayoutTextRequest*)(x))->text)
+struct OzUIWindowLayoutTextRequest
+{
+    int type;
+    unsigned long id;
+    struct Rect clipRect;
+    struct OzUITextLayoutConstraint tlc;
+    wchar_t text[0];
+}__attribute__((packed));
+
+#define SIZE_OZUI_WINDOW_LAYOUT_TEXT_REPLY_FOR_TEXT(str) \
+    (sizeof(int)  + SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS( \
+        wcslen(str)))
+#define SIZE_OZUI_WINDOW_LAYOUT_TEXT_REPLY(x) \
+    (sizeof(int)  + SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS( \
+        ((struct OzUIWindowLayoutTextReply*)(x))->layout.chars ))
+struct OzUIWindowLayoutTextReply
+{
+    int ret;
+    struct OzUITextLayout layout;
+}__attribute__((packed));
+
+#define SIZE_OZUI_WINDOW_DRAW_TEXT_LAYOUTED_REQUEST_FOR_CHARS(text) \
+    (sizeof(struct OzUIWindowDrawTextLayoutedRequest) \
+      - sizeof(struct OzUITextLayout) \
+      + SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS(text))
+#define SIZE_OZUI_WINDOW_DRAW_TEXT_LAYOUTED_REQUEST(x) \
+    (sizeof(struct OzUIWindowDrawTextLayoutedRequest) \
+      - sizeof(struct OzUITextLayout) \
+      + SIZE_OZUI_TEXT_LAYOUT( \
+            &((struct OzUIWindowDrawTextLayoutedRequest*)(x))->layout))
+struct OzUIWindowDrawTextLayoutedRequest
+{
+    int type;
+    unsigned long id;
+    struct Rect clipRect;
+    struct OzUITextLayoutConstraint tlc;
+    struct LineStyle lineStyle;
+    struct OzUITextLayout layout;
+}__attribute__((packed));
+
+struct OzUIWindowDrawTextLayoutedReply
+{
+    int ret;
+}__attribute__((packed));
+
 // event notify
 struct OzUIFocusEventNotify
 {
@@ -160,6 +211,9 @@ int OzUIWindowDrawLine(struct OzUIWindow *window, struct Rect *clipRect,
 
 int OzUIWindowDrawText(struct OzUIWindow *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct LineStyle *lineStyle, struct OzUITextLayout *layout);
+
+int OzUIWindowLayoutText(struct OzUIWindow *window, struct Rect *clipRect,
+        struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct OzUITextLayout *layout);
 
 
 #endif /* UIWINDOW_H */

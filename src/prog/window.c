@@ -4,6 +4,7 @@
 #include "gcontext_p.h"
 #include "guiconfig.h"
 #include "app.h"
+#include "layout.h"
 #include <os/syscall.h>
 #include <stdlib.h>
 #include <string.h>
@@ -247,7 +248,7 @@ int drawLine(struct Window *window, struct Rect *clipRect,
     return 0;
 }
 
-int drawTextLayouted(const wchar_t *text, const struct TextLayout *layout, const struct LayoutConstraint *lc)
+int drawTextLayouted(const struct TextLayout *layout, const struct LayoutConstraint *lc)
 {
     int n;
     cairo_t *cr;
@@ -269,6 +270,23 @@ int drawTextLayouted(const wchar_t *text, const struct TextLayout *layout, const
     cairo_show_glyphs(cr, glyphs, n);
 
     return layout->chars;
+}
+
+static void unpackOzUITextLayout(struct TextLayout *layout, const struct OzUITextLayout *utl)
+{
+    int i;
+    struct CharLayout *cl;
+
+    layout->chars = utl->chars;
+    copyRect(&layout->rect, &utl->rect);
+    layout->ascent = utl->ascent;
+    layout->descent = utl->descent;
+    layout->height = utl->height;
+    for(i=0; i<utl->chars; i++) {
+        cl = createCharLayout(layout);
+        cl->glyphIndex = utl->charLayout[i].glyphIndex;
+        copyRect(&cl->rect, &utl->charLayout[i].rect);
+    }
 }
 
 
@@ -320,11 +338,75 @@ int drawText(struct Window *window, struct Rect *clipRect,
 
     packOzUITextLayout(utl, layout);
 
-    ret = drawTextLayouted(text, layout, &lc);
+    ret = drawTextLayouted(layout, &lc);
 
     destroyTextLayout(layout);
 
     cairo_reset_clip(cr);
+    cairo_restore(cr);
+    return ret;
+}
+
+int windowDrawTextLayouted(struct Window *window, struct Rect *clipRect,
+        struct OzUITextLayoutConstraint *tlc,
+        struct LineStyle *lineStyle, struct OzUITextLayout *utl)
+{
+    int ret;
+    cairo_t *cr;
+    struct LayoutConstraint lc;
+    struct TextLayout *layout;
+
+    cr = window->pixmap->d->cr;
+
+    cairo_save(cr);
+    cairo_rectangle(cr, clipRect->x, clipRect->y, clipRect->w, clipRect->h);
+    cairo_clip(cr);
+    cairo_set_source_rgb(cr, lineStyle->color.r/255.0, lineStyle->color.g/255.0,
+            lineStyle->color.b/255.0);
+    cairo_set_line_width(cr, lineStyle->lineWidth);
+    cairo_set_font_size(cr, tlc->fontSize);
+
+    lc.cr = cr;
+    copyRect(&lc.rect, &tlc->rect);
+    lc.originX = tlc->originX;
+    lc.originY = tlc->originY;
+    lc.flags = tlc->flags;
+
+    layout = createTextLayout();
+    unpackOzUITextLayout(layout, utl);
+    ret = drawTextLayouted(layout, &lc);
+    destroyTextLayout(layout);
+
+    cairo_reset_clip(cr);
+    cairo_restore(cr);
+    return ret;
+}
+
+int windowLayoutText(struct Window *window, struct Rect *clipRect,
+        struct OzUITextLayoutConstraint *tlc, wchar_t *text, 
+        struct OzUITextLayout *utl)
+{
+    cairo_t *cr;
+    int ret;
+    struct LayoutConstraint lc;
+    struct TextLayout *layout;
+
+    cr = window->pixmap->d->cr;
+
+    cairo_save(cr);
+    lc.cr = cr;
+    copyRect(&lc.rect, &tlc->rect);
+    lc.originX = tlc->originX;
+    lc.originY = tlc->originY;
+    lc.flags = tlc->flags;
+
+    layout = createTextLayout();
+    ret = layoutText(layout, text, &lc);
+
+    packOzUITextLayout(utl, layout);
+
+    destroyTextLayout(layout);
+
     cairo_restore(cr);
     return ret;
 }

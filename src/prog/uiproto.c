@@ -35,6 +35,12 @@ int OzUISendReceive(void *request, void *reply)
         case OZUI_EVENT_DRAW_TEXT:
             return OzSendReceive(&hdr, request, SIZE_OZUI_WINDOW_DRAW_TEXT_REQUEST(request), reply, SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY_FOR_TEXT(((struct OzUIWindowDrawTextRequest*)request)->text));
             break;
+        case OZUI_EVENT_LAYOUT_TEXT:
+            return OzSendReceive(&hdr, request, SIZE_OZUI_WINDOW_LAYOUT_TEXT_REQUEST(request), reply, SIZE_OZUI_WINDOW_LAYOUT_TEXT_REPLY_FOR_TEXT(((struct OzUIWindowLayoutTextRequest*)request)->text));
+            break;
+        case OZUI_EVENT_DRAW_TEXT_LAYOUTED:
+            return OzSendReceive(&hdr, request, SIZE_OZUI_WINDOW_DRAW_TEXT_LAYOUTED_REQUEST(request), reply, sizeof(struct OzUIWindowDrawTextLayoutedReply));
+            break;
     };
     return 0;
 }
