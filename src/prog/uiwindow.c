@@ -254,27 +254,48 @@ int OzUIWindowDrawText(struct OzUIWindow *window, struct Rect *clipRect,
     return reply->ret;
 }
 
-int OzUIWindowLayoutText(struct OzUIWindow *window, struct Rect *clipRect,
+int OzUIWindowQueryTextLayout(struct OzUIWindow *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct OzUITextLayout *layout)
 {
-    struct OzUIWindowLayoutTextRequest *request;
-    struct OzUIWindowLayoutTextReply *reply;
-    int i,j;
-    i = SIZE_OZUI_WINDOW_LAYOUT_TEXT_REQUEST_FOR_TEXT(text);
-    j = SIZE_OZUI_WINDOW_LAYOUT_TEXT_REPLY_FOR_TEXT(text);
-    request = (struct OzUIWindowLayoutTextRequest*)malloc(SIZE_OZUI_WINDOW_LAYOUT_TEXT_REQUEST_FOR_TEXT(text));
-    reply = (struct OzUIWindowLayoutTextReply*)malloc(SIZE_OZUI_WINDOW_LAYOUT_TEXT_REPLY_FOR_TEXT(text));
-    request->type = OZUI_EVENT_LAYOUT_TEXT;
+    struct OzUIWindowQueryTextLayoutRequest *request;
+    struct OzUIWindowQueryTextLayoutReply *reply;
+    int i, j, ret;
+    i = SIZE_OZUI_WINDOW_QUERY_TEXT_LAYOUT_REQUEST_FOR_TEXT(text);
+    j = SIZE_OZUI_WINDOW_QUERY_TEXT_LAYOUT_REPLY_FOR_TEXT(text);
+    request = (struct OzUIWindowQueryTextLayoutRequest*)malloc(SIZE_OZUI_WINDOW_QUERY_TEXT_LAYOUT_REQUEST_FOR_TEXT(text));
+    reply = (struct OzUIWindowQueryTextLayoutReply*)malloc(SIZE_OZUI_WINDOW_QUERY_TEXT_LAYOUT_REPLY_FOR_TEXT(text));
+    request->type = OZUI_EVENT_QUERY_TEXT_LAYOUT;
     request->id = window->id;
     memcpy(&request->clipRect, clipRect, sizeof(struct Rect));
     memcpy(&request->tlc, tlc, sizeof(struct OzUITextLayoutConstraint));
     wcscpy(request->text, text);
     OzUISendReceive(request, reply);
+    ret = reply->ret;
+    i = SIZE_OZUI_TEXT_LAYOUT(&reply->layout);
     if (layout)
         memcpy(layout, &reply->layout, SIZE_OZUI_TEXT_LAYOUT(&reply->layout));
     free(request);
     free(reply);
-    return reply->ret;
+    return ret;
+}
+
+int OzUIWindowDrawTextLayout(struct OzUIWindow *window, struct Rect *clipRect,
+        struct OzUITextLayoutConstraint *tlc, struct LineStyle *lineStyle, struct OzUITextLayout *layout)
+{
+    struct OzUIWindowDrawTextLayoutRequest *request;
+    struct OzUIWindowDrawTextLayoutReply reply;
+    int n;
+    n = SIZE_OZUI_WINDOW_DRAW_TEXT_LAYOUT_REQUEST_FOR_CHARS(layout->chars);
+    request = (struct OzUIWindowDrawTextLayoutRequest*)malloc(n);
+    request->type = OZUI_EVENT_DRAW_TEXT_LAYOUT;
+    request->id = window->id;
+    memcpy(&request->clipRect, clipRect, sizeof(struct Rect));
+    memcpy(&request->tlc, tlc, sizeof(struct OzUITextLayoutConstraint));
+    memcpy(&request->lineStyle, lineStyle, sizeof(struct LineStyle));
+    memcpy(&request->layout, layout, SIZE_OZUI_TEXT_LAYOUT(layout));
+    OzUISendReceive(request, &reply);
+    free(request);
+    return reply.ret;
 }
 
 

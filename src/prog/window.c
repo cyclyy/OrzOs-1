@@ -248,7 +248,7 @@ int drawLine(struct Window *window, struct Rect *clipRect,
     return 0;
 }
 
-int drawTextLayouted(const struct TextLayout *layout, const struct LayoutConstraint *lc)
+int drawTextLayout(const struct TextLayout *layout, const struct LayoutConstraint *lc)
 {
     int n;
     cairo_t *cr;
@@ -338,7 +338,7 @@ int drawText(struct Window *window, struct Rect *clipRect,
 
     packOzUITextLayout(utl, layout);
 
-    ret = drawTextLayouted(layout, &lc);
+    ret = drawTextLayout(layout, &lc);
 
     destroyTextLayout(layout);
 
@@ -347,7 +347,7 @@ int drawText(struct Window *window, struct Rect *clipRect,
     return ret;
 }
 
-int windowDrawTextLayouted(struct Window *window, struct Rect *clipRect,
+int windowDrawTextLayout(struct Window *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc,
         struct LineStyle *lineStyle, struct OzUITextLayout *utl)
 {
@@ -374,7 +374,7 @@ int windowDrawTextLayouted(struct Window *window, struct Rect *clipRect,
 
     layout = createTextLayout();
     unpackOzUITextLayout(layout, utl);
-    ret = drawTextLayouted(layout, &lc);
+    ret = drawTextLayout(layout, &lc);
     destroyTextLayout(layout);
 
     cairo_reset_clip(cr);
@@ -382,7 +382,7 @@ int windowDrawTextLayouted(struct Window *window, struct Rect *clipRect,
     return ret;
 }
 
-int windowLayoutText(struct Window *window, struct Rect *clipRect,
+int windowQueryTextLayout(struct Window *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc, wchar_t *text, 
         struct OzUITextLayout *utl)
 {

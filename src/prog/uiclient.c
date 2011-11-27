@@ -1,5 +1,7 @@
 #include "uiproto.h"
 #include "uibutton.h"
+#include "uilabel.h"
+#include "uitextedit.h"
 #include <os/syscall.h>
 
 char replyBuf[1000];
@@ -12,50 +14,9 @@ struct OzUIWindow *window;
 struct OzUIWidget *widget;
 struct OzUIButton *button;
 struct OzUILabel *label;
+struct OzUITextEdit *textEdit;
 wchar_t *msgIn = L"在里面！";
 wchar_t *msgOut = L"在外面！";
-
-/*
-void onMyMiceEnter(struct OzUIWidget *widget)
-{
-    struct Rect rect;
-    rect.x = rect.y = 0;
-    rect.w = 100;
-    rect.h = 40;
-    widget->d = msgIn;
-    OzUIWidgetInvalidate(widget, &rect);
-}
-
-void onMyMiceLeave(struct OzUIWidget *widget)
-{
-    struct Rect rect;
-    rect.x = rect.y = 0;
-    rect.w = 100;
-    rect.h = 40;
-    widget->d = msgOut;
-    OzUIWidgetInvalidate(widget, &rect);
-}
-
-void myPaint(struct OzUIWidget *widget)
-{
-    struct Rect rect;
-    rect.x = rect.y = 0;
-    rect.w = 100;
-    rect.h = 40;
-    fs.color.r = 0;
-    fs.color.g = 255;
-    fs.color.b = 0;
-    OzUIWidgetDrawRectangle(widget, &rect, &ls, &fs);
-    OzUIWidgetDrawText(widget, &tlc, (const wchar_t*)widget->d, &ls, layout);
-}
-
-struct OzUIWidgetOperation myOps = {
-    .onCreate = &onMyMiceLeave,
-    .onMiceEnter = &onMyMiceEnter,
-    .onMiceLeave = &onMyMiceLeave,
-    .paint = &myPaint,
-};
-*/
 
 void myBtnMiceLeftClick(struct OzUIButton *button, struct OzUIMiceEvent *miceEvent)
 {
@@ -72,10 +33,16 @@ static struct OzUIButtonOperation myBtnOps = {
     .onMiceLeftClick = &myBtnMiceLeftClick,
 };
 
+static struct OzUITextEditOperation myTextEditOps = {
+};
+
 int main()
 {
     struct MessageHeader hdr;
     char buf[512];
+
+    stderr = fopen("Device:/Debug", "w");
+    stdout = stderr;
 
     window = OzUICreateWindow(200,200,0);
 
@@ -98,15 +65,11 @@ int main()
 
     fs.color.r = fs.color.g = fs.color.b = 0;
 
-    struct Rect buttonRect;
-    initRect(&buttonRect, 60, 60, 80, 40);
-    button = OzUICreateButton(window, &buttonRect, &myBtnOps, 0);
+    button = OzUICreateButton(window, makeRect(10,10,80,40), &myBtnOps, 0);
     OzUIButtonSetText(button, L"我们都是好人");
 
-    /*
-    initRect(&buttonRect, 60, 120, 40, 40);
-    OzUICreateCloseButton(window, &buttonRect, 0);
-    */
+    textEdit = OzUICreateTextEdit(window, makeRect(10,60,80,40), &myTextEditOps, 0);
+    OzUITextEditSetText(textEdit, L"一行文字");
 
     OzUINextEvent();
     for (;;) {

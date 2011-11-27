@@ -9,9 +9,11 @@ struct OzUICharLayout
     struct Rect rect;
 }__attribute__((packed));
 
+#define SIZE_OZUI_TEXT_LAYOUT_FOR_TEXT(text) \
+    SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS(wcslen(text)+1)
 #define SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS(chars) \
     (sizeof(struct OzUITextLayout) \
-    + sizeof(struct OzUICharLayout) * ((chars) + 1))
+    + sizeof(struct OzUICharLayout) * ((chars)))
 #define SIZE_OZUI_TEXT_LAYOUT(x) \
     SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS(((struct OzUITextLayout*)(x))->chars)
 struct OzUITextLayout 

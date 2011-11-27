@@ -266,10 +266,10 @@ int main()
     //struct OzUINextEventRequest *nextEventRequest = (struct OzUINextEventRequest*)buf;
     struct OzUIWindowDrawTextRequest *drawTextRequest;
     struct OzUIWindowDrawTextReply *drawTextReply = (struct OzUIWindowDrawTextReply*)replyBuf;
-    struct OzUIWindowLayoutTextRequest *layoutTextRequest;
-    struct OzUIWindowLayoutTextReply *layoutTextReply = (struct OzUIWindowLayoutTextReply*)replyBuf;
-    struct OzUIWindowDrawTextLayoutedRequest *drawTextLayoutedRequest;
-    struct OzUIWindowDrawTextLayoutedReply *drawTextLayoutedReply = (struct OzUIWindowDrawTextLayoutedReply*)replyBuf;
+    struct OzUIWindowQueryTextLayoutRequest *layoutTextRequest;
+    struct OzUIWindowQueryTextLayoutReply *layoutTextReply = (struct OzUIWindowQueryTextLayoutReply*)replyBuf;
+    struct OzUIWindowDrawTextLayoutRequest *drawTextLayoutRequest;
+    struct OzUIWindowDrawTextLayoutReply *drawTextLayoutReply = (struct OzUIWindowDrawTextLayoutReply*)replyBuf;
     struct App *app;
     //int drawTextReplyLen;
 
@@ -395,20 +395,20 @@ int main()
             OzReply(hdr.pid, drawTextReply, SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY(drawTextReply));
             //OzReply(hdr.pid, drawTextReply,  200);
             break;
-        case OZUI_EVENT_LAYOUT_TEXT:
-            layoutTextRequest = (struct OzUIWindowLayoutTextRequest*)buf;
+        case OZUI_EVENT_QUERY_TEXT_LAYOUT:
+            layoutTextRequest = (struct OzUIWindowQueryTextLayoutRequest*)buf;
             window = getWindowById(layoutTextRequest->id);
-            windowLayoutText(window, &layoutTextRequest->clipRect, &layoutTextRequest->tlc, layoutTextRequest->text, &layoutTextReply->layout);
+            windowQueryTextLayout(window, &layoutTextRequest->clipRect, &layoutTextRequest->tlc, layoutTextRequest->text, &layoutTextReply->layout);
             layoutTextReply->ret = 0;
-            OzReply(hdr.pid, layoutTextReply, SIZE_OZUI_WINDOW_LAYOUT_TEXT_REPLY(layoutTextReply));
+            OzReply(hdr.pid, layoutTextReply, SIZE_OZUI_WINDOW_QUERY_TEXT_LAYOUT_REPLY(layoutTextReply));
             break;
-        case OZUI_EVENT_DRAW_TEXT_LAYOUTED:
-            drawTextLayoutedRequest = (struct OzUIWindowDrawTextLayoutedRequest*)buf;
-            window = getWindowById(drawTextLayoutedRequest->id);
-            windowDrawTextLayouted(window, &drawTextLayoutedRequest->clipRect, &drawTextLayoutedRequest->tlc, &drawTextLayoutedRequest->lineStyle, &drawTextLayoutedRequest->layout);
-            unionWindowRect(&dirtyRect, window, &drawTextLayoutedRequest->clipRect);
-            drawTextLayoutedReply->ret = 0;
-            OzReply(hdr.pid, drawTextLayoutedReply, sizeof(struct OzUIWindowDrawTextLayoutedReply));
+        case OZUI_EVENT_DRAW_TEXT_LAYOUT:
+            drawTextLayoutRequest = (struct OzUIWindowDrawTextLayoutRequest*)buf;
+            window = getWindowById(drawTextLayoutRequest->id);
+            windowDrawTextLayout(window, &drawTextLayoutRequest->clipRect, &drawTextLayoutRequest->tlc, &drawTextLayoutRequest->lineStyle, &drawTextLayoutRequest->layout);
+            unionWindowRect(&dirtyRect, window, &drawTextLayoutRequest->clipRect);
+            drawTextLayoutReply->ret = 0;
+            OzReply(hdr.pid, drawTextLayoutReply, sizeof(struct OzUIWindowDrawTextLayoutReply));
             break;
         }
     }

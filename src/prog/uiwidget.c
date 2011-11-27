@@ -96,9 +96,20 @@ static void translateLayoutCoords(struct OzUITextLayout *layout, int deltaX, int
 {
     int i;
     translateRect(&layout->rect, deltaX, deltaY);
-    for (i = 0; i <= layout->chars; i++) {
+    for (i = 0; i < layout->chars; i++) {
         translateRect(&layout->charLayout[i].rect, deltaX, deltaY);
     }
+}
+
+static struct OzUITextLayout *copyLayout(struct OzUITextLayout *layout)
+{
+    struct OzUITextLayout *utl;
+    int n;
+    malloc_stats();
+    n = SIZE_OZUI_TEXT_LAYOUT(layout);
+    utl = (struct OzUITextLayout*)malloc(n);
+    memcpy(utl, layout, n);
+    return utl;
 }
 
 int OzUIWidgetDrawText(struct OzUIWidget *widget, struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct LineStyle *lineStyle, struct OzUITextLayout *layout)
@@ -113,5 +124,37 @@ int OzUIWidgetDrawText(struct OzUIWidget *widget, struct OzUITextLayoutConstrain
     ret =  OzUIWindowDrawText(widget->window, &widget->dirtyRect, &baseTLC, text, lineStyle, layout);
     if (layout)
         translateLayoutCoords(layout, -widget->rect.x, -widget->rect.y);
+    return ret;
+}
+
+int OzUIWidgetQueryTextLayout(struct OzUIWidget *widget, struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct OzUITextLayout *layout)
+{
+    struct OzUITextLayoutConstraint baseTLC;
+    int ret;
+    memcpy(&baseTLC, tlc, sizeof(struct OzUITextLayoutConstraint));
+    baseTLC.originX += widget->rect.x;
+    baseTLC.originY += widget->rect.y;
+    baseTLC.rect.x += widget->rect.x;
+    baseTLC.rect.y += widget->rect.y;
+    ret =  OzUIWindowQueryTextLayout(widget->window, &widget->dirtyRect, &baseTLC, text, layout);
+    if (layout)
+        translateLayoutCoords(layout, -widget->rect.x, -widget->rect.y);
+    return ret;
+}
+
+int OzUIWidgetDrawTextLayout(struct OzUIWidget *widget, struct OzUITextLayoutConstraint *tlc, struct LineStyle *lineStyle, struct OzUITextLayout *layout)
+{
+    struct OzUITextLayoutConstraint baseTLC;
+    struct OzUITextLayout *baseLayout;
+    int ret;
+    memcpy(&baseTLC, tlc, sizeof(struct OzUITextLayoutConstraint));
+    baseTLC.originX += widget->rect.x;
+    baseTLC.originY += widget->rect.y;
+    baseTLC.rect.x += widget->rect.x;
+    baseTLC.rect.y += widget->rect.y;
+    baseLayout = copyLayout(layout);
+    translateLayoutCoords(baseLayout, widget->rect.x, widget->rect.y);
+    ret =  OzUIWindowDrawTextLayout(widget->window, &widget->dirtyRect, &baseTLC, lineStyle, baseLayout);
+    free(baseLayout);
     return ret;
 }

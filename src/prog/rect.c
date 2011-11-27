@@ -1,6 +1,8 @@
 #include "rect.h"
 #include <os/sysdef.h>
 
+static struct Rect _rect;
+
 void initRect(struct Rect *rect, int x, int y, int w, int h)
 {
     rect->x = x;
@@ -98,5 +100,11 @@ struct Rect *translateRect(struct Rect *rect, int deltaX, int deltaY)
     rect->x += deltaX;
     rect->y += deltaY;
     return rect;
+}
+
+struct Rect *makeRect(int x, int y, int w, int h)
+{
+    initRect(&_rect, x, y, w, h);
+    return &_rect;
 }
 

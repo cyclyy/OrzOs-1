@@ -54,5 +54,8 @@ int OzUIWidgetDrawLine(struct OzUIWidget *widget,
 int OzUIWidgetDrawText(struct OzUIWidget *widget, 
         struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct LineStyle *lineStyle, struct OzUITextLayout *layout);
 
+int OzUIWidgetQueryTextLayout(struct OzUIWidget *widget, struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct OzUITextLayout *layout);
+
+int OzUIWidgetDrawTextLayout(struct OzUIWidget *widget, struct OzUITextLayoutConstraint *tlc, struct LineStyle *lineStyle, struct OzUITextLayout *layout);
 
 #endif /* UIWIDGET_H */

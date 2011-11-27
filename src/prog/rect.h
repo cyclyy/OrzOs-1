@@ -32,4 +32,6 @@ int rectBottom(const struct Rect *rect);
 
 struct Rect *translateRect(struct Rect *rect, int deltaX, int deltaY);
 
+struct Rect *makeRect(int x, int y, int w, int h);
+
 #endif /* RECT_H */

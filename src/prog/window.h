@@ -75,11 +75,11 @@ int drawLine(struct Window *window, struct Rect *clipRect,
 int drawText(struct Window *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc, wchar_t *text, struct LineStyle *lineStyle, struct OzUITextLayout *utl);
 
-int windowDrawTextLayouted(struct Window *window, struct Rect *clipRect,
+int windowDrawTextLayout(struct Window *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc,
         struct LineStyle *lineStyle, struct OzUITextLayout *utl);
 
-int windowLayoutText(struct Window *window, struct Rect *clipRect,
+int windowQueryTextLayout(struct Window *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc, wchar_t *text, 
         struct OzUITextLayout *utl);
 

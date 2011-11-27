@@ -103,7 +103,7 @@ struct OzUIWindowDrawTextRequest
 
 #define SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY_FOR_TEXT(str) \
     (sizeof(int)  + SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS( \
-        wcslen(str)))
+        wcslen(str)+1))
 #define SIZE_OZUI_WINDOW_DRAW_TEXT_REPLY(x) \
     (sizeof(int)  + SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS( \
         ((struct OzUIWindowDrawTextReply*)(x))->layout.chars ))
@@ -113,13 +113,13 @@ struct OzUIWindowDrawTextReply
     struct OzUITextLayout layout;
 }__attribute__((packed));
 
-#define SIZE_OZUI_WINDOW_LAYOUT_TEXT_REQUEST_FOR_TEXT(text) \
-    (sizeof(struct OzUIWindowLayoutTextRequest) \
+#define SIZE_OZUI_WINDOW_QUERY_TEXT_LAYOUT_REQUEST_FOR_TEXT(text) \
+    (sizeof(struct OzUIWindowQueryTextLayoutRequest) \
     + sizeof(wchar_t) * (wcslen(text) + 1))
-#define SIZE_OZUI_WINDOW_LAYOUT_TEXT_REQUEST(x) \
-    SIZE_OZUI_WINDOW_LAYOUT_TEXT_REQUEST_FOR_TEXT( \
-            ((struct OzUIWindowLayoutTextRequest*)(x))->text)
-struct OzUIWindowLayoutTextRequest
+#define SIZE_OZUI_WINDOW_QUERY_TEXT_LAYOUT_REQUEST(x) \
+    SIZE_OZUI_WINDOW_QUERY_TEXT_LAYOUT_REQUEST_FOR_TEXT( \
+            ((struct OzUIWindowQueryTextLayoutRequest*)(x))->text)
+struct OzUIWindowQueryTextLayoutRequest
 {
     int type;
     unsigned long id;
@@ -128,28 +128,30 @@ struct OzUIWindowLayoutTextRequest
     wchar_t text[0];
 }__attribute__((packed));
 
-#define SIZE_OZUI_WINDOW_LAYOUT_TEXT_REPLY_FOR_TEXT(str) \
+#define SIZE_OZUI_WINDOW_QUERY_TEXT_LAYOUT_REPLY_FOR_TEXT(str) \
     (sizeof(int)  + SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS( \
-        wcslen(str)))
-#define SIZE_OZUI_WINDOW_LAYOUT_TEXT_REPLY(x) \
+        wcslen(str)+1))
+#define SIZE_OZUI_WINDOW_QUERY_TEXT_LAYOUT_REPLY(x) \
     (sizeof(int)  + SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS( \
-        ((struct OzUIWindowLayoutTextReply*)(x))->layout.chars ))
-struct OzUIWindowLayoutTextReply
+        ((struct OzUIWindowQueryTextLayoutReply*)(x))->layout.chars ))
+struct OzUIWindowQueryTextLayoutReply
 {
     int ret;
     struct OzUITextLayout layout;
 }__attribute__((packed));
 
-#define SIZE_OZUI_WINDOW_DRAW_TEXT_LAYOUTED_REQUEST_FOR_CHARS(text) \
-    (sizeof(struct OzUIWindowDrawTextLayoutedRequest) \
+#define SIZE_OZUI_WINDOW_DRAW_TEXT_LAYOUT_REQUEST_FOR_TEXT(text) \
+    SIZE_OZUI_WINDOW_DRAW_TEXT_LAYOUT_REQUEST_FOR_CHARS(wcslen(text)+1)
+#define SIZE_OZUI_WINDOW_DRAW_TEXT_LAYOUT_REQUEST_FOR_CHARS(n) \
+    (sizeof(struct OzUIWindowDrawTextLayoutRequest) \
       - sizeof(struct OzUITextLayout) \
-      + SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS(text))
-#define SIZE_OZUI_WINDOW_DRAW_TEXT_LAYOUTED_REQUEST(x) \
-    (sizeof(struct OzUIWindowDrawTextLayoutedRequest) \
+      + SIZE_OZUI_TEXT_LAYOUT_FOR_CHARS(n))
+#define SIZE_OZUI_WINDOW_DRAW_TEXT_LAYOUT_REQUEST(x) \
+    (sizeof(struct OzUIWindowDrawTextLayoutRequest) \
       - sizeof(struct OzUITextLayout) \
       + SIZE_OZUI_TEXT_LAYOUT( \
-            &((struct OzUIWindowDrawTextLayoutedRequest*)(x))->layout))
-struct OzUIWindowDrawTextLayoutedRequest
+            &((struct OzUIWindowDrawTextLayoutRequest*)(x))->layout))
+struct OzUIWindowDrawTextLayoutRequest
 {
     int type;
     unsigned long id;
@@ -159,7 +161,7 @@ struct OzUIWindowDrawTextLayoutedRequest
     struct OzUITextLayout layout;
 }__attribute__((packed));
 
-struct OzUIWindowDrawTextLayoutedReply
+struct OzUIWindowDrawTextLayoutReply
 {
     int ret;
 }__attribute__((packed));
@@ -212,8 +214,10 @@ int OzUIWindowDrawLine(struct OzUIWindow *window, struct Rect *clipRect,
 int OzUIWindowDrawText(struct OzUIWindow *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct LineStyle *lineStyle, struct OzUITextLayout *layout);
 
-int OzUIWindowLayoutText(struct OzUIWindow *window, struct Rect *clipRect,
+int OzUIWindowQueryTextLayout(struct OzUIWindow *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc, const wchar_t *text, struct OzUITextLayout *layout);
 
+int OzUIWindowDrawTextLayout(struct OzUIWindow *window, struct Rect *clipRect,
+        struct OzUITextLayoutConstraint *tlc, struct LineStyle *lineStyle, struct OzUITextLayout *layout);
 
 #endif /* UIWINDOW_H */

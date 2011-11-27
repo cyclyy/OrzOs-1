@@ -186,7 +186,7 @@ s64int OzSeek(s64int fd, s64int offset, s64int pos)
     struct Handle *handle;
 
 
-    printk("OzSeek:%d:%d\n", offset, pos);
+    //printk("OzSeek:%d:%d\n", offset, pos);
     if (!IS_VALID_HANDLE_INDEX(fd)) {
         return -1;
     }
