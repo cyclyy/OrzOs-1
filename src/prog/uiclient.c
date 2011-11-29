@@ -69,7 +69,8 @@ int main()
     OzUIButtonSetText(button, L"我们都是好人");
 
     textEdit = OzUICreateTextEdit(window, makeRect(10,60,80,40), &myTextEditOps, 0);
-    OzUITextEditSetText(textEdit, L"我们都是好人");
+    OzUITextEditSetText(textEdit, L"我们都是好人对不对啊对不对");
+    OzUITextEditSetAllowMultiline(textEdit, 1);
 
     OzUINextEvent();
     for (;;) {

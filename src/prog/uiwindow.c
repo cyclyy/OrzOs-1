@@ -100,8 +100,8 @@ void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *mice
             if (widget->ops && widget->ops->onMiceEnter)
                 widget->ops->onMiceEnter(widget);
         }
-        localMiceEvent.x = miceEvent->x - widget->rect.x;
-        localMiceEvent.y = miceEvent->y - widget->rect.y;
+        localMiceEvent.x = miceEvent->x - window->screenRect.x - widget->rect.x;
+        localMiceEvent.y = miceEvent->y - window->screenRect.y - widget->rect.y;
         if (widget->ops && widget->ops->onMiceEvent)
             widget->ops->onMiceEvent(widget, &localMiceEvent);
     } else {

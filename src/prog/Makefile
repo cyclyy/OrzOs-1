@@ -26,9 +26,9 @@ all:init uiserver uiclient
 
 init_SRCS = init.o
 
-uiserver_SRCS = uiserver.o window.o rect.o guiconfig.o app.o drawops.o layout.o utf8.o buffer.o keyhelper.o
+uiserver_SRCS = uiserver.o window.o rect.o guiconfig.o app.o drawoption.o layout.o utf8.o buffer.o keyhelper.o
 
-uiclient_SRCS = uiclient.o uiproto.o uilabel.o uibutton.o uiclosebutton.o uitextedit.o uiapp.o uiwindow.o uiwidget.o rect.o guiconfig.o utf8.o uikey.o
+uiclient_SRCS = uiclient.o uiproto.o uilabel.o uibutton.o uiclosebutton.o uitextedit.o uiapp.o uiwindow.o uiwidget.o rect.o guiconfig.o utf8.o uikey.o uitextlayout.o
 
 %.d: %.c
 	@set -e; rm -f $@; \

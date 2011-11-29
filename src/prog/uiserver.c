@@ -3,7 +3,7 @@
 #include "gcontext_p.h"
 #include "uiproto.h"
 #include "window.h"
-#include "drawops.h"
+#include "drawoption.h"
 #include "uikey.h"
 #include "rect.h"
 #include "keyhelper.h"

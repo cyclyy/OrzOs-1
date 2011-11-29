@@ -39,5 +39,6 @@ struct OzUITextLayoutConstraint
     int flags;
 }__attribute__((packed));
 
+void OzUITextLayoutTransform(struct OzUITextLayout *tl, int deltaX, int deltaY);
 
 #endif /* UITEXTLAYOUT_H */
