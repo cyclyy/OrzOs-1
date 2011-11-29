@@ -117,7 +117,7 @@ struct OzUIButton *OzUICreateButton(struct OzUIWindow *window, struct Rect *rect
 
     button = (struct OzUIButton*)malloc(sizeof(struct OzUIButton));
     memset(button, 0, sizeof(struct OzUIButton));
-    button->widget = OzUICreateWidget(window, OZUI_WIDGET_TYPE_BUTTON, rect, &buttonOps, button);
+    button->widget = OzUICreateWidget(window, OZUI_WIDGET_TYPE_BUTTON, 0, rect, &buttonOps, button);
     button->state = OZUI_BUTTON_STATE_READY;
     button->ops = ops;
     button->d = userData;

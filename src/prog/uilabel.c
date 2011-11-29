@@ -13,7 +13,16 @@ static struct OzUIWidgetOperation labelOps = {
 
 static struct LineStyle blackLS = {
     .color = {0,0,0},
-    .lineWidth = 0,
+    .lineWidth = 1,
+};
+
+static struct LineStyle whiteLS = {
+    .color = {255,255,255},
+    .lineWidth = 1,
+};
+
+static struct FillStyle blackFS = {
+    .color = {0,0,0},
 };
 
 static struct FillStyle whiteFS = {
@@ -32,9 +41,9 @@ static void labelPaint(struct OzUIWidget *widget)
     tlc.fontSize = label->fontSize;
     tlc.originX = tlc.originY = 0;
     tlc.flags = OZUI_TEXT_ALIGN_VCENTER;
-    OzUIWidgetDrawRectangle(widget, &rect, &blackLS, &whiteFS);
+    OzUIWidgetDrawRectangle(widget, &rect, &whiteLS, &blackFS);
     if (label && label->text)
-        OzUIWidgetDrawText(widget, &tlc, label->text, &blackLS, 0);
+        OzUIWidgetDrawText(widget, &tlc, label->text, &whiteLS, 0);
 }
 
 struct OzUILabel *OzUICreateLabel(struct OzUIWindow *window, struct Rect *rect)
@@ -43,7 +52,7 @@ struct OzUILabel *OzUICreateLabel(struct OzUIWindow *window, struct Rect *rect)
 
     label = (struct OzUILabel*)malloc(sizeof(struct OzUILabel));
     memset(label, 0, sizeof(struct OzUILabel));
-    label->widget = OzUICreateWidget(window, OZUI_WIDGET_TYPE_LABEL, rect, &labelOps, label);
+    label->widget = OzUICreateWidget(window, OZUI_WIDGET_TYPE_LABEL, 0, rect, &labelOps, label);
     label->fontSize = OZUI_LABEL_DEFAULT_FONT_SIZE;
     OzUIWidgetInvalidateAll(label->widget);
     return label;

@@ -245,8 +245,8 @@ void paintAll()
 
 int main()
 {
-    char buf[512];
-    char replyBuf[512];
+    char *buf;
+    char replyBuf[3000];
     struct Window *window, *oldWindow;
     struct MessageHeader hdr;
     struct IOEvent *ioEventPtr;
@@ -280,12 +280,14 @@ int main()
 
     OzNewTask("C:/uiclient",0);
 
+    buf = (char*)malloc(10000);
+
     OzMilliAlarm(40);
     OzReadAsync(kbdFD, sizeof(struct KeyEvent), &keyEvent);
     OzReadAsync(miceFD, sizeof(struct MiceEvent), &miceEvent);
     for (;;) {
         //paintAll();
-        OzReceive(&hdr, buf, 1000);
+        OzReceive(&hdr, buf, 10000);
         switch (GET_EVENT_TYPE(buf)) {
         case EVENT_TIMER:
             OzMilliAlarm(40);

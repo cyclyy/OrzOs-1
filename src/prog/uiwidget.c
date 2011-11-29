@@ -1,17 +1,20 @@
 #include "uiwidget.h"
 #include "uiwindow.h"
+#include "uikey.h"
+#include "uimice.h"
 #include "point.h"
 #include <stdlib.h>
 #include <string.h>
 #include <os/list.h>
 
-struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, struct Rect *rect, struct OzUIWidgetOperation *ops, void *userData)
+struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, int flags, struct Rect *rect, struct OzUIWidgetOperation *ops, void *userData)
 {
     struct OzUIWidget *widget;
     widget = (struct OzUIWidget*)malloc(sizeof(struct OzUIWidget));
     memset(widget, 0, sizeof(struct OzUIWidget));
     widget->window = window;
     widget->type = type;
+    widget->flags = flags;
     copyRect(&widget->rect, rect);
     translateRect(&widget->rect, widget->window->clientRect.x, widget->window->clientRect.y);
     initRect(&widget->dirtyRect, 0, 0, 0, 0);
@@ -28,6 +31,10 @@ int OzUIDestroyWidget(struct OzUIWidget *widget)
     listDel(&widget->link);
     if (widget->ops && widget->ops->onDestroy)
         widget->ops->onDestroy(widget);
+    if (widget->window->miceWidget == widget)
+        widget->window->miceWidget = 0;
+    if (widget->window->focusWidget == widget)
+        widget->window->focusWidget = 0;
     free(widget);
     return 0;
 }
@@ -56,20 +63,19 @@ static void doWidgetPaint(struct OzUIWidget *widget)
     widget->ops->paint(widget);
 }
 
-int OzUIWidgetInvalidate(struct OzUIWidget *widget, const struct Rect *dirtyRect)
+void OzUIWidgetInvalidate(struct OzUIWidget *widget, const struct Rect *dirtyRect)
 {
     OzUIWidgetBeginDraw(widget, dirtyRect);
     doWidgetPaint(widget);
     OzUIWidgetEndDraw(widget);
-    return 0;
 }
 
-int OzUIWidgetInvalidateAll(struct OzUIWidget *widget)
+void OzUIWidgetInvalidateAll(struct OzUIWidget *widget)
 {
     struct Rect dirtyRect;
 
     initRect(&dirtyRect, 0, 0, widget->rect.w, widget->rect.h);
-    return OzUIWidgetInvalidate(widget, &dirtyRect);
+    OzUIWidgetInvalidate(widget, &dirtyRect);
 }
 
 int OzUIWidgetDrawRectangle(struct OzUIWidget *widget, struct Rect *rect,
@@ -105,7 +111,6 @@ static struct OzUITextLayout *copyLayout(struct OzUITextLayout *layout)
 {
     struct OzUITextLayout *utl;
     int n;
-    malloc_stats();
     n = SIZE_OZUI_TEXT_LAYOUT(layout);
     utl = (struct OzUITextLayout*)malloc(n);
     memcpy(utl, layout, n);

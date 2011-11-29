@@ -22,7 +22,10 @@ struct OzUIWindowOperation genericWindowOperation = {
 
 void OzUIWindowOnKeyEvent(struct OzUIWindow *window, struct OzUIKeyEvent *keyEvent)
 {
-    ;
+    if (!window->focusWidget)
+        return;
+    if (window->focusWidget->ops && window->focusWidget->ops->onKeyEvent)
+        window->focusWidget->ops->onKeyEvent(window->focusWidget, keyEvent);
 }
 
 static struct OzUIWidget *widgetUnderMice(struct OzUIWindow *window, struct OzUIMiceEvent *miceEvent, struct OzUIMiceEvent *localMiceEvent)
@@ -69,6 +72,21 @@ void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *mice
     }
     widget = widgetUnderMice(window, miceEvent, &localMiceEvent);
     if (widget) {
+        // handle keyboard focus event
+        if ((miceEvent->type == OZUI_MICE_EVENT_DOWN) && (widget->flags & OZUI_WIDGET_FLAG_FOCUSABLE)) {
+            if (window->focusWidget != widget) {
+                if (window->focusWidget) {
+                    if (window->focusWidget->ops && window->focusWidget->ops->onUnfocus) {
+                        window->focusWidget->ops->onUnfocus(window->focusWidget);
+                    }
+                }
+                window->focusWidget = widget;
+                if (widget) {
+                    if (widget->ops && widget->ops->onFocus) {
+                        widget->ops->onFocus(widget);
+                    } }
+            }
+        }
         if (window->miceWidget != widget) {
             // TODO: handle mice leave in old miceWidget
             if (window->miceWidget) {
@@ -106,12 +124,12 @@ void OzUIWindowOnMiceEvent(struct OzUIWindow *window, struct OzUIMiceEvent *mice
 
 void OzUIWindowOnFocus(struct OzUIWindow *window)
 {
-    OzUILabelSetText(window->titleLabel, L"focus");
+//    OzUILabelSetText(window->titleLabel, L"focus");
 }
 
 void OzUIWindowOnUnfocus(struct OzUIWindow *window)
 {
-    OzUILabelSetText(window->titleLabel, L"unfocus");
+//    OzUILabelSetText(window->titleLabel, L"unfocus");
 }
 
 struct OzUIWindow *OzUIGetWindowById(unsigned long id)

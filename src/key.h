@@ -156,4 +156,9 @@ struct KeyEvent
     int code;
 }__attribute__((packed));
 
+#define KEY_CODE_IS_PRINT(code) ((code >= Key_Space) && (code < 256))
+#define KEY_CODE_IS_NUM(code) ((code >= Key_0) && (code <= Key_9))
+#define KEY_CODE_IS_ALPHA(code) ((code >= Key_A) && (code <= Key_Z))
+#define KEY_CODE_IS_ALNUM(code) (KEY_CODE_IS_ALPHA(code) || KEY_CODE_IS_NUM(code))
+
 #endif /* KEY_H */

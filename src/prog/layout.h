@@ -38,15 +38,6 @@ struct LayoutConstraint
     int flags;
 };
 
-int layoutTextToGlyph(cairo_t *cr, 
-        cairo_glyph_t **glyphs, 
-        cairo_text_extents_t **exts,
-        const char *text, 
-        struct Rect *rect, 
-        int originX, 
-        int originY, 
-        int flags);
-
 int layoutText(struct TextLayout *layout, const wchar_t *text, const struct LayoutConstraint *constraint);
 
 struct TextLayout *createTextLayout();

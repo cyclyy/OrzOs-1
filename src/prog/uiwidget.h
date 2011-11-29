@@ -5,6 +5,7 @@
 #include <os/list.h>
 #include <wchar.h>
 
+struct OzUIKeyEvent;
 struct OzUIMiceEvent;
 struct OzUIWidget;
 struct Point;
@@ -15,13 +16,19 @@ struct OzUIWidgetOperation
     void (*onMiceEnter)(struct OzUIWidget *widget);
     void (*onMiceLeave)(struct OzUIWidget *widget);
     void (*onMiceEvent)(struct OzUIWidget *widget, struct OzUIMiceEvent *miceEvent);
+    void (*onFocus)(struct OzUIWidget *widget);
+    void (*onUnfocus)(struct OzUIWidget *widget);
+    void (*onKeyEvent)(struct OzUIWidget *widget, struct OzUIKeyEvent *keyEvent);
     void (*paint)(struct OzUIWidget *widget);
 };
+
+#define OZUI_WIDGET_FLAG_FOCUSABLE  1
 
 struct OzUIWidget
 {
     struct OzUIWindow *window;
     int type;
+    int flags;
     struct Rect rect;
     struct Rect dirtyRect;
     struct OzUIWidgetOperation *ops;
@@ -29,7 +36,7 @@ struct OzUIWidget
     void *d;
 };
 
-struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, struct Rect *rect, struct OzUIWidgetOperation *ops, void *userData);
+struct OzUIWidget *OzUICreateWidget(struct OzUIWindow *window, int type, int flags, struct Rect *rect, struct OzUIWidgetOperation *ops, void *userData);
 
 int OzUIDestroyWidget(struct OzUIWidget *widget);
 
@@ -37,9 +44,9 @@ int OzUIWidgetBeginDraw(struct OzUIWidget *widget, const struct Rect *dirtyRect)
 
 int OzUIWidgetEndDraw(struct OzUIWidget *widget);
 
-int OzUIWidgetInvalidateAll(struct OzUIWidget *widget);
+void OzUIWidgetInvalidateAll(struct OzUIWidget *widget);
 
-int OzUIWidgetInvalidate(struct OzUIWidget *widget, const struct Rect *dirtyRect);
+void OzUIWidgetInvalidate(struct OzUIWidget *widget, const struct Rect *dirtyRect);
 
 void OzUIWidgetSetUserData(struct OzUIWidget *widget, void *userData);
 

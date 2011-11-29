@@ -69,7 +69,7 @@ int main()
     OzUIButtonSetText(button, L"我们都是好人");
 
     textEdit = OzUICreateTextEdit(window, makeRect(10,60,80,40), &myTextEditOps, 0);
-    OzUITextEditSetText(textEdit, L"一行文字");
+    OzUITextEditSetText(textEdit, L"我们都是好人");
 
     OzUINextEvent();
     for (;;) {

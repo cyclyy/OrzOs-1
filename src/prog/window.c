@@ -258,6 +258,7 @@ int drawTextLayout(const struct TextLayout *layout, const struct LayoutConstrain
     n = 0;
     cr = lc->cr;
 
+    cairo_set_font_size(cr, lc->fontSize);
     glyphs = cairo_glyph_allocate(layout->chars);
     listForEachEntry(charLayout, &layout->charList, link) {
         if (!isEmptyRect(&charLayout->rect)) {
@@ -325,10 +326,10 @@ int drawText(struct Window *window, struct Rect *clipRect,
     cairo_set_source_rgb(cr, lineStyle->color.r/255.0, lineStyle->color.g/255.0,
             lineStyle->color.b/255.0);
     cairo_set_line_width(cr, lineStyle->lineWidth);
-    cairo_set_font_size(cr, tlc->fontSize);
 
     lc.cr = cr;
     copyRect(&lc.rect, &tlc->rect);
+    lc.fontSize = tlc->fontSize;
     lc.originX = tlc->originX;
     lc.originY = tlc->originY;
     lc.flags = tlc->flags;
@@ -364,10 +365,10 @@ int windowDrawTextLayout(struct Window *window, struct Rect *clipRect,
     cairo_set_source_rgb(cr, lineStyle->color.r/255.0, lineStyle->color.g/255.0,
             lineStyle->color.b/255.0);
     cairo_set_line_width(cr, lineStyle->lineWidth);
-    cairo_set_font_size(cr, tlc->fontSize);
 
     lc.cr = cr;
     copyRect(&lc.rect, &tlc->rect);
+    lc.fontSize = tlc->fontSize;
     lc.originX = tlc->originX;
     lc.originY = tlc->originY;
     lc.flags = tlc->flags;
@@ -396,6 +397,7 @@ int windowQueryTextLayout(struct Window *window, struct Rect *clipRect,
     cairo_save(cr);
     lc.cr = cr;
     copyRect(&lc.rect, &tlc->rect);
+    lc.fontSize = tlc->fontSize;
     lc.originX = tlc->originX;
     lc.originY = tlc->originY;
     lc.flags = tlc->flags;
