@@ -16,8 +16,8 @@ void OzUIAppInit(int argc, char *argv[])
 
 void OzUIAppQuit()
 {
-    struct OzUIWindow *window;
-    listForEachEntry(window, &app->windowList, link) {
+    struct OzUIWindow *window, *tmp;
+    listForEachEntrySafe(window, tmp, &app->windowList, link) {
         OzUIDestroyWindow(window);
     }
 }

@@ -163,3 +163,9 @@ int OzUIWidgetDrawTextLayout(struct OzUIWidget *widget, struct OzUITextLayoutCon
     free(baseLayout);
     return ret;
 }
+
+int OzUIWidgetDrawImageFile(struct OzUIWidget *widget, int x, int y, const char *path)
+{
+    return OzUIWindowDrawImageFile(widget->window, &widget->dirtyRect, x + widget->rect.x, y + widget->rect.y, path);
+}
+

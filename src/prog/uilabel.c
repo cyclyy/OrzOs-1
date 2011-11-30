@@ -40,7 +40,8 @@ static void labelPaint(struct OzUIWidget *widget)
     copyRect(&tlc.rect, &rect);
     tlc.fontSize = label->fontSize;
     tlc.originX = tlc.originY = 0;
-    tlc.flags = OZUI_TEXT_ALIGN_VCENTER;
+    //tlc.flags = OZUI_TEXT_ALIGN_VCENTER;
+    tlc.flags = 0;
     OzUIWidgetDrawRectangle(widget, &rect, &whiteLS, &blackFS);
     if (label && label->text)
         OzUIWidgetDrawText(widget, &tlc, label->text, &whiteLS, 0);

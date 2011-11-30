@@ -83,6 +83,10 @@ int windowQueryTextLayout(struct Window *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc, wchar_t *text, 
         struct OzUITextLayout *utl);
 
+int drawImageFile(struct Window *window, struct Rect *clipRect,
+        int x, int y,
+        const char *path);
+
 struct Window *focusWindow();
 
 void setFocusWindow(struct Window *window);

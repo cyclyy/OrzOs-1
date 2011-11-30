@@ -413,6 +413,33 @@ int windowQueryTextLayout(struct Window *window, struct Rect *clipRect,
     return ret;
 }
 
+int drawImageFile(struct Window *window, struct Rect *clipRect,
+        int x, int y,
+        const char *path)
+{
+    cairo_t *cr;
+    cairo_surface_t *img_surface;
+    cr = window->pixmap->d->cr;
+    img_surface = cairo_image_surface_create_from_png(path);
+    if (cairo_surface_status(img_surface) != CAIRO_STATUS_SUCCESS) {
+        cairo_surface_destroy(img_surface);
+        return -1;
+    }
+    cairo_save(cr);
+    cairo_rectangle(cr, clipRect->x, clipRect->y, clipRect->w, clipRect->h);
+    cairo_clip(cr);
+    cairo_translate(cr, x, y);
+    cairo_scale(cr, 
+            (.0 + clipRect->w) / cairo_image_surface_get_width(img_surface), 
+            (.0 + clipRect->h) / cairo_image_surface_get_height(img_surface));
+    cairo_set_source_surface(cr, img_surface, 0, 0);
+    cairo_paint(cr);
+    cairo_surface_destroy(img_surface);
+    cairo_reset_clip(cr);
+    cairo_restore(cr);
+    return 0;
+}
+
 struct Window *focusWindow()
 {
     return currentWindow;

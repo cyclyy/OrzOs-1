@@ -41,6 +41,9 @@ int OzUISendReceive(void *request, void *reply)
         case OZUI_EVENT_DRAW_TEXT_LAYOUT:
             return OzSendReceive(&hdr, request, SIZE_OZUI_WINDOW_DRAW_TEXT_LAYOUT_REQUEST(request), reply, sizeof(struct OzUIWindowDrawTextLayoutReply));
             break;
+        case OZUI_EVENT_DRAW_IMAGE_FILE:
+            return OzSendReceive(&hdr, request, sizeof(struct OzUIWindowDrawImageFileRequest), reply, sizeof(struct OzUIWindowDrawImageFileReply));
+            break;
     };
     return 0;
 }

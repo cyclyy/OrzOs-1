@@ -166,6 +166,20 @@ struct OzUIWindowDrawTextLayoutReply
     int ret;
 }__attribute__((packed));
 
+struct OzUIWindowDrawImageFileRequest
+{
+    int type;
+    unsigned long id;
+    struct Rect clipRect;
+    int x, y;
+    char path[MAX_PATH_LEN];
+}__attribute__((packed));
+
+struct OzUIWindowDrawImageFileReply
+{
+    int ret;
+}__attribute__((packed));
+
 // event notify
 struct OzUIFocusEventNotify
 {
@@ -220,4 +234,7 @@ int OzUIWindowQueryTextLayout(struct OzUIWindow *window, struct Rect *clipRect,
 int OzUIWindowDrawTextLayout(struct OzUIWindow *window, struct Rect *clipRect,
         struct OzUITextLayoutConstraint *tlc, struct LineStyle *lineStyle, struct OzUITextLayout *layout);
 
+int OzUIWindowDrawImageFile(struct OzUIWindow *window, struct Rect *clipRect,
+        int x, int y, const char *path);
+        
 #endif /* UIWINDOW_H */

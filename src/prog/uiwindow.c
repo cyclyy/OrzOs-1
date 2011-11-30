@@ -316,4 +316,19 @@ int OzUIWindowDrawTextLayout(struct OzUIWindow *window, struct Rect *clipRect,
     return reply.ret;
 }
 
+int OzUIWindowDrawImageFile(struct OzUIWindow *window, struct Rect *clipRect,
+        int x, int y, const char *path)
+{
+    struct OzUIWindowDrawImageFileRequest request;
+    struct OzUIWindowDrawImageFileReply reply;
+    memset(&request, 0, sizeof(struct OzUIWindowDrawImageFileRequest));
+    request.type = OZUI_EVENT_DRAW_IMAGE_FILE;
+    request.id = window->id;
+    copyRect(&request.clipRect, clipRect);
+    request.x = x;
+    request.y = y;
+    strncpy(request.path, path, MAX_PATH_LEN-1);
+    OzUISendReceive(&request, &reply);
+    return reply.ret;
+}
 

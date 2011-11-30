@@ -10,6 +10,10 @@
 #include <stdio.h>
 #include <wchar.h>
 
+#ifndef MAX_PATH_LEN
+#define MAX_PATH_LEN  128
+#endif
+
 extern FILE *dbgFile;
 #define UIDBG(...)  fprintf(dbgFile, __VA_ARGS__)
 
@@ -38,6 +42,7 @@ extern FILE *dbgFile;
 #define OZUI_EVENT_DRAW_LINE            0x1007
 #define OZUI_EVENT_QUERY_TEXT_LAYOUT    0x1008
 #define OZUI_EVENT_DRAW_TEXT_LAYOUT     0x1009
+#define OZUI_EVENT_DRAW_IMAGE_FILE      0x1010
 
 // events received by client window
 #define OZUI_EVENT_MICE                 0x2001

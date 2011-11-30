@@ -65,4 +65,6 @@ int OzUIWidgetQueryTextLayout(struct OzUIWidget *widget, struct OzUITextLayoutCo
 
 int OzUIWidgetDrawTextLayout(struct OzUIWidget *widget, struct OzUITextLayoutConstraint *tlc, struct LineStyle *lineStyle, struct OzUITextLayout *layout);
 
+int OzUIWidgetDrawImageFile(struct OzUIWidget *widget, int x, int y, const char *path);
+
 #endif /* UIWIDGET_H */

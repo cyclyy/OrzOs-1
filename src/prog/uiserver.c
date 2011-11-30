@@ -270,6 +270,8 @@ int main()
     struct OzUIWindowQueryTextLayoutReply *layoutTextReply = (struct OzUIWindowQueryTextLayoutReply*)replyBuf;
     struct OzUIWindowDrawTextLayoutRequest *drawTextLayoutRequest;
     struct OzUIWindowDrawTextLayoutReply *drawTextLayoutReply = (struct OzUIWindowDrawTextLayoutReply*)replyBuf;
+    struct OzUIWindowDrawImageFileRequest *drawImageFileRequest;
+    struct OzUIWindowDrawImageFileReply *drawImageFileReply = (struct OzUIWindowDrawImageFileReply*)replyBuf;
     struct App *app;
     //int drawTextReplyLen;
 
@@ -278,7 +280,8 @@ int main()
     initMice();
     kbdFD = OzOpen("Device:/Keyboard", 0);
 
-    OzNewTask("C:/uiclient",0);
+    //OzNewTask("C:/uiclient",0);
+    OzNewTask("C:/aboutos",0);
 
     buf = (char*)malloc(10000);
 
@@ -411,6 +414,14 @@ int main()
             unionWindowRect(&dirtyRect, window, &drawTextLayoutRequest->clipRect);
             drawTextLayoutReply->ret = 0;
             OzReply(hdr.pid, drawTextLayoutReply, sizeof(struct OzUIWindowDrawTextLayoutReply));
+            break;
+        case OZUI_EVENT_DRAW_IMAGE_FILE:
+            drawImageFileRequest = (struct OzUIWindowDrawImageFileRequest*)buf;
+            window = getWindowById(drawImageFileRequest->id);
+            drawImageFile(window, &drawImageFileRequest->clipRect, drawImageFileRequest->x, drawImageFileRequest->y, drawImageFileRequest->path);
+            unionWindowRect(&dirtyRect, window, &drawImageFileRequest->clipRect);
+            drawImageFileReply->ret = 0;
+            OzReply(hdr.pid, drawImageFileReply, sizeof(struct OzUIWindowDrawImageFileReply));
             break;
         }
     }

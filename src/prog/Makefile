@@ -22,13 +22,15 @@ PROG_LDFLAGS=-T$(PREFIX)/ldscripts/prog.ld -m orzos_x86_64 -z max-page-size=0x10
 
 ASFLAGS=-felf64
 
-all:init uiserver uiclient
+all:init uiserver uiclient aboutos
 
 init_SRCS = init.o
 
 uiserver_SRCS = uiserver.o window.o rect.o guiconfig.o app.o drawoption.o layout.o utf8.o buffer.o keyhelper.o
 
-uiclient_SRCS = uiclient.o uiproto.o uilabel.o uibutton.o uiclosebutton.o uitextedit.o uiapp.o uiwindow.o uiwidget.o rect.o guiconfig.o utf8.o uikey.o uitextlayout.o
+uiclient_SRCS = uiclient.o uiproto.o uilabel.o uibutton.o uiclosebutton.o uitextedit.o uiapp.o uiwindow.o uiwidget.o rect.o guiconfig.o utf8.o uikey.o uitextlayout.o uiimagewidget.o
+
+aboutos_SRCS = aboutos.o uiproto.o uilabel.o uibutton.o uiclosebutton.o uitextedit.o uiapp.o uiwindow.o uiwidget.o rect.o guiconfig.o utf8.o uikey.o uitextlayout.o uiimagewidget.o
 
 %.d: %.c
 	@set -e; rm -f $@; \
@@ -51,8 +53,12 @@ uiclient:$(uiclient_SRCS)
 	@echo "LD	$@"
 	$(QUIET)$(LD) -o $@ $+ $(PROG_LDFLAGS)
 
+aboutos:$(aboutos_SRCS)
+	@echo "LD	$@"
+	$(QUIET)$(LD) -o $@ $+ $(PROG_LDFLAGS)
+
 clean:
-	$(QUIET)-rm *.o init uiserver uiclient
+	$(QUIET)-rm *.o init uiserver uiclient aboutos
 
 ctags:
 	$(QUIET)ctags -R --c-kinds=+p --fields=+S . 

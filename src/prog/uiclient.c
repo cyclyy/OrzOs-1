@@ -2,6 +2,7 @@
 #include "uibutton.h"
 #include "uilabel.h"
 #include "uitextedit.h"
+#include "uiimagewidget.h"
 #include <os/syscall.h>
 
 char replyBuf[1000];
@@ -15,6 +16,7 @@ struct OzUIWidget *widget;
 struct OzUIButton *button;
 struct OzUILabel *label;
 struct OzUITextEdit *textEdit;
+struct OzUIImageWidget *imageWidget;
 wchar_t *msgIn = L"在里面！";
 wchar_t *msgOut = L"在外面！";
 
@@ -71,6 +73,9 @@ int main()
     textEdit = OzUICreateTextEdit(window, makeRect(10,60,80,40), &myTextEditOps, 0);
     OzUITextEditSetText(textEdit, L"我们都是好人对不对啊对不对");
     OzUITextEditSetAllowMultiline(textEdit, 1);
+
+    imageWidget = OzUICreateImageWidget(window, makeRect(10, 110, 80, 40));
+    OzUIImageWidgetSetPath(imageWidget, "C:/logo.png");
 
     OzUINextEvent();
     for (;;) {
