@@ -1,3 +1,4 @@
+#include "uidef.h"
 #include "app.h"
 #include "buffer.h"
 #include <stdlib.h>
@@ -54,6 +55,9 @@ struct App *getApp(int pid)
 void notifyApp(struct App *app, void *data, int size)
 {
     struct Buffer *buffer;
+    /*
+    UIDBG("notifyApp pid:%d,misses:%d\n", app->pid,app->nMissingEvents);
+    */
     compactAppBufferList(app);
     if (app->nMissingEvents) {
         OzPost(app->pid, data, size);

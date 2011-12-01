@@ -91,8 +91,8 @@ int main()
     OzUINextEvent();
     for (;;) {
         OzReceive(&hdr, buf, 3000);
-        if (OzUIDispatchEvent(buf))
-            OzUINextEvent();
+        OzUIDispatchEvent(buf);
+        OzUINextEvent();
     }
     return 0;
 }

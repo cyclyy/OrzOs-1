@@ -3,6 +3,7 @@
 #include "uilabel.h"
 #include "uitextedit.h"
 #include "uiimagewidget.h"
+#include "utf8.h"
 #include <os/syscall.h>
 
 char replyBuf[1000];
@@ -22,13 +23,9 @@ wchar_t *msgOut = L"在外面！";
 
 void myBtnMiceLeftClick(struct OzUIButton *button, struct OzUIMiceEvent *miceEvent)
 {
-    long i = (long)button->d;
-    wchar_t s[100];
-    i++;
-    button->d = (void*)i;
-    swprintf(s, 100, L"左点击了%ld次", i);
-    OzUIButtonSetText(button, s);
-    OzUICreateWindow(200*i,200*i,0);
+    char s[100];
+    wcstous(s, OzUITextEditGetText(textEdit), 100);
+    OzNewTask(s, 0);
 }
 
 static struct OzUIButtonOperation myBtnOps = {
@@ -46,13 +43,14 @@ int main()
     stderr = fopen("Device:/Debug", "w");
     stdout = stderr;
 
-    window = OzUICreateWindow(200,200,0);
+    window = OzUICreateWindow(200,140,0);
 
+    /*
     tlc.fontSize = 12;
     tlc.rect.x = 0;
     tlc.rect.y = 0;
-    tlc.rect.w = 100;
-    tlc.rect.h = 40;
+    tlc.rect.w = 80;
+    tlc.rect.h = 20;
     tlc.originX = 0;
     tlc.originY = 0;
     tlc.flags = OZUI_TEXT_ALIGN_CENTER | OZUI_TEXT_ALIGN_VCENTER;
@@ -66,22 +64,23 @@ int main()
     ls.lineWidth = 1;
 
     fs.color.r = fs.color.g = fs.color.b = 0;
+    */
 
-    button = OzUICreateButton(window, makeRect(10,10,80,40), &myBtnOps, 0);
-    OzUIButtonSetText(button, L"我们都是好人");
+    label = OzUICreateLabel(window, makeRect(10, 10, 40, 20));
+    OzUILabelSetText(label, L"路径：");
 
-    textEdit = OzUICreateTextEdit(window, makeRect(10,60,80,40), &myTextEditOps, 0);
-    OzUITextEditSetText(textEdit, L"我们都是好人对不对啊对不对");
+    textEdit = OzUICreateTextEdit(window, makeRect(60,10,130,20), &myTextEditOps, 0);
+    //OzUITextEditSetText(textEdit, L"");
     OzUITextEditSetAllowMultiline(textEdit, 1);
 
-    imageWidget = OzUICreateImageWidget(window, makeRect(10, 110, 80, 40));
-    OzUIImageWidgetSetPath(imageWidget, "C:/logo.png");
+    button = OzUICreateButton(window, makeRect(50,60,90,40), &myBtnOps, 0);
+    OzUIButtonSetText(button, L"启动");
 
     OzUINextEvent();
     for (;;) {
         OzReceive(&hdr, buf, 512);
-        if (OzUIDispatchEvent(buf))
-            OzUINextEvent();
+        OzUIDispatchEvent(buf);
+        OzUINextEvent();
     }
     for (;;);
     OzUIDestroyWindow(window);

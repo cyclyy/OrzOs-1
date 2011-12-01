@@ -22,10 +22,14 @@ void wakeUpEx(struct WaitQueue *wq, struct Task *task, s64int wakeCode)
 
     wq->num--;
     t = task;
+    if (t->sqPrev)
+        t->sqPrev->sqNext = t->sqNext;
+    if (t->sqNext)
+        t->sqNext->sqPrev = t->sqPrev;
     if (wq->head == t)
-        wq->head = wq->head->sqNext;
+        wq->head = t->sqNext;
     if (wq->tail == t)
-        wq->tail = wq->tail->sqPrev;
+        wq->tail = t->sqPrev;
     t->state = TASK_STATE_READY;
     t->wakeCode = wakeCode;
     rqAdd(t);

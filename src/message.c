@@ -105,9 +105,11 @@ int Receive(struct MessageHeader *header, void *buffer, unsigned long size)
     if (msg->type == MESSAGE_POST) {
         ret = copyToUser(buffer, msg->buffer, MIN(size, msg->header.size));
         kFree(msg->buffer);
-    } else {
+    } else if (msg->type == MESSAGE_SEND) {
         ret = vmemcpy(currentTask->vm, buffer, msg->task->vm, msg->buffer, MIN(size, msg->header.size));
         wakeUp(currentTask->mq->wq, msg->task);
+    } else {
+        ret = vmemcpy(currentTask->vm, buffer, msg->task->vm, msg->buffer, MIN(size, msg->header.size));
     }
     kFree(msg);
     return ret;

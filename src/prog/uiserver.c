@@ -86,15 +86,18 @@ void paintCursor(struct GC *gc)
 
 inline void updateFrameBuffer()
 {
-    //memcpy(fbAddr, shadowPixmap->buffer, FB_SIZE);
+    memcpy(fbAddr, shadowPixmap->buffer, FB_SIZE);
+    return;
+    /*
     register int i, offset;
     crossRect(&dirtyRect, &screenRect);
     offset = WIDTH * dirtyRect.y * 2;
-    for (i = 0; i < dirtyRect.h; i++) {
+    for (i = 0; i < MAX(0,dirtyRect.h); i++) {
         memcpy(fbAddr + offset + dirtyRect.x * 2, shadowPixmap->buffer + offset + dirtyRect.x * 2,
               dirtyRect.w * 2);
         offset += WIDTH * 2;
     }
+    */
 }
 
 
@@ -280,8 +283,7 @@ int main()
     initMice();
     kbdFD = OzOpen("Device:/Keyboard", 0);
 
-    //OzNewTask("C:/uiclient",0);
-    OzNewTask("C:/aboutos",0);
+    OzNewTask("C:/uiclient",0);
 
     buf = (char*)malloc(10000);
 
@@ -300,7 +302,6 @@ int main()
             ioEventPtr = (struct IOEvent*)buf;
             if (ioEventPtr->fd == miceFD) {
                 window = findWindowUnder(cursorX, cursorY);
-                //UIDBG("window:%p\n", window);
                 switch (miceEvent.type) {
                 case MICE_EVENT_PRESS:
                     if (miceEvent.button == MICE_BUTTON_LEFT) {

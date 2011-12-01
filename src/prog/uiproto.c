@@ -44,6 +44,9 @@ int OzUISendReceive(void *request, void *reply)
         case OZUI_EVENT_DRAW_IMAGE_FILE:
             return OzSendReceive(&hdr, request, sizeof(struct OzUIWindowDrawImageFileRequest), reply, sizeof(struct OzUIWindowDrawImageFileReply));
             break;
+        case OZUI_EVENT_NEXT_EVENT:
+            return OzSend(UISERVER_PID, request, sizeof(struct OzUINextEventRequest));
+            break;
     };
     return 0;
 }
@@ -100,7 +103,7 @@ void OzUINextEvent()
 {
     struct OzUINextEventRequest request;
     request.type = OZUI_EVENT_NEXT_EVENT;
-    OzUISend(&request);
+    OzUISendReceive(&request, 0);
 }
 
 // vim: sw=4 sts=4 et tw=100

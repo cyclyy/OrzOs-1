@@ -128,7 +128,7 @@ static s64int mice_CreateEvent()
     if ((miceByte[1] == 0) && (miceByte[2] == 0)) {
         oldBtn = savedMiceByte[0] & 7;
         newBtn = miceByte[0] & 7;
-        printk("D:%d:%d\n",oldBtn,newBtn);
+        //printk("D:%d:%d\n",oldBtn,newBtn);
         if (newBtn > oldBtn) {
             miceEvent.type = MICE_EVENT_PRESS;
             miceEvent.button = newBtn ^ oldBtn;

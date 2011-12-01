@@ -43,8 +43,8 @@ struct Rect *crossRect(struct Rect *rect1, struct Rect *rect2)
     int x,y,rx,ry;
     x = MAX(rect1->x, rect2->x);
     y = MAX(rect1->y, rect2->y);
-    rx = MIN(rect1->x + rect1->w, rect2->x + rect2->w);
-    ry = MIN(rect1->y + rect1->h, rect2->y + rect2->h);
+    rx = MAX(0, MIN(rect1->x + rect1->w, rect2->x + rect2->w));
+    ry = MAX(0, MIN(rect1->y + rect1->h, rect2->y + rect2->h));
     if ((x <= rx) && (y <= ry)) {
         rect1->x = x;
         rect1->y = y;
